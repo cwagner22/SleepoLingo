@@ -20,6 +20,7 @@ import MapviewExample from '../Containers/MapviewExample'
 import APITestingScreen from '../Containers/APITestingScreen'
 import ThemeScreen from '../Containers/ThemeScreen'
 import DeviceInfoScreen from '../Containers/DeviceInfoScreen'
+import LessonScreen from '../Containers/LessonScreen'
 
 /* **************************
 * Documentation: https://github.com/aksonov/react-native-router-flux

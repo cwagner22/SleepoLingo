@@ -24,6 +24,8 @@ import I18n from 'react-native-i18n'
 import Reactotron from 'reactotron-react-native'
 import FJSON from 'format-json'
 
+import Tts from 'react-native-tts'
+
 // import Tts from 'react-native-tts'
 
 class LessonScreen extends React.Component {
@@ -40,6 +42,8 @@ class LessonScreen extends React.Component {
     // }
 
     this.api = API.create()
+
+    Tts.setDefaultRate(0.25);
   }
 
   showResult (response: Object, title: string = 'Response') {
@@ -51,22 +55,78 @@ class LessonScreen extends React.Component {
     }
   }
 
+  speakWordInLanguage (word, language) {
+    return new Promise((resolve, reject) => {
+      Tts.setDefaultLanguage(language).then(() => {
+        Tts.speak(word).then(resolve)
+      })
+    })
+  }
+
+  speakWord (word) {
+    return new Promise((resolve, reject) => {
+      this.speakWordInLanguage(word.original, 'en-US').then(() => {
+        this.speakWordInLanguage(word.translation, 'th-TH').then(() => {
+          setTimeout(() => {
+            resolve()
+          }, 5000)
+        })
+      })
+    })
+  }
+
+  translateWord (word) {
+    return new Promise((resolve, reject) => {
+      this.api.translate(word).then((response) => {
+        var translation = eval(response.data)[0][0][0]
+        console.log(translation)
+        resolve({
+          original: word,
+          translation
+        })
+      }, reject)
+    })
+  }
+
+  speakAllTheWords (results) {
+    this.setState({nbLoop: this.state.nbLoop + 1})
+    if (this.state.nbLoop < 30) {
+      // Sequential promises
+      results.reduce((p, r) => p.then(() => this.speakWord(r)), Promise.resolve())
+      .then(() => {
+        console.log('Repeating');
+        setTimeout(() => {
+          this.speakAllTheWords(results)
+        }, 15000)
+      })
+    }
+  }
+
   tryEndpoint () {
     // const { label, endpoint, args = [''] } = apiEndpoint
-    this.api.translate('Hello').then((response) => {
-      var translation = eval(response.data)[0][0][0]
-      Reactotron.log(translation)
-      this.setState({ translation })
-      // this.showResult(result, label || `${endpoint}(${args.join(', ')})`)
+    let toTranslate = ['Welcome', 'Hello', 'How are you?', 'I’m fine', "What's your name?", 'My name is', 'Recommend']
+    let translated = []
 
-      Tts.speak(translation);
-      Tts.voices().then(voices => Reactotron.log(voices))
-    })
+    const wordPromises = toTranslate.map(this.translateWord.bind(this));
+
+    Promise.all(wordPromises)
+      .then((results) => {
+        // this.showResult(result, label || `${endpoint}(${args.join(', ')})`)
+        // this.setState({ translation })
+
+        // let i = -1
+        this.setState({nbLoop: -1})
+        this.speakAllTheWords(results)
+
+      })
+      .catch(function(err) {
+        console.log("Failed:", err);
+      });
   }
 
   renderButton () {
     return (
-      <FullButton text='Test' onPress={this.tryEndpoint.bind(this)} styles={{marginTop: 10}} />
+      <FullButton text='Test' onPress={this.tryEndpoint.bind(this)} styles={{marginTop: 100}} />
     )
   }
 

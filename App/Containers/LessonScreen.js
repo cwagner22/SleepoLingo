@@ -5,28 +5,16 @@ import { ScrollView, Text, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
-import { Metrics } from '../Themes'
 import FullButton from '../Components/FullButton'
-
-// external libs
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Animatable from 'react-native-animatable'
-import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import API from '../Services/TranslateApi'
 
 // Styles
 import styles from './Styles/LessonScreenStyle'
 
-// I18n
-import I18n from 'react-native-i18n'
-
-import Reactotron from 'reactotron-react-native'
 import FJSON from 'format-json'
 
 import Tts from 'react-native-tts'
-
-// import Tts from 'react-native-tts'
 
 class LessonScreen extends React.Component {
   api: Object
@@ -43,7 +31,7 @@ class LessonScreen extends React.Component {
 
     this.api = API.create()
 
-    Tts.setDefaultRate(0.25);
+    Tts.setDefaultRate(0.25)
   }
 
   showResult (response: Object, title: string = 'Response') {
@@ -78,7 +66,9 @@ class LessonScreen extends React.Component {
   translateWord (word) {
     return new Promise((resolve, reject) => {
       this.api.translate(word).then((response) => {
-        var translation = eval(response.data)[0][0][0]
+        // var translation = eval(response.data)[0][0][0]
+        var json = response.data
+        var translation = json.sentences[0].trans
         console.log(translation)
         resolve({
           original: word,
@@ -94,7 +84,7 @@ class LessonScreen extends React.Component {
       // Sequential promises
       results.reduce((p, r) => p.then(() => this.speakWord(r)), Promise.resolve())
       .then(() => {
-        console.log('Repeating');
+        console.log('Repeating')
         setTimeout(() => {
           this.speakAllTheWords(results)
         }, 15000)
@@ -105,9 +95,8 @@ class LessonScreen extends React.Component {
   tryEndpoint () {
     // const { label, endpoint, args = [''] } = apiEndpoint
     let toTranslate = ['Welcome', 'Hello', 'How are you?', 'I’m fine', "What's your name?", 'My name is', 'Recommend']
-    let translated = []
 
-    const wordPromises = toTranslate.map(this.translateWord.bind(this));
+    const wordPromises = toTranslate.map(this.translateWord.bind(this))
 
     Promise.all(wordPromises)
       .then((results) => {
@@ -117,11 +106,10 @@ class LessonScreen extends React.Component {
         // let i = -1
         this.setState({nbLoop: -1})
         this.speakAllTheWords(results)
-
       })
-      .catch(function(err) {
-        console.log("Failed:", err);
-      });
+      .catch(function (err) {
+        console.log('Failed:', err)
+      })
   }
 
   renderButton () {

@@ -2,7 +2,8 @@
 import apisauce from 'apisauce'
 
 // our "constructor"
-const create = (baseURL = 'https://translate.google.com/translate_a') => {
+// const create = (baseURL = 'https://translate.google.com/translate_a') => {
+const create = (baseURL = 'https://clients5.google.com/translate_a') => {
 // const create = (baseURL = 'https://translation.googleapis.com/language/translate') => {
   // ------
   // STEP 1
@@ -51,7 +52,19 @@ const create = (baseURL = 'https://translate.google.com/translate_a') => {
   // way at this level.
   //
   // const translate = (word) => api.get('v2', {
-  const translate = (word) => api.get('single?client=gtx&ie=UTF-8&oe=UTF-8&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at', {
+  // const translate = (word) => api.get('single?client=gtx&ie=UTF-8&oe=UTF-8&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at', {
+  //   // key: 'AIzaSyC8s0W6iWsIpSQ02ElMuhaNlEHH9mN_v_Y',
+  //   // source: 'en',
+  //   // target: 'th',
+  //   // client: 'gtx',
+  //   // ie: 'UTF-8',
+  //   // oe: 'UTF-8',
+  //   sl: 'en',
+  //   tl: 'th',
+  //   q: word
+  // })
+
+  const translate = (word) => api.get('t?client=dict-chrome-ex&tbb=1&ie=UTF-8&oe=UTF-8&hl=en', {
     // key: 'AIzaSyC8s0W6iWsIpSQ02ElMuhaNlEHH9mN_v_Y',
     // source: 'en',
     // target: 'th',
@@ -62,6 +75,7 @@ const create = (baseURL = 'https://translate.google.com/translate_a') => {
     tl: 'th',
     q: word
   })
+
   //   .then((response) => {
   //   const content = eval(response.data)
   //   // content = eval(content);

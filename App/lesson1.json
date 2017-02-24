@@ -1,0 +1,16 @@
+{
+  id: 1,
+  words: [{
+    orig: 'The apple is red'
+  }, {
+    orig: 'It is John’s apple'
+  }, {
+    orig: 'I give John the apple.'
+  }, {
+    orig: 'We give him the apple.'
+  }, {
+    orig: 'He gives it to John.'
+  }, {
+    orig: 'She gives it to him.'
+  }]
+}

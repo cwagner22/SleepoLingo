@@ -25,6 +25,7 @@ class LessonScreen extends React.Component {
 
   state: {
     translation: null,
+    results: null,
     queue: null
   }
 
@@ -36,22 +37,45 @@ class LessonScreen extends React.Component {
 
     this.api = API.create()
 
-    Tts.setDefaultRate(0.25)
     Tts.addEventListener('tts-start', (event) => console.log('start', event))
     Tts.addEventListener('tts-finish', (event) => {
       console.log('finish', event)
 
       if (event.utteranceId === this.state.utteranceId) {
-        // Finish orig + translation
-        var word = this.state.queue.pop()
-        this.setState({queue: this.state.queue})
-        setTimeout(() => {
-          console.log('next')
-          this.speakWord(word)
-        }, 2000)
+        this.onFinishPlayed()
       }
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
+  }
+
+  start () {
+    this.setState({nbLoop: this.state.nbLoop + 1})
+    if (this.state.nbLoop < 30) {
+      this.setState({queue: this.state.results})
+      const word = this.state.queue.pop()
+      this.speakWord(word)
+    } else {
+      console.log('Finish loop')
+    }
+  }
+
+  onFinishPlayed () {
+    // Finish orig + translation
+    var word = this.state.queue.pop()
+    if (word) {
+      // Play next word
+      this.setState({queue: this.state.queue})
+      setTimeout(() => {
+        console.log('next')
+        this.speakWord(word)
+      }, 2000)
+    } else {
+      // Restart
+      setTimeout(() => {
+        console.log('restart')
+        this.start()
+      }, 5000)
+    }
   }
 
   showResult (response: Object, title: string = 'Response') {
@@ -64,8 +88,10 @@ class LessonScreen extends React.Component {
   }
 
   speakWordInLanguage (word, language, isTranslation) {
+    const rate = isTranslation ? 0.25 : 0.5
     return new Promise((resolve, reject) => {
-      Tts.setDefaultLanguage(language)
+      Tts.setDefaultRate(rate)
+        .then(() => Tts.setDefaultLanguage(language))
         .then(() => {
           return Tts.speak(word)
         })
@@ -100,16 +126,6 @@ class LessonScreen extends React.Component {
     })
   }
 
-  speakAllTheWords (results) {
-    this.setState({nbLoop: this.state.nbLoop + 1})
-    if (this.state.nbLoop < 30) {
-      var self = this
-
-      this.setState({queue: results})
-      self.speakWord(results[0])
-    }
-  }
-
   tryEndpoint () {
     // let toTranslate = ['Welcome', 'Hello', 'How are you?', 'I’m fine', "What's your name?", 'My name is',
     // 'Recommend']
@@ -122,8 +138,9 @@ class LessonScreen extends React.Component {
         // this.showResult(result, label || `${endpoint}(${args.join(', ')})`)
         // this.setState({ translation })
 
+        this.setState({results: results})
         this.setState({nbLoop: -1})
-        this.speakAllTheWords(results)
+        this.start()
       })
       .catch(function (err) {
         console.log('Failed:', err)

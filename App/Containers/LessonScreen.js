@@ -40,20 +40,21 @@ class LessonScreen extends React.Component {
     Tts.addEventListener('tts-start', (event) => console.log('start', event))
     Tts.addEventListener('tts-finish', (event) => {
       console.log('finish', event)
-
-      if (event.utteranceId === this.state.utteranceId) {
-        this.onFinishPlayed()
-      }
+      // Resolve promise
+      this.ttsPromise.resolve()
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
+  }
+
+  getWord () {
+    return this.state.currentWordIndex < this.state.results.length ? this.state.results[this.state.currentWordIndex] : null
   }
 
   start () {
     this.setState({nbLoop: this.state.nbLoop + 1})
     if (this.state.nbLoop < 30) {
-      this.setState({queue: this.state.results})
-      const word = this.state.queue.pop()
-      this.speakWord(word)
+      this.setState({currentWordIndex: 0})
+      this.speakWord(this.getWord())
     } else {
       console.log('Finish loop')
     }
@@ -61,20 +62,22 @@ class LessonScreen extends React.Component {
 
   onFinishPlayed () {
     // Finish orig + translation
-    var word = this.state.queue.pop()
+    this.setState({currentWordIndex: this.state.currentWordIndex + 1})
+    const word = this.getWord()
+
     if (word) {
       // Play next word
-      this.setState({queue: this.state.queue})
+      // this.setState({queue: this.state.queue})
       setTimeout(() => {
         console.log('next')
         this.speakWord(word)
-      }, 2000)
+      }, 1000)
     } else {
       // Restart
       setTimeout(() => {
         console.log('restart')
         this.start()
-      }, 5000)
+      }, 4000)
     }
   }
 
@@ -87,28 +90,42 @@ class LessonScreen extends React.Component {
     }
   }
 
-  speakWordInLanguage (word, language, isTranslation) {
-    const rate = isTranslation ? 0.25 : 0.5
+  speakWordInLanguage (word, language, rate) {
     return new Promise((resolve, reject) => {
       Tts.setDefaultRate(rate)
         .then(() => Tts.setDefaultLanguage(language))
         .then(() => {
-          return Tts.speak(word)
+          // Will be resolved once plaback finished
+          this.ttsPromise = {resolve, reject}
+          Tts.speak(word)
         })
-        .then((utteranceId) => {
-          if (isTranslation) {
-            this.setState({utteranceId})
+    })
+  }
+
+  speakOriginal (word) {
+    return this.speakWordInLanguage(word, 'en-US', 0.35)
+  }
+
+  speakTranslation (word) {
+    this.nbTranslation++
+
+    return new Promise((resolve, reject) => {
+      this.speakWordInLanguage(word, 'th-TH', 0.25)
+        .then(() => {
+          if (this.nbTranslation < 3) {
+            setTimeout(() => this.speakTranslation(word).then(resolve), 1000)
+          } else {
+            resolve()
           }
-          resolve()
         })
     })
   }
 
   speakWord (word) {
-    this.speakWordInLanguage(word.original, 'en-US', false)
-      .then(() => {
-        this.speakWordInLanguage(word.translation, 'th-TH', true)
-      })
+    this.nbTranslation = 0
+    this.speakOriginal(word.original)
+      .then(() => this.speakTranslation(word.translation))
+      .then(() => this.onFinishPlayed())
   }
 
   translateWord (word) {

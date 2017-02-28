@@ -1,5 +1,6 @@
 {
   id: 2,
+  title: 'Basic verbs+pronouns',
   words: [
     {
       orig: "I am"

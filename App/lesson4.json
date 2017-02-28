@@ -1,0 +1,23 @@
+{
+  id: 3,
+  title: 'Useful sentences',
+  words: [
+    {
+      orig: "Welcome"
+    },
+    {
+      orig: "Hello"
+    },
+    {
+      orig: "How are you?"
+    },
+    {
+      orig: "I’m fine"
+    },
+    {
+      orig: "What's your name?"
+    },
+    {
+      orig: "My name is John"
+    }
+  ]}

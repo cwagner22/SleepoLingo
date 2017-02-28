@@ -18,7 +18,8 @@ import Tts from 'react-native-tts'
 
 const lessons = {
   lesson1: require('../lesson1.json'),
-  lesson2: require('../lesson2.json')
+  lesson2: require('../lesson2.json'),
+  lesson3: require('../lesson3.json')
 }
 
 class LessonScreen extends React.Component {
@@ -103,17 +104,18 @@ class LessonScreen extends React.Component {
   }
 
   speakOriginal (word) {
-    return this.speakWordInLanguage(word, 'en-US', 0.3)
+    return this.speakWordInLanguage(word, 'en-US', 0.3) // 0.3 - 0.35
   }
 
   speakTranslation (word) {
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', 0.15)
+      this.speakWordInLanguage(word, 'th-TH', 0.1) // 0.1 - 0.3
         .then(() => {
+          // Repeat translation 3 times
           if (this.nbTranslation < 3) {
-            setTimeout(() => this.speakTranslation(word).then(resolve), 1000)
+            setTimeout(() => this.speakTranslation(word).then(resolve), 2000)
           } else {
             resolve()
           }
@@ -170,7 +172,7 @@ class LessonScreen extends React.Component {
 
     // const wordPromises = lessons.lesson2.words.map(this.translateWord.bind(this))
 
-    const words = lessons.lesson2.words.map((w) => w.orig)
+    const words = lessons.lesson3.words.map((w) => w.orig)
     this.translateWords(words)
     // Promise.all(wordPromises)
       .then((results) => {

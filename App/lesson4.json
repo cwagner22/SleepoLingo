@@ -3,10 +3,13 @@
   title: 'Useful sentences',
   words: [
     {
-      orig: "Welcome"
+      orig: "Good morning"
     },
     {
       orig: "Hello"
+    },
+    {
+      orig: "Welcome"
     },
     {
       orig: "How are you?"

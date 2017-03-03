@@ -187,6 +187,11 @@ const create = (baseURL = 'https://clients5.google.com/translate_a') => {
   //
   // })
 
+  const ttsURL = (word, language, rate) => {
+    return 'https://responsivevoice.org/responsivevoice/getvoice.php?t=' + encodeURIComponent(word) +
+      '&tl=' + language + '&pitch=0.5&rate=' + rate + '&vol=1'
+  }
+
   // ------
   // STEP 3
   // ------
@@ -202,7 +207,8 @@ const create = (baseURL = 'https://clients5.google.com/translate_a') => {
   return {
     // a list of the API functions from step 2
     translate,
-    translateWords
+    translateWords,
+    ttsURL
   }
 }
 

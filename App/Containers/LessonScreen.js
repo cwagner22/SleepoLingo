@@ -3,6 +3,8 @@
 import React, { PropTypes } from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
+import RNFS from 'react-native-fs'
+
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
 import FullButton from '../Components/FullButton'
@@ -25,6 +27,15 @@ class LessonScreen extends React.Component {
   state: {
     // translation: null,
     results: null
+  }
+
+  constructor (props) {
+    super(props)
+
+    // Create or empty cache (dev)
+    var promise = __DEV__ ? RNFS.unlink(RNFS.MainBundlePath + '/cache') : Promise.resolve()
+    promise
+      .then(() => RNFS.mkdir(RNFS.MainBundlePath + '/cache'))
   }
 
   render () {

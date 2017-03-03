@@ -11,7 +11,10 @@ import API from '../Services/TranslateApi'
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 import Tts from 'react-native-tts'
 import _ from 'lodash'
-// import responsiveVoice from '../responsivevoice'
+// import responsiveVoice from '../responsivevoice.src'
+import RNFS from 'react-native-fs'
+import Sound from 'react-native-sound'
+import md5Hex from 'md5-hex'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
@@ -25,6 +28,9 @@ class PlaybackScreen extends React.Component {
       // Set your state here
     }
 
+    // Enable playback in silence mode (iOS only)
+    Sound.setCategory('Playback')
+
     Tts.addEventListener('tts-start', (event) => console.log('start', event))
     Tts.addEventListener('tts-finish', (event) => {
       console.log('finish', event)
@@ -32,7 +38,7 @@ class PlaybackScreen extends React.Component {
       this.ttsPromise.resolve()
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
-    // Tts.voices().then(voices => console.log(voices));
+    // Tts.voices().then(voices => console.log(voices))
 
     this.playLesson()
   }
@@ -98,15 +104,60 @@ class PlaybackScreen extends React.Component {
   //   }
   // }
 
+  playFile (fileName, resolve, reject) {
+    var whoosh = new Sound('cache/' + fileName, Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error)
+        return
+      }
+      // loaded successfully
+      console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels())
+
+      // Play the sound with an onEnd callback
+      whoosh.play((success) => {
+        if (success) {
+          console.log('successfully finished playing')
+          resolve()
+        } else {
+          console.log('playback failed due to audio decoding errors')
+          reject()
+        }
+      })
+    })
+  }
+
   speakWordInLanguage (word, language, rate) {
     return new Promise((resolve, reject) => {
-      Tts.setDefaultRate(rate)
-        .then(() => Tts.setDefaultLanguage(language))
-        .then(() => {
-          // Will be resolved once plaback finished
-          this.ttsPromise = {resolve, reject}
-          Tts.speak(word)
+      const fileName = md5Hex(word) + '.mp3'
+
+      // or DocumentDirectoryPath for android
+      var path = RNFS.MainBundlePath + '/cache/' + fileName
+      const url = this.api.ttsURL(word, language, rate)
+
+      RNFS.exists(path)
+        .then((exists) => {
+          if (!exists) {
+            // write the file
+            RNFS.downloadFile({fromUrl: url, toFile: path}).promise
+              .then((success) => {
+                console.log('FILE WRITTEN!', url, path)
+                this.playFile(fileName, resolve, reject)
+              })
+              .catch((err) => {
+                console.log(err.message)
+              })
+          } else {
+            this.playFile(fileName, resolve, reject)
+          }
         })
+
+      // Tts.setDefaultRate(rate)
+      //   .then(() => Tts.setDefaultLanguage(language))
+      //   .then(() => {
+      //     // Will be resolved once plaback finished
+      //     this.ttsPromise = {resolve, reject}
+      //     Tts.speak(word)
+      //   })
     })
   }
 
@@ -132,7 +183,7 @@ class PlaybackScreen extends React.Component {
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', 0.1) // 0.1 - 0.3
+      this.speakWordInLanguage(word, 'th-TH', 0.15) // 0.1 - 0.3
         .then(() => {
           // Repeat translation 3 times
           if (this.nbTranslation < 3) {
@@ -244,7 +295,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
   }
-  // return bindActionCreators({selectUser: selectUser}, dispatch);
+  // return bindActionCreators({selectUser: selectUser}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaybackScreen)

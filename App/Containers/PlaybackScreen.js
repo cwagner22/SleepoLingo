@@ -29,7 +29,7 @@ class PlaybackScreen extends React.Component {
     }
 
     // Enable playback in silence mode (iOS only)
-    Sound.setCategory('Playback')
+    Sound.setCategory('Playback', true)
 
     Tts.addEventListener('tts-start', (event) => console.log('start', event))
     Tts.addEventListener('tts-finish', (event) => {
@@ -105,7 +105,7 @@ class PlaybackScreen extends React.Component {
   // }
 
   playFile (fileName, resolve, reject) {
-    var whoosh = new Sound('cache/' + fileName, Sound.MAIN_BUNDLE, (error) => {
+    var whoosh = new Sound('cache/' + fileName, Sound.DOCUMENT, (error) => {
       if (error) {
         console.log('failed to load the sound', error)
         return
@@ -131,7 +131,7 @@ class PlaybackScreen extends React.Component {
       const fileName = md5Hex(word) + '.mp3'
 
       // or DocumentDirectoryPath for android
-      var path = RNFS.MainBundlePath + '/cache/' + fileName
+      var path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
       const url = this.api.ttsURL(word, language, rate)
 
       RNFS.exists(path)

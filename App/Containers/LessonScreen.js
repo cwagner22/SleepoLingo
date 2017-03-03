@@ -32,10 +32,22 @@ class LessonScreen extends React.Component {
   constructor (props) {
     super(props)
 
-    // Create or empty cache (dev)
-    var promise = __DEV__ ? RNFS.unlink(RNFS.MainBundlePath + '/cache') : Promise.resolve()
-    promise
-      .then(() => RNFS.mkdir(RNFS.MainBundlePath + '/cache'))
+    var cachePath = RNFS.DocumentDirectoryPath + '/cache'
+
+    if (__DEV__) {
+      // Empty cache
+      RNFS.exists(cachePath).then((exists) => {
+        var pomise = exists ? RNFS.unlink(cachePath) : Promise.resolve()
+        pomise.then(this.createCache)
+      })
+    } else {
+      this.createCache()
+    }
+  }
+
+  createCache () {
+    var cachePath = RNFS.DocumentDirectoryPath + '/cache'
+    RNFS.mkdir(cachePath, {NSURLIsExcludedFromBackupKey: true})
   }
 
   render () {

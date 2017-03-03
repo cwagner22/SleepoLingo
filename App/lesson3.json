@@ -6,10 +6,19 @@
       orig: "I am"
     },
     {
+      orig: "I am hungry"
+    },
+    {
       orig: "I have"
     },
     {
+      orig: "I have an apple"
+    },
+    {
       orig: "You are"
+    },
+    {
+      orig: "You are beautiful"
     },
     {
       orig: "You have"
@@ -18,10 +27,16 @@
       orig: "He is"
     },
     {
+      orig: "He is lucky"
+    },
+    {
       orig: "He has"
     },
     {
       orig: "She is"
+    },
+    {
+      orig: "She is 24 years old"
     },
     {
       orig: "She has"
@@ -30,10 +45,16 @@
       orig: "it is"
     },
     {
+      orig: "it is great"
+    },
+    {
       orig: "it has"
     },
     {
       orig: "we are"
+    },
+    {
+      orig: "we are the best"
     },
     {
       orig: "we have"
@@ -49,5 +70,8 @@
     },
     {
       orig: "they have"
+    },
+    {
+      orig: "they have bought"
     },
   ]}

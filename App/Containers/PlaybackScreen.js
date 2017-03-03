@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { ScrollView, Text, KeyboardAvoidingView } from 'react-native'
+import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -10,6 +10,8 @@ import API from '../Services/TranslateApi'
 // external libs
 // import { Actions as NavigationActions } from 'react-native-router-flux'
 import Tts from 'react-native-tts'
+import _ from 'lodash'
+// import responsiveVoice from '../responsivevoice'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
@@ -19,9 +21,9 @@ class PlaybackScreen extends React.Component {
   constructor (props: Object) {
     super(props)
     this.api = API.create()
-    // this.state ={
-    //   // Set your state here
-    // }
+    this.state = {
+      // Set your state here
+    }
 
     Tts.addEventListener('tts-start', (event) => console.log('start', event))
     Tts.addEventListener('tts-finish', (event) => {
@@ -30,6 +32,7 @@ class PlaybackScreen extends React.Component {
       this.ttsPromise.resolve()
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
+    // Tts.voices().then(voices => console.log(voices));
 
     this.playLesson()
   }
@@ -142,6 +145,7 @@ class PlaybackScreen extends React.Component {
   }
 
   speakWord (word) {
+    this.setState({currentWord: word})
     console.log(word)
     if (!word.translation) {
       return this.onFinishPlayed()
@@ -170,7 +174,7 @@ class PlaybackScreen extends React.Component {
   lowerCaseFirstLetter (word) {
     // Lowercase first letter to get better results with Google Chrome...
     if (!word.startsWith('I ')) {
-      word[0] = word[0].toLowerCase()
+      return _.lowerFirst(word)
     }
 
     return word
@@ -193,13 +197,39 @@ class PlaybackScreen extends React.Component {
     })
   }
 
+  showWord () {
+    if (!this.isPlaying()) {
+      return
+    }
+
+    return <Text>{this.state.currentWord.translation}</Text>
+  }
+
+  showStatus () {
+    if (!this.isPlaying()) {
+      return
+    }
+
+    return (
+      <View>
+        <Text>{this.state.currentWordIndex + 1} / {this.props.lesson.words.length}</Text>
+        <Text>{this.state.nbLoop + 1} / 30</Text>
+      </View>
+    )
+  }
+
+  isPlaying () {
+    return !!this.state.currentWord
+  }
+
   render () {
     return (
-      <ScrollView style={styles.container}>
-        <KeyboardAvoidingView behavior='position'>
-          <Text>PlaybackScreen Container</Text>
-        </KeyboardAvoidingView>
-      </ScrollView>
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container}>
+          {this.showWord()}
+          {this.showStatus()}
+        </ScrollView>
+      </View>
     )
   }
 

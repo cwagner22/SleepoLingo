@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 import API from '../Services/TranslateApi'
+import BackgroundTimer from 'react-native-background-timer'
 
 // external libs
 // import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -82,13 +83,13 @@ class PlaybackScreen extends React.Component {
     if (word) {
       // Play next word
       // this.setState({queue: this.state.queue})
-      setTimeout(() => {
+      BackgroundTimer.setTimeout(() => {
         console.log('next')
         this.speakWord(word)
       }, 1000)
     } else {
       // Restart
-      setTimeout(() => {
+      BackgroundTimer.setTimeout(() => {
         console.log('restart')
         this.start()
       }, 4000)
@@ -187,7 +188,7 @@ class PlaybackScreen extends React.Component {
         .then(() => {
           // Repeat translation 3 times
           if (this.nbTranslation < 3) {
-            setTimeout(() => this.speakTranslation(word).then(resolve), 2000)
+            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), 2000)
           } else {
             resolve()
           }

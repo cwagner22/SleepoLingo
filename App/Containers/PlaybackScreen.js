@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 import API from '../Services/TranslateApi'
+import BingAPI from '../Services/BingApi'
 import BackgroundTimer from 'react-native-background-timer'
 
 // external libs
@@ -25,6 +26,7 @@ class PlaybackScreen extends React.Component {
   constructor (props: Object) {
     super(props)
     this.api = API.create()
+    this.bingAPI = BingAPI.create()
     this.state = {
       // Set your state here
     }
@@ -112,7 +114,8 @@ class PlaybackScreen extends React.Component {
         return
       }
       // loaded successfully
-      console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels())
+      console.log(
+        'duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels())
 
       // Play the sound with an onEnd callback
       whoosh.play((success) => {
@@ -163,7 +166,10 @@ class PlaybackScreen extends React.Component {
   }
 
   speakOriginal (word) {
-    return this.speakWordInLanguage(word, 'en-US', 0.3) // 0.3 - 0.35
+    // 0.3 - 0.35
+    return new Promise((resolve, reject) => {
+      this.speakWordInLanguage(word, 'en-US', 0.3).then(() => BackgroundTimer.setTimeout(resolve, 1000))
+    })
   }
 
   // _speakTranslationWithTimeout (word, rate) {
@@ -209,19 +215,19 @@ class PlaybackScreen extends React.Component {
       .then(() => this.onFinishPlayed())
   }
 
-  translateWord (word) {
-    return new Promise((resolve, reject) => {
-      this.api.translate(word).then((response) => {
-        var json = response.data
-        var translation = json.sentences[0].trans
-        console.log(translation)
-        resolve({
-          original: word.orig,
-          translation
-        })
-      }, reject)
-    })
-  }
+  // translateWord (word) {
+  //   return new Promise((resolve, reject) => {
+  //     this.api.translate(word).then((response) => {
+  //       var json = response.data
+  //       var translation = json.sentences[0].trans
+  //       console.log(translation)
+  //       resolve({
+  //         original: word.orig,
+  //         translation
+  //       })
+  //     }, reject)
+  //   })
+  // }
 
   lowerCaseFirstLetter (word) {
     // Lowercase first letter to get better results with Google Chrome...
@@ -234,6 +240,7 @@ class PlaybackScreen extends React.Component {
 
   translateWords (words) {
     return new Promise((resolve, reject) => {
+      // this.bingAPI.translateArray(words).then((response) => {
       this.api.translateWords(words.map(this.lowerCaseFirstLetter)).then((response) => {
         const wordsWithTranslation = []
         const results = eval(response.data)[0] // eslint-disable-line
@@ -294,8 +301,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-  }
+  return {}
   // return bindActionCreators({selectUser: selectUser}, dispatch)
 }
 

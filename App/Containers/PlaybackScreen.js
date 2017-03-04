@@ -88,13 +88,13 @@ class PlaybackScreen extends React.Component {
       BackgroundTimer.setTimeout(() => {
         console.log('next')
         this.speakWord(word)
-      }, 1000)
+      }, 4000)
     } else {
       // Restart
       BackgroundTimer.setTimeout(() => {
         console.log('restart')
         this.start()
-      }, 4000)
+      }, 10000)
     }
   }
 
@@ -132,36 +132,39 @@ class PlaybackScreen extends React.Component {
 
   speakWordInLanguage (word, language, rate) {
     return new Promise((resolve, reject) => {
-      const fileName = md5Hex(word) + '.mp3'
+      var deviceTTS = true
+      if (deviceTTS) {
+        Tts.setDefaultRate(rate)
+          .then(() => Tts.setDefaultLanguage(language))
+          .then(() => {
+            // Will be resolved once plaback finished
+            this.ttsPromise = {resolve, reject}
+            Tts.speak(word)
+          })
+      } else {
+        const fileName = md5Hex(word) + '.mp3'
 
-      // or DocumentDirectoryPath for android
-      var path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
-      const url = this.api.ttsURL(word, language, rate)
+        // or DocumentDirectoryPath for android
+        var path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
+        const url = this.api.ttsURL(word, language, rate)
 
-      RNFS.exists(path)
-        .then((exists) => {
-          if (!exists) {
-            // write the file
-            RNFS.downloadFile({fromUrl: url, toFile: path}).promise
-              .then((success) => {
-                console.log('FILE WRITTEN!', url, path)
-                this.playFile(fileName, resolve, reject)
-              })
-              .catch((err) => {
-                console.log(err.message)
-              })
-          } else {
-            this.playFile(fileName, resolve, reject)
-          }
-        })
-
-      // Tts.setDefaultRate(rate)
-      //   .then(() => Tts.setDefaultLanguage(language))
-      //   .then(() => {
-      //     // Will be resolved once plaback finished
-      //     this.ttsPromise = {resolve, reject}
-      //     Tts.speak(word)
-      //   })
+        RNFS.exists(path)
+          .then((exists) => {
+            if (!exists) {
+              // write the file
+              RNFS.downloadFile({fromUrl: url, toFile: path}).promise
+                .then((success) => {
+                  console.log('FILE WRITTEN!', url, path)
+                  this.playFile(fileName, resolve, reject)
+                })
+                .catch((err) => {
+                  console.log(err.message)
+                })
+            } else {
+              this.playFile(fileName, resolve, reject)
+            }
+          })
+      }
     })
   }
 
@@ -172,29 +175,28 @@ class PlaybackScreen extends React.Component {
     })
   }
 
-  // _speakTranslationWithTimeout (word, rate) {
-  //   // rate: 0.1 - 0.3
+  // _speakTranslationWithTimeout (word) {
   //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => this.speakWordInLanguage(word, 'th-TH', rate).then(resolve), 2000)
+  //     this.speakWordInLanguage(word, 'th-TH', 0.15).then(() => BackgroundTimer.setTimeout(resolve, 2000))
   //   })
   // }
 
   speakTranslation (word) {
     // return new Promise((resolve, reject) => {
-    //   this._speakTranslationWithTimeout(word, 0.1)
-    //     .then(() => this._speakTranslationWithTimeout(word, 0.1))
-    //     .then(() => this._speakTranslationWithTimeout(word, 0.1))
+    //   this._speakTranslationWithTimeout(word)
+    //     .then(() => this._speakTranslationWithTimeout(word))
+    //     .then(() => this._speakTranslationWithTimeout(word))
     //     .then(resolve)
     // })
 
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', 0.15) // 0.1 - 0.3
+      this.speakWordInLanguage(word, 'th-TH', 0.1) // 0.1 - 0.3
         .then(() => {
           // Repeat translation 3 times
-          if (this.nbTranslation < 3) {
-            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), 2000)
+          if (this.nbTranslation < 5) {
+            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), 5000)
           } else {
             resolve()
           }

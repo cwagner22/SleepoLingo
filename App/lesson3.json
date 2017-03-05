@@ -2,9 +2,9 @@
   id: 2,
   title: 'Basic verbs+pronouns',
   words: [
-    {
-      orig: "I am"
-    },
+//    {
+//      orig: "I am"
+//    },
     {
       orig: "I am hungry"
     },
@@ -18,10 +18,25 @@
       orig: "I have an apple"
     },
     {
+      orig: "I want to order"
+    },
+    {
+      orig: "I want to buy"
+    },
+    {
       orig: "You are"
     },
     {
       orig: "You are beautiful"
+    },
+    {
+      orig: "You are tall"
+    },
+    {
+      orig: "You are smart"
+    },
+    {
+      orig: "You are nice"
     },
     {
       orig: "You have"
@@ -48,7 +63,10 @@
       orig: "it is"
     },
     {
-      orig: "it is great"
+      orig: "it's good"
+    },
+    {
+      orig: "it's very good"
     },
     {
       orig: "it has"
@@ -71,10 +89,14 @@
     {
       orig: "they are"
     },
+
     {
       orig: "they have"
     },
     {
-      orig: "they have bought"
+      orig: "they have kids"
+    },
+    {
+      orig: "they have arrived"
     },
   ]}

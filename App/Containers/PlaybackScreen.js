@@ -3,6 +3,7 @@
 import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
+import VolumeSlider from '../Components/VolumeSlider'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 import API from '../Services/TranslateApi'
@@ -20,6 +21,8 @@ import md5Hex from 'md5-hex'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
+
+const nbLoopMax = 15
 
 class PlaybackScreen extends React.Component {
 
@@ -69,7 +72,7 @@ class PlaybackScreen extends React.Component {
 
   start () {
     this.setState({nbLoop: this.state.nbLoop + 1})
-    if (this.state.nbLoop < 30) {
+    if (this.state.nbLoop < nbLoopMax) {
       this.setState({currentWordIndex: 0})
       this.speakWord(this.getWord())
     } else {
@@ -118,21 +121,23 @@ class PlaybackScreen extends React.Component {
         'duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels())
 
       // Play the sound with an onEnd callback
-      whoosh.play((success) => {
-        if (success) {
-          console.log('successfully finished playing')
-          resolve()
-        } else {
-          console.log('playback failed due to audio decoding errors')
-          reject()
-        }
-      })
+      whoosh
+        .setVolume(this.refs.volumeSlider.state.value)
+        .play((success) => {
+          if (success) {
+            console.log('successfully finished playing')
+            resolve()
+          } else {
+            console.log('playback failed due to audio decoding errors')
+            reject()
+          }
+        })
     })
   }
 
   speakWordInLanguage (word, language, rate) {
     return new Promise((resolve, reject) => {
-      var deviceTTS = true
+      var deviceTTS = false
       if (deviceTTS) {
         Tts.setDefaultRate(rate)
           .then(() => Tts.setDefaultLanguage(language))
@@ -169,9 +174,8 @@ class PlaybackScreen extends React.Component {
   }
 
   speakOriginal (word) {
-    // 0.3 - 0.35
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'en-US', 0.3).then(() => BackgroundTimer.setTimeout(resolve, 1000))
+      this.speakWordInLanguage(word, 'en-US', 0.2).then(() => BackgroundTimer.setTimeout(resolve, 1000))
     })
   }
 
@@ -192,7 +196,7 @@ class PlaybackScreen extends React.Component {
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', 0.1) // 0.1 - 0.3
+      this.speakWordInLanguage(word, 'th-TH', 0.15) // 0.1 - 0.3
         .then(() => {
           // Repeat translation 3 times
           if (this.nbTranslation < 5) {
@@ -274,7 +278,7 @@ class PlaybackScreen extends React.Component {
     return (
       <View>
         <Text>{this.state.currentWordIndex + 1} / {this.props.lesson.words.length}</Text>
-        <Text>{this.state.nbLoop + 1} / 30</Text>
+        <Text>{this.state.nbLoop + 1} / {nbLoopMax}</Text>
       </View>
     )
   }
@@ -290,6 +294,9 @@ class PlaybackScreen extends React.Component {
           {this.showWord()}
           {this.showStatus()}
         </ScrollView>
+        <View>
+          <VolumeSlider ref='volumeSlider' />
+        </View>
       </View>
     )
   }

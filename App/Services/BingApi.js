@@ -1,5 +1,6 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
+import { stringify } from 'qs'
 
 // our "constructor"
 const create = (baseURL = 'https://api.microsofttranslator.com') => {
@@ -43,12 +44,13 @@ const create = (baseURL = 'https://api.microsofttranslator.com') => {
   const translateArray = (array) => {
     const promise = this.token ? Promise.resolve() : issueToken()
     return promise.then(() => {
-      return api.post('/V2/Ajax.svc/TranslateArray', {
-        Texts: array,
-        From: 'en',
-        To: 'th',
-        AppId: ''
-      })
+      const params = {
+        texts: JSON.stringify(array),
+        from: 'en',
+        to: 'th',
+        appid: ''
+      }
+      return api.post('/V2/Ajax.svc/TranslateArray?' + stringify(params))
     })
   }
 

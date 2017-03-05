@@ -22,7 +22,16 @@ import md5Hex from 'md5-hex'
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
 
-const nbLoopMax = 15
+const nbLoopGlobal = 10
+const nbLoopTranslation = 4
+
+const translationTimeout = 5000
+const originalTimeout = 1000
+const nextWordTimeout = 4000
+const repeatAllTimeout = 10000
+
+const rateOriginal = 0.2
+const rateTranslation = 0.2 // 0.1 - 0.3
 
 class PlaybackScreen extends React.Component {
 
@@ -72,7 +81,7 @@ class PlaybackScreen extends React.Component {
 
   start () {
     this.setState({nbLoop: this.state.nbLoop + 1})
-    if (this.state.nbLoop < nbLoopMax) {
+    if (this.state.nbLoop < nbLoopGlobal) {
       this.setState({currentWordIndex: 0})
       this.speakWord(this.getWord())
     } else {
@@ -91,13 +100,13 @@ class PlaybackScreen extends React.Component {
       BackgroundTimer.setTimeout(() => {
         console.log('next')
         this.speakWord(word)
-      }, 4000)
+      }, nextWordTimeout)
     } else {
       // Restart
       BackgroundTimer.setTimeout(() => {
         console.log('restart')
         this.start()
-      }, 10000)
+      }, repeatAllTimeout)
     }
   }
 
@@ -175,7 +184,8 @@ class PlaybackScreen extends React.Component {
 
   speakOriginal (word) {
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'en-US', 0.2).then(() => BackgroundTimer.setTimeout(resolve, 1000))
+      this.speakWordInLanguage(word, 'en-US', rateOriginal).then(
+        () => BackgroundTimer.setTimeout(resolve, originalTimeout))
     })
   }
 
@@ -196,11 +206,11 @@ class PlaybackScreen extends React.Component {
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', 0.15) // 0.1 - 0.3
+      this.speakWordInLanguage(word, 'th-TH', rateTranslation)
         .then(() => {
           // Repeat translation 3 times
-          if (this.nbTranslation < 5) {
-            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), 5000)
+          if (this.nbTranslation < nbLoopTranslation) {
+            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), translationTimeout)
           } else {
             resolve()
           }
@@ -235,6 +245,23 @@ class PlaybackScreen extends React.Component {
   //   })
   // }
 
+  translateWords (words) {
+    return new Promise((resolve, reject) => {
+      this.bingAPI.translateArray(words).then((response) => {
+        const wordsWithTranslation = []
+        const results = response.data
+        for (var i = 0; i < results.length; i++) {
+          var res = results[i]
+          wordsWithTranslation.push({
+            original: words[i],
+            translation: res.TranslatedText
+          })
+        }
+        resolve(wordsWithTranslation)
+      }, reject)
+    })
+  }
+
   lowerCaseFirstLetter (word) {
     // Lowercase first letter to get better results with Google Chrome...
     if (!word.startsWith('I ')) {
@@ -244,9 +271,8 @@ class PlaybackScreen extends React.Component {
     return word
   }
 
-  translateWords (words) {
+  translateWordsGoogle (words) {
     return new Promise((resolve, reject) => {
-      // this.bingAPI.translateArray(words).then((response) => {
       this.api.translateWords(words.map(this.lowerCaseFirstLetter)).then((response) => {
         const wordsWithTranslation = []
         const results = eval(response.data)[0] // eslint-disable-line
@@ -278,13 +304,42 @@ class PlaybackScreen extends React.Component {
     return (
       <View>
         <Text>{this.state.currentWordIndex + 1} / {this.props.lesson.words.length}</Text>
-        <Text>{this.state.nbLoop + 1} / {nbLoopMax}</Text>
+        <Text>{this.state.nbLoop + 1} / {nbLoopGlobal}</Text>
       </View>
     )
   }
 
   isPlaying () {
     return !!this.state.currentWord
+  }
+
+  durationStr (ms) {
+    var hours = Math.floor(ms / 1000 / 3600)
+    var mins = Math.round(ms / 1000 / 60 - (hours * 60))
+    var str = ''
+    if (hours) {
+      str += hours + 'h '
+    }
+
+    str += mins + 'mins'
+    return str
+  }
+
+  renderTime () {
+    if (this.state.results) {
+      const wordDuration = 2000 // Average time to load one file + play
+      const originalDuration = wordDuration + originalTimeout
+      const translationDuration = (wordDuration + translationTimeout) * nbLoopTranslation + nextWordTimeout
+      const loopDuration = (originalDuration + translationDuration) * this.state.results.length
+      const totalDuration = (loopDuration + repeatAllTimeout) * nbLoopGlobal
+
+      return (
+        <View>
+          <Text>~ Loop Duration: {this.durationStr(loopDuration)}</Text>
+          <Text>~ Total Duration: {this.durationStr(totalDuration)}</Text>
+        </View>
+      )
+    }
   }
 
   render () {
@@ -295,6 +350,7 @@ class PlaybackScreen extends React.Component {
           {this.showStatus()}
         </ScrollView>
         <View>
+          {this.renderTime()}
           <VolumeSlider ref='volumeSlider' />
         </View>
       </View>

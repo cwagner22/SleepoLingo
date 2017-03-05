@@ -9,7 +9,7 @@ import styles from './Styles/SearchBarStyle'
 export default class VolumeSlider extends React.Component {
 
   static defaultProps = {
-    value: 0.5
+    value: 1
   }
 
   state = {

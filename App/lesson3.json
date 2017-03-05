@@ -2,9 +2,12 @@
   id: 2,
   title: 'Basic verbs+pronouns',
   words: [
-//    {
-//      orig: "I am"
-//    },
+    {
+      orig: "I am"
+    },
+    {
+      orig: "I am John"
+    },
     {
       orig: "I am hungry"
     },
@@ -89,7 +92,6 @@
     {
       orig: "they are"
     },
-
     {
       orig: "they have"
     },

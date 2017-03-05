@@ -51,8 +51,10 @@ class PlaybackScreen extends React.Component {
   }
 
   /*
-   *
-   *
+   * Custom "linear" function with offsets
+   * Used to get a value proportionally to the time (nb loops)
+   * Currently doesn't work if start = end. Also doesn't support x > endX for now
+   * Maybe can be improved, I'm not the best at Maths ¯\_ツ_/¯
    *        +
    * startY |\
    *        | \
@@ -65,9 +67,8 @@ class PlaybackScreen extends React.Component {
    *   endY |        \________
    *        |
    *        |
-   *        +--------------------------+
+   *        +-----------------+
    *        startX   endX
-   *
    *
    * */
   linearOffsetFn (x, startX, endX, startY, endY) {
@@ -103,7 +104,7 @@ class PlaybackScreen extends React.Component {
 
   playLesson () {
     const words = this.props.lesson.words.map((w) => w.orig)
-    this.translateWords(words)
+    this.translateWordsGoogle(words)
       .then((results) => {
         console.log(results)
         // this.showResult(result, label || `${endpoint}(${args.join(', ')})`)
@@ -126,6 +127,7 @@ class PlaybackScreen extends React.Component {
     this.setState({nbLoop: this.state.nbLoop + 1})
     if (this.state.nbLoop < nbLoopGlobal) {
       this.setState({currentWordIndex: 0})
+      this.setModifiers()
       this.speakWord(this.getWord())
     } else {
       console.log('Finish loop')
@@ -232,20 +234,7 @@ class PlaybackScreen extends React.Component {
     })
   }
 
-  // _speakTranslationWithTimeout (word) {
-  //   return new Promise((resolve, reject) => {
-  //     this.speakWordInLanguage(word, 'th-TH', 0.15).then(() => BackgroundTimer.setTimeout(resolve, 2000))
-  //   })
-  // }
-
   speakTranslation (word) {
-    // return new Promise((resolve, reject) => {
-    //   this._speakTranslationWithTimeout(word)
-    //     .then(() => this._speakTranslationWithTimeout(word))
-    //     .then(() => this._speakTranslationWithTimeout(word))
-    //     .then(resolve)
-    // })
-
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
@@ -262,7 +251,6 @@ class PlaybackScreen extends React.Component {
   }
 
   speakWord (word) {
-    this.setModifiers()
     this.setState({currentWord: word})
     console.log(word)
     if (!word.translation) {
@@ -274,20 +262,6 @@ class PlaybackScreen extends React.Component {
       .then(() => this.speakTranslation(word.translation))
       .then(() => this.onFinishPlayed())
   }
-
-  // translateWord (word) {
-  //   return new Promise((resolve, reject) => {
-  //     this.api.translate(word).then((response) => {
-  //       var json = response.data
-  //       var translation = json.sentences[0].trans
-  //       console.log(translation)
-  //       resolve({
-  //         original: word.orig,
-  //         translation
-  //       })
-  //     }, reject)
-  //   })
-  // }
 
   translateWords (words) {
     return new Promise((resolve, reject) => {

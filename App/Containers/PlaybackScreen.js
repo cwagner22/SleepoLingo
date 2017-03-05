@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, ScrollView, Text } from 'react-native'
+import { View, ScrollView, Text, Slider } from 'react-native'
 import { connect } from 'react-redux'
 import VolumeSlider from '../Components/VolumeSlider'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -24,14 +24,6 @@ import styles from './Styles/PlaybackScreenStyle'
 
 const nbLoopGlobal = 10
 const nbLoopTranslation = 4
-
-const translationTimeout = 5000
-const originalTimeout = 1000
-const nextWordTimeout = 4000
-const repeatAllTimeout = 10000
-
-const rateOriginal = 0.2
-const rateTranslation = 0.2 // 0.1 - 0.3
 
 class PlaybackScreen extends React.Component {
 
@@ -56,6 +48,57 @@ class PlaybackScreen extends React.Component {
     // Tts.voices().then(voices => console.log(voices))
 
     this.playLesson()
+  }
+
+  /*
+   *
+   *
+   *        +
+   * startY |\
+   *        | \
+   *        |  \
+   *        |   \
+   *        |    \
+   *        |     \
+   *        |      \
+   *        |       \
+   *   endY |        \________
+   *        |
+   *        |
+   *        +--------------------------+
+   *        startX   endX
+   *
+   *
+   * */
+  linearOffsetFn (x, startX, endX, startY, endY) {
+    return startY - (startY - endY) * (x / (endX - startX))
+  }
+
+  setModifiers () {
+    this.originalTimeout = 1000
+
+    const x = this.state.nbLoop
+    const startX = 0
+    const endX = nbLoopGlobal - 1
+
+    this.volume = this.linearOffsetFn(x, startX, endX, 1, 0.4)
+
+    const translationTimeoutStart = 1000
+    const translationTimeoutEnd = 5000
+    this.translationTimeout = this.linearOffsetFn(x, startX, endX, translationTimeoutStart, translationTimeoutEnd)
+
+    const nextWordTimeoutStart = 2000
+    const nextWordTimeoutEnd = 4000
+    this.nextWordTimeout = this.linearOffsetFn(x, startX, endX, nextWordTimeoutStart, nextWordTimeoutEnd)
+
+    const repeatAllTimeoutStart = 4000
+    const repeatAllTimeoutEnd = 10000
+    this.repeatAllTimeout = this.linearOffsetFn(x, startX, endX, repeatAllTimeoutStart, repeatAllTimeoutEnd)
+
+    const rateStart = 0.3
+    const rateEnd = 0.2
+    this.rateOriginal = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
+    this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
   }
 
   playLesson () {
@@ -100,13 +143,13 @@ class PlaybackScreen extends React.Component {
       BackgroundTimer.setTimeout(() => {
         console.log('next')
         this.speakWord(word)
-      }, nextWordTimeout)
+      }, this.nextWordTimeout)
     } else {
       // Restart
       BackgroundTimer.setTimeout(() => {
         console.log('restart')
         this.start()
-      }, repeatAllTimeout)
+      }, this.repeatAllTimeout)
     }
   }
 
@@ -131,7 +174,7 @@ class PlaybackScreen extends React.Component {
 
       // Play the sound with an onEnd callback
       whoosh
-        .setVolume(this.refs.volumeSlider.state.value)
+        .setVolume(this.volume * this.refs.volumeSlider.state.value)
         .play((success) => {
           if (success) {
             console.log('successfully finished playing')
@@ -184,8 +227,8 @@ class PlaybackScreen extends React.Component {
 
   speakOriginal (word) {
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'en-US', rateOriginal).then(
-        () => BackgroundTimer.setTimeout(resolve, originalTimeout))
+      this.speakWordInLanguage(word, 'en-US', this.rateOriginal).then(
+        () => BackgroundTimer.setTimeout(resolve, this.originalTimeout))
     })
   }
 
@@ -206,11 +249,11 @@ class PlaybackScreen extends React.Component {
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', rateTranslation)
+      this.speakWordInLanguage(word, 'th-TH', this.rateTranslation)
         .then(() => {
           // Repeat translation 3 times
           if (this.nbTranslation < nbLoopTranslation) {
-            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), translationTimeout)
+            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), this.translationTimeout)
           } else {
             resolve()
           }
@@ -219,6 +262,7 @@ class PlaybackScreen extends React.Component {
   }
 
   speakWord (word) {
+    this.setModifiers()
     this.setState({currentWord: word})
     console.log(word)
     if (!word.translation) {
@@ -328,10 +372,10 @@ class PlaybackScreen extends React.Component {
   renderTime () {
     if (this.state.results) {
       const wordDuration = 2000 // Average time to load one file + play
-      const originalDuration = wordDuration + originalTimeout
-      const translationDuration = (wordDuration + translationTimeout) * nbLoopTranslation + nextWordTimeout
+      const originalDuration = wordDuration + this.originalTimeout
+      const translationDuration = (wordDuration + this.translationTimeout) * nbLoopTranslation + this.nextWordTimeout
       const loopDuration = (originalDuration + translationDuration) * this.state.results.length
-      const totalDuration = (loopDuration + repeatAllTimeout) * nbLoopGlobal
+      const totalDuration = (loopDuration + this.repeatAllTimeout) * nbLoopGlobal
 
       return (
         <View>
@@ -352,6 +396,12 @@ class PlaybackScreen extends React.Component {
         <View>
           {this.renderTime()}
           <VolumeSlider ref='volumeSlider' />
+          <View>
+            <Text>Speed</Text>
+            <Slider
+              {...this.props}
+              onValueChange={(value) => this.setState({value: value})} />
+          </View>
         </View>
       </View>
     )

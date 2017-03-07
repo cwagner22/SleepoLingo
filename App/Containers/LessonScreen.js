@@ -15,10 +15,11 @@ import styles from './Styles/LessonScreenStyle'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
 const lessons = [
-  require('../lesson1.json'),
-  require('../lesson2.json'),
-  require('../lesson3.json'),
-  require('../lesson4.json')
+  require('../Lessons/lesson1.json'),
+  require('../Lessons/lesson2.json'),
+  require('../Lessons/lesson3.json'),
+  require('../Lessons/lesson4.json'),
+  require('../Lessons/lesson5.json')
 ]
 
 class LessonScreen extends React.Component {

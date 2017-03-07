@@ -22,8 +22,8 @@ import md5Hex from 'md5-hex'
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
 
-const nbLoopGlobal = 10
-const nbLoopTranslation = 4
+const nbLoopGlobal = 3
+const nbLoopTranslation = 3
 
 class PlaybackScreen extends React.Component {
 
@@ -55,6 +55,7 @@ class PlaybackScreen extends React.Component {
    * Used to get a value proportionally to the time (nb loops)
    * Currently doesn't work if start = end. Also doesn't support x > endX for now
    * Maybe can be improved, I'm not the best at Maths ¯\_ツ_/¯
+   * For fun (online graph): https://www.desmos.com/calculator/ivo13pufam
    *        +
    * startY |\
    *        | \
@@ -85,16 +86,19 @@ class PlaybackScreen extends React.Component {
     this.volume = this.linearOffsetFn(x, startX, endX, 1, 0.4)
 
     const translationTimeoutStart = 1000
-    const translationTimeoutEnd = 5000
-    this.translationTimeout = this.linearOffsetFn(x, startX, endX, translationTimeoutStart, translationTimeoutEnd)
+    // const translationTimeoutEnd = 5000
+    // this.translationTimeout = this.linearOffsetFn(x, startX, endX, translationTimeoutStart, translationTimeoutEnd)
+    this.translationTimeout = translationTimeoutStart
 
     const nextWordTimeoutStart = 2000
-    const nextWordTimeoutEnd = 4000
-    this.nextWordTimeout = this.linearOffsetFn(x, startX, endX, nextWordTimeoutStart, nextWordTimeoutEnd)
+    // const nextWordTimeoutEnd = 4000
+    // this.nextWordTimeout = this.linearOffsetFn(x, startX, endX, nextWordTimeoutStart, nextWordTimeoutEnd)
+    this.nextWordTimeout = nextWordTimeoutStart
 
     const repeatAllTimeoutStart = 4000
-    const repeatAllTimeoutEnd = 10000
-    this.repeatAllTimeout = this.linearOffsetFn(x, startX, endX, repeatAllTimeoutStart, repeatAllTimeoutEnd)
+    // const repeatAllTimeoutEnd = 10000
+    // this.repeatAllTimeout = this.linearOffsetFn(x, startX, endX, repeatAllTimeoutStart, repeatAllTimeoutEnd)
+    this.repeatAllTimeout = repeatAllTimeoutStart
 
     const rateStart = 0.3
     const rateEnd = 0.2

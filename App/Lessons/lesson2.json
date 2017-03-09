@@ -1,207 +1,98 @@
 {
   id: 1,
-  title: 'Most used words',
+  title: 'Pronouns + Basic Auxiliary Verbs',
   words: [
     {
-      orig: "the"
-    }, {
-      orig: "of"
-    }, {
-      orig: "and"
-    }, {
-      orig: "a"
-    }, {
-      orig: "to"
-    }, {
-      orig: "in"
-    }, {
-      orig: "is"
-    }, {
-      orig: "you"
-    }, {
-      orig: "that"
-    }, {
-      orig: "it"
-    }, {
-      orig: "he"
-    }, {
-      orig: "was"
-    }, {
-      orig: "for"
-    }, {
-      orig: "on"
-    }, {
-      orig: "are"
-    }, {
-      orig: "as"
-    }, {
-      orig: "with"
-    }, {
-      orig: "his"
-    }, {
-      orig: "they"
-    }, {
-      orig: "I"
-    }, {
-      orig: "at"
-    }, {
-      orig: "be"
-    }, {
-      orig: "this"
-    }, {
-      orig: "have"
-    }, {
-      orig: "from"
-    }, {
-      orig: "or"
-    }, {
-      orig: "one"
-    }, {
-      orig: "had"
-    }, {
-      orig: "by"
-    }, {
-      orig: "word"
-    }, {
-      orig: "but"
-    }, {
-      orig: "not"
-    }, {
-      orig: "what"
-    }, {
-      orig: "all"
-    }, {
-      orig: "were"
-    }, {
-      orig: "we"
-    }, {
-      orig: "when"
-    }, {
-      orig: "your"
-    }, {
-      orig: "can"
-    }, {
-      orig: "said"
-    }, {
-      orig: "there"
-    }, {
-      orig: "use"
-    }, {
-      orig: "an"
-    }, {
-      orig: "each"
-    }, {
-      orig: "which"
-    }, {
-      orig: "she"
-    }, {
-      orig: "do"
-    }, {
-      orig: "how"
-    }, {
-      orig: "their"
-    }, {
-      orig: "if"
-    }, {
-      orig: "will"
-    }, {
-      orig: "up"
-    }, {
-      orig: "other"
-    }, {
-      orig: "about"
-    }, {
-      orig: "out"
-    }, {
-      orig: "many"
-    }, {
-      orig: "then"
-    }, {
-      orig: "them"
-    }, {
-      orig: "these"
-    }, {
-      orig: "so"
-    }, {
-      orig: "some"
-    }, {
-      orig: "her"
-    }, {
-      orig: "would"
-    }, {
-      orig: "make"
-    }, {
-      orig: "like"
-    }, {
-      orig: "him"
-    }, {
-      orig: "into"
-    }, {
-      orig: "time"
-    }, {
-      orig: "has"
-    }, {
-      orig: "look"
-    }, {
-      orig: "two"
-    }, {
-      orig: "more"
-    }, {
-      orig: "write"
-    }, {
-      orig: "go"
-    }, {
-      orig: "see"
-    }, {
-      orig: "number"
-    }, {
-      orig: "no"
-    }, {
-      orig: "way"
-    }, {
-      orig: "could"
-    }, {
-      orig: "people"
-    }, {
-      orig: "my"
-    }, {
-      orig: "than"
-    }, {
-      orig: "first"
-    }, {
-      orig: "water"
-    }, {
-      orig: "been"
-    }, {
-      orig: "call"
-    }, {
-      orig: "who"
-    }, {
-      orig: "oil"
-    }, {
-      orig: "its"
-    }, {
-      orig: "now"
-    }, {
-      orig: "find"
-    }, {
-      orig: "long"
-    }, {
-      orig: "down"
-    }, {
-      orig: "day"
-    }, {
-      orig: "did"
-    }, {
-      orig: "get"
-    }, {
-      orig: "come"
-    }, {
-      orig: "made"
-    }, {
-      orig: "may"
-    }, {
-      orig: "part"
-    }
-  ]
-}
+      orig: "I am"
+    },
+    {
+      orig: "I have"
+    },
+    {
+      orig: "You are"
+    },
+    {
+      orig: "You have"
+    },
+    {
+      orig: "He is"
+    },
+    {
+      orig: "He has"
+    },
+    {
+      orig: "She is"
+    },
+    {
+      orig: "She has"
+    },
+    {
+      orig: "we are"
+    },
+    {
+      orig: "we have"
+    },
+    {
+      orig: "you are"
+    },
+    {
+      orig: "you have"
+    },
+    {
+      orig: "they are"
+    },
+    {
+      orig: "they have"
+    },
+    {
+      orig: "I am John"
+    },
+    {
+      orig: "I am hungry"
+    },
+    {
+      orig: "I am full"
+    },
+    {
+      orig: "I am clever"
+    },
+    {
+      orig: "I have an apple"
+    },
+    {
+      orig: "I am lucky"
+    },
+    {
+      orig: "You are beautiful"
+    },
+    {
+      orig: "You are tall"
+    },
+    {
+      orig: "You are nice"
+    },
+    {
+      orig: "She is 24 years old"
+    },
+    {
+      orig: "we are the best"
+    },
+    {
+      orig: "they have kids"
+    },
+    {
+      orig: "they have arrived"
+    },
+    {
+      orig: "it's good"
+    },
+    {
+      orig: "it's very good"
+    },
+    {
+      orig: "it's raining"
+    },
+    {
+      orig: "it's crazy"
+    },
+  ]}

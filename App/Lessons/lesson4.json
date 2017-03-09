@@ -1,26 +1,56 @@
 {
   id: 3,
-  title: 'Useful sentences',
+  title: 'Questions',
   words: [
     {
-      orig: "Good morning"
+      orig: "What?"
     },
     {
-      orig: "Hello"
+      orig: "What is that?"
     },
     {
-      orig: "Welcome"
+      orig: "What is your name?"
     },
     {
-      orig: "How are you?"
+      orig: "Who?"
     },
     {
-      orig: "I’m fine"
+      orig: "Who are you?"
     },
     {
-      orig: "What's your name?"
+      orig: "Who is him?"
     },
     {
-      orig: "My name is John"
+      orig: "When?"
+    },
+    {
+      orig: "When is that?"
+    },
+    {
+      orig: "When are you coming?"
+    },
+    {
+      orig: "Where?"
+    },
+    {
+      orig: "Where is this place?"
+    },
+    {
+      orig: "Where is him?"
+    },
+    {
+      orig: "Why?"
+    },
+    {
+      orig: "Why so much?"
+    },
+    {
+      orig: "Why did you do that?"
+    },
+    {
+      orig: "How?"
+    },
+    {
+      orig: "How can I go there?"
     }
   ]}

@@ -18,8 +18,7 @@ const lessons = [
   require('../Lessons/lesson1.json'),
   require('../Lessons/lesson2.json'),
   require('../Lessons/lesson3.json'),
-  require('../Lessons/lesson4.json'),
-  require('../Lessons/lesson5.json')
+  require('../Lessons/lesson4.json')
 ]
 
 class LessonScreen extends React.Component {

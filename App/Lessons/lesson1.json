@@ -1,17 +1,65 @@
 {
   id: 0,
-  title: 'Grammar',
-  words: [{
-    orig: 'The apple is red'
-  }, {
-    orig: 'It is John’s apple'
-  }, {
-    orig: 'I give John the apple.'
-  }, {
-    orig: 'We give him the apple.'
-  }, {
-    orig: 'He gives it to John.'
-  }, {
-    orig: 'She gives it to him.'
-  }]
-}
+  title: 'Essentials',
+  words: [
+    {
+      orig: "Hello"
+    },
+    {
+      orig: "Good morning"
+    },
+    {
+      orig: "Goodbye"
+    },
+    {
+      orig: "See you later"
+    },
+    {
+      orig: "Yes"
+    },
+    {
+      orig: "No"
+    },
+    {
+      orig: "Excuse me"
+    },
+    {
+      orig: "Thanks"
+    },
+    {
+      orig: "Thanks very much"
+    },
+    {
+      orig: "You're welcome"
+    },
+    {
+      orig: "Ok"
+    },
+    {
+      orig: "How much is it?"
+    },
+    {
+      orig: "Sorry"
+    },
+    {
+      orig: "I don't understand"
+    },
+    {
+      orig: "I get it"
+    },
+    {
+      orig: "I don't know"
+    },
+    {
+      orig: "Excuse me, where are the toilets?"
+    },
+    {
+      orig: "Happy New Year!"
+    },
+    {
+      orig: "Happy birthday!"
+    },
+    {
+      orig: "Congratulations!"
+    }
+  ]}

@@ -1,104 +1,113 @@
 {
   id: 2,
-  title: 'Basic verbs+pronouns',
+  title: 'Numbers',
   words: [
     {
-      orig: "I am"
+      orig: "zero"
     },
     {
-      orig: "I am John"
+      orig: "one"
     },
     {
-      orig: "I am hungry"
+      orig: "two"
     },
     {
-      orig: "I am full"
+      orig: "three"
     },
     {
-      orig: "I have"
+      orig: "four"
     },
     {
-      orig: "I have an apple"
+      orig: "five"
     },
     {
-      orig: "I want to order"
+      orig: "six"
     },
     {
-      orig: "I want to buy"
+      orig: "seven"
     },
     {
-      orig: "You are"
+      orig: "eight"
     },
     {
-      orig: "You are beautiful"
+      orig: "nine"
     },
     {
-      orig: "You are tall"
+      orig: "ten"
     },
     {
-      orig: "You are smart"
+      orig: "eleven"
     },
     {
-      orig: "You are nice"
+      orig: "twelve"
     },
     {
-      orig: "You have"
+      orig: "thirteen"
     },
     {
-      orig: "He is"
+      orig: "Fourteen"
     },
     {
-      orig: "He is lucky"
+      orig: "Fifteen"
     },
     {
-      orig: "He has"
+      orig: "Sixteen"
     },
     {
-      orig: "She is"
+      orig: "Seventeen"
     },
     {
-      orig: "She is 24 years old"
+      orig: "Eighteen"
     },
     {
-      orig: "She has"
+      orig: "Nineteen"
     },
     {
-      orig: "it is"
+      orig: "Twenty"
     },
     {
-      orig: "it's good"
+      orig: "Twenty-one	"
     },
     {
-      orig: "it's very good"
+      orig: "Thirty"
     },
     {
-      orig: "it has"
+      orig: "Thirty-one"
     },
     {
-      orig: "we are"
+      orig: "Forty"
     },
     {
-      orig: "we are the best"
+      orig: "Fifty"
     },
     {
-      orig: "we have"
+      orig: "Sixty"
     },
     {
-      orig: "you are"
+      orig: "Seventy"
     },
     {
-      orig: "you have"
+      orig: "Eighty"
     },
     {
-      orig: "they are"
+      orig: "Ninety"
     },
     {
-      orig: "they have"
+      orig: "One hundred"
     },
     {
-      orig: "they have kids"
+      orig: "One hundred and five"
     },
     {
-      orig: "they have arrived"
+      orig: "Two hundred"
     },
+    {
+      orig: "One thousand"
+    },
+    {
+      orig: "One thousand five hundred"
+    },
+    {
+      orig: "Ten thousand"
+    }
   ]}

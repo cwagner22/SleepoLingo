@@ -1,0 +1,65 @@
+{
+  id: 6,
+  title: 'Conversation (Archive?)',
+  words: [
+    {
+      orig: "Hello. How are you?"
+    },
+    {
+      orig: "Hello. I'm fine, thank you"
+    },
+    {
+      orig: "Do you speak Thai?"
+    },
+    {
+      orig: "No, I don't speak Thai"
+    },
+    {
+      orig: "Only a little bit"
+    },
+    {
+      orig: "Where do you come from?"
+    },
+    {
+      orig: "What is your nationality?"
+    },
+    {
+      orig: "I am English"
+    },
+    {
+      orig: "And you, do you live here?"
+    },
+    {
+      orig: "Yes, I live here"
+    },
+    {
+      orig: "My name is Sarah, what's your name?"
+    },
+    {
+      orig: "What are you doing here?"
+    },
+    {
+      orig: "I am on holiday"
+    },
+    {
+      orig: "We are on holiday"
+    },
+    {
+      orig: "I am on a business trip"
+    },
+    {
+      orig: "I work here"
+    },
+    {
+      orig: "We work here"
+    },
+    {
+      orig: "Where are the good places to go out and eat?"
+    },
+    {
+      orig: "Is there a museum in the neighbourhood?"
+    },
+    {
+      orig: "Where could I get an internet connection?"
+    }
+  ]}

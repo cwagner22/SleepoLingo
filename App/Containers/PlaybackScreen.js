@@ -111,9 +111,6 @@ class PlaybackScreen extends React.Component {
     this.translateWordsGoogle(words)
       .then((results) => {
         console.log(results)
-        // this.showResult(result, label || `${endpoint}(${args.join(', ')})`)
-        // this.setState({ translation })
-
         this.setState({results: results})
         this.setState({nbLoop: -1})
         this.start()
@@ -128,13 +125,18 @@ class PlaybackScreen extends React.Component {
   }
 
   start () {
-    this.setState({nbLoop: this.state.nbLoop + 1})
+    this.setState({
+      nbLoop: this.state.nbLoop + 1,
+      currentWordIndex: 0
+    })
+    this.setModifiers()
+    this.speakWord(this.getWord())
+  }
+
+  restart () {
     if (this.state.nbLoop < nbLoopGlobal) {
-      this.setState({currentWordIndex: 0})
-      this.setModifiers()
-      this.speakWord(this.getWord())
-    } else {
-      console.log('Finish loop')
+      this.speakOriginal('Restarting the lesson')
+        .then(() => this.start())
     }
   }
 
@@ -145,48 +147,30 @@ class PlaybackScreen extends React.Component {
 
     if (word) {
       // Play next word
-      // this.setState({queue: this.state.queue})
-      BackgroundTimer.setTimeout(() => {
-        console.log('next')
-        this.speakWord(word)
-      }, this.nextWordTimeout)
+      BackgroundTimer.setTimeout(() => this.speakWord(word), this.nextWordTimeout)
     } else {
       // Restart
-      BackgroundTimer.setTimeout(() => {
-        console.log('restart')
-        this.start()
-      }, this.repeatAllTimeout)
+      BackgroundTimer.setTimeout(() => this.restart(), this.repeatAllTimeout)
     }
   }
 
-  // showResult (response: Object, title: string = 'Response') {
-  //   this.refs.container.scrollTo({x: 0, y: 0, animated: true})
-  //   if (response.ok) {
-  //     this.refs.result.setState({message: FJSON.plain(response.data), title: title})
-  //   } else {
-  //     this.refs.result.setState({message: `${response.problem} - ${response.status}`, title: title})
-  //   }
-  // }
-
   playFile (fileName, resolve, reject) {
-    var whoosh = new Sound('cache/' + fileName, Sound.DOCUMENT, (error) => {
+    var sound = new Sound('cache/' + fileName, Sound.DOCUMENT, (error) => {
       if (error) {
         console.log('failed to load the sound', error)
-        return
+        return reject()
       }
       // loaded successfully
       console.log(
-        'duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels())
+        'duration in seconds: ' + sound.getDuration() + 'number of channels: ' + sound.getNumberOfChannels())
 
       // Play the sound with an onEnd callback
-      whoosh
+      sound
         .setVolume(this.volume * this.refs.volumeSlider.state.value)
         .play((success) => {
           if (success) {
-            console.log('successfully finished playing')
             resolve()
           } else {
-            console.log('playback failed due to audio decoding errors')
             reject()
           }
         })
@@ -350,10 +334,12 @@ class PlaybackScreen extends React.Component {
   renderTime () {
     if (this.state.results) {
       const wordDuration = 2000 // Average time to load one file + play
+      const repeatingSentenceDuration = 2000 // Average time to play repeating sentence
       const originalDuration = wordDuration + this.originalTimeout
       const translationDuration = (wordDuration + this.translationTimeout) * nbLoopTranslation + this.nextWordTimeout
       const loopDuration = (originalDuration + translationDuration) * this.state.results.length
-      const totalDuration = (loopDuration + this.repeatAllTimeout) * nbLoopGlobal
+      const totalDuration = (loopDuration + this.repeatAllTimeout + repeatingSentenceDuration + this.originalTimeout) *
+        (nbLoopGlobal - 1) + loopDuration
 
       return (
         <View>

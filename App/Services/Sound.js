@@ -1,15 +1,7 @@
 // @flow
 
 import Sound from 'react-native-sound'
-
-class Deferred {
-  constructor () {
-    this.promise = new Promise((resolve, reject) => {
-      this.reject = reject
-      this.resolve = resolve
-    })
-  }
-}
+import Deferred from '../Lib/Deferred'
 
 const loadSound = (fileName, volume) => {
   var dfd = new Deferred()

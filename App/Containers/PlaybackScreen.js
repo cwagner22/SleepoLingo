@@ -8,8 +8,9 @@ import VolumeSlider from '../Components/VolumeSlider'
 
 import API from '../Services/TranslateApi'
 import BingAPI from '../Services/BingApi'
-import Timer from '../Lib/Timer'
 import loadSound from '../Services/Sound'
+import makeCancelable from '../Lib/MakeCancelable'
+import Deferred from '../Lib/Deferred'
 
 // external libs
 import Tts from 'react-native-tts'
@@ -17,6 +18,7 @@ import _ from 'lodash'
 import RNFS from 'react-native-fs'
 import Sound from 'react-native-sound'
 import md5Hex from 'md5-hex'
+import BackgroundTimer from 'react-native-background-timer'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
@@ -25,7 +27,6 @@ const nbLoopGlobal = 3
 const nbLoopTranslation = 3
 
 class PlaybackScreen extends React.Component {
-
   constructor (props: Object) {
     super(props)
     this.api = API.create()
@@ -33,6 +34,8 @@ class PlaybackScreen extends React.Component {
     this.state = {
       // Set your state here
     }
+    this._cancelablePromise = null
+    this._ttsDeferred = null
 
     // Enable playback in silence mode (iOS only)
     Sound.setCategory('Playback', true)
@@ -41,7 +44,7 @@ class PlaybackScreen extends React.Component {
     Tts.addEventListener('tts-finish', (event) => {
       console.log('finish', event)
       // Resolve promise
-      this.ttsPromise.resolve()
+      this.ttsDeferred.resolve()
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
     // Tts.voices().then(voices => console.log(voices))
@@ -50,14 +53,26 @@ class PlaybackScreen extends React.Component {
   }
 
   componentWillUnmount () {
-    this.callMethodTimer('cancel')
+    this.pausePlayback()
   }
 
-  callMethodTimer (method) {
-    this.originalTimeoutTimer && this.originalTimeoutTimer[method]()
-    this.nextWordTimeoutTimer && this.nextWordTimeoutTimer[method]()
-    this.repeatAllTimeoutTimer && this.repeatAllTimeoutTimer[method]()
-    this.translationTimeoutTimer && this.translationTimeoutTimer[method]()
+  delay (ms) {
+    return this.makeCancelable(
+      new Promise(function (resolve, reject) {
+        BackgroundTimer.setTimeout(resolve, ms)
+      })
+    )
+  }
+
+  makeCancelable (promise) {
+    this._cancelablePromise = makeCancelable(promise)
+    this._cancelablePromise.promise
+      .catch((err) => {
+        if (!err.isCanceled) {
+          console.log(err.stack)
+        }
+      })
+    return this._cancelablePromise.promise
   }
 
   /*
@@ -126,7 +141,7 @@ class PlaybackScreen extends React.Component {
         this.start()
       })
       .catch(function (err) {
-        console.log('Failed:', err)
+        console.log('Failed:', err.stack)
       })
   }
 
@@ -157,63 +172,67 @@ class PlaybackScreen extends React.Component {
 
     if (word) {
       // Play next word
-      this.nextWordTimeoutTimer = new Timer(() => this.speakWord(word), this.nextWordTimeout)
+      this.delay(this.nextWordTimeout).then(() => this.speakWord(word))
     } else {
       // Restart
-      this.repeatAllTimeoutTimer = new Timer(() => this.restart(), this.repeatAllTimeout)
+      this.delay(this.repeatAllTimeout).then(() => this.restart())
     }
   }
 
+  playTTS (word, language, rate) {
+    return Tts.setDefaultRate(rate)
+      .then(() => Tts.setDefaultLanguage(language))
+      .then(() => {
+        // Will be resolved once plaback finished
+        this._ttsDeferred = new Deferred()
+        Tts.speak(word)
+      })
+  }
+
+  downloadAudioIfNeeded (word, language, rate) {
+    const fileName = md5Hex(word) + '.mp3'
+    const path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
+    const url = this.api.ttsURL(word, language, rate)
+
+    const promise = RNFS.exists(path)
+      .then((exists) => {
+        if (!exists) {
+          // write the file
+          return RNFS.downloadFile({fromUrl: url, toFile: path}).promise
+            .then((success) => {
+              console.log('FILE WRITTEN!', url, path)
+              return fileName
+            })
+        }
+
+        return fileName
+      })
+
+    return this.makeCancelable(promise)
+  }
+
   speakWordInLanguage (word, language, rate) {
-    return new Promise((resolve, reject) => {
-      var deviceTTS = false
-      if (deviceTTS) {
-        Tts.setDefaultRate(rate)
-          .then(() => Tts.setDefaultLanguage(language))
-          .then(() => {
-            // Will be resolved once plaback finished
-            this.ttsPromise = {resolve, reject}
-            Tts.speak(word)
-          })
-      } else {
-        const fileName = md5Hex(word) + '.mp3'
-
-        // or DocumentDirectoryPath for android
-        var path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
-        const url = this.api.ttsURL(word, language, rate)
-
-        RNFS.exists(path)
-          .then((exists) => {
-            if (!exists) {
-              // write the file
-              RNFS.downloadFile({fromUrl: url, toFile: path}).promise
-                .then((success) => {
-                  console.log('FILE WRITTEN!', url, path)
-                  this.sound = loadSound(fileName, this.volume)
-                  this.sound.promise.then(resolve)
-                })
-                .catch((err) => {
-                  console.log(err.message)
-                })
-            } else {
-              this.sound = loadSound(fileName, this.volume)
-              this.sound.promise.then(resolve)
-            }
-          })
-      }
-    })
+    var deviceTTS = false
+    if (deviceTTS) {
+      return this.playTTS()
+    } else {
+      return this.downloadAudioIfNeeded(word, language, rate)
+        .then((fileName) => {
+          this._sound = loadSound(fileName, this.volume)
+          return this.makeCancelable(this._sound.promise)
+        })
+    }
   }
 
   speakOriginal (word) {
-    return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'en-US', this.rateOriginal)
-        .then(() => {
-          this.originalTimeoutTimer = new Timer(resolve, this.originalTimeout)
-        })
-    })
+    return this.speakWordInLanguage(word, 'en-US', this.rateOriginal)
+      .then(() => {
+        return this.delay(this.originalTimeout)
+      })
   }
 
   speakTranslation (word) {
+    // todo: chain promises?
     this.nbTranslation++
 
     return new Promise((resolve, reject) => {
@@ -221,8 +240,9 @@ class PlaybackScreen extends React.Component {
         .then(() => {
           // Repeat translation 3 times
           if (this.nbTranslation < nbLoopTranslation) {
-            this.translationTimeoutTimer = new Timer(() => this.speakTranslation(word).then(resolve),
-              this.translationTimeout)
+            this.delay(this.translationTimeout)
+              .then(() => this.speakTranslation(word))
+              .then(resolve)
           } else {
             resolve()
           }
@@ -240,12 +260,14 @@ class PlaybackScreen extends React.Component {
     this.nbTranslation = 0
     this.speakOriginal(word.original)
       .then(() => this.speakTranslation(word.translation))
+      .then(() => console.log('finished'))
       .then(() => this.onFinishPlayed())
   }
 
   translateWords (words) {
-    return new Promise((resolve, reject) => {
-      this.bingAPI.translateArray(words).then((response) => {
+    this._cancelablePromise = makeCancelable(this.bingAPI.translateArray(words))
+    return this._cancelablePromise.promise
+      .then((response) => {
         const wordsWithTranslation = []
         const results = response.data
         for (var i = 0; i < results.length; i++) {
@@ -255,9 +277,8 @@ class PlaybackScreen extends React.Component {
             translation: res.TranslatedText
           })
         }
-        resolve(wordsWithTranslation)
-      }, reject)
-    })
+        return wordsWithTranslation
+      })
   }
 
   lowerCaseFirstLetter (word) {
@@ -270,8 +291,9 @@ class PlaybackScreen extends React.Component {
   }
 
   translateWordsGoogle (words) {
-    return new Promise((resolve, reject) => {
-      this.api.translateWords(words.map(this.lowerCaseFirstLetter)).then((response) => {
+    this._cancelablePromise = makeCancelable(this.api.translateWords(words.map(this.lowerCaseFirstLetter)))
+    return this._cancelablePromise.promise
+      .then((response) => {
         const wordsWithTranslation = []
         const results = eval(response.data)[0] // eslint-disable-line
         for (var i = 0; i < results.length; i++) {
@@ -281,9 +303,8 @@ class PlaybackScreen extends React.Component {
             translation: res[0][0][0]
           })
         }
-        resolve(wordsWithTranslation)
-      }, reject)
-    })
+        return wordsWithTranslation
+      })
   }
 
   showWord () {
@@ -317,16 +338,13 @@ class PlaybackScreen extends React.Component {
 
   resumePlayback () {
     this.setState({isPaused: false})
-    this.sound && this.sound.resume()
-    this.callMethodTimer('resume')
+    // Restart word playback from original
+    this.speakWord(this.getWord())
   }
 
   pausePlayback () {
-    // todo: Handle network requests
-    // Wrap: https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html
-    this.sound && this.sound.pause()
-
-    this.callMethodTimer('pause')
+    this._sound && this._sound.pause()
+    this._cancelablePromise.cancel()
     this.setState({isPaused: true})
   }
 

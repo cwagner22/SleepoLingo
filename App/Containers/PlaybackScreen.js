@@ -1,20 +1,19 @@
 // @flow
 
 import React from 'react'
-import { View, ScrollView, Text, Slider } from 'react-native'
+import { View, ScrollView, Text, Slider, TouchableOpacity } from 'react-native'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import VolumeSlider from '../Components/VolumeSlider'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+
 import API from '../Services/TranslateApi'
 import BingAPI from '../Services/BingApi'
-import BackgroundTimer from 'react-native-background-timer'
+import Timer from '../Lib/Timer'
+import loadSound from '../Services/Sound'
 
 // external libs
-// import { Actions as NavigationActions } from 'react-native-router-flux'
 import Tts from 'react-native-tts'
 import _ from 'lodash'
-// import responsiveVoice from '../responsivevoice.src'
 import RNFS from 'react-native-fs'
 import Sound from 'react-native-sound'
 import md5Hex from 'md5-hex'
@@ -48,6 +47,17 @@ class PlaybackScreen extends React.Component {
     // Tts.voices().then(voices => console.log(voices))
 
     this.playLesson()
+  }
+
+  componentWillUnmount () {
+    this.callMethodTimer('cancel')
+  }
+
+  callMethodTimer (method) {
+    this.originalTimeoutTimer && this.originalTimeoutTimer[method]()
+    this.nextWordTimeoutTimer && this.nextWordTimeoutTimer[method]()
+    this.repeatAllTimeoutTimer && this.repeatAllTimeoutTimer[method]()
+    this.translationTimeoutTimer && this.translationTimeoutTimer[method]()
   }
 
   /*
@@ -147,34 +157,11 @@ class PlaybackScreen extends React.Component {
 
     if (word) {
       // Play next word
-      BackgroundTimer.setTimeout(() => this.speakWord(word), this.nextWordTimeout)
+      this.nextWordTimeoutTimer = new Timer(() => this.speakWord(word), this.nextWordTimeout)
     } else {
       // Restart
-      BackgroundTimer.setTimeout(() => this.restart(), this.repeatAllTimeout)
+      this.repeatAllTimeoutTimer = new Timer(() => this.restart(), this.repeatAllTimeout)
     }
-  }
-
-  playFile (fileName, resolve, reject) {
-    var sound = new Sound('cache/' + fileName, Sound.DOCUMENT, (error) => {
-      if (error) {
-        console.log('failed to load the sound', error)
-        return reject()
-      }
-      // loaded successfully
-      console.log(
-        'duration in seconds: ' + sound.getDuration() + 'number of channels: ' + sound.getNumberOfChannels())
-
-      // Play the sound with an onEnd callback
-      sound
-        .setVolume(this.volume * this.refs.volumeSlider.state.value)
-        .play((success) => {
-          if (success) {
-            resolve()
-          } else {
-            reject()
-          }
-        })
-    })
   }
 
   speakWordInLanguage (word, language, rate) {
@@ -202,13 +189,15 @@ class PlaybackScreen extends React.Component {
               RNFS.downloadFile({fromUrl: url, toFile: path}).promise
                 .then((success) => {
                   console.log('FILE WRITTEN!', url, path)
-                  this.playFile(fileName, resolve, reject)
+                  this.sound = loadSound(fileName, this.volume)
+                  this.sound.promise.then(resolve)
                 })
                 .catch((err) => {
                   console.log(err.message)
                 })
             } else {
-              this.playFile(fileName, resolve, reject)
+              this.sound = loadSound(fileName, this.volume)
+              this.sound.promise.then(resolve)
             }
           })
       }
@@ -217,8 +206,10 @@ class PlaybackScreen extends React.Component {
 
   speakOriginal (word) {
     return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'en-US', this.rateOriginal).then(
-        () => BackgroundTimer.setTimeout(resolve, this.originalTimeout))
+      this.speakWordInLanguage(word, 'en-US', this.rateOriginal)
+        .then(() => {
+          this.originalTimeoutTimer = new Timer(resolve, this.originalTimeout)
+        })
     })
   }
 
@@ -230,7 +221,8 @@ class PlaybackScreen extends React.Component {
         .then(() => {
           // Repeat translation 3 times
           if (this.nbTranslation < nbLoopTranslation) {
-            BackgroundTimer.setTimeout(() => this.speakTranslation(word).then(resolve), this.translationTimeout)
+            this.translationTimeoutTimer = new Timer(() => this.speakTranslation(word).then(resolve),
+              this.translationTimeout)
           } else {
             resolve()
           }
@@ -319,6 +311,78 @@ class PlaybackScreen extends React.Component {
     return !!this.state.currentWord
   }
 
+  stopPlayback () {
+    NavigationActions.lesson()
+  }
+
+  resumePlayback () {
+    this.setState({isPaused: false})
+    this.sound && this.sound.resume()
+    this.callMethodTimer('resume')
+  }
+
+  pausePlayback () {
+    // todo: Handle network requests
+    // Wrap: https://facebook.github.io/react/blog/2015/12/16/ismounted-antipattern.html
+    this.sound && this.sound.pause()
+
+    this.callMethodTimer('pause')
+    this.setState({isPaused: true})
+  }
+
+  previous () {
+
+  }
+
+  next () {
+
+  }
+
+  renderPlayPauseButton () {
+    if (this.state.isPaused) {
+      return (
+        <View>
+          <TouchableOpacity onPress={this.resumePlayback.bind(this)}>
+            <Text>RES</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View>
+          <TouchableOpacity onPress={this.pausePlayback.bind(this)}>
+            <Text>PAUSE</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
+
+  renderPlaybackButtons () {
+    if (this.isPlaying()) {
+      return (
+        <View>
+          <View>
+            <TouchableOpacity onPress={this.previous.bind(this)}>
+              <Text>PREV</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity onPress={this.stopPlayback.bind(this)}>
+              <Text>STOP</Text>
+            </TouchableOpacity>
+          </View>
+          {this.renderPlayPauseButton()}
+          <View>
+            <TouchableOpacity onPress={this.next.bind(this)}>
+              <Text>NEXT</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
+  }
+
   durationStr (ms) {
     var hours = Math.floor(ms / 1000 / 3600)
     var mins = Math.round(ms / 1000 / 60 - (hours * 60))
@@ -357,6 +421,7 @@ class PlaybackScreen extends React.Component {
           {this.showWord()}
           {this.showStatus()}
         </ScrollView>
+        {this.renderPlaybackButtons()}
         <View>
           {this.renderTime()}
           <VolumeSlider ref='volumeSlider' />

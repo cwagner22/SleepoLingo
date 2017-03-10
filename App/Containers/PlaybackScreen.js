@@ -260,7 +260,6 @@ class PlaybackScreen extends React.Component {
     this.nbTranslation = 0
     this.speakOriginal(word.original)
       .then(() => this.speakTranslation(word.translation))
-      .then(() => console.log('finished'))
       .then(() => this.onFinishPlayed())
   }
 
@@ -333,7 +332,7 @@ class PlaybackScreen extends React.Component {
   }
 
   stopPlayback () {
-    NavigationActions.lesson()
+    NavigationActions.lesson({ type: 'replace' })
   }
 
   resumePlayback () {

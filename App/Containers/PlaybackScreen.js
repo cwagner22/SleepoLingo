@@ -4,7 +4,7 @@ import React from 'react'
 import { View, ScrollView, Text, Slider, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
-import VolumeSlider from '../Components/VolumeSlider'
+import VolumeSlider from './VolumeSlider'
 
 import API from '../Services/TranslateApi'
 import BingAPI from '../Services/BingApi'
@@ -53,7 +53,12 @@ class PlaybackScreen extends React.Component {
   }
 
   componentWillUnmount () {
-    this.pausePlayback()
+    this.cancelPromises()
+  }
+
+  cancelPromises () {
+    this._sound && this._sound.cancel()
+    this._cancelablePromise.cancel()
   }
 
   delay (ms) {
@@ -81,6 +86,8 @@ class PlaybackScreen extends React.Component {
    * Currently doesn't work if start = end. Also doesn't support x > endX for now
    * Maybe can be improved, I'm not the best at Maths ¯\_ツ_/¯
    * For fun (online graph): https://www.desmos.com/calculator/ivo13pufam
+   * Might be possible to apply an easing function (http://easings.net)
+   *
    *        +
    * startY |\
    *        | \
@@ -136,8 +143,10 @@ class PlaybackScreen extends React.Component {
     this.translateWordsGoogle(words)
       .then((results) => {
         console.log(results)
-        this.setState({results: results})
-        this.setState({nbLoop: -1})
+        this.setState({
+          results: results,
+          nbLoop: -1
+        })
         this.start()
       })
       .catch(function (err) {
@@ -154,6 +163,7 @@ class PlaybackScreen extends React.Component {
       nbLoop: this.state.nbLoop + 1,
       currentWordIndex: 0
     })
+
     this.setModifiers()
     this.speakWord(this.getWord())
   }
@@ -218,8 +228,8 @@ class PlaybackScreen extends React.Component {
     } else {
       return this.downloadAudioIfNeeded(word, language, rate)
         .then((fileName) => {
-          this._sound = loadSound(fileName, this.volume)
-          return this.makeCancelable(this._sound.promise)
+          this._sound = loadSound(fileName, this.volume * this.props.volume)
+          return this._sound.promise
         })
     }
   }
@@ -232,22 +242,16 @@ class PlaybackScreen extends React.Component {
   }
 
   speakTranslation (word) {
-    // todo: chain promises?
     this.nbTranslation++
 
-    return new Promise((resolve, reject) => {
-      this.speakWordInLanguage(word, 'th-TH', this.rateTranslation)
-        .then(() => {
-          // Repeat translation 3 times
-          if (this.nbTranslation < nbLoopTranslation) {
-            this.delay(this.translationTimeout)
-              .then(() => this.speakTranslation(word))
-              .then(resolve)
-          } else {
-            resolve()
-          }
-        })
-    })
+    return this.speakWordInLanguage(word, 'th-TH', this.rateTranslation)
+      .then(() => {
+        // Repeat translation 3 times
+        if (this.nbTranslation < nbLoopTranslation) {
+          return this.delay(this.translationTimeout)
+            .then(() => this.speakTranslation(word))
+        }
+      })
   }
 
   speakWord (word) {
@@ -342,17 +346,22 @@ class PlaybackScreen extends React.Component {
   }
 
   pausePlayback () {
-    this._sound && this._sound.pause()
-    this._cancelablePromise.cancel()
+    this.cancelPromises()
     this.setState({isPaused: true})
   }
 
   previous () {
-
+    this.cancelPromises()
+    this.setState({
+      currentWordIndex: Math.max(0, this.state.currentWordIndex - 1)
+    }, () => this.speakWord(this.getWord()))
   }
 
   next () {
-
+    this.cancelPromises()
+    this.setState({
+      currentWordIndex: Math.min(this.state.results.length - 1, this.state.currentWordIndex + 1)
+    }, () => this.speakWord(this.getWord()))
   }
 
   renderPlayPauseButton () {
@@ -441,7 +450,7 @@ class PlaybackScreen extends React.Component {
         {this.renderPlaybackButtons()}
         <View>
           {this.renderTime()}
-          <VolumeSlider ref='volumeSlider' />
+          <VolumeSlider />
           <View>
             <Text>Speed</Text>
             <Slider
@@ -457,13 +466,13 @@ class PlaybackScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: state.lesson.lesson
+    lesson: state.lesson.lesson,
+    volume: state.playback.volume
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {}
-  // return bindActionCreators({selectUser: selectUser}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaybackScreen)

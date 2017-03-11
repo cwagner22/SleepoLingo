@@ -6,17 +6,17 @@ import Deferred from '../Lib/Deferred'
 const loadSound = (fileName, volume) => {
   var dfd = new Deferred()
   var sound = null
+  var _hasFinished = false
 
   const play = function () {
     sound
-    // todo: store volume slider in redux?
-    // .setVolume(this.volume * this.refs.volumeSlider.state.value)
       .setVolume(volume)
       .play((success) => {
+        _hasFinished = true
         if (success) {
           dfd.resolve()
         } else {
-          dfd.reject()
+          dfd.reject({isCanceled: true})
         }
       })
   }
@@ -39,6 +39,12 @@ const loadSound = (fileName, volume) => {
     },
     resume () {
       play()
+    },
+    cancel () {
+      sound.stop()
+      if (!_hasFinished) {
+        dfd.reject({isCanceled: true})
+      }
     }
   }
 }

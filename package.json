@@ -20,7 +20,8 @@
     "android:devices": "$ANDROID_HOME/platform-tools/adb devices",
     "android:logcat": "$ANDROID_HOME/platform-tools/adb logcat *:S ReactNative:V ReactNativeJS:V",
     "android:shake": "$ANDROID_HOME/platform-tools/adb devices | grep '\\t' | awk '{print $1}' | sed 's/\\s//g' | xargs -I {} $ANDROID_HOME/platform-tools/adb -s {} shell input keyevent 82",
-    "flow": "flow --show-all-errors"
+    "flow": "flow --show-all-errors",
+    "postinstall": "rndebugger-open"
   },
   "dependencies": {
     "apisauce": "^0.6.0",
@@ -62,6 +63,7 @@
     "nyc": "^9.0.1",
     "react-addons-test-utils": "^15.3.1",
     "react-dom": "^15.4.0",
+    "react-native-debugger-open": "^0.3.2",
     "react-native-mock": "^0.2.8",
     "reactotron-apisauce": "^1.5.2",
     "reactotron-react-native": "^1.5.2",

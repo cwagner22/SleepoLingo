@@ -14,12 +14,7 @@ import styles from './Styles/LessonScreenStyle'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
-const lessons = [
-  require('../Lessons/lesson1.json'),
-  require('../Lessons/lesson2.json'),
-  require('../Lessons/lesson3.json'),
-  require('../Lessons/lesson4.json')
-]
+import lessons from '../Lessons'
 
 class LessonScreen extends React.Component {
   api: Object
@@ -68,15 +63,24 @@ class LessonScreen extends React.Component {
     NavigationActions.playback()
   }
 
-  renderLesson (lesson: Object) {
+  renderLesson (lessonContent) {
     return (
-      <FullButton text={lesson.title} onPress={() => this.startLesson(lesson)} key={lesson.id} />
+      <FullButton text={lessonContent.title} onPress={() => this.startLesson(lessonContent)} key={lessonContent.id} />
+    )
+  }
+
+  renderLessonGroup (lesson: Object) {
+    return (
+      <View key={lesson.group}>
+        <Text>{lesson.group}</Text>
+        {lesson.content.map((lessonContent) => this.renderLesson(lessonContent))}
+      </View>
     )
   }
 
   renderLessons () {
     return <View style={{marginTop: 10}}>
-      {lessons.map((lesson) => this.renderLesson(lesson))}
+      {lessons.map((lesson) => this.renderLessonGroup(lesson))}
     </View>
   }
 }

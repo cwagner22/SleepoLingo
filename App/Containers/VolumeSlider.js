@@ -17,7 +17,7 @@ class VolumeSlider extends React.Component {
     return (
       <View>
         <Text style={styles.text} >
-          {this.props.volume}
+          {this.props.volume && +this.props.volume.toFixed(0)}
         </Text>
         <Slider value={this.props.volume} step={0.1} onValueChange={this.props.changeVol} />
       </View>

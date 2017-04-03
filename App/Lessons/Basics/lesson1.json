@@ -1,65 +1,107 @@
 {
   id: 0,
   title: 'Essentials',
+  lesson: '"kráp (male)/kâ (female)" are placed at the end to increase the degree of politeness. Pom/Chan',
   words: [
     {
-      orig: "Hello"
+      original: "Hello",
+      translation: "สวัสดี",
+      transliteration: "sà-wàt-dee"
     },
     {
-      orig: "Good morning"
+      original: "Hello, my name is John",
+      translation: "สวัสดี ผม ชื่อ จอห์น",
+      transliteration: "sà-wàt-dee pŏm chêu John"
     },
     {
-      orig: "Goodbye"
+      original: "Hi!",
+      translation: "หวัดดี",
+      transliteration: "wàt dee"
     },
     {
-      orig: "See you later"
+      original: "How are you?",
+      translation: "สบายดี ไหม",
+      transliteration: "sà-baai dee măi"
     },
     {
-      orig: "Yes"
+      original: "Goodbye",
+      translation: "ลาก่อน",
+      transliteration: "laa gòn"
     },
     {
-      orig: "No"
+      original: "See you later",
+      translation: "เจอกัน",
+      transliteration: "jer gan",
+      or: "láew póp gan mài"
     },
     {
-      orig: "Excuse me"
+      original: "See you tomorrow",
+      translation: "เจอกัน พรุ่งนี้",
+      transliteration: "jer gan prûng-née"
     },
     {
-      orig: "Thanks"
+      original: "Yes",
+      translation: "ใช่",
+      transliteration: "châi"
     },
     {
-      orig: "Thanks very much"
+      original: "No",
+      translation: "ไม่ใช่",
+      transliteration: "mâi châi"
     },
     {
-      orig: "You're welcome"
+      original: "Sorry",
+      translation: "ขอโทษ",
+      transliteration: "kŏr-tôht"
     },
     {
-      orig: "Ok"
+      original: "Please",
+      translation: "กรุณา",
+      transliteration: "gà-rú-naa"
     },
     {
-      orig: "How much is it?"
+      original: "Thank you",
+      translation: "ขอบคุณ",
+      transliteration: "kòp kun"
     },
     {
-      orig: "Sorry"
+      original: "Thank you very much",
+      translation: "ขอบคุณ มาก",
+      transliteration: "kòp kun mâak"
     },
     {
-      orig: "I don't understand"
+      original: "You're welcome",
+      translation: "ยินดี",
+      transliteration: "yin-dee"
     },
     {
-      orig: "I get it"
+      original: "I don't understand",
+      translation: "ฉัน ไม่ เข้าใจ",
+      transliteration: "chăn mâi kâo jai"
     },
     {
-      orig: "I don't know"
+      original: "I understand",
+      translation: "ฉัน เข้าใจ",
+      transliteration: "chăn kâo jai"
     },
     {
-      orig: "Excuse me, where are the toilets?"
+      original: "I don't know",
+      translation: "ผม ไม่ รู้",
+      transliteration: "pŏm mâi róo"
     },
     {
-      orig: "Happy New Year!"
+      original: "What's up?",
+      translation: "ว่า ไง",
+      transliteration: "wâa ngai"
     },
     {
-      orig: "Happy birthday!"
+      original: "Do you speak English?",
+      translation: "คุณ พูด ภาษาอังกฤษ ได้ ไหม",
+      transliteration: "kun pôot paa-săa ang-grìt dâai măi"
     },
     {
-      orig: "Congratulations!"
+      original: "I speak Thai",
+      translation: "ผม พูด ภาษาไทย",
+      transliteration: "pŏm pôot paa-săa tai"
     }
   ]}

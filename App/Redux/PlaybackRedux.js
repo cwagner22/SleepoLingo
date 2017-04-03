@@ -12,7 +12,8 @@ const { Types, Creators } = createActions({
   setCurrentWord: ['currentWordIndex'],
   incCurrentWord: ['currentWordIndex'],
   decCurrentWord: ['currentWordIndex'],
-  playbackSetPaused: ['isPaused']
+  playbackSetPaused: ['isPaused'],
+  lessonStart: ['lesson']
 })
 
 export const LessonTypes = Types
@@ -22,7 +23,8 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   volume: 1,
-  results: [],
+  // results: [],
+  lesson: null,
   lessonLoopIndex: -1,
   currentWordIndex: -1,
   isPaused: true
@@ -51,7 +53,7 @@ export const setLessonLoop = (state, { lessonLoopIndex }: Object) => {
 }
 
 export const incCurrentWord = (state) => {
-  return state.merge({ currentWordIndex: Math.min(state.results.length - 1, state.currentWordIndex + 1) })
+  return state.merge({ currentWordIndex: Math.min(state.lesson.words.length - 1, state.currentWordIndex + 1) })
 }
 
 export const decCurrentWord = (state) => {
@@ -66,6 +68,10 @@ export const setPaused = (state, { isPaused }: Object) => {
   return state.merge({ isPaused })
 }
 
+export const startLesson = (state, { lesson }: Object) => {
+  return state.merge({ lesson })
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -77,5 +83,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_CURRENT_WORD]: setCurrentWord,
   [Types.INC_CURRENT_WORD]: incCurrentWord,
   [Types.DEC_CURRENT_WORD]: decCurrentWord,
-  [Types.PLAYBACK_SET_PAUSED]: setPaused
+  [Types.PLAYBACK_SET_PAUSED]: setPaused,
+  [Types.LESSON_START]: startLesson
 })

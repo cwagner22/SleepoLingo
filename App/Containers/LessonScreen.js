@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import RNFS from 'react-native-fs'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-import LessonActions from '../Redux/LessonRedux'
+import PlaybackActions from '../Redux/PlaybackRedux'
 import FullButton from '../Components/FullButton'
 
 // Styles
@@ -97,7 +97,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    startLesson: (lesson) => dispatch(LessonActions.lessonStart(lesson))
+    startLesson: (lesson) => dispatch(PlaybackActions.lessonStart(lesson))
     // requestTemperature: (city) => dispatch(TemperatureActions.temperatureRequest(city))
   }
 }

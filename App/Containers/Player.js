@@ -113,11 +113,12 @@ class PlayerScreen extends React.Component {
   setModifiers () {
     this.originalTimeout = 1000
 
-    const x = this.props.lessonLoopIndex
-    const startX = 0
-    const endX = LESSON_LOOP_MAX - 1
+    // const x = this.props.lessonLoopIndex
+    // const startX = 0
+    // const endX = LESSON_LOOP_MAX - 1
 
-    this.volume = this.linearOffsetFn(x, startX, endX, 1, 0.4)
+    this.volume = 1
+    // this.volume = this.linearOffsetFn(x, startX, endX, 1, 0.4)
 
     const translationTimeoutStart = 1000
     // const translationTimeoutEnd = 5000
@@ -135,40 +136,45 @@ class PlayerScreen extends React.Component {
     this.repeatAllTimeout = repeatAllTimeoutStart
 
     const rateStart = 0.3
-    const rateEnd = 0.2
-    this.rateOriginal = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
-    this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
+    // const rateEnd = 0.2
+    this.rateOriginal = rateStart
+    // this.rateOriginal = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
+    this.rateTranslation = rateStart
+    // this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
   }
 
   playLesson () {
-    const words = this.props.lesson.words.map((w) => w.orig)
-    this.translateWordsGoogle(words)
-      .then((results) => {
-        console.log(results)
-        this.props.setResults(results)
-        // this.props.setLessonLoop(-1)
+    // const words = this.props.lesson.words.map((w) => w.orig)
+    // this.translateWordsGoogle(words)
+    //   .then((results) => {
+    //     console.log(results)
+    //     this.props.setResults(results)
+    //     // this.props.setLessonLoop(-1)
+    //
+    //     this.start()
+    //   })
+    //   .catch(function (err) {
+    //     if (!err.isCanceled) {
+    //       console.log(err && err.stack)
+    //     }
+    //   })
 
-        this.start()
-      })
-      .catch(function (err) {
-        if (!err.isCanceled) {
-          console.log(err && err.stack)
-        }
-      })
+    this.start()
   }
 
   getWord () {
-    return this.props.currentWordIndex < this.props.results.length ? this.props.results[this.props.currentWordIndex] : null
+    return this.props.currentWordIndex < this.props.lesson.words.length ? this.props.lesson.words[this.props.currentWordIndex] : null
   }
 
   start () {
     this.props.setCurrentWord(0)
     this.props.incLessonLoop()
 
-    this.setModifiers()
-    this.props.setPaused(false)
-
-    this.speakWord()
+    setTimeout(() => {
+      this.setModifiers()
+      this.props.setPaused(false)
+      this.speakWord()
+    }) // fix fucking redux/setState async update issue
   }
 
   restart () {
@@ -180,7 +186,7 @@ class PlayerScreen extends React.Component {
 
   onFinishPlayed () {
     // Finish orig + translation
-    if (this.props.currentWordIndex < this.props.results.length - 1) {
+    if (this.props.currentWordIndex < this.props.lesson.words.length - 1) {
       // Play next word
       this.props.incCurrentWord()
       this.delay(this.nextWordTimeout).then(() => this.speakWord())
@@ -259,6 +265,7 @@ class PlayerScreen extends React.Component {
     var word = this.getWord()
     // this.setState({currentWord: word})
     console.log(word)
+    console.log(this.props.lesson)
     if (!word.translation) {
       return this.onFinishPlayed()
     }
@@ -318,7 +325,7 @@ class PlayerScreen extends React.Component {
   }
 
   stopPlayback () {
-    NavigationActions.lesson({ type: 'reset' })
+    NavigationActions.lesson({type: 'reset'})
   }
 
   resumePlayback () {
@@ -365,28 +372,26 @@ class PlayerScreen extends React.Component {
   }
 
   renderPlaybackButtons () {
-    if (this.props.results.length) {
-      return (
+    return (
+      <View>
         <View>
-          <View>
-            <TouchableOpacity onPress={this.previous.bind(this)}>
-              <Text>PREV</Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity onPress={this.stopPlayback.bind(this)}>
-              <Text>STOP</Text>
-            </TouchableOpacity>
-          </View>
-          {this.renderPlayPauseButton()}
-          <View>
-            <TouchableOpacity onPress={this.next.bind(this)}>
-              <Text>NEXT</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={this.previous.bind(this)}>
+            <Text>PREV</Text>
+          </TouchableOpacity>
         </View>
-      )
-    }
+        <View>
+          <TouchableOpacity onPress={this.stopPlayback.bind(this)}>
+            <Text>STOP</Text>
+          </TouchableOpacity>
+        </View>
+        {this.renderPlayPauseButton()}
+        <View>
+          <TouchableOpacity onPress={this.next.bind(this)}>
+            <Text>NEXT</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
   }
 
   durationStr (ms) {
@@ -402,22 +407,20 @@ class PlayerScreen extends React.Component {
   }
 
   renderTime () {
-    if (this.props.results) {
-      const wordDuration = 2000 // Average time to load one file + play
-      const repeatingSentenceDuration = 2000 // Average time to play repeating sentence
-      const originalDuration = wordDuration + this.originalTimeout
-      const translationDuration = (wordDuration + this.translationTimeout) * TRANSLATION_LOOP_MAX + this.nextWordTimeout
-      const loopDuration = (originalDuration + translationDuration) * this.props.results.length
-      const totalDuration = (loopDuration + this.repeatAllTimeout + repeatingSentenceDuration + this.originalTimeout) *
-        (LESSON_LOOP_MAX - 1) + loopDuration
+    const wordDuration = 2000 // Average time to load one file + play
+    const repeatingSentenceDuration = 2000 // Average time to play repeating sentence
+    const originalDuration = wordDuration + this.originalTimeout
+    const translationDuration = (wordDuration + this.translationTimeout) * TRANSLATION_LOOP_MAX + this.nextWordTimeout
+    const loopDuration = (originalDuration + translationDuration) * this.props.lesson.words.length
+    const totalDuration = (loopDuration + this.repeatAllTimeout + repeatingSentenceDuration + this.originalTimeout) *
+      (LESSON_LOOP_MAX - 1) + loopDuration
 
-      return (
-        <View>
-          <Text>~ Loop Duration: {this.durationStr(loopDuration)}</Text>
-          <Text>~ Total Duration: {this.durationStr(totalDuration)}</Text>
-        </View>
-      )
-    }
+    return (
+      <View>
+        <Text>~ Loop Duration: {this.durationStr(loopDuration)}</Text>
+        <Text>~ Total Duration: {this.durationStr(totalDuration)}</Text>
+      </View>
+    )
   }
 
   render () {
@@ -442,7 +445,7 @@ class PlayerScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: state.lesson.lesson,
+    lesson: state.playback.lesson,
     volume: state.playback.volume,
     results: state.playback.results,
     lessonLoopIndex: state.playback.lessonLoopIndex,

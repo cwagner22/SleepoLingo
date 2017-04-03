@@ -11,7 +11,7 @@ import styles from './Styles/PlaybackScreenStyle'
 
 class PlaybackScreen extends React.Component {
   currentWord () {
-    return this.props.results[this.props.currentWordIndex]
+    return this.props.lesson.words[this.props.currentWordIndex]
   }
 
   showWord () {
@@ -46,8 +46,8 @@ class PlaybackScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: state.lesson.lesson,
-    results: state.playback.results,
+    lesson: state.playback.lesson,
+    // results: state.playback.results,
     lessonLoopIndex: state.playback.lessonLoopIndex,
     currentWordIndex: state.playback.currentWordIndex,
     isPaused: state.playback.isPaused

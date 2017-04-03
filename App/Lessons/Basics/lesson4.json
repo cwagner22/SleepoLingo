@@ -36,6 +36,11 @@
       orig: "Where is this place?"
     },
     {
+      orig: "Excuse me, where are the toilets?",
+      translation: "",
+      transliteration: ""
+    },
+    {
       orig: "Where is him?"
     },
     {
@@ -52,5 +57,10 @@
     },
     {
       orig: "How can I go there?"
-    }
+    },
+    {
+      orig: "How much is it?",
+      translation: "ราคา เท่าไหร่ ",
+      transliteration: "raa-kaa tâo rài"
+    },
   ]}

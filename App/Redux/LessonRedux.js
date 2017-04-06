@@ -50,6 +50,17 @@ export const ankiHard = (state) => {
   // })
 
   // return state.merge({currentWord: {showDate}}, {deep: true})
+
+  // return state.lesson.words.map(w => () => {
+  //   if (w.id !== state.currentWord.id) {
+  //     return w;
+  //   }
+  //   return {
+  //     ...w,
+  //     showDate
+  //   };
+  // });
+
   return state.setIn(['lesson', 'words', state.currentWord.id, 'showDate'], showDate)
 }
 

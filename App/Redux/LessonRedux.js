@@ -26,7 +26,11 @@ export const INITIAL_STATE = Immutable({
 
 // request the data from an api
 export const startLesson = (state, { lesson }: Object) => {
-  return state.merge({ lesson })
+  if (lesson.id !== state.lesson.id) {
+    return state.merge({ lesson })
+  } else {
+    return state
+  }
 }
 
 export const ankiHard = (state) => {

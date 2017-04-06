@@ -4,32 +4,37 @@ import React from 'react'
 import { View, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 
-// Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
-// import FullButton from '../Components/FullButton'
-import CardBack from '../Containers/CardBack'
-import CardFront from '../Containers/CardFront'
+import CardOriginal from './CardOriginal'
+import CardTranslation from './CardTranslation'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
-  renderCard () {
-    if (this.props.lesson.isFront) {
-      return <CardFront />
-    } else {
-      return <CardBack />
+  componentWillMount () {
+    this.props.loadNextCard()
+  }
+
+  renderTranslation () {
+    if (this.props.lesson.showAnswer) {
+      return (
+        <CardTranslation />
+      )
     }
   }
 
   render () {
-    return (
-      <View style={styles.mainContainer}>
-        <ScrollView style={styles.container}>
-          {this.renderCard()}
-        </ScrollView>
-      </View>
-    )
+    if (this.props.lesson.currentWord) {
+      return (
+        <View style={styles.mainContainer}>
+          <ScrollView style={styles.container}>
+            <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.props.showAnswer() }} />
+            {this.renderTranslation()}
+          </ScrollView>
+        </View>
+      )
+    }
   }
 }
 
@@ -41,7 +46,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showFront: () => dispatch(LessonActions.ankiShowFront())
+    showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
+    loadNextCard: () => dispatch(LessonActions.loadNextCard())
   }
 }
 

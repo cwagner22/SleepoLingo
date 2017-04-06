@@ -1,14 +1,14 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
+import _ from 'lodash'
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
   lessonStart: ['lesson'],
   ankiHard: null,
-  ankiShowBack: null,
-  ankiShowFront: null,
-  setCurrentWord: ['currentWord']
+  lessonShowAnswer: null,
+  loadNextCard: null
 })
 
 export const LessonTypes = Types
@@ -18,7 +18,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   lesson: null,
-  isFront: true,
+  showAnswer: false,
   currentWord: null
 })
 
@@ -29,7 +29,11 @@ export const startLesson = (state, { lesson }: Object) => {
   if (lesson.id !== state.lesson.id) {
     return state.merge({ lesson })
   } else {
-    return state
+    // Keep same lesson state
+    return state.merge({
+      showAnswer: false,
+      currentWord: null
+    })
   }
 }
 
@@ -68,16 +72,17 @@ export const ankiHard = (state) => {
   return state.setIn(['lesson', 'words', state.currentWord.id, 'showDate'], showDate)
 }
 
-export const showBack = (state) => {
-  return state.merge({ isFront: false })
+export const showAnswer = (state) => {
+  return state.merge({ showAnswer: true })
 }
 
-export const showFront = (state) => {
-  return state.merge({ isFront: true })
-}
-
-export const setCurrentWord = (state, { currentWord }: Object) => {
-  return state.merge({ currentWord })
+export const loadNextCard = (state) => {
+  var sortedWords = _.sortBy(state.lesson.words, ['showDate', 'id'])
+    .filter((word) => {
+      // Exclude future cards
+      return !word.showDate || word.showDate < new Date()
+    })
+  return state.merge({ showAnswer: false, currentWord: sortedWords[0] })
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
@@ -85,7 +90,6 @@ export const setCurrentWord = (state, { currentWord }: Object) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_START]: startLesson,
   [Types.ANKI_HARD]: ankiHard,
-  [Types.ANKI_SHOW_BACK]: showBack,
-  [Types.ANKI_SHOW_FRONT]: showFront,
-  [Types.SET_CURRENT_WORD]: setCurrentWord
+  [Types.LESSON_SHOW_ANSWER]: showAnswer,
+  [Types.LOAD_NEXT_CARD]: loadNextCard
 })

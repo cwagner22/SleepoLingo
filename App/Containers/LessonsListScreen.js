@@ -59,7 +59,6 @@ class LessonsListScreen extends React.Component {
   }
 
   startLesson (lesson) {
-    this.props.startLesson(lesson)
     NavigationActions.lesson()
   }
 

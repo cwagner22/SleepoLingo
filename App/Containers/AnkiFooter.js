@@ -46,8 +46,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     ankiHard: () => dispatch(LessonActions.ankiHard()),
-    ankiOk: () => dispatch(LessonActions.ankiHard()),
-    ankiEasy: () => dispatch(LessonActions.ankiHard()),
+    ankiOk: () => dispatch(LessonActions.ankiOk()),
+    ankiEasy: () => dispatch(LessonActions.ankiEasy()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard())
   }
 }

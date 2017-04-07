@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
 import CardTranslation from './CardTranslation'
+import AnkiFooter from './AnkiFooter'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -24,17 +25,28 @@ class AnkiScreen extends React.Component {
     }
   }
 
-  render () {
-    if (this.props.lesson.currentWord) {
+  renderFooter () {
+    if (this.props.lesson.showAnswer) {
       return (
-        <View style={styles.mainContainer}>
-          <ScrollView style={styles.container}>
-            <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.props.showAnswer() }} />
-            {this.renderTranslation()}
-          </ScrollView>
-        </View>
+        <AnkiFooter />
       )
     }
+  }
+
+  render () {
+    if (!this.props.lesson.currentWord) {
+      return null
+    }
+
+    return (
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container}>
+          <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.props.showAnswer() }} />
+          {this.renderTranslation()}
+        </ScrollView>
+        {this.renderFooter()}
+      </View>
+    )
   }
 }
 

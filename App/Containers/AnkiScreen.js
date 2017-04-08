@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, ScrollView } from 'react-native'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
 
 import LessonActions from '../Redux/LessonRedux'
@@ -13,14 +13,32 @@ import AnkiFooter from './AnkiFooter'
 import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
+  state = {
+    showFront: true
+  }
+
   componentWillMount () {
     this.props.loadNextCard()
   }
 
-  renderTranslation () {
-    if (this.props.lesson.showAnswer) {
+  changeSide () {
+    this.setState({
+      showFront: !this.state.showFront
+    })
+  }
+
+  renderOriginal () {
+    if (this.state.showFront) {
       return (
-        <CardTranslation />
+        <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.changeSide() }} />
+      )
+    }
+  }
+
+  renderTranslation () {
+    if (!this.state.showFront) {
+      return (
+        <CardTranslation onPress={() => { this.changeSide() }} />
       )
     }
   }
@@ -40,10 +58,8 @@ class AnkiScreen extends React.Component {
 
     return (
       <View style={styles.mainContainer}>
-        <ScrollView style={styles.container}>
-          <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.props.showAnswer() }} />
-          {this.renderTranslation()}
-        </ScrollView>
+        {this.renderOriginal()}
+        {this.renderTranslation()}
         {this.renderFooter()}
       </View>
     )

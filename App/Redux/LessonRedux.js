@@ -13,6 +13,7 @@ const { Types, Creators } = createActions({
   ankiOk: null,
   ankiEasy: null,
   lessonShowAnswer: null,
+  lessonShowOriginal: null,
   loadNextCard: null
 })
 
@@ -115,14 +116,15 @@ export const showAnswer = (state) => {
   return state.merge({ showAnswer: true })
 }
 
+export const showOriginal = (state) => {
+  return state.merge({ showAnswer: false })
+}
+
 export const loadNextCard = (state) => {
   // Sort words
   var sortedWords = _.sortBy(state.words, ['showDate', 'id'])
     .filter((word) => {
       // Exclude future cards
-      if (word.showDate) {
-        console.log(word.showDate)
-      }
       return !word.showDate || word.showDate < new Date()
       // return !word.showDate || word.showDate.isBefore(moment())
     })
@@ -138,5 +140,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ANKI_OK]: ankiOk,
   [Types.ANKI_EASY]: ankiEasy,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
+  [Types.LESSON_SHOW_ORIGINAL]: showOriginal,
   [Types.LOAD_NEXT_CARD]: loadNextCard
 })

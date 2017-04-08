@@ -120,7 +120,11 @@ export const loadNextCard = (state) => {
   var sortedWords = _.sortBy(state.words, ['showDate', 'id'])
     .filter((word) => {
       // Exclude future cards
+      if (word.showDate) {
+        console.log(word.showDate)
+      }
       return !word.showDate || word.showDate < new Date()
+      // return !word.showDate || word.showDate.isBefore(moment())
     })
   console.log(sortedWords)
   return state.merge({ showAnswer: false, currentWord: sortedWords[0] })

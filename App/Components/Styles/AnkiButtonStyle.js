@@ -9,10 +9,10 @@ export default StyleSheet.create({
     // borderColor: Colors.cedar,
     // borderTopWidth: 1,
     // borderBottomWidth: 1,
-    backgroundColor: Colors.fernFrond
+    backgroundColor: Colors.fernFrond,
+    padding: 15
   },
   buttonText: {
-    margin: 18,
     textAlign: 'center',
     color: Colors.snow,
     fontSize: Fonts.size.medium,

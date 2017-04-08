@@ -29,9 +29,9 @@ class AnkiFooter extends React.Component {
   render () {
     return (
       <View style={styles.ankiFooter}>
-        <AnkiButton styles={styles.ankiHard} text='Hard (1 min)' onPress={() => this.hard()} />
-        <AnkiButton styles={styles.ankiOk} text='OK (10 mins)' onPress={() => this.ok()} />
-        <AnkiButton styles={styles.ankiEasy} text='Easy (1 day)' onPress={() => this.easy()} />
+        <AnkiButton styles={styles.ankiHard} text='Hard' subText='(1 min)' onPress={() => this.hard()} />
+        <AnkiButton styles={styles.ankiOk} text='OK' subText='(10 mins)' onPress={() => this.ok()} />
+        <AnkiButton styles={styles.ankiEasy} text='Easy' subText='(1 day)' onPress={() => this.easy()} />
       </View>
     )
   }

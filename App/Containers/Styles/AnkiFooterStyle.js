@@ -9,12 +9,15 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   ankiHard: {
+    flex: 1,
     backgroundColor: Colors.fernFrond
   },
   ankiOk: {
+    flex: 1,
     backgroundColor: Colors.wattle
   },
   ankiEasy: {
+    flex: 1,
     backgroundColor: Colors.capePalliser
   }
 })

@@ -20,7 +20,9 @@ class AnkiScreen extends React.Component {
   renderOriginal () {
     if (this.props.lesson.showFront) {
       return (
-        <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.props.showBack() }} />
+        <CardOriginal text={this.props.lesson.currentWord.original}
+          fullText={this.props.lesson.currentWord.full && this.props.lesson.currentWord.full.original}
+          onPress={() => { this.props.showBack() }} />
       )
     }
   }

@@ -13,7 +13,8 @@ const { Types, Creators } = createActions({
   ankiOk: null,
   ankiEasy: null,
   lessonShowAnswer: null,
-  lessonShowOriginal: null,
+  lessonShowFront: null,
+  lessonShowBack: null,
   loadNextCard: null
 })
 
@@ -25,6 +26,7 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   lesson: {},
   showAnswer: false,
+  showFront: true,
   currentWord: {},
   cardsDates: [], // Separate array to keep track of cards dates. Including it in lesson words would make it
   // overwritten on lesson load
@@ -116,8 +118,12 @@ export const showAnswer = (state) => {
   return state.merge({ showAnswer: true })
 }
 
-export const showOriginal = (state) => {
-  return state.merge({ showAnswer: false })
+export const showFront = (state) => {
+  return state.merge({ showFront: true })
+}
+
+export const showBack = (state) => {
+  return state.merge({ showFront: false })
 }
 
 export const loadNextCard = (state) => {
@@ -129,7 +135,7 @@ export const loadNextCard = (state) => {
       // return !word.showDate || word.showDate.isBefore(moment())
     })
   console.log(sortedWords)
-  return state.merge({ showAnswer: false, currentWord: sortedWords[0] })
+  return state.merge({ showAnswer: false, showFront: true, currentWord: sortedWords[0] })
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
@@ -140,6 +146,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ANKI_OK]: ankiOk,
   [Types.ANKI_EASY]: ankiEasy,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
-  [Types.LESSON_SHOW_ORIGINAL]: showOriginal,
+  [Types.LESSON_SHOW_FRONT]: showFront,
+  [Types.LESSON_SHOW_BACK]: showBack,
   [Types.LOAD_NEXT_CARD]: loadNextCard
 })

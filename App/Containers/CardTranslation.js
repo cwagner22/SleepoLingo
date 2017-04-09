@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, Text, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, TouchableHighlight, Image } from 'react-native'
 import { connect } from 'react-redux'
 
 import LessonActions from '../Redux/LessonRedux'
@@ -26,8 +26,17 @@ class CardTranslation extends React.Component {
     return (
       <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
         <View style={styles.container}>
-          <Text onPress={() => Player.speakWordInLanguage(this.props.currentWord.translation, 'th-TH', 0.4)}
-            style={styles.title}>{this.props.currentWord.translation}</Text>
+          <TouchableHighlight onPress={() => Player.speakWordInLanguage(this.props.currentWord.translation, 'th-TH', 0.4)}
+            underlayColor='#F3F3F3'>
+            <View>
+              <Text style={styles.title}>{this.props.currentWord.translation}</Text>
+              <Text style={styles.title}>{this.props.currentWord.transliteration && this.props.currentWord.transliteration}</Text>
+            </View>
+          </TouchableHighlight>
+          <Image
+            // style={}
+            source={this.props.currentWord.image}
+          />
         </View>
       </TouchableWithoutFeedback>
     )

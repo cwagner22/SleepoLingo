@@ -6,7 +6,7 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   title: {
-    fontSize: 25,
+    fontSize: 29,
     textAlign: 'center'
   }
 })

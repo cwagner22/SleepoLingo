@@ -13,32 +13,22 @@ import AnkiFooter from './AnkiFooter'
 import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
-  state = {
-    showFront: true
-  }
-
   componentWillMount () {
     this.props.loadNextCard()
   }
 
-  changeSide () {
-    this.setState({
-      showFront: !this.state.showFront
-    })
-  }
-
   renderOriginal () {
-    if (this.state.showFront) {
+    if (this.props.lesson.showFront) {
       return (
-        <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.changeSide() }} />
+        <CardOriginal text={this.props.lesson.currentWord.original} onPress={() => { this.props.showBack() }} />
       )
     }
   }
 
   renderTranslation () {
-    if (!this.state.showFront) {
+    if (!this.props.lesson.showFront) {
       return (
-        <CardTranslation onPress={() => { this.changeSide() }} />
+        <CardTranslation onPress={() => { this.props.showFront() }} />
       )
     }
   }
@@ -75,6 +65,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
+    showFront: () => dispatch(LessonActions.lessonShowFront()),
+    showBack: () => dispatch(LessonActions.lessonShowBack()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard())
   }
 }

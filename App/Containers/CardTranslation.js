@@ -30,6 +30,16 @@ class CardTranslation extends React.Component {
     }
   }
 
+  renderImage () {
+    if (this.props.currentWord.image) {
+      return (
+        <Image
+          style={{flex: 1, height: undefined, width: undefined}} resizeMode='contain'
+          source={this.props.currentWord.image} />
+      )
+    }
+  }
+
   render () {
     return (
       <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
@@ -38,10 +48,7 @@ class CardTranslation extends React.Component {
             transliteration={this.props.currentWord.transliteration}
             onPress={() => this.speakText(this.props.currentWord.translation)} />
           {this.renderFullTranslation()}
-          <Image
-            style={{flex: 1, height: undefined, width: undefined}} resizeMode='contain'
-            source={this.props.currentWord.image}
-          />
+          {this.renderImage()}
         </View>
       </TouchableWithoutFeedback>
     )

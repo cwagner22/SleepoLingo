@@ -1,13 +1,16 @@
 // @flow
 
 import React, { PropTypes } from 'react'
-import { View, ScrollView, Text } from 'react-native'
+import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import RNFS from 'react-native-fs'
+import { normalize } from 'normalizr'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
 import FullButton from '../Components/FullButton'
+import RoundedButton from '../Components/RoundedButton'
+import { lessonsValuesSchema } from '../Redux/schema'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
@@ -17,11 +20,25 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import lessons from '../Lessons'
 
 class LessonsListScreen extends React.Component {
-  api: Object
-
   state: {
-    // translation: null,
-    results: null
+    results: null,
+    dataSource: Object
+  }
+
+  createDataBlob () {
+    const normalizedData = normalize(lessons, lessonsValuesSchema)
+    this.lessons = normalizedData.entities
+
+    var lessonGroups = normalizedData.entities.lessonGroup
+
+    for (var key in lessonGroups) {
+      // check also if property is not inherited from prototype
+      if (lessonGroups.hasOwnProperty(key)) {
+        lessonGroups[key] = lessonGroups[key].content
+      }
+    }
+
+    return lessonGroups
   }
 
   constructor (props) {
@@ -38,24 +55,26 @@ class LessonsListScreen extends React.Component {
     } else {
       this.createCache()
     }
+
+    const rowHasChanged = (r1, r2) => r1 !== r2
+    const sectionHeaderHasChanged = (s1, s2) => s1 !== s2
+
+    // DataSource configured
+    const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
+
+    var dataBlob = this.createDataBlob()
+    console.log(this.lessons)
+
+    // Datasource is always in state
+    this.state = {
+      // lessons: normalizedData.entities,
+      dataSource: ds.cloneWithRowsAndSections(dataBlob)
+    }
   }
 
   createCache () {
     var cachePath = RNFS.DocumentDirectoryPath + '/cache'
     RNFS.mkdir(cachePath, {NSURLIsExcludedFromBackupKey: true})
-  }
-
-  render () {
-    // const { translation } = this.props
-
-    return (
-      <View style={styles.mainContainer}>
-        <ScrollView style={styles.container}>
-          <Text style={styles.componentLabel}>Choose a lesson</Text>
-          {this.renderLessons()}
-        </ScrollView>
-      </View>
-    )
   }
 
   startLesson (lesson) {
@@ -83,6 +102,34 @@ class LessonsListScreen extends React.Component {
       {lessons.map((lesson) => this.renderLessonGroup(lesson))}
     </View>
   }
+
+  renderHeader (data, sectionID) {
+    return <Text style={styles.boldLabel}>{sectionID}</Text>
+  }
+
+  renderRow (rowData, sectionID) {
+    var lesson = this.lessons.lesson[rowData]
+
+    return (
+      <RoundedButton styles={styles.label} text={lesson.title} onPress={() => this.startLesson(lesson)} />
+    )
+  }
+
+  render () {
+    // const { translation } = this.props
+
+    return (
+      <View style={styles.container}>
+        <ListView
+          renderSectionHeader={this.renderHeader}
+          contentContainerStyle={styles.listContent}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow.bind(this)}
+          enableEmptySections
+        />
+      </View>
+    )
+  }
 }
 
 LessonsListScreen.propTypes = {
@@ -91,13 +138,11 @@ LessonsListScreen.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    // translation: state.translation
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // startLesson: (lesson) => dispatch(PlaybackActions.lessonStart(lesson))
     startLesson: (lesson) => dispatch(LessonActions.lessonStart(lesson))
   }
 }

@@ -1,9 +1,9 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 import _ from 'lodash'
-import { normalize, schema } from 'normalizr'
+import { normalize } from 'normalizr'
 import moment from 'moment'
-// import { orderSchema } from './schemas';
+import { lessonSchema } from '../Redux/schema'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -31,14 +31,6 @@ export const INITIAL_STATE = Immutable({
   cardsDates: [], // Separate array to keep track of cards dates. Including it in lesson words would make it
   // overwritten on lesson load
   words: []
-})
-
-/* ------------- Schemas ------------- */
-
-const wordSchema = new schema.Entity('words')
-
-const lessonSchema = new schema.Entity('lesson', {
-  words: [ wordSchema ]
 })
 
 /* ------------- Reducers ------------- */

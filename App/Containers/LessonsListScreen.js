@@ -4,41 +4,43 @@ import React, { PropTypes } from 'react'
 import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import RNFS from 'react-native-fs'
-import { normalize } from 'normalizr'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
-import FullButton from '../Components/FullButton'
+// import FullButton from '../Components/FullButton'
 import RoundedButton from '../Components/RoundedButton'
-import { lessonsValuesSchema } from '../Redux/schema'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
 
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
-import lessons from '../Lessons'
-
 class LessonsListScreen extends React.Component {
   state: {
-    results: null,
     dataSource: Object
   }
 
+  componentWillMount () {
+    this.props.loadLessons()
+  }
+
   createDataBlob () {
-    const normalizedData = normalize(lessons, lessonsValuesSchema)
-    this.lessons = normalizedData.entities
+    var dataBlob = {}
 
-    var lessonGroups = normalizedData.entities.lessonGroup
+    for (var key in this.props.lessonGroup) {
+      // Check also if property is not inherited from prototype
+      if (this.props.lessonGroup.hasOwnProperty(key)) {
+        dataBlob[key] = {}
+        var lessonGroup = this.props.lessonGroup[key]
 
-    for (var key in lessonGroups) {
-      // check also if property is not inherited from prototype
-      if (lessonGroups.hasOwnProperty(key)) {
-        lessonGroups[key] = lessonGroups[key].content
+        for (var val of lessonGroup.content) {
+          var lesson = this.props.lesson[val]
+          dataBlob[key][lesson.id] = lesson
+        }
       }
     }
 
-    return lessonGroups
+    return dataBlob
   }
 
   constructor (props) {
@@ -63,11 +65,10 @@ class LessonsListScreen extends React.Component {
     const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
 
     var dataBlob = this.createDataBlob()
-    console.log(this.lessons)
+    console.log(dataBlob)
 
     // Datasource is always in state
     this.state = {
-      // lessons: normalizedData.entities,
       dataSource: ds.cloneWithRowsAndSections(dataBlob)
     }
   }
@@ -82,34 +83,11 @@ class LessonsListScreen extends React.Component {
     NavigationActions.lesson()
   }
 
-  renderLesson (lessonContent) {
-    return (
-      <FullButton text={lessonContent.title} onPress={() => this.startLesson(lessonContent)} key={lessonContent.id} />
-    )
-  }
-
-  renderLessonGroup (lesson: Object) {
-    return (
-      <View key={lesson.group}>
-        <Text>{lesson.group}</Text>
-        {lesson.content.map((lessonContent) => this.renderLesson(lessonContent))}
-      </View>
-    )
-  }
-
-  renderLessons () {
-    return <View style={{marginTop: 10}}>
-      {lessons.map((lesson) => this.renderLessonGroup(lesson))}
-    </View>
-  }
-
   renderHeader (data, sectionID) {
     return <Text style={styles.boldLabel}>{sectionID}</Text>
   }
 
-  renderRow (rowData, sectionID) {
-    var lesson = this.lessons.lesson[rowData]
-
+  renderRow (lesson, sectionID) {
     return (
       <RoundedButton styles={styles.label} text={lesson.title} onPress={() => this.startLesson(lesson)} />
     )
@@ -138,11 +116,14 @@ LessonsListScreen.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
+    lessonGroup: state.lesson.lessonGroup,
+    lesson: state.lesson.lesson
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    loadLessons: () => dispatch(LessonActions.loadLessons()),
     startLesson: (lesson) => dispatch(LessonActions.lessonStart(lesson))
   }
 }

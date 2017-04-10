@@ -3,12 +3,15 @@ import Immutable from 'seamless-immutable'
 import _ from 'lodash'
 import { normalize } from 'normalizr'
 import moment from 'moment'
-import { lessonSchema } from '../Redux/schema'
+
+import { lessonsValuesSchema } from '../Redux/schema'
+import lessons from '../Lessons'
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
   lessonStart: ['lesson'],
+  loadLessons: null,
   ankiHard: null,
   ankiOk: null,
   ankiEasy: null,
@@ -24,37 +27,28 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  lesson: {},
+  lesson: [],
+  words: [],
+  lessonGroup: [],
+  currentLesson: {},
+  currentWord: {},
   showAnswer: false,
   showFront: true,
-  currentWord: {},
-  cardsDates: [], // Separate array to keep track of cards dates. Including it in lesson words would make it
-  // overwritten on lesson load
-  words: []
+  cardsDates: []
 })
 
 /* ------------- Reducers ------------- */
 
 export const startLesson = (state, { lesson }: Object) => {
-  // Normalize
-  const normalizedData = normalize(lesson, lessonSchema)
-
   // Reset cards if new lesson
   var resetCards = {}
   if (lesson.id !== state.lesson.id) {
     resetCards = { cardsDates: [] }
-  } else {
-    // Assign dates
-    _.each(normalizedData.entities.words, (w) => {
-      w.showDate = state.cardsDates[w.id]
-    })
   }
 
   return state.merge({
     ...resetCards,
-    ...normalizedData.entities,
-    lesson: normalizedData.entities.lesson[0],
-    // cardsDates: [],
+    currentLesson: lesson,
     showAnswer: false,
     currentWord: null
   })
@@ -119,15 +113,33 @@ export const showBack = (state) => {
 }
 
 export const loadNextCard = (state) => {
+  // Assign dates for sorting
+  var wordsWithDates = state.words.map((w) => {
+    return {
+      ...w,
+      showDate: state.cardDates[w.id]
+    }
+  })
+
   // Sort words
-  var sortedWords = _.sortBy(state.words, ['showDate', 'id'])
+  var sortedWords = _.sortBy(wordsWithDates, ['showDate', 'id'])
     .filter((word) => {
       // Exclude future cards
       return !word.showDate || word.showDate < new Date()
       // return !word.showDate || word.showDate.isBefore(moment())
     })
   console.log(sortedWords)
-  return state.merge({ showAnswer: false, showFront: true, currentWord: sortedWords[0] })
+
+  return state.merge({
+    showAnswer: false,
+    showFront: true,
+    currentWord: sortedWords[0]
+  })
+}
+
+export const loadLessons = (state) => {
+  const normalizedData = normalize(lessons, lessonsValuesSchema)
+  return state.merge(normalizedData.entities)
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
@@ -140,5 +152,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,
-  [Types.LOAD_NEXT_CARD]: loadNextCard
+  [Types.LOAD_NEXT_CARD]: loadNextCard,
+  [Types.LOAD_LESSONS]: loadLessons
 })

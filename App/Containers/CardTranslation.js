@@ -57,7 +57,7 @@ class CardTranslation extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentWord: state.lesson.currentWord,
+    currentWord: state.lesson.words[state.lesson.currentWordId],
     lesson: state.lesson
   }
 }

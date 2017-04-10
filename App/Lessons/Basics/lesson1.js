@@ -1,7 +1,7 @@
 export default {
   id: 0,
   title: 'Essentials',
-  lesson: '\'kráp (male)/kâ (female)\' are placed at the end to increase the degree of politeness. Pom/Chan',
+  note: '\'kráp (male)/kâ (female)\' are placed at the end to increase the degree of politeness. Pom/Chan',
   words: [
     {
       id: 1,

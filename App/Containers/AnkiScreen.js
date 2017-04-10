@@ -20,8 +20,8 @@ class AnkiScreen extends React.Component {
   renderOriginal () {
     if (this.props.lesson.showFront) {
       return (
-        <CardOriginal text={this.props.lesson.currentWord.original}
-          fullText={this.props.lesson.currentWord.full && this.props.lesson.currentWord.full.original}
+        <CardOriginal text={this.props.currentWord.original}
+          fullText={this.props.currentWord.full && this.props.currentWord.full.original}
           onPress={() => { this.props.showBack() }} />
       )
     }
@@ -44,7 +44,7 @@ class AnkiScreen extends React.Component {
   }
 
   render () {
-    if (!this.props.lesson.currentWord) {
+    if (!this.props.currentWord) {
       return null
     }
 
@@ -60,7 +60,8 @@ class AnkiScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: state.lesson
+    lesson: state.lesson,
+    currentWord: state.lesson.words[state.lesson.currentWordId]
   }
 }
 

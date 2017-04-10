@@ -23,7 +23,6 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   volume: 1,
-  // results: [],
   lesson: null,
   lessonLoopIndex: -1,
   currentWordIndex: -1,

@@ -6,11 +6,12 @@ import moment from 'moment'
 
 import { lessonsValuesSchema } from '../Redux/schema'
 import lessons from '../Lessons'
+import LessonHelper from '../Services/LessonHelper'
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  lessonStart: ['lesson'],
+  lessonStart: ['lessonId'],
   loadLessons: null,
   ankiHard: null,
   ankiOk: null,
@@ -27,11 +28,11 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  lesson: [],
+  lessons: [],
   words: [],
-  lessonGroup: [],
-  currentLesson: {},
-  currentWord: {},
+  lessonGroups: [],
+  currentLessonId: null,
+  currentWordId: null,
   showAnswer: false,
   showFront: true,
   cardsDates: []
@@ -39,16 +40,16 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
-export const startLesson = (state, { lesson }: Object) => {
+export const startLesson = (state, { lessonId }: Number) => {
   // Reset cards if new lesson
   var resetCards = {}
-  if (lesson.id !== state.lesson.id) {
+  if (lessonId !== state.currentLessonId) {
     resetCards = { cardsDates: [] }
   }
 
   return state.merge({
     ...resetCards,
-    currentLesson: lesson,
+    currentLessonId: lessonId,
     showAnswer: false,
     currentWord: null
   })
@@ -84,8 +85,7 @@ const updateCardDate = (state, showDate) => {
   //   };
   // });
 
-  return state.setIn(['cardsDates', state.currentWord.id], showDate.toDate())
-    .setIn(['words', state.currentWord.id, 'showDate'], showDate.toDate())
+  return state.setIn(['cardsDates', state.currentWordId], showDate.toDate())
 }
 
 export const ankiHard = (state) => {
@@ -114,10 +114,11 @@ export const showBack = (state) => {
 
 export const loadNextCard = (state) => {
   // Assign dates for sorting
-  var wordsWithDates = state.words.map((w) => {
+  const lessonHelper = new LessonHelper(state)
+  var wordsWithDates = lessonHelper.currentWords().map((w) => {
     return {
       ...w,
-      showDate: state.cardDates[w.id]
+      showDate: state.cardsDates[w.id]
     }
   })
 
@@ -133,7 +134,7 @@ export const loadNextCard = (state) => {
   return state.merge({
     showAnswer: false,
     showFront: true,
-    currentWord: sortedWords[0]
+    currentWordId: sortedWords[0].id
   })
 }
 

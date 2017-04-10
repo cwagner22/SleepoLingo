@@ -27,14 +27,14 @@ class LessonsListScreen extends React.Component {
   createDataBlob () {
     var dataBlob = {}
 
-    for (var key in this.props.lessonGroup) {
+    for (var key in this.props.lessonGroups) {
       // Check also if property is not inherited from prototype
-      if (this.props.lessonGroup.hasOwnProperty(key)) {
+      if (this.props.lessonGroups.hasOwnProperty(key)) {
         dataBlob[key] = {}
-        var lessonGroup = this.props.lessonGroup[key]
+        var lessonGroup = this.props.lessonGroups[key]
 
         for (var val of lessonGroup.content) {
-          var lesson = this.props.lesson[val]
+          var lesson = this.props.lessons[val]
           dataBlob[key][lesson.id] = lesson
         }
       }
@@ -65,7 +65,6 @@ class LessonsListScreen extends React.Component {
     const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
 
     var dataBlob = this.createDataBlob()
-    console.log(dataBlob)
 
     // Datasource is always in state
     this.state = {
@@ -79,7 +78,7 @@ class LessonsListScreen extends React.Component {
   }
 
   startLesson (lesson) {
-    this.props.startLesson(lesson)
+    this.props.startLesson(lesson.id)
     NavigationActions.lesson()
   }
 
@@ -116,15 +115,15 @@ LessonsListScreen.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    lessonGroup: state.lesson.lessonGroup,
-    lesson: state.lesson.lesson
+    lessonGroups: state.lesson.lessonGroups,
+    lessons: state.lesson.lessons
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     loadLessons: () => dispatch(LessonActions.loadLessons()),
-    startLesson: (lesson) => dispatch(LessonActions.lessonStart(lesson))
+    startLesson: (lessonId) => dispatch(LessonActions.lessonStart(lessonId))
   }
 }
 

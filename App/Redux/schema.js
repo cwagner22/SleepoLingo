@@ -4,11 +4,11 @@ import { schema } from 'normalizr'
 
 const wordSchema = new schema.Entity('words')
 
-const lessonSchema = new schema.Entity('lesson', {
+const lessonSchema = new schema.Entity('lessons', {
   words: [ wordSchema ]
 })
 
-const lessonGroupSchema = new schema.Entity('lessonGroup', {
+const lessonGroupSchema = new schema.Entity('lessonGroups', {
   content: [ lessonSchema ]
 }, {
   idAttribute: 'group'

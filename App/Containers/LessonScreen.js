@@ -17,7 +17,7 @@ class LessonScreen extends React.Component {
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.container}>
-          <Text style={styles.componentLabel}>{this.props.lesson.lesson}</Text>
+          <Text style={styles.componentLabel}>{this.props.currentLesson.note}</Text>
         </ScrollView>
         <FullButton text='Day' onPress={() => this.startDay()} />
         <FullButton text='Night' onPress={() => this.startNight()} />
@@ -36,7 +36,7 @@ class LessonScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: state.lesson.lesson
+    currentLesson: state.lesson.lessons[state.lesson.currentLessonId]
   }
 }
 

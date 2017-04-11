@@ -7,6 +7,7 @@ import moment from 'moment'
 import { lessonsValuesSchema } from '../Redux/schema'
 import lessons from '../Lessons'
 import LessonHelper from '../Services/LessonHelper'
+import WordHelper from '../Services/WordHelper'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -113,21 +114,19 @@ export const showBack = (state) => {
 }
 
 export const loadNextCard = (state) => {
-  // Assign dates for sorting
   const lessonHelper = new LessonHelper(state)
+  const wordHelper = new WordHelper(state)
+
+  // Assign dates for sorting
   var wordsWithDates = lessonHelper.currentWords().map((w) => {
-    return {
-      ...w,
-      showDate: state.cardsDates[w.id]
-    }
+    return wordHelper.wordWithDate(w)
   })
 
   // Sort words
   var sortedWords = _.sortBy(wordsWithDates, ['showDate', 'id'])
     .filter((word) => {
       // Exclude future cards
-      return !word.showDate || word.showDate < new Date()
-      // return !word.showDate || word.showDate.isBefore(moment())
+      return wordHelper.isReady(word)
     })
   console.log(sortedWords)
 

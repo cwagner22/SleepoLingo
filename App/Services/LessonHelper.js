@@ -7,4 +7,11 @@ export default class LessonHelper {
   currentWords () {
     return this.currentLesson.words.map(wId => this.store.words[wId])
   }
+
+  wordWithDate (word) {
+    return {
+      ...word,
+      showDate: this.state.cardsDates[word.id]
+    }
+  }
 }

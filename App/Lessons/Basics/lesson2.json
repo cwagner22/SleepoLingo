@@ -1,7 +1,8 @@
 {
   id: 1,
   title: 'Pronouns + Basic Auxiliary Verbs',
-  words: [
+  words: [],
+  words0: [
     {
       orig: "I am"
     },

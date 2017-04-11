@@ -1,7 +1,8 @@
 {
   id: 2,
   title: 'Numbers',
-  words: [
+  words: [],
+  words0: [
     {
       orig: "zero"
     },

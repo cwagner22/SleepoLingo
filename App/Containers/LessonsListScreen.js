@@ -7,8 +7,8 @@ import RNFS from 'react-native-fs'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
-// import FullButton from '../Components/FullButton'
-import RoundedButton from '../Components/RoundedButton'
+import LessonButton from '../Components/LessonButton'
+import WordHelper from '../Services/WordHelper'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
@@ -86,9 +86,18 @@ class LessonsListScreen extends React.Component {
     return <Text style={styles.boldLabel}>{sectionID}</Text>
   }
 
+  nbCardsLeft (lesson) {
+    return lesson.words.reduce((total, wordId) => {
+      if (this.props.wordHelper.isReady(wordId)) {
+        total++
+      }
+      return total
+    }, 0)
+  }
+
   renderRow (lesson, sectionID) {
     return (
-      <RoundedButton styles={styles.label} text={lesson.title} onPress={() => this.startLesson(lesson)} />
+      <LessonButton text={lesson.title} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.startLesson(lesson)} />
     )
   }
 
@@ -114,9 +123,12 @@ LessonsListScreen.propTypes = {
 }
 
 const mapStateToProps = (state) => {
+  const wordHelper = new WordHelper(state.lesson)
   return {
     lessonGroups: state.lesson.lessonGroups,
-    lessons: state.lesson.lessons
+    lessons: state.lesson.lessons,
+    words: state.lesson.words,
+    wordHelper
   }
 }
 

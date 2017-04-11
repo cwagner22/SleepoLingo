@@ -1,7 +1,8 @@
 {
   id: 3,
   title: 'Questions',
-  words: [
+  words: [],
+  words0: [
     {
       orig: "What?"
     },
@@ -60,7 +61,7 @@
     },
     {
       orig: "How much is it?",
-      translation: "ราคา เท่าไหร่ ",
+      translation: "ราคา เท่าไหร่",
       transliteration: "raa-kaa tâo rài"
     },
   ]}

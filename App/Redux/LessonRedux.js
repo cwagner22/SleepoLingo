@@ -128,12 +128,13 @@ export const loadNextCard = (state) => {
       // Exclude future cards
       return wordHelper.isReady(word)
     })
-  console.log(sortedWords)
+
+  var currentWordId = sortedWords.length ? sortedWords[0].id : null
 
   return state.merge({
     showAnswer: false,
     showFront: true,
-    currentWordId: sortedWords[0].id
+    currentWordId
   })
 }
 

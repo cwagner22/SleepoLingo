@@ -1,13 +1,15 @@
 // @flow
 
 import React from 'react'
-import { View } from 'react-native'
+import { View, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
 import CardTranslation from './CardTranslation'
 import AnkiFooter from './AnkiFooter'
+import WordHelper from '../Services/WordHelper'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -15,6 +17,18 @@ import styles from './Styles/AnkiScreenStyle'
 class AnkiScreen extends React.Component {
   componentWillMount () {
     this.props.loadNextCard()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.currentWord !== this.props.currentWord && !nextProps.currentWord) {
+      Alert.alert(
+        'Well done',
+        'No more cards, come back later!',
+        [
+          {text: 'OK', onPress: () => NavigationActions.lessonsList({type: 'reset'})}
+        ]
+      )
+    }
   }
 
   renderOriginal () {
@@ -59,9 +73,11 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const wordHelper = new WordHelper(state.lesson)
+
   return {
     lesson: state.lesson,
-    currentWord: state.lesson.words[state.lesson.currentWordId]
+    currentWord: wordHelper.currentWord
   }
 }
 

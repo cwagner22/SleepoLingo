@@ -3,6 +3,7 @@
 import React, { PropTypes } from 'react'
 import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import RNFS from 'react-native-fs'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -12,8 +13,6 @@ import WordHelper from '../Services/WordHelper'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
-
-import { Actions as NavigationActions } from 'react-native-router-flux'
 
 class LessonsListScreen extends React.Component {
   state: {

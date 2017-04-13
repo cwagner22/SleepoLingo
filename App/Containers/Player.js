@@ -66,7 +66,7 @@ class PlayerScreen extends React.Component {
         .then(() => this.start())
     }
 
-    if (nextProps.currentWord !== this.props.currentWord) {
+    if (nextProps.currentWord !== this.props.currentWord || nextProps.forcePlay) {
       this.speakWord(nextProps.currentWord)
     }
   }
@@ -373,6 +373,7 @@ const mapStateToProps = (state) => {
   return {
     volume: state.playback.volume,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
+    forcePlay: state.lesson.forcePlay,
     isPaused: state.playback.isPaused,
     currentWord: state.lesson.words[state.lesson.currentWordId],
     currentWords: lessonHelper.currentWords()

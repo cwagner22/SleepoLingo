@@ -41,7 +41,8 @@ export const INITIAL_STATE = Immutable({
   showAnswer: false,
   showFront: true,
   cardsDates: [],
-  lessonLoopCounter: null
+  lessonLoopCounter: null,
+  forcePlay: null
 })
 
 /* ------------- Reducers ------------- */
@@ -144,27 +145,54 @@ export const loadNextCard = (state) => {
   })
 }
 
-export const incCurrentWord = (state, { allowRestart }: Boolean) => {
+const navigateCurrentWord = (state, action) => {
   const lessonHelper = new LessonHelper(state)
   var currentWords = lessonHelper.currentWords()
-  var index = currentWords.findIndex((w) => w.id === state.currentWordId) + 1
-
   var lessonLoopCounter = state.lessonLoopCounter
-  if (index >= currentWords.length) {
-    if (allowRestart) {
-      if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
-        lessonLoopCounter++
-        index = 0
+  var index = currentWords.findIndex((w) => w.id === state.currentWordId)
+  var currentWordId
+
+  switch (action.type) {
+    case 'INC_CURRENT_WORD':
+      if (++index >= currentWords.length) {
+        // if (allowRestart) {
+        if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
+          lessonLoopCounter++
+          index = 0
+        } else {
+          index = currentWords.length - 1
+        }
+        // } else {
+        //
+        // }
       }
-    } else {
-      index = currentWords.length - 1
-    }
+
+      currentWordId = currentWords[Math.max(0, index)].id
+      return {
+        ...state,
+        lessonLoopCounter,
+        currentWordId,
+        forcePlay: currentWordId === state.currentWordId
+      }
+    case 'DEC_CURRENT_WORD':
+      currentWordId = currentWords[Math.max(0, --index)].id
+      return {
+        ...state,
+        lessonLoopCounter,
+        currentWordId,
+        forcePlay: currentWordId === state.currentWordId
+      }
+    default:
+      return state
   }
-  return state.merge({ lessonLoopCounter, currentWordId: currentWords[index].id })
 }
 
-export const decCurrentWord = (state) => {
-  return state.merge({ currentWordIndex: Math.max(0, state.currentWordIndex - 1) })
+export const incCurrentWord = (state, action) => {
+  return navigateCurrentWord(state, action)
+}
+
+export const decCurrentWord = (state, action) => {
+  return navigateCurrentWord(state, action)
 }
 
 export const loadLessons = (state) => {

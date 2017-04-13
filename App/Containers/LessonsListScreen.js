@@ -87,7 +87,7 @@ class LessonsListScreen extends React.Component {
 
   nbCardsLeft (lesson) {
     return lesson.words.reduce((total, wordId) => {
-      if (this.props.wordHelper.isReady(wordId)) {
+      if (this.props.wordHelper.isReady(wordId, true)) {
         total++
       }
       return total

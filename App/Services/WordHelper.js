@@ -1,6 +1,7 @@
 // @flow
 
 import _ from 'lodash'
+import moment from 'moment'
 
 export default class WordHelper {
   constructor (store) {
@@ -8,11 +9,13 @@ export default class WordHelper {
     this.currentWord = store.words[store.currentWordId]
   }
 
-  isReady (word) {
+  isReady (word, allowAlmost) {
     word = this.wordWithDate(word)
-
-    return !word.showDate || word.showDate < new Date()
-    // return !word.showDate || word.showDate.isBefore(moment())
+    var dateCompare = moment()
+    if (allowAlmost) {
+      dateCompare.add(1, 'm')
+    }
+    return !word.showDate || moment(word.showDate).isBefore(dateCompare)
   }
 
   wordWithDate (word) {

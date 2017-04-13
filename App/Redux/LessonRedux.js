@@ -120,6 +120,20 @@ export const showBack = (state) => {
   return state.merge({ showFront: false })
 }
 
+const sortCards = (wordHelper, wordsWithDates, allowAlmost) => {
+  var sortedWords = _.sortBy(wordsWithDates, ['showDate', 'id'])
+    .filter((word) => {
+      // Exclude future cards
+      return wordHelper.isReady(word, allowAlmost)
+    })
+
+  if (sortedWords.length) {
+    return sortedWords
+  } else {
+    return sortCards(wordHelper, wordsWithDates, true)
+  }
+}
+
 export const loadNextCard = (state) => {
   const lessonHelper = new LessonHelper(state)
   const wordHelper = new WordHelper(state)
@@ -129,13 +143,7 @@ export const loadNextCard = (state) => {
     return wordHelper.wordWithDate(w)
   })
 
-  // Sort words
-  var sortedWords = _.sortBy(wordsWithDates, ['showDate', 'id'])
-    .filter((word) => {
-      // Exclude future cards
-      return wordHelper.isReady(word)
-    })
-
+  var sortedWords = sortCards(wordHelper, wordsWithDates, false)
   var currentWordId = sortedWords.length ? sortedWords[0].id : null
 
   return state.merge({

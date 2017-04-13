@@ -9,6 +9,8 @@ import lessons from '../Lessons'
 import LessonHelper from '../Services/LessonHelper'
 import WordHelper from '../Services/WordHelper'
 
+export const LESSON_LOOP_MAX = 2
+
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
@@ -20,7 +22,9 @@ const { Types, Creators } = createActions({
   lessonShowAnswer: null,
   lessonShowFront: null,
   lessonShowBack: null,
-  loadNextCard: null
+  loadNextCard: null,
+  incCurrentWord: ['allowRestart'],
+  decCurrentWord: null
 })
 
 export const LessonTypes = Types
@@ -36,7 +40,8 @@ export const INITIAL_STATE = Immutable({
   currentWordId: null,
   showAnswer: false,
   showFront: true,
-  cardsDates: []
+  cardsDates: [],
+  lessonLoopCounter: null
 })
 
 /* ------------- Reducers ------------- */
@@ -52,7 +57,8 @@ export const startLesson = (state, { lessonId }: Number) => {
     ...resetCards,
     currentLessonId: lessonId,
     showAnswer: false,
-    currentWord: null
+    currentWordId: null,
+    lessonLoopCounter: 1
   })
 }
 
@@ -138,6 +144,29 @@ export const loadNextCard = (state) => {
   })
 }
 
+export const incCurrentWord = (state, { allowRestart }: Boolean) => {
+  const lessonHelper = new LessonHelper(state)
+  var currentWords = lessonHelper.currentWords()
+  var index = currentWords.findIndex((w) => w.id === state.currentWordId) + 1
+
+  var lessonLoopCounter = state.lessonLoopCounter
+  if (index >= currentWords.length) {
+    if (allowRestart) {
+      if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
+        lessonLoopCounter++
+        index = 0
+      }
+    } else {
+      index = currentWords.length - 1
+    }
+  }
+  return state.merge({ lessonLoopCounter, currentWordId: currentWords[index].id })
+}
+
+export const decCurrentWord = (state) => {
+  return state.merge({ currentWordIndex: Math.max(0, state.currentWordIndex - 1) })
+}
+
 export const loadLessons = (state) => {
   const normalizedData = normalize(lessons, lessonsValuesSchema)
   return state.merge(normalizedData.entities)
@@ -154,5 +183,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,
   [Types.LOAD_NEXT_CARD]: loadNextCard,
-  [Types.LOAD_LESSONS]: loadLessons
+  [Types.LOAD_LESSONS]: loadLessons,
+  [Types.INC_CURRENT_WORD]: incCurrentWord,
+  [Types.DEC_CURRENT_WORD]: decCurrentWord
 })

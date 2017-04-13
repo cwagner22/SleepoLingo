@@ -9,9 +9,9 @@ export default {
       translation: 'สวัสดี',
       transliteration: 'sà-wàt-dee',
       full: {
-        original: 'Hello, my name is John',
-        translation: 'สวัสดี ผม ชื่อ จอห์น',
-        transliteration: 'sà-wàt-dee pŏm chêu John'
+        original: 'Hello, my name is Chris',
+        translation: 'สวัสดี ผม ชื่อ คริส',
+        transliteration: 'sà-wàt-dee pŏm chêu Chris'
       },
       image: require('../images/0-1.jpg')
     },

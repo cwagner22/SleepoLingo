@@ -8,23 +8,23 @@ import { connect } from 'react-redux'
 import VolumeSlider from './VolumeSlider'
 import API from '../Services/TranslateApi'
 import BingAPI from '../Services/BingApi'
-import loadSound from '../Services/Sound'
 import makeCancelable from '../Lib/MakeCancelable'
 import Deferred from '../Lib/Deferred'
 import PlaybackActions from '../Redux/PlaybackRedux'
+import LessonActions from '../Redux/LessonRedux'
+import Player from '../Services/Player'
+import LessonHelper from '../Services/LessonHelper'
 
 // external libs
 import Tts from 'react-native-tts'
 import _ from 'lodash'
-import RNFS from 'react-native-fs'
 import Sound from 'react-native-sound'
-import md5Hex from 'md5-hex'
 import BackgroundTimer from 'react-native-background-timer'
 
 // Styles
 // import styles from './Styles/PlayerStyle'
 
-export const LESSON_LOOP_MAX = 3
+export const LESSON_LOOP_MAX = 2
 export const TRANSLATION_LOOP_MAX = 3
 
 class PlayerScreen extends React.Component {
@@ -49,8 +49,27 @@ class PlayerScreen extends React.Component {
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
     // Tts.voices().then(voices => console.log(voices))
+  }
 
-    this.playLesson()
+  componentWillMount () {
+    this.props.incCurrentWord(true)
+    this.props.setPaused(false)
+    this.start()
+  }
+
+  start () {
+    this.setModifiers()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.lessonLoopCounter !== this.props.lessonLoopCounter) {
+      this.speakOriginal('Restarting the lesson')
+        .then(() => this.start())
+    }
+
+    if (nextProps.currentWord !== this.props.currentWord) {
+      this.speakWord(nextProps.currentWord)
+    }
   }
 
   componentWillUnmount () {
@@ -113,7 +132,7 @@ class PlayerScreen extends React.Component {
   setModifiers () {
     this.originalTimeout = 1000
 
-    // const x = this.props.lessonLoopIndex
+    // const x = this.props.lessonLoopCounter - 1
     // const startX = 0
     // const endX = LESSON_LOOP_MAX - 1
 
@@ -143,57 +162,9 @@ class PlayerScreen extends React.Component {
     // this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
   }
 
-  playLesson () {
-    // const words = this.props.lesson.words.map((w) => w.orig)
-    // this.translateWordsGoogle(words)
-    //   .then((results) => {
-    //     console.log(results)
-    //     this.props.setResults(results)
-    //     // this.props.setLessonLoop(-1)
-    //
-    //     this.start()
-    //   })
-    //   .catch(function (err) {
-    //     if (!err.isCanceled) {
-    //       console.log(err && err.stack)
-    //     }
-    //   })
-
-    this.start()
-  }
-
-  getWord () {
-    return this.props.currentWordIndex < this.props.lesson.words.length ? this.props.lesson.words[this.props.currentWordIndex] : null
-  }
-
-  start () {
-    this.props.setCurrentWord(0)
-    this.props.incLessonLoop()
-
-    setTimeout(() => {
-      this.setModifiers()
-      this.props.setPaused(false)
-      this.speakWord()
-    }) // fix fucking redux/setState async update issue
-  }
-
-  restart () {
-    if (this.props.lessonLoopIndex < LESSON_LOOP_MAX) {
-      this.speakOriginal('Restarting the lesson')
-        .then(() => this.start())
-    }
-  }
-
   onFinishPlayed () {
     // Finish orig + translation
-    if (this.props.currentWordIndex < this.props.lesson.words.length - 1) {
-      // Play next word
-      this.props.incCurrentWord()
-      this.delay(this.nextWordTimeout).then(() => this.speakWord())
-    } else {
-      // Restart
-      this.delay(this.repeatAllTimeout).then(() => this.restart())
-    }
+    this.props.incCurrentWord(true)
   }
 
   playTTS (word, language, rate) {
@@ -206,43 +177,8 @@ class PlayerScreen extends React.Component {
       })
   }
 
-  downloadAudioIfNeeded (word, language, rate) {
-    const fileName = md5Hex(word) + '.mp3'
-    const path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
-    const url = this.api.ttsURL(word, language, rate)
-
-    const promise = RNFS.exists(path)
-      .then((exists) => {
-        if (!exists) {
-          // write the file
-          return RNFS.downloadFile({fromUrl: url, toFile: path}).promise
-            .then((success) => {
-              console.log('FILE WRITTEN!', url, path)
-              return fileName
-            })
-        }
-
-        return fileName
-      })
-
-    return this.makeCancelable(promise)
-  }
-
-  speakWordInLanguage (word, language, rate) {
-    var deviceTTS = false
-    if (deviceTTS) {
-      return this.playTTS()
-    } else {
-      return this.downloadAudioIfNeeded(word, language, rate)
-        .then((fileName) => {
-          this._sound = loadSound(fileName, this.volume * this.props.volume)
-          return this._sound.promise
-        })
-    }
-  }
-
   speakOriginal (word) {
-    return this.speakWordInLanguage(word, 'en-US', this.rateOriginal)
+    return Player.speakWordInLanguage(word, 'en-US', this.rateOriginal)
       .then(() => {
         return this.delay(this.originalTimeout)
       })
@@ -251,7 +187,7 @@ class PlayerScreen extends React.Component {
   speakTranslation (word) {
     this.nbTranslation++
 
-    return this.speakWordInLanguage(word, 'th-TH', this.rateTranslation)
+    return Player.speakWordInLanguage(word, 'th-TH', this.rateTranslation)
       .then(() => {
         // Repeat translation 3 times
         if (this.nbTranslation < TRANSLATION_LOOP_MAX) {
@@ -261,24 +197,18 @@ class PlayerScreen extends React.Component {
       })
   }
 
-  speakWord () {
-    var word = this.getWord()
-    // this.setState({currentWord: word})
-    console.log(word)
-    console.log(this.props.lesson)
-    if (!word.translation) {
-      return this.onFinishPlayed()
-    }
+  speakWord (word) {
+    var _word = word.full || word
 
     this.nbTranslation = 0
-    this.speakOriginal(word.original)
-      .then(() => this.speakTranslation(word.translation))
+    this.speakOriginal(_word.original)
+      .then(() => this.speakTranslation(_word.translation))
       .then(() => this.onFinishPlayed())
-      .catch(function (err) {
-        if (!err.isCanceled) {
-          console.log(err && err.stack)
-        }
-      })
+    // .catch(function (err) {
+    //   if (!err.isCanceled) {
+    //     console.log(err && err.stack)
+    //   }
+    // })
   }
 
   translateWords (words) {
@@ -342,13 +272,11 @@ class PlayerScreen extends React.Component {
   previous () {
     this.cancelPromises()
     this.props.decCurrentWord()
-    setTimeout(() => this.speakWord()) // fix fucking redux/setState async update issue
   }
 
   next () {
     this.cancelPromises()
-    this.props.incCurrentWord()
-    setTimeout(() => this.speakWord()) // fix fucking redux/setState async update issue
+    this.props.incCurrentWord(false)
   }
 
   renderPlayPauseButton () {
@@ -411,7 +339,7 @@ class PlayerScreen extends React.Component {
     const repeatingSentenceDuration = 2000 // Average time to play repeating sentence
     const originalDuration = wordDuration + this.originalTimeout
     const translationDuration = (wordDuration + this.translationTimeout) * TRANSLATION_LOOP_MAX + this.nextWordTimeout
-    const loopDuration = (originalDuration + translationDuration) * this.props.lesson.words.length
+    const loopDuration = (originalDuration + translationDuration) * this.props.currentWords.length
     const totalDuration = (loopDuration + this.repeatAllTimeout + repeatingSentenceDuration + this.originalTimeout) *
       (LESSON_LOOP_MAX - 1) + loopDuration
 
@@ -440,30 +368,25 @@ class PlayerScreen extends React.Component {
       </View>
     )
   }
-
 }
 
 const mapStateToProps = (state) => {
+  const lessonHelper = new LessonHelper(state.lesson)
   return {
-    lesson: state.playback.lesson,
     volume: state.playback.volume,
-    results: state.playback.results,
-    lessonLoopIndex: state.playback.lessonLoopIndex,
-    currentWordIndex: state.playback.currentWordIndex,
-    isPaused: state.playback.isPaused
+    lessonLoopCounter: state.lesson.lessonLoopCounter,
+    isPaused: state.playback.isPaused,
+    currentWord: state.lesson.words[state.lesson.currentWordId],
+    currentWords: lessonHelper.currentWords()
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    incLessonLoop: () => dispatch(PlaybackActions.incLessonLoop()),
-    decLessonLoop: () => dispatch(PlaybackActions.decLessonLoop()),
-    setLessonLoop: (val) => dispatch(PlaybackActions.setLessonLoop(val)),
-    incCurrentWord: () => dispatch(PlaybackActions.incCurrentWord()),
-    decCurrentWord: () => dispatch(PlaybackActions.decCurrentWord()),
-    setCurrentWord: (val) => dispatch(PlaybackActions.setCurrentWord(val)),
-    setResults: (res) => dispatch(PlaybackActions.playbackResults(res)),
-    setPaused: (val) => dispatch(PlaybackActions.playbackSetPaused(val))
+    incCurrentWord: (allowRestart) => dispatch(LessonActions.incCurrentWord(allowRestart)),
+    decCurrentWord: () => dispatch(LessonActions.decCurrentWord()),
+    setPaused: (val) => dispatch(PlaybackActions.playbackSetPaused(val)),
+    loadNextWord: () => dispatch(PlaybackActions.playbackLoadNextWord())
   }
 }
 

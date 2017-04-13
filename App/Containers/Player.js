@@ -5,6 +5,11 @@ import { View, Text, Slider, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import Tts from 'react-native-tts'
+import _ from 'lodash'
+import Sound from 'react-native-sound'
+import BackgroundTimer from 'react-native-background-timer'
+
 import VolumeSlider from './VolumeSlider'
 import API from '../Services/TranslateApi'
 import BingAPI from '../Services/BingApi'
@@ -14,12 +19,6 @@ import PlaybackActions from '../Redux/PlaybackRedux'
 import LessonActions from '../Redux/LessonRedux'
 import Player from '../Services/Player'
 import LessonHelper from '../Services/LessonHelper'
-
-// external libs
-import Tts from 'react-native-tts'
-import _ from 'lodash'
-import Sound from 'react-native-sound'
-import BackgroundTimer from 'react-native-background-timer'
 
 // Styles
 // import styles from './Styles/PlayerStyle'
@@ -78,7 +77,7 @@ class PlayerScreen extends React.Component {
   }
 
   cancelPromises () {
-    this._sound && this._sound.cancel()
+    Player.cancel()
     this._cancelablePromise.cancel()
   }
 
@@ -178,19 +177,19 @@ class PlayerScreen extends React.Component {
   }
 
   speakOriginal (word) {
-    return Player.speakWordInLanguage(word, 'en-US', this.rateOriginal)
+    return this.makeCancelable(Player.speakWordInLanguage(word, 'en-US', this.rateOriginal))
       .then(() => {
         return this.delay(this.originalTimeout)
       })
   }
 
   speakTranslation (word) {
-    this.nbTranslation++
+    this.translationCounter++
 
-    return Player.speakWordInLanguage(word, 'th-TH', this.rateTranslation)
+    return this.makeCancelable(Player.speakWordInLanguage(word, 'th-TH', this.rateTranslation))
       .then(() => {
         // Repeat translation 3 times
-        if (this.nbTranslation < TRANSLATION_LOOP_MAX) {
+        if (this.translationCounter < TRANSLATION_LOOP_MAX) {
           return this.delay(this.translationTimeout)
             .then(() => this.speakTranslation(word))
         }
@@ -200,20 +199,19 @@ class PlayerScreen extends React.Component {
   speakWord (word) {
     var _word = word.full || word
 
-    this.nbTranslation = 0
+    this.translationCounter = 0
     this.speakOriginal(_word.original)
       .then(() => this.speakTranslation(_word.translation))
       .then(() => this.onFinishPlayed())
-    // .catch(function (err) {
-    //   if (!err.isCanceled) {
-    //     console.log(err && err.stack)
-    //   }
-    // })
+      .catch(function (err) {
+        if (!err.isCanceled) {
+          console.log(err && err.stack)
+        }
+      })
   }
 
   translateWords (words) {
-    this._cancelablePromise = makeCancelable(this.bingAPI.translateArray(words))
-    return this._cancelablePromise.promise
+    return this.makeCancelable(this.bingAPI.translateArray(words))
       .then((response) => {
         const wordsWithTranslation = []
         const results = response.data

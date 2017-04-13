@@ -5,20 +5,8 @@ import md5Hex from 'md5-hex'
 
 import API from './TranslateApi'
 import loadSound from './Sound'
-import makeCancelable from '../Lib/MakeCancelable'
 
 this.api = API.create()
-
-const makeCancelableWrapper = (promise) => {
-  this._cancelablePromise = makeCancelable(promise)
-  this._cancelablePromise.promise
-    .catch((err) => {
-      if (!err.isCanceled) {
-        console.log(err && err.stack)
-      }
-    })
-  return this._cancelablePromise.promise
-}
 
 const downloadAudioIfNeeded = (word, language, rate) => {
   const fileName = md5Hex(word) + '.mp3'
@@ -39,7 +27,7 @@ const downloadAudioIfNeeded = (word, language, rate) => {
       return fileName
     })
 
-  return makeCancelableWrapper(promise)
+  return promise
 }
 
 const speakWordInLanguage = (word, language, rate) => {
@@ -52,10 +40,20 @@ const speakWordInLanguage = (word, language, rate) => {
         // this._sound = loadSound(fileName, this.volume * this.props.volume)
         this._sound = loadSound(fileName, 1)
         return this._sound.promise
+          .catch(function (err) {
+            if (!err.isCanceled) {
+              console.log(err && err.stack)
+            }
+          })
       })
   }
 }
 
+const cancel = () => {
+  this._sound && this._sound.cancel()
+}
+
 export default {
-  speakWordInLanguage
+  speakWordInLanguage,
+  cancel
 }

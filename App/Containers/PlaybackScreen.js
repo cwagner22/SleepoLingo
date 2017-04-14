@@ -6,13 +6,14 @@ import { connect } from 'react-redux'
 
 import Player, { LESSON_LOOP_MAX } from './Player'
 import LessonHelper from '../Services/LessonHelper'
+import LessonActions from '../Redux/LessonRedux'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
 
 class PlaybackScreen extends React.Component {
   componentWillMount () {
-    // this.props.init()
+    this.props.startLesson(this.props.data)
   }
 
   showWord () {
@@ -51,7 +52,6 @@ const mapStateToProps = (state) => {
 
   return {
     lesson: state.playback.lesson,
-    // results: state.playback.results,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
     currentWordIndex: currentWords.findIndex((w) => w.id === state.lesson.currentWordId),
     isPaused: state.playback.isPaused,
@@ -62,7 +62,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // init: () => dispatch(PlaybackActions.playbackInit())
+    startLesson: (lessonId) => dispatch(LessonActions.lessonStart(lessonId))
   }
 }
 

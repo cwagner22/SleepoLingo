@@ -76,9 +76,8 @@ class LessonsListScreen extends React.Component {
     RNFS.mkdir(cachePath, {NSURLIsExcludedFromBackupKey: true})
   }
 
-  startLesson (lesson) {
-    this.props.startLesson(lesson.id)
-    NavigationActions.lesson()
+  startLesson (lessonId) {
+    NavigationActions.lesson(lessonId)
   }
 
   renderHeader (data, sectionID) {
@@ -96,7 +95,7 @@ class LessonsListScreen extends React.Component {
 
   renderRow (lesson, sectionID) {
     return (
-      <LessonButton text={lesson.title} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.startLesson(lesson)} />
+      <LessonButton text={lesson.title} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.startLesson(lesson.id)} />
     )
   }
 
@@ -133,9 +132,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLessons: () => dispatch(LessonActions.loadLessons()),
-    startLesson: (lessonId) => dispatch(LessonActions.lessonStart(lessonId))
-  }
+    loadLessons: () => dispatch(LessonActions.loadLessons())}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonsListScreen)

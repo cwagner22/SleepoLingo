@@ -16,6 +16,7 @@ import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
   componentWillMount () {
+    this.props.startLesson(this.props.data)
     this.props.loadNextCard()
   }
 
@@ -86,7 +87,8 @@ const mapDispatchToProps = (dispatch) => {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
     showFront: () => dispatch(LessonActions.lessonShowFront()),
     showBack: () => dispatch(LessonActions.lessonShowBack()),
-    loadNextCard: () => dispatch(LessonActions.loadNextCard())
+    loadNextCard: () => dispatch(LessonActions.loadNextCard()),
+    startLesson: (lessonId) => dispatch(LessonActions.lessonStart(lessonId))
   }
 }
 

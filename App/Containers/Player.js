@@ -53,7 +53,7 @@ class PlayerScreen extends React.Component {
   componentWillMount () {
     this.props.incCurrentWord(true)
     this.props.setPaused(false)
-    this.start()
+    this.setModifiers()
   }
 
   start () {
@@ -61,13 +61,14 @@ class PlayerScreen extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    var promise = Promise.resolve()
     if (nextProps.lessonLoopCounter !== this.props.lessonLoopCounter) {
-      this.speakOriginal('Restarting the lesson')
-        .then(() => this.start())
+      promise = this.speakOriginal('Restarting the lesson')
+        .then(() => this.setModifiers())
     }
 
     if (nextProps.currentWord !== this.props.currentWord || nextProps.forcePlay) {
-      this.speakWord(nextProps.currentWord)
+      promise.then(() => this.speakWord(nextProps.currentWord))
     }
   }
 

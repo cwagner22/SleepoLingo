@@ -14,8 +14,9 @@ export const LESSON_LOOP_MAX = 2
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  lessonStart: ['lessonId'],
   loadLessons: null,
+  loadLesson: ['lessonId'],
+  lessonStart: ['lessonId'],
   ankiHard: null,
   ankiOk: null,
   ankiEasy: null,
@@ -47,6 +48,17 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
+export const loadLessons = (state) => {
+  const normalizedData = normalize(lessons, lessonsValuesSchema)
+  return state.merge(normalizedData.entities)
+}
+
+export const loadLesson = (state, { lessonId }: Number) => {
+  return state.merge({
+    currentLessonId: lessonId
+  })
+}
+
 export const startLesson = (state, { lessonId }: Number) => {
   // Reset cards if new lesson
   var resetCards = {}
@@ -56,7 +68,6 @@ export const startLesson = (state, { lessonId }: Number) => {
 
   return state.merge({
     ...resetCards,
-    currentLessonId: lessonId,
     showAnswer: false,
     currentWordId: null,
     lessonLoopCounter: 1
@@ -64,35 +75,6 @@ export const startLesson = (state, { lessonId }: Number) => {
 }
 
 const updateCardDate = (state, showDate) => {
-  // return state.merge({
-  //   currentWord: {
-  //     ...state.currentWord,
-  //     showDate: showDate
-  //   },
-  //   lesson: {
-  //     ...state.lesson,
-  //     words : {
-  //       ...state.lesson.words,
-  //       [state.currentWord.id] : {
-  //         ...state.lesson.words[state.currentWord.id],
-  //         showDate: showDate
-  //       }
-  //     }
-  //   }
-  // })
-
-  // return state.merge({currentWord: {showDate}}, {deep: true})
-
-  // return state.lesson.words.map(w => () => {
-  //   if (w.id !== state.currentWord.id) {
-  //     return w;
-  //   }
-  //   return {
-  //     ...w,
-  //     showDate
-  //   };
-  // });
-
   return state.setIn(['cardsDates', state.currentWordId], showDate.toDate())
 }
 
@@ -203,11 +185,6 @@ export const decCurrentWord = (state, action) => {
   return navigateCurrentWord(state, action)
 }
 
-export const loadLessons = (state) => {
-  const normalizedData = normalize(lessons, lessonsValuesSchema)
-  return state.merge(normalizedData.entities)
-}
-
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -220,6 +197,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_BACK]: showBack,
   [Types.LOAD_NEXT_CARD]: loadNextCard,
   [Types.LOAD_LESSONS]: loadLessons,
+  [Types.LOAD_LESSON]: loadLesson,
   [Types.INC_CURRENT_WORD]: incCurrentWord,
   [Types.DEC_CURRENT_WORD]: decCurrentWord
 })

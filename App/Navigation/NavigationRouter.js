@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Scene, Router } from 'react-native-router-flux'
+import { Scene, Router, Actions as NavigationActions } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyle'
 import NavigationDrawer from './NavigationDrawer'
 import NavItems from './NavItems'
@@ -24,6 +24,7 @@ import LessonsListScreen from '../Containers/LessonsListScreen'
 import LessonScreen from '../Containers/LessonScreen'
 import AnkiScreen from '../Containers/AnkiScreen'
 import PlaybackScreen from '../Containers/PlaybackScreen'
+import WordsListScreen from '../Containers/WordsListScreen'
 
 /* **************************
 * Documentation: https://github.com/aksonov/react-native-router-flux
@@ -38,7 +39,8 @@ class NavigationRouter extends Component {
             <Scene initial key='presentationScreen' component={PresentationScreen} title='Ignite' renderLeftButton={NavItems.hamburgerButton} />
             <Scene key='lessonsList' component={LessonsListScreen} title='Lessons' />
             <Scene key='lesson' component={LessonScreen} title='Lesson Tips' />
-            <Scene key='anki' component={AnkiScreen} title='Anki' />
+            <Scene key='anki' component={AnkiScreen} title='Anki' rightTitle='All Words' onRight={() => NavigationActions.wordsList()} />
+            <Scene key='wordsList' component={WordsListScreen} title='Words' />
             <Scene key='playback' component={PlaybackScreen} title='Playback' />
             <Scene key='componentExamples' component={AllComponentsScreen} title='Components' />
             <Scene key='usageExamples' component={UsageExamplesScreen} title='Usage' rightTitle='Example' onRight={() => window.alert('Example Pressed')} />

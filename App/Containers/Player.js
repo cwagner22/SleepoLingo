@@ -16,15 +16,18 @@ import BingAPI from '../Services/BingApi'
 import makeCancelable from '../Lib/MakeCancelable'
 import Deferred from '../Lib/Deferred'
 import PlaybackActions from '../Redux/PlaybackRedux'
-import LessonActions from '../Redux/LessonRedux'
+import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
 import Player from '../Services/Player'
 import LessonHelper from '../Services/LessonHelper'
 
 // Styles
 // import styles from './Styles/PlayerStyle'
 
-export const LESSON_LOOP_MAX = 2
-export const TRANSLATION_LOOP_MAX = 3
+const TRANSLATION_LOOP_MAX = 3
+const ORIGINAL_TIMEOUT = 1000
+const TRANSLATION_TIMEOUT = 1000
+const NEXT_WORD_TIMEOUT = 2000
+const REPEAT_ALL_TIMEOUT = 4000
 
 class PlayerScreen extends React.Component {
   constructor (props: Object) {
@@ -129,7 +132,7 @@ class PlayerScreen extends React.Component {
     return startY - (startY - endY) * (x / (endX - startX))
   }
 
-  setModifiers () {
+  setModifiersOld () {
     this.originalTimeout = 1000
 
     // const x = this.props.lessonLoopCounter - 1
@@ -162,6 +165,22 @@ class PlayerScreen extends React.Component {
     // this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
   }
 
+  isFocusMode () {
+    return this.props.lessonLoopCounter <= LESSON_LOOP_MAX
+  }
+
+  setModifiers () {
+    this.volume = this.isFocusMode() ? 1 : 0.5
+
+    this.originalTimeout = ORIGINAL_TIMEOUT
+    this.translationTimeout = TRANSLATION_TIMEOUT
+    this.nextWordTimeout = NEXT_WORD_TIMEOUT
+    this.repeatAllTimeout = REPEAT_ALL_TIMEOUT
+
+    this.rateOriginal = this.isFocusMode() ? 0.3 : 0.2
+    this.rateTranslation = this.isFocusMode() ? 0.3 : 0.2
+  }
+
   onFinishPlayed () {
     // Finish orig + translation
     this.props.incCurrentWord(true)
@@ -178,7 +197,7 @@ class PlayerScreen extends React.Component {
   }
 
   speakOriginal (word) {
-    return this.makeCancelable(Player.speakWordInLanguage(word, 'en-US', this.rateOriginal))
+    return this.makeCancelable(Player.speakWordInLanguage(word, 'en-US', this.rateOriginal, this.volume * this.props.volume))
       .then(() => {
         return this.delay(this.originalTimeout)
       })
@@ -187,7 +206,7 @@ class PlayerScreen extends React.Component {
   speakTranslation (word) {
     this.translationCounter++
 
-    return this.makeCancelable(Player.speakWordInLanguage(word, 'th-TH', this.rateTranslation))
+    return this.makeCancelable(Player.speakWordInLanguage(word, 'th-TH', this.rateTranslation, this.volume * this.props.volume))
       .then(() => {
         // Repeat translation 3 times
         if (this.translationCounter < TRANSLATION_LOOP_MAX) {
@@ -254,7 +273,9 @@ class PlayerScreen extends React.Component {
   }
 
   stopPlayback () {
-    NavigationActions.lesson({type: 'reset'})
+    // todo: crashes for no reason
+    NavigationActions.pop()
+    // NavigationActions.lesson(this.props.currentLessonId)
   }
 
   resumePlayback () {

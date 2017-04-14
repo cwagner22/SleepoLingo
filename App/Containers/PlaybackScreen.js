@@ -4,9 +4,9 @@ import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 
-import Player, { LESSON_LOOP_MAX } from './Player'
+import Player from './Player'
 import LessonHelper from '../Services/LessonHelper'
-import LessonActions from '../Redux/LessonRedux'
+import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'

@@ -30,15 +30,14 @@ const downloadAudioIfNeeded = (word, language, rate) => {
   return promise
 }
 
-const speakWordInLanguage = (word, language, rate) => {
+const speakWordInLanguage = (word, language, rate, volume = 1) => {
   var deviceTTS = false
   if (deviceTTS) {
     return this.playTTS()
   } else {
     return downloadAudioIfNeeded(word, language, rate)
       .then((fileName) => {
-        // this._sound = loadSound(fileName, this.volume * this.props.volume)
-        this._sound = loadSound(fileName, 1)
+        this._sound = loadSound(fileName, volume)
         return this._sound.promise
           .catch(function (err) {
             if (!err.isCanceled) {

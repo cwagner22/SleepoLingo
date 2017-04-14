@@ -56,10 +56,6 @@ class PlayerScreen extends React.Component {
     this.setModifiers()
   }
 
-  start () {
-    this.setModifiers()
-  }
-
   componentWillReceiveProps (nextProps) {
     var promise = Promise.resolve()
     if (nextProps.lessonLoopCounter !== this.props.lessonLoopCounter) {
@@ -67,7 +63,11 @@ class PlayerScreen extends React.Component {
         .then(() => this.setModifiers())
     }
 
-    if (nextProps.currentWord !== this.props.currentWord || nextProps.forcePlay) {
+    if (nextProps.currentWord !== this.props.currentWord ||
+      // forcePlay is set when using the prev/next button on the same word (first/last words)
+      (nextProps.sameWord && this.forcePlay)
+    ) {
+      this.forcePlay = false
       promise.then(() => this.speakWord(nextProps.currentWord))
     }
   }
@@ -271,11 +271,13 @@ class PlayerScreen extends React.Component {
   previous () {
     this.cancelPromises()
     this.props.decCurrentWord()
+    this.forcePlay = true
   }
 
   next () {
     this.cancelPromises()
     this.props.incCurrentWord(false)
+    this.forcePlay = true
   }
 
   renderPlayPauseButton () {
@@ -374,7 +376,7 @@ const mapStateToProps = (state) => {
   return {
     volume: state.playback.volume,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
-    forcePlay: state.lesson.forcePlay,
+    sameWord: state.lesson.sameWord,
     isPaused: state.playback.isPaused,
     currentWord: state.lesson.words[state.lesson.currentWordId],
     currentWords: lessonHelper.currentWords()

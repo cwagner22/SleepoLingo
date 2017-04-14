@@ -162,7 +162,7 @@ const navigateCurrentWord = (state, action) => {
         ...state,
         lessonLoopCounter,
         currentWordId,
-        forcePlay: currentWordId === state.currentWordId
+        sameWord: currentWordId === state.currentWordId
       }
     case 'DEC_CURRENT_WORD':
       currentWordId = currentWords[Math.max(0, --index)].id
@@ -170,7 +170,7 @@ const navigateCurrentWord = (state, action) => {
         ...state,
         lessonLoopCounter,
         currentWordId,
-        forcePlay: currentWordId === state.currentWordId
+        sameWord: currentWordId === state.currentWordId
       }
     default:
       return state

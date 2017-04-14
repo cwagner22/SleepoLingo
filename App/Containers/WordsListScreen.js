@@ -25,8 +25,8 @@ class WordsListScreen extends React.Component {
   _renderContent (section) {
     const word = section.full ? section.full : section
     return (
-      <TouchableHighlight style={styles.content} onPress={() => this.play(word.translation)}>
-        <View>
+      <TouchableHighlight onPress={() => this.play(word.translation)}>
+        <View style={styles.content}>
           <Text>{word.translation}</Text>
           <Text>{word.transliteration}</Text>
         </View>

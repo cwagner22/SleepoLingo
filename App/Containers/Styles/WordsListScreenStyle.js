@@ -23,6 +23,7 @@ export default StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: Colors.snow,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flexWrap: 'wrap'
   }
 })

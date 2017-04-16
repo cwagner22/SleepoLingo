@@ -37,7 +37,7 @@ const speakWordInLanguage = (word, language, rate, volume = 1) => {
   } else {
     return downloadAudioIfNeeded(word, language, rate)
       .then((fileName) => {
-        this._sound = loadSound(fileName, volume)
+        this._sound = loadSound(fileName, volume, rate)
         return this._sound.promise
           .catch(function (err) {
             if (!err.isCanceled) {

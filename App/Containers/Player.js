@@ -25,9 +25,13 @@ import LessonHelper from '../Services/LessonHelper'
 
 const TRANSLATION_LOOP_MAX = 3
 const ORIGINAL_TIMEOUT = 1000
+const ORIGINAL_TIMEOUT_SLEEP = 5000
 const TRANSLATION_TIMEOUT = 1000
+const TRANSLATION_TIMEOUT_SLEEP = 5000
 const NEXT_WORD_TIMEOUT = 2000
+const NEXT_WORD_TIMEOUT_SLEEP = 5000
 const REPEAT_ALL_TIMEOUT = 4000
+const REPEAT_ALL_TIMEOUT_SLEEP = 4000
 
 class PlayerScreen extends React.Component {
   constructor (props: Object) {
@@ -51,6 +55,14 @@ class PlayerScreen extends React.Component {
     })
     Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
     // Tts.voices().then(voices => console.log(voices))
+
+    this.scheduleTimer()
+  }
+
+  scheduleTimer () {
+    setTimeout(() => {
+      NavigationActions.pop()
+    }, 60 * 60 * 1000)
   }
 
   componentWillMount () {
@@ -62,13 +74,18 @@ class PlayerScreen extends React.Component {
   componentWillReceiveProps (nextProps) {
     var promise = Promise.resolve()
     if (nextProps.lessonLoopCounter !== this.props.lessonLoopCounter) {
-      promise = this.speakOriginal('Restarting the lesson')
-        .then(() => this.setModifiers())
+      if (this.isFocusMode()) {
+        promise = this.speakOriginal('One more time')
+      }
+      promise.then(() => this.delay(this.repeatAllTimeout))
+      promise.then(() => this.setModifiers())
     }
 
     if (nextProps.currentWord !== this.props.currentWord ||
       // forcePlay is set when using the prev/next button on the same word (first/last words)
-      (nextProps.sameWord && this.forcePlay)
+      (nextProps.sameWord && this.forcePlay) ||
+      //  Sleeping mode
+      !this.isFocusMode()
     ) {
       this.forcePlay = false
       promise.then(() => this.speakWord(nextProps.currentWord))
@@ -170,20 +187,22 @@ class PlayerScreen extends React.Component {
   }
 
   setModifiers () {
-    this.volume = this.isFocusMode() ? 1 : 0.5
+    this.volume = this.isFocusMode() ? 1 : 0.4
 
-    this.originalTimeout = ORIGINAL_TIMEOUT
-    this.translationTimeout = TRANSLATION_TIMEOUT
-    this.nextWordTimeout = NEXT_WORD_TIMEOUT
-    this.repeatAllTimeout = REPEAT_ALL_TIMEOUT
+    this.originalTimeout = this.isFocusMode() ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
+    this.translationTimeout = this.isFocusMode() ? TRANSLATION_TIMEOUT : TRANSLATION_TIMEOUT_SLEEP
+    this.nextWordTimeout = this.isFocusMode() ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
+    this.repeatAllTimeout = this.isFocusMode() ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
 
-    this.rateOriginal = this.isFocusMode() ? 0.3 : 0.2
-    this.rateTranslation = this.isFocusMode() ? 0.3 : 0.2
+    this.rateOriginal = this.isFocusMode() ? 0.6 : 0.4
+    this.rateTranslation = this.isFocusMode() ? 0.6 : 0.4
   }
 
   onFinishPlayed () {
     // Finish orig + translation
-    this.props.incCurrentWord(true)
+    return this.delay(this.nextWordTimeout).then(() => {
+      this.props.incCurrentWord(true)
+    })
   }
 
   playTTS (word, language, rate) {

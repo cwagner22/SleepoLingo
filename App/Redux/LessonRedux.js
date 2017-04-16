@@ -146,12 +146,12 @@ const navigateCurrentWord = (state, action) => {
     case 'INC_CURRENT_WORD':
       if (++index >= currentWords.length) {
         // if (allowRestart) {
-        if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
-          lessonLoopCounter++
-          index = 0
-        } else {
-          index = currentWords.length - 1
-        }
+        // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
+        lessonLoopCounter++
+        index = 0
+        // } else {
+        //   index = currentWords.length - 1
+        // }
         // } else {
         //
         // }

@@ -188,8 +188,10 @@ const create = (baseURL = 'https://clients5.google.com/translate_a') => {
   // })
 
   const ttsURL = (word, language, rate) => {
+    // return 'https://responsivevoice.org/responsivevoice/getvoice.php?t=' + encodeURIComponent(word) +
+    //   '&tl=' + language + '&pitch=0.5&rate=' + rate + '&vol=1'
     return 'https://responsivevoice.org/responsivevoice/getvoice.php?t=' + encodeURIComponent(word) +
-      '&tl=' + language + '&pitch=0.5&rate=' + rate + '&vol=1'
+      '&tl=' + language
   }
 
   // ------

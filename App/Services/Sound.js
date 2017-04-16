@@ -3,7 +3,7 @@
 import Sound from 'react-native-sound'
 import Deferred from '../Lib/Deferred'
 
-const loadSound = (fileName, volume) => {
+const loadSound = (fileName, volume, speed) => {
   var dfd = new Deferred()
   var sound = null
   var _hasFinished = false
@@ -11,6 +11,7 @@ const loadSound = (fileName, volume) => {
   const play = function () {
     sound
       .setVolume(volume)
+      .setSpeed(speed)
       .play((success) => {
         _hasFinished = true
         if (success) {

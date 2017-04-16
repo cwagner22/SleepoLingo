@@ -47,15 +47,21 @@ class LessonsListScreen extends React.Component {
 
     var cachePath = RNFS.DocumentDirectoryPath + '/cache'
 
-    if (__DEV__) {
-      // Empty cache
-      RNFS.exists(cachePath).then((exists) => {
-        var pomise = exists ? RNFS.unlink(cachePath) : Promise.resolve()
-        pomise.then(this.createCache)
-      })
-    } else {
-      this.createCache()
-    }
+    // if (__DEV__) {
+    //   // Empty cache
+    //   RNFS.exists(cachePath).then((exists) => {
+    //     var pomise = exists ? RNFS.unlink(cachePath) : Promise.resolve()
+    //     pomise.then(this.createCache)
+    //   })
+    // } else {
+    //   this.createCache()
+    // }
+
+    RNFS.exists(cachePath).then((exists) => {
+      if (!exists) {
+        this.createCache()
+      }
+    })
 
     const rowHasChanged = (r1, r2) => r1 !== r2
     const sectionHeaderHasChanged = (s1, s2) => s1 !== s2

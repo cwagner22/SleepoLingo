@@ -5,6 +5,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   playbackVolChange: ['volume'],
+  playbackSpeedChange: ['speed'],
   playbackSetPaused: ['isPaused'],
   playbackInit: null
 })
@@ -16,6 +17,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   volume: 1,
+  speed: 1,
   isPaused: true
 })
 
@@ -27,6 +29,10 @@ export const init = (state, { volume }: Object) => {
 
 export const changeVolume = (state, { volume }: Object) => {
   return state.merge({ volume })
+}
+
+export const changeSpeed = (state, { speed }: Object) => {
+  return state.merge({ speed })
 }
 
 export const setResults = (state, { results }: Object) => {
@@ -41,6 +47,7 @@ export const setPaused = (state, { isPaused }: Object) => {
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLAYBACK_VOL_CHANGE]: changeVolume,
+  [Types.PLAYBACK_SPEED_CHANGE]: changeSpeed,
   [Types.PLAYBACK_SET_PAUSED]: setPaused,
   [Types.PLAYBACK_INIT]: init
 })

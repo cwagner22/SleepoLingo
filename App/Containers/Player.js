@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, Text, Slider, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -10,7 +10,8 @@ import _ from 'lodash'
 import Sound from 'react-native-sound'
 import BackgroundTimer from 'react-native-background-timer'
 
-import VolumeSlider from './VolumeSlider'
+import VolumeSlider from '../Components/VolumeSlider'
+import SpeedSlider from '../Components/SpeedSlider'
 import API from '../Services/TranslateApi'
 import BingAPI from '../Services/BingApi'
 import makeCancelable from '../Lib/MakeCancelable'
@@ -194,8 +195,9 @@ class PlayerScreen extends React.Component {
     this.nextWordTimeout = this.isFocusMode() ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
     this.repeatAllTimeout = this.isFocusMode() ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
 
-    this.rateOriginal = this.isFocusMode() ? 0.6 : 0.4
-    this.rateTranslation = this.isFocusMode() ? 0.6 : 0.4
+    this.speed = (this.isFocusMode() ? 0.6 : 0.4)
+    // this.rateOriginal = speed
+    // this.rateTranslation = speed
   }
 
   onFinishPlayed () {
@@ -216,7 +218,8 @@ class PlayerScreen extends React.Component {
   }
 
   speakOriginal (word) {
-    return this.makeCancelable(Player.speakWordInLanguage(word, 'en-US', this.rateOriginal, this.volume * this.props.volume))
+    return this.makeCancelable(
+      Player.speakWordInLanguage(word, 'en-US', this.speed * this.props.speed, this.volume * this.props.volume))
       .then(() => {
         return this.delay(this.originalTimeout)
       })
@@ -225,7 +228,8 @@ class PlayerScreen extends React.Component {
   speakTranslation (word) {
     this.translationCounter++
 
-    return this.makeCancelable(Player.speakWordInLanguage(word, 'th-TH', this.rateTranslation, this.volume * this.props.volume))
+    return this.makeCancelable(
+      Player.speakWordInLanguage(word, 'th-TH', this.speed * this.props.speed, this.volume * this.props.volume))
       .then(() => {
         // Repeat translation 3 times
         if (this.translationCounter < TRANSLATION_LOOP_MAX) {
@@ -398,13 +402,8 @@ class PlayerScreen extends React.Component {
         {this.renderPlaybackButtons()}
         <View>
           {this.renderTime()}
-          <VolumeSlider />
-          <View>
-            <Text>Speed</Text>
-            <Slider
-              {...this.props}
-              onValueChange={(value) => this.setState({value: value})} />
-          </View>
+          <VolumeSlider volume={this.props.volume} onChange={(volume) => this.props.changeVol(volume)} />
+          <SpeedSlider speed={this.props.speed} onChange={(speed) => this.props.changeSpeed(speed)} />
         </View>
       </View>
     )
@@ -415,6 +414,7 @@ const mapStateToProps = (state) => {
   const lessonHelper = new LessonHelper(state.lesson)
   return {
     volume: state.playback.volume,
+    speed: state.playback.speed,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
     sameWord: state.lesson.sameWord,
     isPaused: state.playback.isPaused,
@@ -428,7 +428,8 @@ const mapDispatchToProps = (dispatch) => {
     incCurrentWord: (allowRestart) => dispatch(LessonActions.incCurrentWord(allowRestart)),
     decCurrentWord: () => dispatch(LessonActions.decCurrentWord()),
     setPaused: (val) => dispatch(PlaybackActions.playbackSetPaused(val)),
-    loadNextWord: () => dispatch(PlaybackActions.playbackLoadNextWord())
+    changeVol: (volume) => dispatch(PlaybackActions.playbackVolChange(volume)),
+    changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed))
   }
 }
 

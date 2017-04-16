@@ -8,10 +8,10 @@ import loadSound from './Sound'
 
 this.api = API.create()
 
-const downloadAudioIfNeeded = (word, language, rate) => {
+const downloadAudioIfNeeded = (word, language) => {
   const fileName = md5Hex(word) + '.mp3'
   const path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
-  const url = this.api.ttsURL(word, language, rate)
+  const url = this.api.ttsURL(word, language)
 
   const promise = RNFS.exists(path)
     .then((exists) => {
@@ -30,14 +30,14 @@ const downloadAudioIfNeeded = (word, language, rate) => {
   return promise
 }
 
-const speakWordInLanguage = (word, language, rate, volume = 1) => {
+const speakWordInLanguage = (word, language, speed = 1, volume = 1) => {
   var deviceTTS = false
   if (deviceTTS) {
     return this.playTTS()
   } else {
-    return downloadAudioIfNeeded(word, language, rate)
+    return downloadAudioIfNeeded(word, language)
       .then((fileName) => {
-        this._sound = loadSound(fileName, volume, rate)
+        this._sound = loadSound(fileName, volume, speed)
         return this._sound.promise
           .catch(function (err) {
             if (!err.isCanceled) {

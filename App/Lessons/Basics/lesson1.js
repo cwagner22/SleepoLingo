@@ -134,6 +134,12 @@ export default {
       translation: 'คุณ พูด ภาษาอังกฤษ ได้ ไหม',
       transliteration: 'kun pôot paa-săa ang-grìt dâai măi',
       image: require('../images/0-19.jpg')
+    },
+    {
+      id: 20,
+      original: 'Good night, sweet dreams',
+      translation: '',
+      transliteration: ''
     }
   ]
 }

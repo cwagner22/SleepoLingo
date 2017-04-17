@@ -75,8 +75,10 @@ class PlayerScreen extends React.Component {
   componentWillReceiveProps (nextProps) {
     var promise = Promise.resolve()
     if (nextProps.lessonLoopCounter !== this.props.lessonLoopCounter) {
-      if (this.isFocusMode()) {
+      if (this.isFocusMode(nextProps.lessonLoopCounter)) {
         promise = this.speakOriginal('One more time')
+      } else if (nextProps.lessonLoopCounter === LESSON_LOOP_MAX + 1) {
+        promise = this.speakOriginal('Good night')
       }
       promise.then(() => this.delay(this.repeatAllTimeout))
       promise.then(() => this.setModifiers())
@@ -84,9 +86,9 @@ class PlayerScreen extends React.Component {
 
     if (nextProps.currentWord !== this.props.currentWord ||
       // forcePlay is set when using the prev/next button on the same word (first/last words)
-      (nextProps.sameWord && this.forcePlay) ||
-      //  Sleeping mode
-      !this.isFocusMode()
+      (nextProps.sameWord && this.forcePlay)
+    //  Sleeping mode
+    // !this.isFocusMode()
     ) {
       this.forcePlay = false
       promise.then(() => this.speakWord(nextProps.currentWord))
@@ -183,8 +185,8 @@ class PlayerScreen extends React.Component {
     // this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
   }
 
-  isFocusMode () {
-    return this.props.lessonLoopCounter <= LESSON_LOOP_MAX
+  isFocusMode (counter) {
+    return (counter || this.props.lessonLoopCounter) <= LESSON_LOOP_MAX
   }
 
   setModifiers () {

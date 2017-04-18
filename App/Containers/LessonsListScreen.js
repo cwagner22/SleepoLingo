@@ -82,7 +82,7 @@ class LessonsListScreen extends React.Component {
     RNFS.mkdir(cachePath, {NSURLIsExcludedFromBackupKey: true})
   }
 
-  startLesson (lessonId) {
+  goToLesson (lessonId) {
     NavigationActions.lesson(lessonId)
   }
 
@@ -101,7 +101,7 @@ class LessonsListScreen extends React.Component {
 
   renderRow (lesson, sectionID) {
     return (
-      <LessonButton text={lesson.title} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.startLesson(lesson.id)} />
+      <LessonButton text={lesson.title} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.goToLesson(lesson.id)} />
     )
   }
 

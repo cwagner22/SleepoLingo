@@ -62,7 +62,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    startLesson: (lessonId) => dispatch(LessonActions.lessonStart(lessonId))
+    startLesson: () => dispatch(LessonActions.lessonStart())
   }
 }
 

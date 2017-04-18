@@ -88,7 +88,7 @@ const mapDispatchToProps = (dispatch) => {
     showFront: () => dispatch(LessonActions.lessonShowFront()),
     showBack: () => dispatch(LessonActions.lessonShowBack()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
-    startLesson: (lessonId) => dispatch(LessonActions.lessonStart(lessonId))
+    startLesson: () => dispatch(LessonActions.lessonStart())
   }
 }
 

@@ -19,7 +19,7 @@ class WordsListScreen extends React.Component {
   }
 
   play (text) {
-    Player.speakWordInLanguage(text, 'th-TH', 0.4)
+    Player.speakWordInLanguage(text, 'th-TH', 0.7)
   }
 
   _renderContent (section) {

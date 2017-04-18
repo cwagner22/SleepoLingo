@@ -30,11 +30,12 @@ export default {
       translation: 'คือ',
       transliteration: 'keu',
       full: {
-        original: 'He is my teacher',
-        translation: 'เขา คือ ครู ของ ฉัน ',
-        transliteration: 'kăo keu kroo kŏng chăn'
+        original: 'She is my teacher',
+        translation: 'เธอ คือ ครู ของ ฉัน ',
+        transliteration: 'ter keu kroo kŏng chăn'
       },
-      note: 'คือ/keu links 2 equal things , giving definition, explanation, clarification of things.',
+      note: 'คือ/keu links 2 equal things , giving definition, explanation, clarification of things. In this example' +
+      'we can also use เป็น/bpen...todo: check',
       image: require('../images/105.jpg')
     },
     {

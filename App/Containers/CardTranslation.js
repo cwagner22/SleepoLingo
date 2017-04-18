@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, TouchableWithoutFeedback, Image } from 'react-native'
+import { View, TouchableWithoutFeedback, Image, Text } from 'react-native'
 import { connect } from 'react-redux'
 
 import LessonActions from '../Redux/LessonRedux'
@@ -33,9 +33,7 @@ class CardTranslation extends React.Component {
   renderImage () {
     if (this.props.currentWord.image) {
       return (
-        <Image
-          style={{flex: 1, height: undefined, width: undefined}} resizeMode='contain'
-          source={this.props.currentWord.image} />
+        <Image style={styles.image} resizeMode='contain' source={this.props.currentWord.image} />
       )
     }
   }
@@ -49,6 +47,7 @@ class CardTranslation extends React.Component {
             onPress={() => this.speakText(this.props.currentWord.translation)} />
           {this.renderFullTranslation()}
           {this.renderImage()}
+          <Text style={styles.note}>{this.props.currentWord.note}</Text>
         </View>
       </TouchableWithoutFeedback>
     )

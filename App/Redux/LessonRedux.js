@@ -16,7 +16,7 @@ export const LESSON_LOOP_MAX = 2
 const { Types, Creators } = createActions({
   loadLessons: null,
   loadLesson: ['lessonId'],
-  lessonStart: ['lessonId'],
+  lessonStart: null,
   ankiHard: null,
   ankiOk: null,
   ankiEasy: null,
@@ -41,7 +41,7 @@ export const INITIAL_STATE = Immutable({
   currentWordId: null,
   showAnswer: false,
   showFront: true,
-  cardsDates: [],
+  cardsDates: {},
   lessonLoopCounter: null,
   forcePlay: null
 })
@@ -57,7 +57,7 @@ export const loadLesson = (state, { lessonId }: Number) => {
   // Reset cards if new lesson
   var resetCards = {}
   if (lessonId !== state.currentLessonId) {
-    resetCards = { cardsDates: [] }
+    resetCards = { cardsDates: {} }
   }
   return state.merge({
     ...resetCards,
@@ -65,7 +65,7 @@ export const loadLesson = (state, { lessonId }: Number) => {
   })
 }
 
-export const startLesson = (state, { lessonId }: Number) => {
+export const startLesson = (state) => {
   return state.merge({
     showAnswer: false,
     currentWordId: null,

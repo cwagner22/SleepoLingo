@@ -1,15 +1,8 @@
 export default {
   id: 1,
   title: 'To Be/To Have',
-  note: 'Todo: Pronouns list',
+  note: 'Todo: Pronouns list. To say your name use ชื่อ (chêu)',
   words: [
-    {
-      id: 101,
-      original: 'I am (name)',
-      translation: 'ผม ชื่อ',
-      transliteration: 'pŏm cheu',
-      note: 'ชื่อ/cheu: To be called'
-    },
     {
       id: 102,
       original: 'To be',
@@ -20,14 +13,16 @@ export default {
         translation: 'ผม เป็น ผู้ชาย',
         transliteration: 'pŏm bpen pôo chaai'
       },
-      note: 'เป็น/bpen + nouns or noun phrases'
+      note: 'เป็น/bpen + nouns or noun phrases',
+      image: require('../images/102.jpg')
     },
     {
       id: 104,
       original: 'You are not a man',
       translation: 'คุณ ไม่ใช่ ผู้ชาย',
       transliteration: 'kun mâi châi pôo chaai',
-      note: 'ไม่ใช่/mâi châi /is not OR ไม่ได้เป็น/ mâi dâai bpen/ is not'
+      note: 'ไม่ใช่/mâi châi /is not OR ไม่ได้เป็น/ mâi dâai bpen/ is not',
+      image: require('../images/104.jpg')
     },
     {
       id: 105,
@@ -35,11 +30,51 @@ export default {
       translation: 'คือ',
       transliteration: 'keu',
       full: {
+        original: 'He is my teacher',
+        translation: 'เขา คือ ครู ของ ฉัน ',
+        transliteration: 'kăo keu kroo kŏng chăn'
+      },
+      note: 'คือ/keu links 2 equal things , giving definition, explanation, clarification of things.',
+      image: require('../images/105.jpg')
+    },
+    {
+      id: 120,
+      original: 'This',
+      translation: 'นี่',
+      transliteration: 'nêe',
+      full: {
         original: 'This is a hat',
         translation: 'นี่ คือ หมวก ',
         transliteration: 'nêe keu mùak'
       },
-      note: 'เป็น/bpen + nouns or noun phrases. Used to give definition, explanation, clarification of thing'
+      note: 'To indicate that you\'re referring to "this" particular person or object',
+      image: require('../images/120.jpg')
+    },
+    {
+      id: 121,
+      original: 'That (not far)',
+      translation: 'นั่น',
+      transliteration: 'nân',
+      full: {
+        original: 'That is my friend',
+        translation: 'นั่น เพื่อน ฉัน',
+        transliteration: 'nân pêuan chăn'
+      },
+      note: 'To indicate that something which is positioned right there (not far from you). Use โน้น (nohn, that' +
+      'over there) to indicate someone or something that is far away from you',
+      image: require('../images/121.jpg')
+    },
+    {
+      id: 122,
+      original: 'This one',
+      translation: 'อันนี้',
+      transliteration: 'an née',
+      full: {
+        original: 'I want this one',
+        translation: 'ฉัน ต้องการ อันนี้',
+        transliteration: 'chăn dtông gaan an née'
+      },
+      image: require('../images/122.jpg')
     },
     {
       id: 106,
@@ -50,7 +85,8 @@ export default {
         original: 'I have a dog',
         translation: 'ผม มี สุนัข',
         transliteration: 'pŏm mee sù-nák'
-      }
+      },
+      image: require('../images/106.jpg')
     },
     {
       id: 107,
@@ -61,7 +97,8 @@ export default {
         original: 'There is a car',
         translation: 'มี รถ',
         transliteration: 'mee rót'
-      }
+      },
+      image: require('../images/107.jpg')
     },
     {
       id: 109,
@@ -73,7 +110,8 @@ export default {
         translation: 'อยู่ บ้าน',
         transliteration: 'yòo bâan'
       },
-      note: 'อยู่ (yòo) means to live (at), to be situated at, to be located'
+      note: 'อยู่ (yòo) means to live (at), to be situated at, to be located',
+      image: require('../images/109.jpeg')
     },
     {
       id: 110,
@@ -84,7 +122,8 @@ export default {
         original: 'You are nice',
         translation: 'คุณ เป็น คนดี',
         transliteration: 'kun bpen kon dee'
-      }
+      },
+      image: require('../images/110.jpg')
     },
     {
       id: 111,
@@ -96,7 +135,8 @@ export default {
         translation: 'เขา ชอบ กิน',
         transliteration: 'kăo chôp gin'
       },
-      note: 'เธอ (ter) is usually used to say She'
+      note: 'เธอ (ter) is usually used to say She',
+      image: require('../images/111.jpg')
     },
     {
       id: 112,
@@ -108,7 +148,8 @@ export default {
         translation: 'เธอ สวย',
         transliteration: 'ter sŭay'
       },
-      note: 'หล่อ (lòr) is used for men (handsome)'
+      note: 'หล่อ (lòr) is used for men (handsome)',
+      image: require('../images/112.jpg')
     },
     {
       id: 113,
@@ -119,7 +160,8 @@ export default {
         original: 'It’s a cat',
         translation: 'มัน เป็น แมว',
         transliteration: 'man bpen maew'
-      }
+      },
+      image: require('../images/113.jpg')
     },
     {
       id: 114,
@@ -131,7 +173,8 @@ export default {
         translation: 'พวกเรา ยอดเยี่ยม',
         transliteration: 'pûak rao yôt yîam'
       },
-      note: 'เรา (rao) can also be used to say We'
+      note: 'เรา (rao) can also be used to say We',
+      image: require('../images/114.jpg')
     },
     {
       id: 115,
@@ -142,7 +185,8 @@ export default {
         original: 'You are generous (plural)',
         translation: 'พวกคุณ ใจกว้าง',
         transliteration: 'pûak kun jai gwâang'
-      }
+      },
+      image: require('../images/115.jpeg')
     },
     {
       id: 116,
@@ -153,13 +197,15 @@ export default {
         original: 'They are Chinese',
         translation: 'พวกเขา เป็น ชาวจีน',
         transliteration: 'pûak kăo bpen chaao jeen'
-      }
+      },
+      image: require('../images/116.svg')
     },
     {
       id: 117,
       original: 'It\'s raining',
       translation: 'ฝนตก',
-      transliteration: 'fŏn dtòk'
+      transliteration: 'fŏn dtòk',
+      image: require('../images/117.jpg')
     },
     {
       id: 118,
@@ -171,13 +217,15 @@ export default {
         translation: 'มัน ดีมาก',
         transliteration: 'dee mâak'
       },
-      note: 'Can be prefixed by มัน (man) under certain conditions'
+      note: 'Can be prefixed by มัน (man) under certain conditions',
+      image: require('../images/118.jpg')
     },
     {
       id: 119,
       original: 'It\'s crazy',
       translation: 'มัน บ้า',
-      transliteration: 'man bâa'
+      transliteration: 'man bâa',
+      image: require('../images/119.jpg')
     }
   ]
 }

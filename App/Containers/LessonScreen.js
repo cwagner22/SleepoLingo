@@ -31,11 +31,11 @@ class LessonScreen extends React.Component {
   }
 
   startDay () {
-    NavigationActions.anki(this.props.data)
+    NavigationActions.anki()
   }
 
   startNight () {
-    NavigationActions.playback(this.props.data)
+    NavigationActions.playback()
   }
 }
 

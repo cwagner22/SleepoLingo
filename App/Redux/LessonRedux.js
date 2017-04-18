@@ -54,20 +54,19 @@ export const loadLessons = (state) => {
 }
 
 export const loadLesson = (state, { lessonId }: Number) => {
-  return state.merge({
-    currentLessonId: lessonId
-  })
-}
-
-export const startLesson = (state, { lessonId }: Number) => {
   // Reset cards if new lesson
   var resetCards = {}
   if (lessonId !== state.currentLessonId) {
     resetCards = { cardsDates: [] }
   }
-
   return state.merge({
     ...resetCards,
+    currentLessonId: lessonId
+  })
+}
+
+export const startLesson = (state, { lessonId }: Number) => {
+  return state.merge({
     showAnswer: false,
     currentWordId: null,
     lessonLoopCounter: 1
@@ -103,7 +102,8 @@ export const showBack = (state) => {
 }
 
 const sortCards = (wordHelper, wordsWithDates, allowAlmost) => {
-  var sortedWords = _.sortBy(wordsWithDates, ['showDate', 'id'])
+  // Sort by date and index
+  var sortedWords = _.sortBy(wordsWithDates, ['showDate', (w, i) => i])
     .filter((word) => {
       // Exclude future cards
       return wordHelper.isReady(word, allowAlmost)

@@ -16,7 +16,7 @@ import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
   componentWillMount () {
-    this.props.startLesson(this.props.data)
+    this.props.startLesson()
     this.props.loadNextCard()
   }
 

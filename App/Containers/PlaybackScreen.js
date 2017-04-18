@@ -13,7 +13,7 @@ import styles from './Styles/PlaybackScreenStyle'
 
 class PlaybackScreen extends React.Component {
   componentWillMount () {
-    this.props.startLesson(this.props.data)
+    this.props.startLesson()
   }
 
   showWord () {

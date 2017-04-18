@@ -61,7 +61,9 @@ class PlayerScreen extends React.Component {
   }
 
   scheduleTimer () {
-    setTimeout(() => {
+    BackgroundTimer.setTimeout(() => {
+      // Force component to stop right now. Pop() will be called once the app is active.
+      this.componentWillUnmount()
       NavigationActions.pop()
     }, 60 * 60 * 1000)
   }

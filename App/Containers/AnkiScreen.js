@@ -32,18 +32,14 @@ class AnkiScreen extends React.Component {
     }
   }
 
-  renderOriginal () {
+  renderCard () {
     if (this.props.lesson.showFront) {
       return (
         <CardOriginal text={this.props.currentWord.original}
           fullText={this.props.currentWord.full && this.props.currentWord.full.original}
           onPress={() => { this.props.showBack() }} />
       )
-    }
-  }
-
-  renderTranslation () {
-    if (!this.props.lesson.showFront) {
+    } else {
       return (
         <CardTranslation onPress={() => { this.props.showFront() }} />
       )
@@ -65,8 +61,7 @@ class AnkiScreen extends React.Component {
 
     return (
       <View style={styles.mainContainer}>
-        {this.renderOriginal()}
-        {this.renderTranslation()}
+        {this.renderCard()}
         {this.renderFooter()}
       </View>
     )

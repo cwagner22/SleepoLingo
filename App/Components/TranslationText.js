@@ -4,6 +4,7 @@ import React from 'react'
 import { TouchableHighlight, View, Text } from 'react-native'
 
 import styles from './Styles/TranslationTextStyle'
+import { Colors } from '../Themes'
 
 type TranslationTextProps = {
   translation: string,
@@ -17,7 +18,7 @@ class TranslationText extends React.Component {
   render () {
     return (
       <TouchableHighlight onPress={this.props.onPress} style={styles.container}
-        underlayColor='#F3F3F3'>
+        underlayColor={Colors.underlayGrey}>
         <View>
           <Text style={styles.title}>{this.props.translation}</Text>
           <Text

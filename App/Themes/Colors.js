@@ -23,7 +23,8 @@ const colors = {
   fernFrond: '#6F8741',
   cedar: '#42241E',
   wattle: '#d1ca48',
-  capePalliser: '#ab683f'
+  capePalliser: '#ab683f',
+  underlayGrey: '#f3f3f3'
 }
 
 export default colors

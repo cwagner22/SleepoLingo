@@ -138,8 +138,9 @@ export default {
     {
       id: 20,
       original: 'Good night, sweet dreams',
-      translation: '',
-      transliteration: ''
+      translation: 'ราตรีสวัสดิ์ ฝันหวาน',
+      transliteration: 'raa-dtree sà-wàt făn wăan',
+      image: require('../images/0-20.jpg')
     }
   ]
 }

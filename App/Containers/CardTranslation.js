@@ -71,7 +71,7 @@ class CardTranslation extends React.Component {
             onRequestClose={() => { this.setModalVisible(false) }}
           >
             <TouchableOpacity style={styles.modalContainer} activeOpacity={0.7}
-              onPress={() => { this.setModalVisible(false) }}>
+              onPressOut={() => { this.setModalVisible(false) }}>
               <View style={styles.innerContainer}>
                 <Explanation explanation={this.props.currentWord.explanation} />
               </View>

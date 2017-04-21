@@ -15,31 +15,51 @@ import WordHelper from '../Services/WordHelper'
 import styles from './Styles/LessonsListScreenStyle'
 
 class LessonsListScreen extends React.Component {
-  state: {
-    dataSource: Object
+  state = {
+    // dataSource: Object
   }
 
   componentWillMount () {
     this.props.loadLessons()
   }
 
-  createDataBlob () {
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.lessonGroups !== this.props.lessonGroups) {
+      this.setupDataSource(nextProps)
+    }
+  }
+
+  createDataBlob (props) {
     var dataBlob = {}
 
-    for (var key in this.props.lessonGroups) {
+    for (var key in props.lessonGroups) {
       // Check also if property is not inherited from prototype
-      if (this.props.lessonGroups.hasOwnProperty(key)) {
+      if (props.lessonGroups.hasOwnProperty(key)) {
         dataBlob[key] = {}
-        var lessonGroup = this.props.lessonGroups[key]
+        var lessonGroup = props.lessonGroups[key]
 
         for (var val of lessonGroup.content) {
-          var lesson = this.props.lessons[val]
+          var lesson = props.lessons[val]
           dataBlob[key][lesson.id] = lesson
         }
       }
     }
 
     return dataBlob
+  }
+
+  setupDataSource (props) {
+    const rowHasChanged = (r1, r2) => r1 !== r2
+    const sectionHeaderHasChanged = (s1, s2) => s1 !== s2
+
+    // DataSource configured
+    const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
+
+    var dataBlob = this.createDataBlob(props)
+    // Datasource is always in state
+    this.setState({
+      dataSource: ds.cloneWithRowsAndSections(dataBlob)
+    })
   }
 
   constructor (props) {
@@ -62,19 +82,6 @@ class LessonsListScreen extends React.Component {
         this.createCache()
       }
     })
-
-    const rowHasChanged = (r1, r2) => r1 !== r2
-    const sectionHeaderHasChanged = (s1, s2) => s1 !== s2
-
-    // DataSource configured
-    const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
-
-    var dataBlob = this.createDataBlob()
-
-    // Datasource is always in state
-    this.state = {
-      dataSource: ds.cloneWithRowsAndSections(dataBlob)
-    }
   }
 
   createCache () {
@@ -106,7 +113,7 @@ class LessonsListScreen extends React.Component {
   }
 
   render () {
-    // const { translation } = this.props
+    if (!this.state.dataSource) return null
 
     return (
       <View style={styles.container}>

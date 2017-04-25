@@ -51,27 +51,45 @@ export default {
       image: require('../images/104.jpg')
     },
     {
-      id: 125,
-      original: 'I am French',
-      translation: 'ฉัน เป็น คน ฝรั่งเศส',
-      transliteration: 'chăn bpen kon fà-ràng-sàyt',
-      image: require('../images/125.jpg'),
+      id: 126,
+      original: 'I am 30 years old',
+      translation: 'ฉัน อายุ 30 ปี',
+      transliteration: 'chăn săam sìp years bpee',
+      image: require('../images/126.jpg')
+    },
+    {
+      id: 105,
+      original: 'To be',
+      translation: 'คือ',
+      transliteration: 'keu',
+      full: {
+        original: 'She is my teacher',
+        translation: 'เธอ คือ ครู ของ ฉัน',
+        transliteration: 'ter keu kroo kŏng chăn'
+      },
+      note: 'คือ/keu links 2 equal things , giving definition, explanation, clarification of things. In this example' +
+      'we can also use เป็น/bpen...todo: check',
+      image: require('../images/105.jpg'),
       explanation: [{
-        original: 'ฉัน',
-        transliteration: 'chăn',
-        translation: 'I'
+        original: 'เธอ',
+        transliteration: 'ter',
+        translation: 'You'
       }, {
-        original: 'เป็น',
-        transliteration: 'bpen',
+        original: 'คือ',
+        transliteration: 'keu',
         translation: 'be'
       }, {
-        original: 'คน',
-        transliteration: 'kon',
-        translation: 'person'
+        original: 'ครู',
+        transliteration: 'kroo',
+        translation: 'teacher'
       }, {
-        original: 'ฝรั่งเศส',
-        transliteration: 'fà-ràng-sàyt',
-        translation: 'France'
+        original: 'ของ',
+        transliteration: 'kŏng',
+        translation: 'of'
+      }, {
+        original: 'ฉัน',
+        transliteration: 'chăn',
+        translation: 'I, me'
       }]
     },
     {
@@ -132,7 +150,6 @@ export default {
         transliteration: 'mùak',
         translation: 'hat'
       }],
-      note: 'To indicate that you\'re referring to "this" particular person or object',
       image: require('../images/120.jpg')
     },
     {
@@ -235,7 +252,7 @@ export default {
     },
     {
       id: 109,
-      original: 'To be (location)',
+      original: 'To be located',
       translation: 'อยู่',
       transliteration: 'yòo',
       full: {
@@ -325,22 +342,17 @@ export default {
     {
       id: 124,
       original: 'He is poor',
-      translation: 'เขา เป็น คนยากจน',
-      transliteration: 'kăo bpen kon yâak jon',
+      translation: 'เขา กจน',
+      transliteration: 'kăo jon',
       explanation: [{
         original: 'เขา',
         transliteration: 'kăo',
         translation: 'he'
       }, {
-        original: 'เป็น',
-        transliteration: 'bpen',
-        translation: 'be'
-      }, {
-        original: 'คนยากจน',
-        transliteration: 'kon yâak jon',
-        translation: 'the poor'
+        original: 'กจน',
+        transliteration: 'jon',
+        translation: 'poor'
       }],
-      note: 'todo: check',
       image: require('../images/124.jpg')
     },
     {
@@ -374,7 +386,7 @@ export default {
         transliteration: 'sŭay',
         translation: 'beautiful'
       }],
-      note: 'หล่อ (lòr) is used for men (handsome), todo: check',
+      note: 'หล่อ (lòr) is used for men (handsome)',
       image: require('../images/112.jpg')
     },
     {
@@ -490,7 +502,7 @@ export default {
       full: {
         original: 'It\'s very good',
         translation: 'มัน ดีมาก',
-        transliteration: 'dee mâak'
+        transliteration: 'man dee mâak'
       },
       explanation: [{
         original: 'มัน',

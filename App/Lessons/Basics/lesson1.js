@@ -28,6 +28,12 @@ export default {
       image: require('../images/0-2.jpg')
     },
     {
+      id: 22,
+      original: 'I\'m fine',
+      translation: 'ฉัน สบายดี',
+      transliteration: 'chăn sà-baai dee'
+    },
+    {
       id: 4,
       original: 'Goodbye',
       translation: 'ลาก่อน',
@@ -39,7 +45,7 @@ export default {
       original: 'See you later',
       translation: 'เจอกัน',
       transliteration: 'jer gan',
-      or: 'láew póp gan mài',
+      note: 'láew póp gan mài',
       image: require('../images/0-5.jpg')
     },
     {
@@ -87,6 +93,7 @@ export default {
         translation: 'ขอบคุณ มาก',
         transliteration: 'kòp kun mâak'
       },
+      note: 'ขอบใจ (kòp jai) is used to thank someone with lower rank or status (less formal)',
       image: require('../images/0-11.jpg')
     },
     {
@@ -95,6 +102,22 @@ export default {
       translation: 'ยินดี',
       transliteration: 'yin-dee',
       image: require('../images/0-13.jpg')
+    },
+    {
+      id: 21,
+      original: 'It doesn\'t matter/Nevermind/It’s okay',
+      translation: 'ไม่ เป็นไร',
+      transliteration: 'mâi bpen rai',
+      explanation: [{
+        original: 'ไม่',
+        transliteration: 'mâi',
+        translation: 'no'
+      }, {
+        original: 'เป็นไร',
+        transliteration: 'bpen rai',
+        translation: 'matter, problem'
+      }],
+      image: require('../images/0-21.jpg')
     },
     {
       id: 15,

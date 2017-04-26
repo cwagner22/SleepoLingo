@@ -48,6 +48,7 @@
     "react-native-tts": "^1.1.0",
     "react-native-vector-icons": "^4.0.0",
     "react-redux": "^4.4.6",
+    "realm": "^1.2.0",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
     "redux-persist": "^3.5.0",
@@ -104,7 +105,7 @@
       "React$Element"
     ]
   },
-  "config": {
+  "config0": {
     "ghooks": {
       "pre-commit": "if [ -d 'ignite-base' ]; then cd ignite-base; fi; npm run lint"
     }

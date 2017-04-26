@@ -5,6 +5,7 @@ import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import RNFS from 'react-native-fs'
+import Realm from 'realm'
 
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
@@ -114,6 +115,13 @@ class LessonsListScreen extends React.Component {
 
   render () {
     if (!this.state.dataSource) return null
+    let realm = new Realm({
+      schema: [{name: 'Dog', properties: {name: 'string'}}]
+    })
+
+    realm.write(() => {
+      realm.create('Dog', {name: 'Rex'})
+    })
 
     return (
       <View style={styles.container}>
@@ -124,6 +132,9 @@ class LessonsListScreen extends React.Component {
           renderRow={this.renderRow.bind(this)}
           enableEmptySections
         />
+        <Text style={styles.boldLabel}>
+          Count of Dogs in Realm: {realm.objects('Dog').length}
+        </Text>
       </View>
     )
   }

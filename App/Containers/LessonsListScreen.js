@@ -10,7 +10,7 @@ import RNFS from 'react-native-fs'
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
 import WordHelper from '../Services/WordHelper'
-import realm from '../Realm/realm0'
+import realm from '../Realm/realm'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'

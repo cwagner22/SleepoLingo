@@ -1,5 +1,5 @@
 {
-  "name": "SleepoLingo",
+  "name": "SleepoLingo2",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -48,7 +48,7 @@
     "react-native-tts": "^1.1.0",
     "react-native-vector-icons": "^4.0.0",
     "react-redux": "^4.4.6",
-    "realm": "^1.2.0",
+    "realm": "file:../realm-js",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
     "redux-persist": "^3.5.0",
@@ -105,7 +105,7 @@
       "React$Element"
     ]
   },
-  "config0": {
+  "config": {
     "ghooks": {
       "pre-commit": "if [ -d 'ignite-base' ]; then cd ignite-base; fi; npm run lint"
     }

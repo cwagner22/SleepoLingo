@@ -6,4 +6,4 @@ import App from './App/Containers/App'
 // To show network call in devtools
 GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
 
-AppRegistry.registerComponent('SleepoLingo', () => App)
+AppRegistry.registerComponent('SleepoLingo2', () => App)

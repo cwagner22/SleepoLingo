@@ -87,7 +87,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.sleepolingo"
+        applicationId "com.sleepolingo2"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -126,7 +126,6 @@ android {
 }
 
 dependencies {
-    compile project(':realm')
     compile project(':react-native-vector-icons')
     compile project(':react-native-tts')
     compile project(':react-native-sound')

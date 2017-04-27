@@ -2,8 +2,8 @@ export default [{
   id: 0,
   group: 'Basic',
   content: [
-    require('./Basics/lesson1'),
-    require('./Basics/lesson2'),
+    require('./Basics/lesson1').default,
+    require('./Basics/lesson2').default,
     require('./Basics/lesson3.json'),
     require('./Basics/lesson4.json')
   ]

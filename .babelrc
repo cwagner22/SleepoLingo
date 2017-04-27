@@ -2,5 +2,10 @@
   "presets": ["react-native"],
   "plugins": [
     "add-module-exports"
-  ]
+  ],
+  "env": {
+    "development": {
+      "sourceMaps": "inline"
+    }
+  }
 }

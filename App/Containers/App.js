@@ -1,18 +1,16 @@
 // @flow
 
 import React, { Component } from 'react'
-// import { Provider } from 'react-redux'
-// import '../I18n/I18n' // keep before root container
-// import RootContainer from './RootContainer'
-// import createStore from '../Redux'
-// import applyConfigSettings from '../Config'
-import realm from '../Realm/realm0'
-
+import { Provider } from 'react-redux'
+import '../I18n/I18n' // keep before root container
+import RootContainer from './RootContainer'
+import createStore from '../Redux'
+import applyConfigSettings from '../Config'
 
 // Apply config overrides
-// applyConfigSettings()
+applyConfigSettings()
 // create our store
-// const store = createStore()
+const store = createStore()
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -26,7 +24,7 @@ import realm from '../Realm/realm0'
 class App extends Component {
   render () {
     return (
-      <Provider>
+      <Provider store={store}>
         <RootContainer />
       </Provider>
     )

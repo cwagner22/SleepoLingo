@@ -10,7 +10,7 @@ import RNFS from 'react-native-fs'
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
 import WordHelper from '../Services/WordHelper'
-import realm from '../Realm/realm0'
+import realm from '../Realm/realm'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
@@ -117,15 +117,15 @@ class LessonsListScreen extends React.Component {
     if (!this.state.dataSource) return null
 
     // realm.write(() => {
-      // realm.create('Sentence', {words: ['aa', 'bb']})
-      // let sentence = realm.create('Sentence', {words: [{val: 'Hello'}, {val: 'my'}, {val: 'name'}, {val: 'is'}, {val: 'Chris'}]})
+    // realm.create('Sentence', {words: ['aa', 'bb']})
+    // let sentence = realm.create('Sentence', {words: [{val: 'Hello'}, {val: 'my'}, {val: 'name'}, {val: 'is'}, {val: 'Chris'}]})
 
-      let sentence = realm.objects('Sentence')[0]
-      console.log(sentence, sentence.id, sentence.model);
+    let sentence = realm.objects('Sentence')[0]
+    console.log(sentence, sentence.id, sentence.model)
 
-      // realm.create('Card', {
-      //   sentence: sentence.id
-      // })
+    // realm.create('Card', {
+    //   sentence: sentence.id
+    // })
     // })
 
     return (

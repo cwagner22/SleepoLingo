@@ -1,7 +1,7 @@
 'use strict'
 
 import Realm from 'realm'
-// import RNFS from 'react-native-fs'
+import RNFS from 'react-native-fs'
 
 class Todo extends Realm.Object {}
 Todo.schema = {
@@ -49,12 +49,12 @@ Card.schema = {
   }
 }
 
-// console.log(RNFS.MainBundlePath, Realm.defaultPath)
+console.log(RNFS.MainBundlePath, Realm.defaultPath)
 export default new Realm({
   // path: RNFS.MainBundlePath + '/realm.realm',
   // path: '/App/Realm/db.realm',
   path: '/Users/christophe/Development/Projects/SleepoLingo4/App/Realm/db.realm',
-  schema: [Word, Sentence, Card],
+  schema: [Word, Sentence, Card]
   // migration: function(oldRealm, newRealm) {
   //   // only apply this change if upgrading to schemaVersion 1
   //   if (oldRealm.schemaVersion < 1) {

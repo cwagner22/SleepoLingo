@@ -23,9 +23,9 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		7EC41FCB5ACE4FAD912C84C9 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BFCF75A09EC4A1EBA3787DD /* libRealmReact.a */; };
-		E8D7517C36DB4FE8927E8C17 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A83198AB949549F98A46ADE0 /* libc++.tbd */; };
-		CFE4CAC3AF694D56B7E4BF68 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DD6244C97C45C79D8670B2 /* libz.tbd */; };
+		F816FC6314F44E4D8CDE05A1 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D51914AE3E4E4699975B8D /* libRealmReact.a */; };
+		FEFE58DEE8214DCAA7551B19 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0A01F398AB4F919EEBA97D /* libc++.tbd */; };
+		007734121D8D4DC68DDCB7EC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD0CADA288A42C6A3480727 /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -236,10 +236,10 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		384F630EF7A046EA8619BE9E /* RealmReact.xcodeproj */ = {isa = PBXFileReference; name = "RealmReact.xcodeproj"; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		2BFCF75A09EC4A1EBA3787DD /* libRealmReact.a */ = {isa = PBXFileReference; name = "libRealmReact.a"; path = "libRealmReact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		A83198AB949549F98A46ADE0 /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
-		E7DD6244C97C45C79D8670B2 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		71F5617AE5B94F19813842C3 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; name = "RealmReact.xcodeproj"; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		E4D51914AE3E4E4699975B8D /* libRealmReact.a */ = {isa = PBXFileReference; name = "libRealmReact.a"; path = "libRealmReact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		DF0A01F398AB4F919EEBA97D /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		CCD0CADA288A42C6A3480727 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,9 +266,9 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				7EC41FCB5ACE4FAD912C84C9 /* libRealmReact.a in Frameworks */,
-				E8D7517C36DB4FE8927E8C17 /* libc++.tbd in Frameworks */,
-				CFE4CAC3AF694D56B7E4BF68 /* libz.tbd in Frameworks */,
+				F816FC6314F44E4D8CDE05A1 /* libRealmReact.a in Frameworks */,
+				FEFE58DEE8214DCAA7551B19 /* libc++.tbd in Frameworks */,
+				007734121D8D4DC68DDCB7EC /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,7 +413,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				384F630EF7A046EA8619BE9E /* RealmReact.xcodeproj */,
+				71F5617AE5B94F19813842C3 /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -434,7 +434,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* SleepoLingoTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
-				12DDE5D3AF4142F6BD5FDD7C /* Frameworks */,
+				991ED5CEB2824F43852D822A /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -449,11 +449,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		12DDE5D3AF4142F6BD5FDD7C /* Frameworks */ = {
+		991ED5CEB2824F43852D822A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A83198AB949549F98A46ADE0 /* libc++.tbd */,
-				E7DD6244C97C45C79D8670B2 /* libz.tbd */,
+				DF0A01F398AB4F919EEBA97D /* libc++.tbd */,
+				CCD0CADA288A42C6A3480727 /* libz.tbd */,
 			);
 			name = Frameworks;
 			path = "";

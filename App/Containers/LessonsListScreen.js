@@ -5,12 +5,12 @@ import { View, Text, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import RNFS from 'react-native-fs'
-import Realm from 'realm'
+// import Realm from 'realm'
 
-// Add Actions - replace 'Your' with whatever your reducer is called :)
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
 import WordHelper from '../Services/WordHelper'
+import realm from '../Realm/realm0'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
@@ -115,13 +115,18 @@ class LessonsListScreen extends React.Component {
 
   render () {
     if (!this.state.dataSource) return null
-    let realm = new Realm({
-      schema: [{name: 'Dog', properties: {name: 'string'}}]
-    })
 
-    realm.write(() => {
-      realm.create('Dog', {name: 'Rex'})
-    })
+    // realm.write(() => {
+      // realm.create('Sentence', {words: ['aa', 'bb']})
+      // let sentence = realm.create('Sentence', {words: [{val: 'Hello'}, {val: 'my'}, {val: 'name'}, {val: 'is'}, {val: 'Chris'}]})
+
+      let sentence = realm.objects('Sentence')[0]
+      console.log(sentence, sentence.id, sentence.model);
+
+      // realm.create('Card', {
+      //   sentence: sentence.id
+      // })
+    // })
 
     return (
       <View style={styles.container}>
@@ -133,7 +138,7 @@ class LessonsListScreen extends React.Component {
           enableEmptySections
         />
         <Text style={styles.boldLabel}>
-          Count of Dogs in Realm: {realm.objects('Dog').length}
+          Count of Dogs in Realm: {realm.objects('Sentence').length}
         </Text>
       </View>
     )

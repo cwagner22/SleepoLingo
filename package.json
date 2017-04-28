@@ -22,7 +22,8 @@
     "android:shake": "$ANDROID_HOME/platform-tools/adb devices | grep '\\t' | awk '{print $1}' | sed 's/\\s//g' | xargs -I {} $ANDROID_HOME/platform-tools/adb -s {} shell input keyevent 82",
     "flow": "flow --show-all-errors",
     "postinstall0": "rndebugger-open",
-    "revert": "rndebugger-open --revert"
+    "revert": "rndebugger-open --revert",
+    "precommit": "if [ -d 'ignite-base' ]; then cd ignite-base; fi; npm run lint"
   },
   "dependencies": {
     "apisauce": "^0.6.0",
@@ -105,10 +106,5 @@
       "FormData",
       "React$Element"
     ]
-  },
-  "config": {
-    "ghooks": {
-      "pre-commit": "if [ -d 'ignite-base' ]; then cd ignite-base; fi; npm run lint"
-    }
   }
 }

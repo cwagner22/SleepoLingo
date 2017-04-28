@@ -16,11 +16,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React Native!"
 
-@interface SleepoLingo2Tests : XCTestCase
+@interface SleepoLingoTests : XCTestCase
 
 @end
 
-@implementation SleepoLingo2Tests
+@implementation SleepoLingoTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

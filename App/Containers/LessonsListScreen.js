@@ -116,17 +116,17 @@ class LessonsListScreen extends React.Component {
   render () {
     if (!this.state.dataSource) return null
 
-    // realm.write(() => {
-    // realm.create('Sentence', {words: ['aa', 'bb']})
-    // let sentence = realm.create('Sentence', {words: [{val: 'Hello'}, {val: 'my'}, {val: 'name'}, {val: 'is'}, {val: 'Chris'}]})
+    realm.write(() => {
+      // realm.create('Sentence', {words: ['aa', 'bb']})
+      // let sentence = realm.create('Sentence',
 
-    let sentence = realm.objects('Sentence')[0]
-    console.log(sentence, sentence.id, sentence.model)
+      // let sentence = realm.objects('Sentence')[0]
+      // console.log(sentence, sentence.id, sentence.model)
 
-    // realm.create('Card', {
-    //   sentence: sentence.id
-    // })
-    // })
+      realm.create('Card', {
+        sentence: {words: [{val: 'Hello'}, {val: 'my'}, {val: 'name'}, {val: 'is'}, {val: 'Chris'}]}
+      }, true)
+    })
 
     return (
       <View style={styles.container}>
@@ -161,7 +161,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLessons: () => dispatch(LessonActions.loadLessons())}
+    loadLessons: () => dispatch(LessonActions.loadLessons())
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonsListScreen)

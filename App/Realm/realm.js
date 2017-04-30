@@ -34,7 +34,9 @@ Word.schema = {
 class Sentence extends Realm.Object {}
 Sentence.schema = {
   name: 'Sentence',
+  // primaryKey: 'id',
   properties: {
+    // id: 'int',
     // List of Strings not possible yet
     words: {type: 'list', objectType: 'Word'}
   }
@@ -43,17 +45,21 @@ Sentence.schema = {
 class Card extends Realm.Object {}
 Card.schema = {
   name: 'Card',
+  // primaryKey: 'id',
   properties: {
+    // id: 'int',
     sentence: {type: 'Sentence'},
     full: {type: 'Sentence', optional: true}
   }
 }
 
-console.log(RNFS.MainBundlePath, Realm.defaultPath)
+console.log(RNFS.MainBundlePath, Realm.defaultPath, RNFS.CachesDirectoryPath)
+// Bundle path: for readonly? Put seed in ios folder
+// Doc folder: to edit
 export default new Realm({
-  // path: RNFS.MainBundlePath + '/realm.realm',
+  path: RNFS.MainBundlePath + '/realm.realm',
   // path: '/App/Realm/db.realm',
-  path: '/Users/christophe/Development/Projects/SleepoLingo4/App/Realm/db.realm',
+  // path: '/Users/christophe/Development/Projects/SleepoLingo4/App/Realm/db.realm',
   schema: [Word, Sentence, Card]
   // migration: function(oldRealm, newRealm) {
   //   // only apply this change if upgrading to schemaVersion 1

@@ -4,7 +4,7 @@ export default {
   note: '\'kráp (male)/kâ (female)\' are placed at the end to increase the degree of politeness. Pom/Chan',
   words: [
     {
-      id: 1,
+      id: '6428a124-873f-4775-83c8-87b8ce8fe956',
       original: 'Hello',
       translation: 'สวัสดี',
       transliteration: 'sà-wàt-dee',
@@ -13,7 +13,10 @@ export default {
         translation: 'สวัสดี ผม ชื่อ คริส',
         transliteration: 'sà-wàt-dee pŏm chêu Chris'
       },
-      image: require('../images/0-1.jpg')
+      image: require('./images/6428a124-873f-4775-83c8-87b8ce8fe956.jpg')
+      // audio: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956.mp3'),
+      // audiob: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956b.mp3'),
+      // audioc: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956c.mp3')
     },
     {
       id: 2,

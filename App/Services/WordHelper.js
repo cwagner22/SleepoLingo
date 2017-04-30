@@ -19,7 +19,7 @@ export default class WordHelper {
   }
 
   wordWithDate (word) {
-    if (_.isNumber(word)) {
+    if (!_.isObject(word)) {
       word = this.store.words[word]
     }
 

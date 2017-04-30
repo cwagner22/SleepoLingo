@@ -3,9 +3,11 @@
 import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import FullButton from '../Components/FullButton'
 import LessonActions from '../Redux/LessonRedux'
+import LessonHelper from '../Services/LessonHelper'
 
 // Styles
 import styles from './Styles/LessonScreenStyle'
@@ -17,8 +19,17 @@ class LessonScreen extends React.Component {
     this.props.loadLesson(this.props.data)
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.currentLesson !== this.props.currentLesson) {
+      this.props.downloadLesson(nextProps.currentWords)
+    }
+  }
+
   render () {
-    const { currentLesson } = this.props
+    const {currentLesson} = this.props
+
+    if (_.isUndefined(currentLesson)) return null
+
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.container}>
@@ -40,14 +51,22 @@ class LessonScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  var currentWords = null
+  if (!_.isUndefined(state.lesson.currentLessonId)) {
+    const lessonHelper = new LessonHelper(state.lesson)
+    currentWords = lessonHelper.currentWords()
+  }
   return {
-    currentLesson: state.lesson.lessons[state.lesson.currentLessonId]
+    currentLesson: state.lesson.lessons[state.lesson.currentLessonId],
+    currentWords
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLesson: (lessonId) => dispatch(LessonActions.loadLesson(lessonId))}
+    loadLesson: (lessonId) => dispatch(LessonActions.loadLesson(lessonId)),
+    downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words))
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonScreen)

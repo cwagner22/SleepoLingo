@@ -25,7 +25,8 @@ const { Types, Creators } = createActions({
   lessonShowBack: null,
   loadNextCard: null,
   incCurrentWord: ['allowRestart'],
-  decCurrentWord: null
+  decCurrentWord: null,
+  downloadLesson: ['currentWords']
 })
 
 export const LessonTypes = Types

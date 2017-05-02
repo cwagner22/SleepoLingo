@@ -9,7 +9,7 @@ import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
 import CardTranslation from './CardTranslation'
 import AnkiFooter from './AnkiFooter'
-import WordHelper from '../Services/WordHelper'
+import CardHelper from '../Services/CardHelper'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -21,7 +21,7 @@ class AnkiScreen extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.currentWord !== this.props.currentWord && !nextProps.currentWord) {
+    if (nextProps.currentCard !== this.props.currentCard && !nextProps.currentCard) {
       Alert.alert(
         'Well done',
         'No more cards, come back later!',
@@ -35,8 +35,8 @@ class AnkiScreen extends React.Component {
   renderCard () {
     if (this.props.lesson.showFront) {
       return (
-        <CardOriginal text={this.props.currentWord.original}
-          fullText={this.props.currentWord.full && this.props.currentWord.full.original}
+        <CardOriginal text={this.props.currentCard.sentence.original}
+          fullText={this.props.currentCard.fullSentence && this.props.currentCard.fullSentence.original}
           onPress={() => { this.props.showBack() }} />
       )
     } else {
@@ -55,7 +55,7 @@ class AnkiScreen extends React.Component {
   }
 
   render () {
-    if (!this.props.currentWord) {
+    if (!this.props.currentCard) {
       return null
     }
 
@@ -69,11 +69,11 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const wordHelper = new WordHelper(state.lesson)
+  const cardHelper = new CardHelper(state.lesson)
 
   return {
     lesson: state.lesson,
-    currentWord: wordHelper.currentWord
+    currentCard: cardHelper.currentCard
   }
 }
 

@@ -5,21 +5,18 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import Tts from 'react-native-tts'
-import _ from 'lodash'
 import Sound from 'react-native-sound'
 import BackgroundTimer from 'react-native-background-timer'
 
 import VolumeSlider from '../Components/VolumeSlider'
 import SpeedSlider from '../Components/SpeedSlider'
 import API from '../Services/TranslateApi'
-import BingAPI from '../Services/BingApi'
 import makeCancelable from '../Lib/MakeCancelable'
-import Deferred from '../Lib/Deferred'
 import PlaybackActions from '../Redux/PlaybackRedux'
 import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
 import Player from '../Services/Player'
 import LessonHelper from '../Services/LessonHelper'
+import CardHelper from '../Services/CardHelper'
 
 // Styles
 // import styles from './Styles/PlayerStyle'
@@ -38,7 +35,6 @@ class PlayerScreen extends React.Component {
   constructor (props: Object) {
     super(props)
     this.api = API.create()
-    this.bingAPI = BingAPI.create()
     this.state = {
       // Set your state here
     }
@@ -48,16 +44,11 @@ class PlayerScreen extends React.Component {
     // Enable playback in silence mode (iOS only)
     Sound.setCategory('Playback', true)
 
-    Tts.addEventListener('tts-start', (event) => console.log('start', event))
-    Tts.addEventListener('tts-finish', (event) => {
-      console.log('finish', event)
-      // Resolve promise
-      this.ttsDeferred.resolve()
-    })
-    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event))
-    // Tts.voices().then(voices => console.log(voices))
-
     this.scheduleTimer()
+
+    this.setModifiers()
+
+    this.props.loadPlayingState()
   }
 
   scheduleTimer () {
@@ -68,33 +59,38 @@ class PlayerScreen extends React.Component {
     }, 60 * 60 * 1000)
   }
 
-  componentWillMount () {
-    this.props.incCurrentWord(true)
-    this.props.setPaused(false)
-    this.setModifiers()
-  }
+  componentDidUpdate (prevProps) {
+    const {translationLoopCounter, playingState} = this.props
+    const {playing} = this.props.playback
 
-  componentWillReceiveProps (nextProps) {
-    var promise = Promise.resolve()
-    if (nextProps.lessonLoopCounter !== this.props.lessonLoopCounter) {
-      if (this.isFocusMode(nextProps.lessonLoopCounter)) {
-        promise = this.speakOriginal('One more time')
-      } else if (nextProps.lessonLoopCounter === LESSON_LOOP_MAX + 1) {
-        promise = this.speakOriginal('Good night')
+    if (prevProps.playback.playing !== playing && !playing) { // PLAYBACK_SUCCESS
+      this.props.loadPlayingState()
+    }
+
+    if (prevProps.playingState !== playingState || prevProps.translationLoopCounter !== translationLoopCounter) {
+      switch (playingState) {
+        case 'ORIGINAL':
+          this.delay(this.originalTimeout).then(() => this.playCard())
+          break
+        case 'TRANSLATION':
+          this.delay(this.translationTimeout).then(() => this.playCard())
+          break
+        case 'RESTART':
+          // todo: should happen before word incremented/loop restarted?
+          this.delay(this.repeatAllTimeout).then(() => this.playMessageEnd())
+          break
       }
-      promise.then(() => this.delay(this.repeatAllTimeout))
-      promise.then(() => this.setModifiers())
     }
 
-    if (nextProps.currentWord !== this.props.currentWord ||
-      // forcePlay is set when using the prev/next button on the same word (first/last words)
-      (nextProps.sameWord && this.forcePlay)
-    //  Sleeping mode
-    // !this.isFocusMode()
-    ) {
-      this.forcePlay = false
-      promise.then(() => this.speakWord(nextProps.currentWord))
-    }
+    // if (nextProps.currentWord !== this.props.currentWord ||
+    //   // forcePlay is set when using the prev/next button on the same word (first/last words)
+    //   (nextProps.sameWord && this.forcePlay)
+    // //  Sleeping mode
+    // // !this.isFocusMode()
+    // ) {
+    //   this.forcePlay = false
+    //   promise.then(() => this.speakWord(nextProps.currentWord))
+    // }
   }
 
   componentWillUnmount () {
@@ -126,177 +122,48 @@ class PlayerScreen extends React.Component {
     return this._cancelablePromise.promise
   }
 
-  /*
-   * Custom "linear" function with offsets
-   * Used to get a value proportionally to the time (nb loops)
-   * Currently doesn't work if start = end. Also doesn't support x > endX for now
-   * Maybe can be improved, I'm not the best at Maths ¯\_ツ_/¯
-   * For fun (online graph): https://www.desmos.com/calculator/ivo13pufam
-   * Might be possible to apply an easing function (http://easings.net)
-   *
-   *        +
-   * startY |\
-   *        | \
-   *        |  \
-   *        |   \
-   *        |    \
-   *        |     \
-   *        |      \
-   *        |       \
-   *   endY |        \________
-   *        |
-   *        |
-   *        +-----------------+
-   *        startX   endX
-   *
-   * */
-  linearOffsetFn (x, startX, endX, startY, endY) {
-    return startY - (startY - endY) * (x / (endX - startX))
-  }
-
-  setModifiersOld () {
-    this.originalTimeout = 1000
-
-    // const x = this.props.lessonLoopCounter - 1
-    // const startX = 0
-    // const endX = LESSON_LOOP_MAX - 1
-
-    this.volume = 1
-    // this.volume = this.linearOffsetFn(x, startX, endX, 1, 0.4)
-
-    const translationTimeoutStart = 1000
-    // const translationTimeoutEnd = 5000
-    // this.translationTimeout = this.linearOffsetFn(x, startX, endX, translationTimeoutStart, translationTimeoutEnd)
-    this.translationTimeout = translationTimeoutStart
-
-    const nextWordTimeoutStart = 2000
-    // const nextWordTimeoutEnd = 4000
-    // this.nextWordTimeout = this.linearOffsetFn(x, startX, endX, nextWordTimeoutStart, nextWordTimeoutEnd)
-    this.nextWordTimeout = nextWordTimeoutStart
-
-    const repeatAllTimeoutStart = 4000
-    // const repeatAllTimeoutEnd = 10000
-    // this.repeatAllTimeout = this.linearOffsetFn(x, startX, endX, repeatAllTimeoutStart, repeatAllTimeoutEnd)
-    this.repeatAllTimeout = repeatAllTimeoutStart
-
-    const rateStart = 0.3
-    // const rateEnd = 0.2
-    this.rateOriginal = rateStart
-    // this.rateOriginal = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
-    this.rateTranslation = rateStart
-    // this.rateTranslation = this.linearOffsetFn(x, startX, endX, rateStart, rateEnd)
-  }
-
-  isFocusMode (counter) {
-    return (counter || this.props.lessonLoopCounter) <= LESSON_LOOP_MAX
+  isFocusMode () {
+    return this.props.lessonLoopCounter <= LESSON_LOOP_MAX
   }
 
   setModifiers () {
-    this.volume = this.isFocusMode() ? 1 : 0.4
+    const isFocusMode = this.isFocusMode()
+    this.volume = isFocusMode ? 1 : 0.4
 
-    this.originalTimeout = this.isFocusMode() ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
-    this.translationTimeout = this.isFocusMode() ? TRANSLATION_TIMEOUT : TRANSLATION_TIMEOUT_SLEEP
-    this.nextWordTimeout = this.isFocusMode() ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
-    this.repeatAllTimeout = this.isFocusMode() ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
+    this.originalTimeout = isFocusMode ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
+    this.translationTimeout = isFocusMode ? TRANSLATION_TIMEOUT : TRANSLATION_TIMEOUT_SLEEP
+    this.nextWordTimeout = isFocusMode ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
+    this.repeatAllTimeout = isFocusMode ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
 
-    this.speed = (this.isFocusMode() ? 0.6 : 0.4)
+    this.speed = (isFocusMode ? 0.6 : 0.4)
     // this.rateOriginal = speed
     // this.rateTranslation = speed
   }
 
-  onFinishPlayed () {
-    // Finish orig + translation
-    return this.delay(this.nextWordTimeout).then(() => {
-      this.props.incCurrentWord(true)
-    })
+  loopStart () {
+    this.setModifiers()
+    this.playCard()
   }
 
-  playTTS (word, language, rate) {
-    return Tts.setDefaultRate(rate)
-      .then(() => Tts.setDefaultLanguage(language))
-      .then(() => {
-        // Will be resolved once plaback finished
-        this._ttsDeferred = new Deferred()
-        Tts.speak(word)
-      })
+  playCard () {
+    const {currentCard, speed, volume, playingState} = this.props
+    const sentence = currentCard.fullSentence ? currentCard.fullSentence : currentCard.sentence
+    const translation = playingState === 'TRANSLATION'
+    const sentenceStr = translation ? sentence.translation : sentence.original
+    const language = translation ? 'th-TH' : 'en-US'
+
+    this.props.play(sentenceStr, language, this.speed * speed, this.volume * volume)
   }
 
-  speakOriginal (word) {
-    return this.makeCancelable(
-      Player.speakWordInLanguage(word, 'en-US', this.speed * this.props.speed, this.volume * this.props.volume))
-      .then(() => {
-        return this.delay(this.originalTimeout)
-      })
-  }
-
-  speakTranslation (word) {
-    this.translationCounter++
-
-    return this.makeCancelable(
-      Player.speakWordInLanguage(word, 'th-TH', this.speed * this.props.speed, this.volume * this.props.volume))
-      .then(() => {
-        // Repeat translation 3 times
-        if (this.translationCounter < TRANSLATION_LOOP_MAX) {
-          return this.delay(this.translationTimeout)
-            .then(() => this.speakTranslation(word))
-        }
-      })
-  }
-
-  speakWord (word) {
-    var _word = word.full || word
-
-    this.translationCounter = 0
-    this.speakOriginal(_word.original)
-      .then(() => this.speakTranslation(_word.translation))
-      .then(() => this.onFinishPlayed())
-      .catch(function (err) {
-        if (!err.isCanceled) {
-          console.log(err && err.stack)
-        }
-      })
-  }
-
-  translateWords (words) {
-    return this.makeCancelable(this.bingAPI.translateArray(words))
-      .then((response) => {
-        const wordsWithTranslation = []
-        const results = response.data
-        for (var i = 0; i < results.length; i++) {
-          var res = results[i]
-          wordsWithTranslation.push({
-            original: words[i],
-            translation: res.TranslatedText
-          })
-        }
-        return wordsWithTranslation
-      })
-  }
-
-  lowerCaseFirstLetter (word) {
-    // Lowercase first letter to get better results with Google Chrome...
-    if (!word.startsWith('I ')) {
-      return _.lowerFirst(word)
+  playMessageEnd () {
+    const {speed, volume} = this.props
+    var sentenceStr
+    if (this.isFocusMode()) {
+      sentenceStr = 'Repeat'
+    } else if (this.props.lessonLoopCounter === LESSON_LOOP_MAX + 1) {
+      sentenceStr = 'Good night'
     }
-
-    return word
-  }
-
-  translateWordsGoogle (words) {
-    this._cancelablePromise = makeCancelable(this.api.translateWords(words.map(this.lowerCaseFirstLetter)))
-    return this._cancelablePromise.promise
-      .then((response) => {
-        const wordsWithTranslation = []
-        const results = eval(response.data)[0] // eslint-disable-line
-        for (var i = 0; i < results.length; i++) {
-          var res = results[i]
-          wordsWithTranslation.push({
-            original: words[i],
-            translation: res[0][0][0]
-          })
-        }
-        return wordsWithTranslation
-      })
+    this.props.play(sentenceStr, 'en-US', this.speed * speed, this.volume * volume)
   }
 
   stopPlayback () {
@@ -388,7 +255,7 @@ class PlayerScreen extends React.Component {
     const repeatingSentenceDuration = 2000 // Average time to play repeating sentence
     const originalDuration = wordDuration + this.originalTimeout
     const translationDuration = (wordDuration + this.translationTimeout) * TRANSLATION_LOOP_MAX + this.nextWordTimeout
-    const loopDuration = (originalDuration + translationDuration) * this.props.currentWords.length
+    const loopDuration = (originalDuration + translationDuration) * this.props.currentCards.length
     const totalDuration = (loopDuration + this.repeatAllTimeout + repeatingSentenceDuration + this.originalTimeout) *
       (LESSON_LOOP_MAX - 1) + loopDuration
 
@@ -416,14 +283,19 @@ class PlayerScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   const lessonHelper = new LessonHelper(state.lesson)
+  const cardHelper = new CardHelper(state.lesson)
+
   return {
     volume: state.playback.volume,
     speed: state.playback.speed,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
+    translationLoopCounter: state.lesson.translationLoopCounter,
+    playingState: state.lesson.playingState,
     sameWord: state.lesson.sameWord,
     isPaused: state.playback.isPaused,
-    currentWord: state.lesson.words[state.lesson.currentWordId],
-    currentWords: lessonHelper.currentWords()
+    playback: state.playback,
+    currentCard: cardHelper.currentCard,
+    currentCards: lessonHelper.currentCards()
   }
 }
 
@@ -433,7 +305,10 @@ const mapDispatchToProps = (dispatch) => {
     decCurrentWord: () => dispatch(LessonActions.decCurrentWord()),
     setPaused: (val) => dispatch(PlaybackActions.playbackSetPaused(val)),
     changeVol: (volume) => dispatch(PlaybackActions.playbackVolChange(volume)),
-    changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed))
+    changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed)),
+    play: (sentence, language, volume, speed) => dispatch(
+      PlaybackActions.playbackStart(sentence, language, volume, speed)),
+    loadPlayingState: () => dispatch(LessonActions.loadPlayingState())
   }
 }
 

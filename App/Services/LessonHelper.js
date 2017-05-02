@@ -4,14 +4,9 @@ export default class LessonHelper {
     this.currentLesson = store.lessons[store.currentLessonId]
   }
 
-  currentWords () {
-    return this.currentLesson.words.map(wId => this.store.words[wId])
-  }
-
-  wordWithDate (word) {
-    return {
-      ...word,
-      showDate: this.state.cardsDates[word.id]
+  currentCards () {
+    if (this.currentLesson) {
+      return this.currentLesson.cards.map(cId => this.store.cards[cId])
     }
   }
 }

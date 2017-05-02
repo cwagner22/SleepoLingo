@@ -13,10 +13,11 @@ import {
 import { connect } from 'react-redux'
 
 import LessonActions from '../Redux/LessonRedux'
-import Player from '../Services/Player'
+import PlaybackActions from '../Redux/PlaybackRedux'
 import TranslationText from '../Components/TranslationText'
 import Explanation from '../Components/Explanation'
 import { Colors } from '../Themes'
+import CardHelper from '../Services/CardHelper'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -30,38 +31,39 @@ class CardTranslation extends React.Component {
     this.props.showAnswer()
   }
 
-  speakText (text) {
-    Player.speakWordInLanguage(text, 'th-TH', 0.7)
+  speakText (sentence) {
+    // Player.speakWordInLanguage(text, 'th-TH', 0.7)
+    this.props.play(sentence, 'th-TH', 0.7)
   }
 
   renderFullTranslation () {
-    if (this.props.currentWord.full) {
+    if (this.props.currentCard.fullSentence) {
       return (
-        <TranslationText translation={this.props.currentWord.full.translation}
-          transliteration={this.props.currentWord.full.transliteration}
-          onPress={() => this.speakText(this.props.currentWord.full.translation)} />
+        <TranslationText translation={this.props.currentCard.fullSentence.translation}
+          transliteration={this.props.currentCard.fullSentence.transliteration}
+          onPress={() => this.speakText(this.props.currentCard.fullSentence.translation)} />
       )
     }
   }
 
   renderImage () {
-    if (this.props.currentWord.image) {
+    if (this.props.currentCard.image) {
       return (
-        <Image style={styles.image} resizeMode='contain' source={this.props.currentWord.image} />
+        <Image style={styles.image} resizeMode='contain' source={this.props.currentCard.image} />
       )
     }
   }
 
   renderNote () {
-    if (this.props.currentWord.note) {
+    if (this.props.currentCard.note) {
       return (
-        <Text style={styles.note}>{this.props.currentWord.note}</Text>
+        <Text style={styles.note}>{this.props.currentCard.note}</Text>
       )
     }
   }
 
   renderExplanation () {
-    if (this.props.currentWord.explanation) {
+    if (this.props.currentCard.explanation) {
       return (
         <View>
           <Modal
@@ -73,7 +75,7 @@ class CardTranslation extends React.Component {
             <TouchableOpacity style={styles.modalContainer} activeOpacity={0.7}
               onPressOut={() => { this.setModalVisible(false) }}>
               <View style={styles.innerContainer}>
-                <Explanation explanation={this.props.currentWord.explanation} />
+                <Explanation explanation={this.props.currentCard.explanation} />
               </View>
             </TouchableOpacity>
           </Modal>
@@ -96,9 +98,9 @@ class CardTranslation extends React.Component {
     return (
       <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
         <View style={[styles.container, {padding: 5}]}>
-          <TranslationText translation={this.props.currentWord.translation}
-            transliteration={this.props.currentWord.transliteration}
-            onPress={() => this.speakText(this.props.currentWord.translation)} />
+          <TranslationText translation={this.props.currentCard.sentence.translation}
+            transliteration={this.props.currentCard.sentence.transliteration}
+            onPress={() => this.speakText(this.props.currentCard.sentence.translation)} />
           {this.renderFullTranslation()}
           {this.renderExplanation()}
           {this.renderImage()}
@@ -110,15 +112,17 @@ class CardTranslation extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const cardHelper = new CardHelper(state.lesson)
   return {
-    currentWord: state.lesson.words[state.lesson.currentWordId],
+    currentCard: cardHelper.currentCard,
     lesson: state.lesson
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showAnswer: () => dispatch(LessonActions.lessonShowAnswer())
+    showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
+    play: (sentence, language, volume, speed) => dispatch(PlaybackActions.playbackStart(sentence, language, volume, speed))
   }
 }
 

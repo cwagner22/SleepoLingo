@@ -9,7 +9,7 @@ import RNFS from 'react-native-fs'
 
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
-import WordHelper from '../Services/WordHelper'
+import CardHelper from '../Services/CardHelper'
 import realm from '../Realm/realm'
 
 // Styles
@@ -91,6 +91,8 @@ class LessonsListScreen extends React.Component {
   }
 
   goToLesson (lessonId) {
+    // this.props.loadLessonSaga(lessonId)
+    // this.props.loadLesson(lessonId)
     NavigationActions.lesson(lessonId)
   }
 
@@ -99,8 +101,8 @@ class LessonsListScreen extends React.Component {
   }
 
   nbCardsLeft (lesson) {
-    return lesson.words.reduce((total, wordId) => {
-      if (this.props.wordHelper.isReady(wordId, true)) {
+    return lesson.cards.reduce((total, cardId) => {
+      if (this.props.cardHelper.isReady(cardId, true)) {
         total++
       }
       return total
@@ -150,18 +152,20 @@ LessonsListScreen.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-  const wordHelper = new WordHelper(state.lesson)
+  const cardHelper = new CardHelper(state.lesson)
   return {
     lessonGroups: state.lesson.lessonGroups,
     lessons: state.lesson.lessons,
-    words: state.lesson.words,
-    wordHelper
+    // sentences: state.lesson.sentences,
+    cardHelper
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLessons: () => dispatch(LessonActions.loadLessons())
+    loadLessons: () => dispatch(LessonActions.loadLessons()),
+    loadLessonSaga: (lessonId) => dispatch(LessonActions.loadLessonSaga(lessonId)),
+    loadLesson: (lessonId) => dispatch(LessonActions.loadLesson(lessonId))
   }
 }
 

@@ -3,9 +3,9 @@ export default [{
   group: 'Basic',
   content: [
     require('./Basics/lesson1').default,
-    require('./Basics/lesson2').default,
-    require('./Basics/lesson3.json'),
-    require('./Basics/lesson4.json')
+    require('./Basics/lesson2').default
+    // require('./Basics/lesson3.json'),
+    // require('./Basics/lesson4.json')
   ]
 }, {
   id: 1,

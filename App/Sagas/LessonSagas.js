@@ -1,16 +1,30 @@
+import { call, put } from 'redux-saga/effects'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import RNFS from 'react-native-fs'
+import md5Hex from 'md5-hex'
 
 import API from '../Services/TranslateApi'
+import LessonActions from '../Redux/LessonRedux'
 
 const api = API.create()
 
-const downloadAudioIfNeeded = (word, language) => {
-  const path = RNFS.CachesDirectoryPath + '/' + word.id + '.mp3'
-  const w = word.full ? word.full : word
-  const url = api.ttsURL(w.translation, language)
+const getFilePath = (sentence, language) => {
+  const fileName = md5Hex(sentence) + '.mp3'
+  return getLanguagePath(language) + '/' + fileName
+}
 
-  const promise = RNFS.exists(path)
+const getLanguagePath = (language) => {
+  return RNFS.CachesDirectoryPath + '/' + language
+}
+
+const downloadAudioIfNeeded = (sentence, language) => {
+  const path = getFilePath(sentence, language)
+  const url = api.ttsURL(sentence, language)
+
+  return RNFS.mkdir(getLanguagePath(language))
+    .then(() => RNFS.exists(path))
     .then((exists) => {
+      console.log(sentence, path, exists)
       if (!exists) {
         // write the file
         return RNFS.downloadFile({
@@ -24,31 +38,36 @@ const downloadAudioIfNeeded = (word, language) => {
         })
       }
     })
-
-  return promise
 }
 
 export function * downloadLesson (action) {
-  const {currentWords} = action
-  console.log(currentWords)
+  const {currentCards} = action
 
-  var promises = []
-  currentWords.forEach((w) => {
-    promises.push(downloadAudioIfNeeded(w, 'th-TH'))
-  })
+  var items = []
+  for (var i = 0; i < currentCards.length; i++) {
+    const c = currentCards[i]
+    const sentence = c.fullSentence ? c.fullSentence : c.sentence
+    items = items.concat([{
+      sentence: sentence.original, language: 'en-US'
+    }, {
+      sentence: sentence.translation, language: 'th-TH'
+    }])
+  }
+  items = items.concat([{
+    sentence: 'Repeat', language: 'en-US'
+  }, {
+    sentence: 'Good night', language: 'en-US'
+  }])
 
-  yield Promise.all(promises)
+  yield items.map((item) => call(downloadAudioIfNeeded, item.sentence, item.language))
+}
 
-  // const { city } = action
-  // // make the call to the api
-  // const response = yield call(api.getCity, city)
-  //
-  // // success?
-  // if (response.ok) {
-  //   const kelvin = path(['data', 'main', 'temp_max'], response)
-  //   const temperature = <convertFrom></convertFrom>Kelvin(kelvin)
-  //   yield put(TemperatureActions.temperatureSuccess(temperature, 'bonus'))
-  // } else {
-  //   yield put(TemperatureActions.temperatureFailure())
-  // }
+export function * loadLesson (action) {
+  const {lessonId} = action
+
+  // Navigate to route
+  yield call(NavigationActions.lesson, lessonId)
+
+  // Update state
+  yield put(LessonActions.loadLesson(lessonId))
 }

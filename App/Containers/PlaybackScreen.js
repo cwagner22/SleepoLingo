@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import Player from './Player'
 import LessonHelper from '../Services/LessonHelper'
+import CardHelper from '../Services/CardHelper'
 import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
 
 // Styles
@@ -18,7 +19,9 @@ class PlaybackScreen extends React.Component {
 
   showWord () {
     if (this.props.currentWord) {
-      return <Text>{this.props.currentWord.translation}</Text>
+      const sentence = this.props.currentCards.fullSentence ? this.props.currentCards.fullSentence.translation
+        : this.props.currentCards.sentence.translation
+      return <Text>{ sentence.translation}</Text>
     }
   }
 
@@ -26,7 +29,7 @@ class PlaybackScreen extends React.Component {
     if (this.props.currentWord) {
       return (
         <View>
-          <Text>{this.props.currentWordIndex + 1} / {this.props.currentWords.length}</Text>
+          <Text>{this.props.currentCardIndex + 1} / {this.props.currentCards.length}</Text>
           <Text>{this.props.lessonLoopCounter} / {LESSON_LOOP_MAX}</Text>
         </View>
       )
@@ -48,15 +51,16 @@ class PlaybackScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   const lessonHelper = new LessonHelper(state.lesson)
-  const currentWords = lessonHelper.currentWords()
+  const cardHelper = new CardHelper(state.lesson)
+  const currentCards = lessonHelper.currentCards()
 
   return {
     lesson: state.playback.lesson,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
-    currentWordIndex: currentWords.findIndex((w) => w.id === state.lesson.currentWordId),
+    currentCardIndex: currentCards.findIndex((c) => c.id === state.lesson.currentCardId),
     isPaused: state.playback.isPaused,
-    currentWord: state.lesson.words[state.lesson.currentWordId],
-    currentWords: currentWords
+    currentCards,
+    currentCard: cardHelper.currentCard
   }
 }
 

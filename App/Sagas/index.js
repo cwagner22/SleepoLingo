@@ -10,6 +10,7 @@ import { TemperatureTypes } from '../Redux/TemperatureRedux'
 import { LoginTypes } from '../Redux/LoginRedux'
 import { OpenScreenTypes } from '../Redux/OpenScreenRedux'
 import { LessonTypes } from '../Redux/LessonRedux'
+import { PlaybackTypes } from '../Redux/PlaybackRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -17,7 +18,8 @@ import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getTemperature } from './TemperatureSagas'
 import { openScreen } from './OpenScreenSagas'
-import { downloadLesson } from './LessonSagas'
+import { downloadLesson, loadLesson } from './LessonSagas'
+import { play } from './PlaybackSagas'
 
 /* ------------- API ------------- */
 
@@ -27,6 +29,7 @@ const api = DebugSettings.useFixtures ? FixtureAPI : API.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 
+// Example: https://github.com/andresmijares/async-redux-saga/blob/master/src/sagas/
 export default function * root () {
   yield [
     // some sagas only receive an action
@@ -35,6 +38,8 @@ export default function * root () {
     takeLatest(OpenScreenTypes.OPEN_SCREEN, openScreen),
 
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
+    takeLatest(LessonTypes.LOAD_LESSON_SAGA, loadLesson),
+    takeLatest(PlaybackTypes.PLAYBACK_START, play),
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api)

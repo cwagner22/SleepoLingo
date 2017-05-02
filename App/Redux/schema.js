@@ -2,10 +2,10 @@
 
 import { schema } from 'normalizr'
 
-const wordSchema = new schema.Entity('words')
+const cardSchema = new schema.Entity('cards')
 
 const lessonSchema = new schema.Entity('lessons', {
-  words: [ wordSchema ]
+  cards: [ cardSchema ]
 })
 
 const lessonGroupSchema = new schema.Entity('lessonGroups', {
@@ -15,4 +15,4 @@ const lessonGroupSchema = new schema.Entity('lessonGroups', {
 })
 const lessonsValuesSchema = new schema.Values(lessonGroupSchema)
 
-export { lessonsValuesSchema, lessonGroupSchema, lessonSchema, wordSchema }
+export { lessonsValuesSchema, lessonGroupSchema, lessonSchema, cardSchema }

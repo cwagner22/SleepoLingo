@@ -7,15 +7,15 @@ import moment from 'moment'
 import { lessonsValuesSchema } from '../Redux/schema'
 import lessons from '../Lessons'
 import LessonHelper from '../Services/LessonHelper'
-import WordHelper from '../Services/WordHelper'
+import CardHelper from '../Services/CardHelper'
 
 export const LESSON_LOOP_MAX = 2
+const TRANSLATION_LOOP_MAX = 3
 
 /* ------------- Types and Action Creators ------------- */
 
-const { Types, Creators } = createActions({
+const {Types, Creators} = createActions({
   loadLessons: null,
-  loadLesson: ['lessonId'],
   lessonStart: null,
   ankiHard: null,
   ankiOk: null,
@@ -24,9 +24,12 @@ const { Types, Creators } = createActions({
   lessonShowFront: null,
   lessonShowBack: null,
   loadNextCard: null,
+  downloadLesson: ['currentCards'],
+  loadLessonSaga: ['lessonId'],
+  loadLesson: ['lessonId'],
   incCurrentWord: ['allowRestart'],
   decCurrentWord: null,
-  downloadLesson: ['currentWords']
+  loadPlayingState: null
 })
 
 export const LessonTypes = Types
@@ -36,15 +39,17 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   lessons: [],
-  words: [],
+  cards: [],
   lessonGroups: [],
   currentLessonId: null,
-  currentWordId: null,
+  currentCardId: null,
   showAnswer: false,
   showFront: true,
   cardsDates: {},
   lessonLoopCounter: null,
-  forcePlay: null
+  forcePlay: null,
+  playingState: null,
+  translationLoopCounter: null
 })
 
 /* ------------- Reducers ------------- */
@@ -54,11 +59,11 @@ export const loadLessons = (state) => {
   return state.merge(normalizedData.entities)
 }
 
-export const loadLesson = (state, { lessonId }: Number) => {
+export const loadLesson = (state, {lessonId}: Number) => {
   // Reset cards if new lesson
   var resetCards = {}
   if (lessonId !== state.currentLessonId) {
-    resetCards = { cardsDates: {} }
+    resetCards = {cardsDates: {}}
   }
   return state.merge({
     ...resetCards,
@@ -69,13 +74,15 @@ export const loadLesson = (state, { lessonId }: Number) => {
 export const startLesson = (state) => {
   return state.merge({
     showAnswer: false,
-    currentWordId: null,
-    lessonLoopCounter: 1
+    currentCardId: null,
+    lessonLoopCounter: 0,
+    translationLoopCounter: 0,
+    playingState: null
   })
 }
 
 const updateCardDate = (state, showDate) => {
-  return state.setIn(['cardsDates', state.currentWordId], showDate.toDate())
+  return state.setIn(['cardsDates', state.currentCardId], showDate.toDate())
 }
 
 export const ankiHard = (state) => {
@@ -91,15 +98,15 @@ export const ankiEasy = (state) => {
 }
 
 export const showAnswer = (state) => {
-  return state.merge({ showAnswer: true })
+  return state.merge({showAnswer: true})
 }
 
 export const showFront = (state) => {
-  return state.merge({ showFront: true })
+  return state.merge({showFront: true})
 }
 
 export const showBack = (state) => {
-  return state.merge({ showFront: false })
+  return state.merge({showFront: false})
 }
 
 const sortCards = (wordHelper, wordsWithDates, allowAlmost) => {
@@ -119,59 +126,60 @@ const sortCards = (wordHelper, wordsWithDates, allowAlmost) => {
 
 export const loadNextCard = (state) => {
   const lessonHelper = new LessonHelper(state)
-  const wordHelper = new WordHelper(state)
+  const cardHelper = new CardHelper(state)
 
   // Assign dates for sorting
-  var wordsWithDates = lessonHelper.currentWords().map((w) => {
-    return wordHelper.wordWithDate(w)
+  var cardsWithDates = lessonHelper.currentCards().map((c) => {
+    return cardHelper.cardWithDate(c)
   })
 
-  var sortedWords = sortCards(wordHelper, wordsWithDates, false)
-  var currentWordId = sortedWords.length ? sortedWords[0].id : null
+  var sortedCards = sortCards(cardHelper, cardsWithDates, false)
+  var currentCardId = sortedCards.length ? sortedCards[0].id : null
 
   return state.merge({
     showAnswer: false,
     showFront: true,
-    currentWordId
+    currentCardId
   })
 }
 
 const navigateCurrentWord = (state, action) => {
   const lessonHelper = new LessonHelper(state)
-  var currentWords = lessonHelper.currentWords()
+  var currentCards = lessonHelper.currentCards()
   var lessonLoopCounter = state.lessonLoopCounter
-  var index = currentWords.findIndex((w) => w.id === state.currentWordId)
-  var currentWordId
+  var index = currentCards.findIndex((c) => c.id === state.currentCardId)
+  var currentCardId
 
   switch (action.type) {
     case 'INC_CURRENT_WORD':
-      if (++index >= currentWords.length) {
+    case 'LOAD_PLAYING_STATE':
+      if (++index >= currentCards.length) {
         // if (allowRestart) {
         // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
         lessonLoopCounter++
         index = 0
         // } else {
-        //   index = currentWords.length - 1
+        //   index = currentCards.length - 1
         // }
         // } else {
         //
         // }
       }
 
-      currentWordId = currentWords[Math.max(0, index)].id
+      currentCardId = currentCards[Math.max(0, index)].id
       return {
         ...state,
         lessonLoopCounter,
-        currentWordId,
-        sameWord: currentWordId === state.currentWordId
+        currentCardId,
+        sameWord: currentCardId === state.currentCardId
       }
     case 'DEC_CURRENT_WORD':
-      currentWordId = currentWords[Math.max(0, --index)].id
+      currentCardId = currentCards[Math.max(0, --index)].id
       return {
         ...state,
         lessonLoopCounter,
-        currentWordId,
-        sameWord: currentWordId === state.currentWordId
+        currentCardId,
+        sameWord: currentCardId === state.currentCardId
       }
     default:
       return state
@@ -184,6 +192,42 @@ export const incCurrentWord = (state, action) => {
 
 export const decCurrentWord = (state, action) => {
   return navigateCurrentWord(state, action)
+}
+
+export const startPlayer = (state, action) => {
+  const newState = navigateCurrentWord(state, action)
+  return state.merge({
+    ...newState
+  })
+}
+
+export const loadPlayingState = (state, action) => {
+  var playingState = state.playingState
+  var translationLoopCounter = state.translationLoopCounter
+  var newState = {}
+  if (!state.playingState) {
+    // init
+    playingState = 'ORIGINAL'
+    newState = navigateCurrentWord(state, action)
+  } else if (state.playingState === 'ORIGINAL') {
+    // translation
+    playingState = 'TRANSLATION'
+  } else if (state.playingState === 'TRANSLATION') {
+    if (++translationLoopCounter >= TRANSLATION_LOOP_MAX) {
+      // next word
+      newState = navigateCurrentWord(state, action)
+      translationLoopCounter = 0
+      playingState = state.lessonLoopCounter !== newState.lessonLoopCounter ? 'RESTART' : 'ORIGINAL'
+    }
+  } else if (state.playingState === 'RESTART') {
+    playingState = 'ORIGINAL'
+  }
+
+  return state.merge({
+    ...newState,
+    playingState,
+    translationLoopCounter
+  })
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
@@ -200,5 +244,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOAD_LESSONS]: loadLessons,
   [Types.LOAD_LESSON]: loadLesson,
   [Types.INC_CURRENT_WORD]: incCurrentWord,
-  [Types.DEC_CURRENT_WORD]: decCurrentWord
+  [Types.DEC_CURRENT_WORD]: decCurrentWord,
+  [Types.LOAD_PLAYING_STATE]: loadPlayingState
 })

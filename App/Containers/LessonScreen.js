@@ -19,10 +19,8 @@ class LessonScreen extends React.Component {
     this.props.loadLesson(this.props.data)
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.currentLesson !== this.props.currentLesson) {
-      this.props.downloadLesson(nextProps.currentWords)
-    }
+  componentDidMount () {
+    this.props.downloadLesson(this.props.currentCards)
   }
 
   render () {
@@ -51,14 +49,10 @@ class LessonScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  var currentWords = null
-  if (!_.isUndefined(state.lesson.currentLessonId)) {
-    const lessonHelper = new LessonHelper(state.lesson)
-    currentWords = lessonHelper.currentWords()
-  }
+  const lessonHelper = new LessonHelper(state.lesson)
   return {
-    currentLesson: state.lesson.lessons[state.lesson.currentLessonId],
-    currentWords
+    currentLesson: lessonHelper.currentLesson,
+    currentCards: lessonHelper.currentCards()
   }
 }
 

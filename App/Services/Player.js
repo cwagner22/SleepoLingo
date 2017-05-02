@@ -1,34 +1,12 @@
 // @flow
 
 import RNFS from 'react-native-fs'
-// import md5Hex from 'md5-hex'
+import md5Hex from 'md5-hex'
 
 import API from './TranslateApi'
 import loadSound from './Sound'
 
 this.api = API.create()
-//
-// const downloadAudioIfNeeded = (word, language) => {
-//   const fileName = md5Hex(word) + '.mp3'
-//   const path = RNFS.DocumentDirectoryPath + '/cache/' + fileName
-//   const url = this.api.ttsURL(word, language)
-//
-//   const promise = RNFS.exists(path)
-//     .then((exists) => {
-//       if (!exists) {
-//         // write the file
-//         return RNFS.downloadFile({fromUrl: url, toFile: path}).promise
-//           .then((success) => {
-//             console.log('FILE WRITTEN!', url, path)
-//             return fileName
-//           })
-//       }
-//
-//       return fileName
-//     })
-//
-//   return promise
-// }
 
 const speakWordInLanguage = (word, language, speed = 1, volume = 1) => {
   var deviceTTS = false
@@ -67,11 +45,27 @@ const speakWordInLanguage = (word, language, speed = 1, volume = 1) => {
   }
 }
 
+const getFilePath = (sentence, language) => {
+  const fileName = md5Hex(sentence) + '.mp3'
+  return getLanguagePath(language) + '/' + fileName
+}
+
+const getLanguagePath = (language) => {
+  return RNFS.CachesDirectoryPath + '/' + language
+}
+
+const isFocusMode = () => {
+  this._sound && this._sound.cancel()
+}
+
 const cancel = () => {
   this._sound && this._sound.cancel()
 }
 
 export default {
   speakWordInLanguage,
-  cancel
+  cancel,
+  getFilePath,
+  getLanguagePath,
+  isFocusMode
 }

@@ -4,11 +4,13 @@ import Player from '../Services/Player'
 import PlaybackActions from '../Redux/PlaybackRedux'
 import loadSound from '../Services/Sound'
 
+var sound
+
 export function * play (action) {
   try {
     const {sentence, language, volume, speed} = action
     const path = Player.getFilePath(sentence, language)
-    yield call(loadSound, path, volume, speed)
+    sound = yield call(loadSound, path, volume, speed)
     // this._sound =
     // this._sound.promise
     //   .then(() => {
@@ -24,5 +26,11 @@ export function * play (action) {
   } catch (error) {
     console.error(error)
     yield put(PlaybackActions.playbackError())
+  }
+}
+
+export function * cancel (action) {
+  if (sound) {
+    sound.cancel()
   }
 }

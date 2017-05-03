@@ -6,14 +6,14 @@ import Deferred from '../Lib/Deferred'
 const loadSound = (path, volume = 1, speed = 0.7) => {
   var dfd = new Deferred()
   var sound = null
-  // var _hasFinished = false
+  var _hasFinished = false
 
   const play = function () {
     sound
       .setVolume(volume)
       .setSpeed(speed)
       .play((success) => {
-        // _hasFinished = true
+        _hasFinished = true
         if (success) {
           dfd.resolve()
         } else {
@@ -33,23 +33,23 @@ const loadSound = (path, volume = 1, speed = 0.7) => {
     play()
   })
 
-  return dfd.promise
+  // return dfd.promise
 
-  // return {
-  //   promise: dfd.promise,
-  //   pause () {
-  //     sound.pause()
-  //   },
-  //   resume () {
-  //     play()
-  //   },
-  //   cancel () {
-  //     sound.stop()
-  //     if (!_hasFinished) {
-  //       dfd.reject({isCanceled: true})
-  //     }
-  //   }
-  // }
+  return {
+    promise: dfd.promise,
+    pause () {
+      sound.pause()
+    },
+    resume () {
+      play()
+    },
+    cancel () {
+      sound.stop()
+      if (!_hasFinished) {
+        dfd.reject({isCanceled: true})
+      }
+    }
+  }
 }
 
 export default loadSound

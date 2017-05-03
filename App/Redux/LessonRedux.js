@@ -179,6 +179,8 @@ const navigateCurrentWord = (state, action) => {
         ...state,
         lessonLoopCounter,
         currentCardId,
+        playingState: 'ORIGINAL',
+        translationLoopCounter: 0,
         sameWord: currentCardId === state.currentCardId
       }
     default:
@@ -192,13 +194,6 @@ export const incCurrentWord = (state, action) => {
 
 export const decCurrentWord = (state, action) => {
   return navigateCurrentWord(state, action)
-}
-
-export const startPlayer = (state, action) => {
-  const newState = navigateCurrentWord(state, action)
-  return state.merge({
-    ...newState
-  })
 }
 
 export const loadPlayingState = (state, action) => {

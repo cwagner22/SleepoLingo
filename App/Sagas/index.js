@@ -18,8 +18,8 @@ import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getTemperature } from './TemperatureSagas'
 import { openScreen } from './OpenScreenSagas'
-import { downloadLesson, loadLesson } from './LessonSagas'
-import { play } from './PlaybackSagas'
+import { downloadLesson } from './LessonSagas'
+import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
 
 /* ------------- API ------------- */
 
@@ -38,8 +38,11 @@ export default function * root () {
     takeLatest(OpenScreenTypes.OPEN_SCREEN, openScreen),
 
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
-    takeLatest(LessonTypes.LOAD_LESSON_SAGA, loadLesson),
     takeLatest(PlaybackTypes.PLAYBACK_START, play),
+    takeLatest(PlaybackTypes.PLAYER_START, start),
+    takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),
+    takeLatest(PlaybackTypes.PLAYER_PREV, playerPrev),
+    takeLatest(PlaybackTypes.PLAYER_STOP, playerStop),
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api)

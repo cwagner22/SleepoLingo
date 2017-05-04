@@ -9,9 +9,6 @@ import lessons from '../Lessons'
 import LessonHelper from '../Services/LessonHelper'
 import CardHelper from '../Services/CardHelper'
 
-export const LESSON_LOOP_MAX = 2
-const TRANSLATION_LOOP_MAX = 3
-
 /* ------------- Types and Action Creators ------------- */
 
 const {Types, Creators} = createActions({
@@ -23,13 +20,9 @@ const {Types, Creators} = createActions({
   lessonShowAnswer: null,
   lessonShowFront: null,
   lessonShowBack: null,
-  loadNextCard: null,
   downloadLesson: ['currentCards'],
-  loadLessonSaga: ['lessonId'],
   loadLesson: ['lessonId'],
-  incCurrentWord: ['allowRestart'],
-  decCurrentWord: null,
-  loadPlayingState: null
+  setCurrentCard: ['currentCardId']
 })
 
 export const LessonTypes = Types
@@ -48,7 +41,6 @@ export const INITIAL_STATE = Immutable({
   cardsDates: {},
   lessonLoopCounter: null,
   forcePlay: null,
-  playingState: null,
   translationLoopCounter: null
 })
 
@@ -143,85 +135,9 @@ export const loadNextCard = (state) => {
   })
 }
 
-const navigateCurrentWord = (state, action) => {
-  const lessonHelper = new LessonHelper(state)
-  var currentCards = lessonHelper.currentCards()
-  var lessonLoopCounter = state.lessonLoopCounter
-  var index = currentCards.findIndex((c) => c.id === state.currentCardId)
-  var currentCardId
-
-  switch (action.type) {
-    case 'INC_CURRENT_WORD':
-    case 'LOAD_PLAYING_STATE':
-      if (++index >= currentCards.length) {
-        // if (allowRestart) {
-        // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
-        lessonLoopCounter++
-        index = 0
-        // } else {
-        //   index = currentCards.length - 1
-        // }
-        // } else {
-        //
-        // }
-      }
-
-      currentCardId = currentCards[Math.max(0, index)].id
-      return {
-        ...state,
-        lessonLoopCounter,
-        currentCardId,
-        sameWord: currentCardId === state.currentCardId
-      }
-    case 'DEC_CURRENT_WORD':
-      currentCardId = currentCards[Math.max(0, --index)].id
-      return {
-        ...state,
-        lessonLoopCounter,
-        currentCardId,
-        playingState: 'ORIGINAL',
-        translationLoopCounter: 0,
-        sameWord: currentCardId === state.currentCardId
-      }
-    default:
-      return state
-  }
-}
-
-export const incCurrentWord = (state, action) => {
-  return navigateCurrentWord(state, action)
-}
-
-export const decCurrentWord = (state, action) => {
-  return navigateCurrentWord(state, action)
-}
-
-export const loadPlayingState = (state, action) => {
-  var playingState = state.playingState
-  var translationLoopCounter = state.translationLoopCounter
-  var newState = {}
-  if (!state.playingState) {
-    // init
-    playingState = 'ORIGINAL'
-    newState = navigateCurrentWord(state, action)
-  } else if (state.playingState === 'ORIGINAL') {
-    // translation
-    playingState = 'TRANSLATION'
-  } else if (state.playingState === 'TRANSLATION') {
-    if (++translationLoopCounter >= TRANSLATION_LOOP_MAX) {
-      // next word
-      newState = navigateCurrentWord(state, action)
-      translationLoopCounter = 0
-      playingState = state.lessonLoopCounter !== newState.lessonLoopCounter ? 'RESTART' : 'ORIGINAL'
-    }
-  } else if (state.playingState === 'RESTART') {
-    playingState = 'ORIGINAL'
-  }
-
+export const setCurrentCard = (state, { currentCardId }) => {
   return state.merge({
-    ...newState,
-    playingState,
-    translationLoopCounter
+    currentCardId
   })
 }
 
@@ -238,7 +154,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOAD_NEXT_CARD]: loadNextCard,
   [Types.LOAD_LESSONS]: loadLessons,
   [Types.LOAD_LESSON]: loadLesson,
-  [Types.INC_CURRENT_WORD]: incCurrentWord,
-  [Types.DEC_CURRENT_WORD]: decCurrentWord,
-  [Types.LOAD_PLAYING_STATE]: loadPlayingState
+  [Types.SET_CURRENT_CARD]: setCurrentCard
 })

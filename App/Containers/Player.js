@@ -48,7 +48,8 @@ class PlayerScreen extends React.Component {
 
     this.setModifiers()
 
-    this.props.loadPlayingState()
+    // this.props.loadPlayingState()
+    this.props.playerStart()
   }
 
   scheduleTimer () {
@@ -59,7 +60,7 @@ class PlayerScreen extends React.Component {
     }, 60 * 60 * 1000)
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate0 (prevProps) {
     const {translationLoopCounter, playingState} = this.props
     const {playing} = this.props.playback
 
@@ -183,18 +184,6 @@ class PlayerScreen extends React.Component {
     this.props.setPaused(true)
   }
 
-  previous () {
-    this.cancelPromises()
-    this.props.decCurrentWord()
-    this.forcePlay = true
-  }
-
-  next () {
-    this.cancelPromises()
-    this.props.incCurrentWord(false)
-    this.forcePlay = true
-  }
-
   renderPlayPauseButton () {
     if (this.props.isPaused) {
       return (
@@ -219,7 +208,7 @@ class PlayerScreen extends React.Component {
     return (
       <View>
         <View>
-          <TouchableOpacity onPress={this.previous.bind(this)}>
+          <TouchableOpacity onPress={this.props.playerPrev}>
             <Text>PREV</Text>
           </TouchableOpacity>
         </View>
@@ -230,7 +219,7 @@ class PlayerScreen extends React.Component {
         </View>
         {this.renderPlayPauseButton()}
         <View>
-          <TouchableOpacity onPress={this.next.bind(this)}>
+          <TouchableOpacity onPress={this.props.playerNext}>
             <Text>NEXT</Text>
           </TouchableOpacity>
         </View>
@@ -308,7 +297,10 @@ const mapDispatchToProps = (dispatch) => {
     changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed)),
     play: (sentence, language, volume, speed) => dispatch(
       PlaybackActions.playbackStart(sentence, language, volume, speed)),
-    loadPlayingState: () => dispatch(LessonActions.loadPlayingState())
+    loadPlayingState: () => dispatch(LessonActions.loadPlayingState()),
+    playerStart: () => dispatch(PlaybackActions.playerStart()),
+    playerNext: () => dispatch(PlaybackActions.playerNext()),
+    playerPrev: () => dispatch(PlaybackActions.playerPrev())
   }
 }
 

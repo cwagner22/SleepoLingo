@@ -1,10 +1,8 @@
-import { call, put } from 'redux-saga/effects'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+import { call } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import md5Hex from 'md5-hex'
 
 import API from '../Services/TranslateApi'
-import LessonActions from '../Redux/LessonRedux'
 
 const api = API.create()
 
@@ -60,14 +58,4 @@ export function * downloadLesson (action) {
   }])
 
   yield items.map((item) => call(downloadAudioIfNeeded, item.sentence, item.language))
-}
-
-export function * loadLesson (action) {
-  const {lessonId} = action
-
-  // Navigate to route
-  yield call(NavigationActions.lesson, lessonId)
-
-  // Update state
-  yield put(LessonActions.loadLesson(lessonId))
 }

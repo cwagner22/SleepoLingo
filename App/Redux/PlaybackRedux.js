@@ -10,7 +10,12 @@ const { Types, Creators } = createActions({
   playbackInit: null,
   playbackStart: ['sentence', 'language', 'speed', 'volume'],
   playbackSuccess: null,
-  playbackError: null
+  playbackError: null,
+  playerStop: null,
+  playerStart: null,
+  playerNext: null,
+  playerPrev: null,
+  playerReady: null
 })
 
 export const PlaybackTypes = Types

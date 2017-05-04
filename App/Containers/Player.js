@@ -11,10 +11,8 @@ import BackgroundTimer from 'react-native-background-timer'
 import VolumeSlider from '../Components/VolumeSlider'
 import SpeedSlider from '../Components/SpeedSlider'
 import API from '../Services/TranslateApi'
-import makeCancelable from '../Lib/MakeCancelable'
 import PlaybackActions from '../Redux/PlaybackRedux'
 import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
-import Player from '../Services/Player'
 import LessonHelper from '../Services/LessonHelper'
 import CardHelper from '../Services/CardHelper'
 
@@ -22,14 +20,6 @@ import CardHelper from '../Services/CardHelper'
 // import styles from './Styles/PlayerStyle'
 
 const TRANSLATION_LOOP_MAX = 3
-const ORIGINAL_TIMEOUT = 1000
-const ORIGINAL_TIMEOUT_SLEEP = 5000
-const TRANSLATION_TIMEOUT = 1000
-const TRANSLATION_TIMEOUT_SLEEP = 5000
-const NEXT_WORD_TIMEOUT = 2000
-const NEXT_WORD_TIMEOUT_SLEEP = 5000
-const REPEAT_ALL_TIMEOUT = 4000
-const REPEAT_ALL_TIMEOUT_SLEEP = 4000
 
 class PlayerScreen extends React.Component {
   constructor (props: Object) {
@@ -46,9 +36,6 @@ class PlayerScreen extends React.Component {
 
     this.scheduleTimer()
 
-    this.setModifiers()
-
-    // this.props.loadPlayingState()
     this.props.playerStart()
   }
 
@@ -60,111 +47,8 @@ class PlayerScreen extends React.Component {
     }, 60 * 60 * 1000)
   }
 
-  componentDidUpdate0 (prevProps) {
-    const {translationLoopCounter, playingState} = this.props
-    const {playing} = this.props.playback
-
-    if (prevProps.playback.playing !== playing && !playing) { // PLAYBACK_SUCCESS
-      this.props.loadPlayingState()
-    }
-
-    if (prevProps.playingState !== playingState || prevProps.translationLoopCounter !== translationLoopCounter) {
-      switch (playingState) {
-        case 'ORIGINAL':
-          this.delay(this.originalTimeout).then(() => this.playCard())
-          break
-        case 'TRANSLATION':
-          this.delay(this.translationTimeout).then(() => this.playCard())
-          break
-        case 'RESTART':
-          // todo: should happen before word incremented/loop restarted?
-          this.delay(this.repeatAllTimeout).then(() => this.playMessageEnd())
-          break
-      }
-    }
-
-    // if (nextProps.currentWord !== this.props.currentWord ||
-    //   // forcePlay is set when using the prev/next button on the same word (first/last words)
-    //   (nextProps.sameWord && this.forcePlay)
-    // //  Sleeping mode
-    // // !this.isFocusMode()
-    // ) {
-    //   this.forcePlay = false
-    //   promise.then(() => this.speakWord(nextProps.currentWord))
-    // }
-  }
-
   componentWillUnmount () {
-    this.cancelPromises()
-    this.props.setPaused(true)
-  }
-
-  cancelPromises () {
-    Player.cancel()
-    this._cancelablePromise.cancel()
-  }
-
-  delay (ms) {
-    return this.makeCancelable(
-      new Promise(function (resolve, reject) {
-        BackgroundTimer.setTimeout(resolve, ms)
-      })
-    )
-  }
-
-  makeCancelable (promise) {
-    this._cancelablePromise = makeCancelable(promise)
-    this._cancelablePromise.promise
-      .catch((err) => {
-        if (!err.isCanceled) {
-          console.log(err && err.stack)
-        }
-      })
-    return this._cancelablePromise.promise
-  }
-
-  isFocusMode () {
-    return this.props.lessonLoopCounter <= LESSON_LOOP_MAX
-  }
-
-  setModifiers () {
-    const isFocusMode = this.isFocusMode()
-    this.volume = isFocusMode ? 1 : 0.4
-
-    this.originalTimeout = isFocusMode ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
-    this.translationTimeout = isFocusMode ? TRANSLATION_TIMEOUT : TRANSLATION_TIMEOUT_SLEEP
-    this.nextWordTimeout = isFocusMode ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
-    this.repeatAllTimeout = isFocusMode ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
-
-    this.speed = (isFocusMode ? 0.6 : 0.4)
-    // this.rateOriginal = speed
-    // this.rateTranslation = speed
-  }
-
-  loopStart () {
-    this.setModifiers()
-    this.playCard()
-  }
-
-  playCard () {
-    const {currentCard, speed, volume, playingState} = this.props
-    const sentence = currentCard.fullSentence ? currentCard.fullSentence : currentCard.sentence
-    const translation = playingState === 'TRANSLATION'
-    const sentenceStr = translation ? sentence.translation : sentence.original
-    const language = translation ? 'th-TH' : 'en-US'
-
-    this.props.play(sentenceStr, language, this.speed * speed, this.volume * volume)
-  }
-
-  playMessageEnd () {
-    const {speed, volume} = this.props
-    var sentenceStr
-    if (this.isFocusMode()) {
-      sentenceStr = 'Repeat'
-    } else if (this.props.lessonLoopCounter === LESSON_LOOP_MAX + 1) {
-      sentenceStr = 'Good night'
-    }
-    this.props.play(sentenceStr, 'en-US', this.speed * speed, this.volume * volume)
+    this.props.playerStop()
   }
 
   stopPlayback () {
@@ -292,7 +176,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     incCurrentWord: (allowRestart) => dispatch(LessonActions.incCurrentWord(allowRestart)),
     decCurrentWord: () => dispatch(LessonActions.decCurrentWord()),
-    setPaused: (val) => dispatch(PlaybackActions.playbackSetPaused(val)),
     changeVol: (volume) => dispatch(PlaybackActions.playbackVolChange(volume)),
     changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed)),
     play: (sentence, language, volume, speed) => dispatch(
@@ -300,7 +183,8 @@ const mapDispatchToProps = (dispatch) => {
     loadPlayingState: () => dispatch(LessonActions.loadPlayingState()),
     playerStart: () => dispatch(PlaybackActions.playerStart()),
     playerNext: () => dispatch(PlaybackActions.playerNext()),
-    playerPrev: () => dispatch(PlaybackActions.playerPrev())
+    playerPrev: () => dispatch(PlaybackActions.playerPrev()),
+    playerStop: () => dispatch(PlaybackActions.playerStop())
   }
 }
 

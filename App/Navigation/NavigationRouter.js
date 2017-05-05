@@ -25,6 +25,7 @@ import LessonScreen from '../Containers/LessonScreen'
 import AnkiScreen from '../Containers/AnkiScreen'
 import PlaybackScreen from '../Containers/PlaybackScreen'
 import WordsListScreen from '../Containers/WordsListScreen'
+import ImportScreen from '../Containers/ImportScreen'
 
 /* **************************
 * Documentation: https://github.com/aksonov/react-native-router-flux
@@ -42,6 +43,7 @@ class NavigationRouter extends Component {
             <Scene key='anki' component={AnkiScreen} title='Anki' rightTitle='All Words' onRight={() => NavigationActions.wordsList()} />
             <Scene key='wordsList' component={WordsListScreen} title='Words' />
             <Scene key='playback' component={PlaybackScreen} title='Playback' />
+            <Scene key='import' component={ImportScreen} title='Import' />
             <Scene key='componentExamples' component={AllComponentsScreen} title='Components' />
             <Scene key='usageExamples' component={UsageExamplesScreen} title='Usage' rightTitle='Example' onRight={() => window.alert('Example Pressed')} />
             <Scene key='login' component={LoginScreen} title='Login' hideNavBar />

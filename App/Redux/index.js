@@ -12,6 +12,7 @@ export default () => {
     search: require('./SearchRedux').reducer,
     lesson: require('./LessonRedux').reducer,
     playback: require('./PlaybackRedux').reducer
+    // import: require('./ImportRedux').reducer
   })
 
   const rootReducer = (state, action) => {

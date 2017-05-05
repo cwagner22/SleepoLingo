@@ -3,24 +3,24 @@
 import Realm from 'realm'
 import RNFS from 'react-native-fs'
 
-class Todo extends Realm.Object {}
-Todo.schema = {
-  name: 'Todo',
-  properties: {
-    done: {type: 'bool', default: false},
-    text: 'string'
-  }
-}
-
-class TodoList extends Realm.Object {}
-TodoList.schema = {
-  name: 'TodoList',
-  properties: {
-    name: 'string',
-    creationDate: 'date',
-    items: {type: 'list', objectType: 'Todo'}
-  }
-}
+// class Todo extends Realm.Object {}
+// Todo.schema = {
+//   name: 'Todo',
+//   properties: {
+//     done: {type: 'bool', default: false},
+//     text: 'string'
+//   }
+// }
+//
+// class TodoList extends Realm.Object {}
+// TodoList.schema = {
+//   name: 'TodoList',
+//   properties: {
+//     name: 'string',
+//     creationDate: 'date',
+//     items: {type: 'list', objectType: 'Todo'}
+//   }
+// }
 
 class Word extends Realm.Object {}
 Word.schema = {
@@ -32,13 +32,25 @@ Word.schema = {
 }
 
 class Sentence extends Realm.Object {}
+// Sentence.schema = {
+//   name: 'Sentence',
+//   // primaryKey: 'id',
+//   properties: {
+//     // id: 'int',
+//     // List of Strings not possible yet
+//     words: {type: 'list', objectType: 'Word'}
+//   }
+// }
+
 Sentence.schema = {
   name: 'Sentence',
   // primaryKey: 'id',
   properties: {
     // id: 'int',
     // List of Strings not possible yet
-    words: {type: 'list', objectType: 'Word'}
+    original: 'string',
+    translation: 'string',
+    transliteration: 'string'
   }
 }
 
@@ -49,7 +61,32 @@ Card.schema = {
   properties: {
     // id: 'int',
     sentence: {type: 'Sentence'},
-    full: {type: 'Sentence', optional: true}
+    fullSentence: {type: 'Sentence', optional: true},
+    note: {type: 'string', optional: true},
+    image: 'string'
+  }
+}
+
+class Lesson extends Realm.Object {}
+Lesson.schema = {
+  name: 'Lesson',
+  // primaryKey: 'id',
+  properties: {
+    // id: 'int',
+    name: 'string',
+    note: 'string',
+    cards: {type: 'list', objectType: 'Card'}
+  }
+}
+
+class LessonGroup extends Realm.Object {}
+LessonGroup.schema = {
+  name: 'LessonGroup',
+  // primaryKey: 'id',
+  properties: {
+    // id: 'int',
+    name: 'string',
+    lessons: {type: 'list', objectType: 'Lesson'}
   }
 }
 
@@ -57,10 +94,10 @@ console.log(RNFS.MainBundlePath, Realm.defaultPath, RNFS.CachesDirectoryPath)
 // Bundle path: for readonly? Put seed in ios folder
 // Doc folder: to edit
 export default new Realm({
-  path: RNFS.MainBundlePath + '/realm.realm',
+  // path: RNFS.MainBundlePath + '/realm.realm',
   // path: '/App/Realm/db.realm',
-  // path: '/Users/christophe/Development/Projects/SleepoLingo4/App/Realm/db.realm',
-  schema: [Word, Sentence, Card]
+  path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/db.realm',
+  schema: [Word, Sentence, Card, Lesson, LessonGroup]
   // migration: function(oldRealm, newRealm) {
   //   // only apply this change if upgrading to schemaVersion 1
   //   if (oldRealm.schemaVersion < 1) {

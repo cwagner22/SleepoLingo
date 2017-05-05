@@ -11,6 +11,7 @@ import { LoginTypes } from '../Redux/LoginRedux'
 import { OpenScreenTypes } from '../Redux/OpenScreenRedux'
 import { LessonTypes } from '../Redux/LessonRedux'
 import { PlaybackTypes } from '../Redux/PlaybackRedux'
+import { ImportTypes } from '../Redux/ImportRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -20,6 +21,7 @@ import { getTemperature } from './TemperatureSagas'
 import { openScreen } from './OpenScreenSagas'
 import { downloadLesson } from './LessonSagas'
 import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
+import { importStart } from './ImportSagas'
 
 /* ------------- API ------------- */
 
@@ -43,6 +45,8 @@ export default function * root () {
     takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),
     takeLatest(PlaybackTypes.PLAYER_PREV, playerPrev),
     takeLatest(PlaybackTypes.PLAYER_STOP, playerStop),
+
+    takeLatest(ImportTypes.IMPORT_START, importStart),
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(TemperatureTypes.TEMPERATURE_REQUEST, getTemperature, api)

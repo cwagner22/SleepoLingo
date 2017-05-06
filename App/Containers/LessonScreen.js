@@ -3,11 +3,9 @@
 import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
-import _ from 'lodash'
 
 import FullButton from '../Components/FullButton'
 import LessonActions from '../Redux/LessonRedux'
-import LessonHelper from '../Services/LessonHelper'
 
 // Styles
 import styles from './Styles/LessonScreenStyle'
@@ -16,22 +14,18 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
-    this.props.loadLesson(this.props.data)
-  }
-
-  componentDidMount () {
-    this.props.downloadLesson(this.props.currentCards)
+    this.props.loadLesson(this.props.lesson)
   }
 
   render () {
-    const {currentLesson} = this.props
+    const {lesson} = this.props
 
-    if (_.isUndefined(currentLesson)) return null
+    // if (_.isUndefined(lesson)) return null
 
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.container}>
-          <Text style={styles.componentLabel}>{currentLesson.note}</Text>
+          <Text style={styles.componentLabel}>{lesson.note}</Text>
         </ScrollView>
         <FullButton text='Day' onPress={() => this.startDay()} />
         <FullButton text='Night' onPress={() => this.startNight()} />
@@ -49,16 +43,17 @@ class LessonScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const lessonHelper = new LessonHelper(state.lesson)
+  // const lessonHelper = new LessonHelper(state.lesson)
   return {
-    currentLesson: lessonHelper.currentLesson,
-    currentCards: lessonHelper.currentCards()
+    // currentLesson: lessonHelper.currentLesson,
+    // currentLesson: state.lesson.currentLesson,
+    // currentCards: lessonHelper.currentCards()
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLesson: (lessonId) => dispatch(LessonActions.loadLesson(lessonId)),
+    loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson)),
     downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words))
   }
 }

@@ -9,7 +9,6 @@ import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
 import CardTranslation from './CardTranslation'
 import AnkiFooter from './AnkiFooter'
-import CardHelper from '../Services/CardHelper'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -69,11 +68,11 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const cardHelper = new CardHelper(state.lesson)
+  // const cardHelper = new CardHelper(state.lesson)
 
   return {
     lesson: state.lesson,
-    currentCard: cardHelper.currentCard
+    currentCard: state.lesson.currentCard
   }
 }
 

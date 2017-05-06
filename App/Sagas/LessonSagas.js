@@ -1,10 +1,14 @@
-import { call } from 'redux-saga/effects'
+import { call, select, put } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import md5Hex from 'md5-hex'
 
 import API from '../Services/TranslateApi'
+import LessonActions from '../Redux/LessonRedux'
+import {resetDates} from '../Realm/realm'
 
 const api = API.create()
+
+const getCurrentLesson = (state) => state.lesson.currentLesson
 
 const getFilePath = (sentence, language) => {
   const fileName = md5Hex(sentence) + '.mp3'
@@ -58,4 +62,13 @@ export function * downloadLesson (action) {
   }])
 
   yield items.map((item) => call(downloadAudioIfNeeded, item.sentence, item.language))
+}
+
+export function * loadLesson ({lesson}) {
+  // Reset cards if new lesson
+  const currentLesson = yield select(getCurrentLesson)
+  if (lesson !== currentLesson) {
+    yield call(resetDates, lesson.cards)
+    yield put(LessonActions.setCurrentLesson(lesson))
+  }
 }

@@ -1,13 +1,11 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import _ from 'lodash'
 import { normalize } from 'normalizr'
 import moment from 'moment'
 
 import { lessonsValuesSchema } from '../Redux/schema'
 import lessons from '../Lessons'
-import LessonHelper from '../Services/LessonHelper'
-import CardHelper from '../Services/CardHelper'
+import {sortCards} from '../Realm/realm'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -20,8 +18,10 @@ const {Types, Creators} = createActions({
   lessonShowAnswer: null,
   lessonShowFront: null,
   lessonShowBack: null,
+  loadNextCard: null,
   downloadLesson: ['currentCards'],
-  loadLesson: ['lessonId'],
+  loadLesson: ['lesson'],
+  setCurrentLesson: ['lesson'],
   setCurrentCard: ['currentCardId']
 })
 
@@ -34,7 +34,8 @@ export const INITIAL_STATE = Immutable({
   lessons: [],
   cards: [],
   lessonGroups: [],
-  currentLessonId: null,
+  // currentLessonId: null,
+  currentLesson: null,
   currentCardId: null,
   showAnswer: false,
   showFront: true,
@@ -51,15 +52,21 @@ export const loadLessons = (state) => {
   return state.merge(normalizedData.entities)
 }
 
-export const loadLesson = (state, {lessonId}: Number) => {
-  // Reset cards if new lesson
-  var resetCards = {}
-  if (lessonId !== state.currentLessonId) {
-    resetCards = {cardsDates: {}}
-  }
+// export const loadLesson = (state, {lesson}: Object) => {
+//   // Reset cards if new lesson
+//   var resetCards = {}
+//   if (lessonId !== state.currentLessonId) {
+//     resetCards = {cardsDates: {}}
+//   }
+//   return state.merge({
+//     ...resetCards,
+//     currentLessonId: lessonId
+//   })
+// }
+
+export const setCurrentLesson = (state, {lesson}) => {
   return state.merge({
-    ...resetCards,
-    currentLessonId: lessonId
+    currentLesson: lesson
   })
 }
 
@@ -101,43 +108,22 @@ export const showBack = (state) => {
   return state.merge({showFront: false})
 }
 
-const sortCards = (wordHelper, wordsWithDates, allowAlmost) => {
-  // Sort by date and index
-  var sortedWords = _.sortBy(wordsWithDates, ['showDate', (w, i) => i])
-    .filter((word) => {
-      // Exclude future cards
-      return wordHelper.isReady(word, allowAlmost)
-    })
-
-  if (sortedWords.length) {
-    return sortedWords
-  } else {
-    return sortCards(wordHelper, wordsWithDates, true)
-  }
-}
-
 export const loadNextCard = (state) => {
-  const lessonHelper = new LessonHelper(state)
-  const cardHelper = new CardHelper(state)
-
-  // Assign dates for sorting
-  var cardsWithDates = lessonHelper.currentCards().map((c) => {
-    return cardHelper.cardWithDate(c)
-  })
-
-  var sortedCards = sortCards(cardHelper, cardsWithDates, false)
-  var currentCardId = sortedCards.length ? sortedCards[0].id : null
+  // const currentLesson = yield select(getCurrentLesson)
+  // const cards = yield call(sortCards, currentLesson.cards)
+  const cards = sortCards(state.currentLesson.cards)
+  var currentCard = cards.length ? cards[0] : null
 
   return state.merge({
     showAnswer: false,
     showFront: true,
-    currentCardId
+    currentCard
   })
 }
 
-export const setCurrentCard = (state, { currentCardId }) => {
+export const setCurrentCard = (state, {currentCard}) => {
   return state.merge({
-    currentCardId
+    currentCard
   })
 }
 
@@ -153,6 +139,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_BACK]: showBack,
   [Types.LOAD_NEXT_CARD]: loadNextCard,
   [Types.LOAD_LESSONS]: loadLessons,
-  [Types.LOAD_LESSON]: loadLesson,
+  // [Types.LOAD_LESSON]: loadLesson,
+  [Types.SET_CURRENT_LESSON]: setCurrentLesson,
   [Types.SET_CURRENT_CARD]: setCurrentCard
 })

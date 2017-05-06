@@ -15,7 +15,7 @@ export default {
         translation: 'สวัสดี ผม ชื่อ คริส',
         transliteration: 'sà-wàt-dee pŏm chêu Chris'
       },
-      image: require('./images/6428a124-873f-4775-83c8-87b8ce8fe956.jpg')
+      image: require('../images/193795.jpg')
       // audio: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956.mp3'),
       // audiob: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956b.mp3'),
       // audioc: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956c.mp3')
@@ -32,7 +32,7 @@ export default {
         translation: 'หวัดดี สบายดี ไหม',
         transliteration: 'wàt dee sà-baai dee măi'
       },
-      image: require('./images/6428a124-873f-4775-83c8-87b8ce8fe956.jpg')
+      image: require('../images/193795.jpg')
       // audio: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956.mp3'),
       // audiob: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956b.mp3'),
       // audioc: require('./audio/6428a124-873f-4775-83c8-87b8ce8fe956c.mp3')

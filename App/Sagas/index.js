@@ -19,7 +19,7 @@ import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getTemperature } from './TemperatureSagas'
 import { openScreen } from './OpenScreenSagas'
-import { downloadLesson } from './LessonSagas'
+import { downloadLesson, loadLesson } from './LessonSagas'
 import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
 import { importStart } from './ImportSagas'
 
@@ -40,6 +40,7 @@ export default function * root () {
     takeLatest(OpenScreenTypes.OPEN_SCREEN, openScreen),
 
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
+    takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
     takeLatest(PlaybackTypes.PLAYBACK_START, play),
     takeLatest(PlaybackTypes.PLAYER_START, start),
     takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),

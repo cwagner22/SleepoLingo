@@ -28,7 +28,11 @@ function parseCards (worksheet) {
 
     let data = {
       image: 'test',
-      sentence
+      sentence,
+      // The order of Results is only guaranteed to stay consistent when the query is sorted. For performance
+      // reasons, insertion order is not guaranteed to be preserved. So we use an index property to be sure.
+      index: i,
+      id: Number(row.Id)
     }
 
     if (row.Note) data.note = row.Note

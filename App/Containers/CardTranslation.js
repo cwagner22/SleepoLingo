@@ -17,7 +17,7 @@ import PlaybackActions from '../Redux/PlaybackRedux'
 import TranslationText from '../Components/TranslationText'
 import Explanation from '../Components/Explanation'
 import { Colors } from '../Themes'
-import CardHelper from '../Services/CardHelper'
+import images from '../Lessons/images/images'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -49,7 +49,7 @@ class CardTranslation extends React.Component {
   renderImage () {
     if (this.props.currentCard.image) {
       return (
-        <Image style={styles.image} resizeMode='contain' source={this.props.currentCard.image} />
+        <Image style={styles.image} resizeMode='contain' source={images[this.props.currentCard.id]} />
       )
     }
   }
@@ -112,9 +112,8 @@ class CardTranslation extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const cardHelper = new CardHelper(state.lesson)
   return {
-    currentCard: cardHelper.currentCard,
+    currentCard: state.lesson.currentCard,
     lesson: state.lesson
   }
 }

@@ -47,11 +47,9 @@ class CardTranslation extends React.Component {
   }
 
   renderImage () {
-    if (this.props.currentCard.image) {
-      return (
-        <Image style={styles.image} resizeMode='contain' source={images[this.props.currentCard.id]} />
-      )
-    }
+    return (
+      <Image style={styles.image} resizeMode='contain' source={images[this.props.currentCard.id]} />
+    )
   }
 
   renderNote () {
@@ -121,7 +119,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
-    play: (sentence, language, volume, speed) => dispatch(PlaybackActions.playbackStart(sentence, language, volume, speed))
+    play: (sentence, language, volume, speed) => dispatch(
+      PlaybackActions.playbackStart(sentence, language, volume, speed))
   }
 }
 

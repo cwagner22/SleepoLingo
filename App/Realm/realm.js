@@ -3,6 +3,7 @@
 import Realm from 'realm'
 import RNFS from 'react-native-fs'
 import _ from 'lodash'
+import moment from 'moment'
 
 // class Todo extends Realm.Object {}
 // Todo.schema = {
@@ -64,21 +65,31 @@ Card.schema = {
     sentence: {type: 'Sentence'},
     fullSentence: {type: 'Sentence', optional: true},
     note: {type: 'string', optional: true},
-    image: 'string',
     showDate: {type: 'date', optional: true},
     index: 'int'
   }
 }
 
-import moment from 'moment'
-// Card.isReady = (allowAlmost) => {
-//   // card = this.cardWithDate(card)
-//   var dateCompare = moment()
-//   if (allowAlmost) {
-//     dateCompare.add(1, 'm')
-//   }
-//   return !this.showDate || moment(this.showDate).isBefore(dateCompare)
-// }
+export const createCard = (id, sentence, fullSentence, index, note) => {
+  let data = {
+    sentence,
+    // The order of Results is only guaranteed to stay consistent when the query is sorted. For performance
+    // reasons, insertion order is not guaranteed to be preserved. So we use an index property to be sure.
+    index,
+    id
+  }
+
+  if (note) data.note = note
+  if (fullSentence.original && fullSentence.translation && fullSentence.transliteration) {
+    data.fullSentence = fullSentence
+  }
+
+  let res
+  realm.write(() => {
+    res = realm.create('Card', data, true)
+  })
+  return res
+}
 
 export const resetDates = (cards) => {
   realm.write(() => {
@@ -141,9 +152,26 @@ Lesson.schema = {
   properties: {
     // id: 'int',
     name: 'string',
-    note: 'string',
+    note: {type: 'string', optional: true},
     cards: {type: 'list', objectType: 'Card'}
   }
+}
+
+export const createLesson = (name, note, cards) => {
+  let data = {
+    name,
+    cards
+  }
+
+  if (note) {
+    data.note = note
+  }
+
+  let res
+  realm.write(() => {
+    res = realm.create('Lesson', data, true)
+  })
+  return res
 }
 
 class LessonGroup extends Realm.Object {}
@@ -159,6 +187,25 @@ LessonGroup.schema = {
 
 export const getLessonGroups = () => {
   return realm.objects('LessonGroup')
+}
+
+export const createLessonGroup = (name, lessons) => {
+  let data = {
+    name,
+    lessons
+  }
+
+  let res
+  realm.write(() => {
+    res = realm.create('LessonGroup', data, true)
+  })
+  return res
+}
+
+export const reset = () => {
+  realm.write(() => {
+    realm.deleteAll()
+  })
 }
 
 console.log(RNFS.MainBundlePath, Realm.defaultPath, RNFS.CachesDirectoryPath)
@@ -184,4 +231,4 @@ const realm = new Realm({
   // readOnly: true
   schemaVersion: 1
 })
-export default realm
+// export default realm

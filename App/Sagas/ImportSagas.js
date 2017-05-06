@@ -1,17 +1,18 @@
 import { call } from 'redux-saga/effects'
 import XLSX from 'xlsx'
 import RNFS from 'react-native-fs'
-import realm from '../Realm/realm'
+import { createCard, createLesson, createLessonGroup, reset } from '../Realm/realm'
 
 const getSentence = (string) => string.split('\n')[0]
 const getFullSentence = (string) => string.split('\n')[1]
 
 function parseCards (worksheet) {
+  console.log('Parsing cards, worksheet length: ', worksheet.length)
   let cards = []
   for (var i = 0; i < worksheet.length; i++) {
     var row = worksheet[i]
     if (!row.Original || !row.Translation || !row.Transliteration) {
-      return cards
+      break
     }
 
     const sentence = {
@@ -26,54 +27,66 @@ function parseCards (worksheet) {
       transliteration: getFullSentence(row.Transliteration)
     }
 
-    let data = {
-      image: 'test',
-      sentence,
-      // The order of Results is only guaranteed to stay consistent when the query is sorted. For performance
-      // reasons, insertion order is not guaranteed to be preserved. So we use an index property to be sure.
-      index: i,
-      id: Number(row.Id)
-    }
-
-    if (row.Note) data.note = row.Note
-    if (fullSentence.original && fullSentence.translation && fullSentence.transliteration) data.fullSentence = fullSentence
-
-    cards.push(realm.create('Card', data, true))
+    console.log(sentence)
+    const card = createCard(Number(row.Id), sentence, fullSentence, i, row.Note)
+    cards.push(card)
   }
 
+  worksheet.splice(0, i)
+  console.log(cards.length + ' cards found')
   return cards
 }
 
 function parseLesson (worksheet) {
+  if (!worksheet.length) return
+  console.log('Parsing lesson, worksheet length: ', worksheet.length)
   const lessonNameFull = worksheet[0].Original
   const name = lessonNameFull.substr(lessonNameFull.indexOf(':') + 1)
-  const note = worksheet[1].Original
+  if (!name) return
 
-  const cards = parseCards(worksheet.slice(2))
+  let note
+  if (worksheet[1].Original && !worksheet[1].Translation && !worksheet[1].Transliteration) {
+    // Note is optional
+    note = worksheet[1].Original
+  }
 
-  return realm.create('Lesson', {
-    name,
-    note,
-    cards
-  })
+  worksheet.splice(0, note ? 2 : 1)
+  const cards = parseCards(worksheet)
+  if (!cards.length) return
+  return createLesson(name, note, cards)
 }
 
-function parseLessons (workbook) {
-  const worksheetName = workbook.SheetNames[0]
-  const worksheet = workbook.Sheets[worksheetName]
-  const worksheetJSON = XLSX.utils.sheet_to_json(worksheet)
-  console.log(worksheetJSON)
+function parseLessons (worksheet) {
+  let lessons = []
+  let canContinue = true
+  while (canContinue) {
+    const lesson = parseLesson(worksheet)
+    if (lesson) {
+      lessons.push(lesson)
+      canContinue = worksheet.length > 2
+    } else {
+      canContinue = false
+    }
+  }
 
-  realm.write(() => {
-    realm.deleteAll()
+  return lessons
+}
 
-    const lesson = parseLesson(worksheetJSON)
+function parseGroups (workbook) {
+  reset()
+  console.log(workbook)
+  for (var i = 0; i < workbook.SheetNames.length; i++) {
+    const name = workbook.SheetNames[i]
+    if (name === 'Words') return
+    let worksheet = workbook.Sheets[name]
+    let worksheetJSON = XLSX.utils.sheet_to_json(worksheet)
+    console.log(worksheetJSON)
 
-    realm.create('LessonGroup', {
-      name: worksheetName,
-      lessons: [lesson]
-    }, true)
-  })
+    const lessons = parseLessons(worksheetJSON)
+    if (lessons.length) {
+      createLessonGroup(name, lessons)
+    }
+  }
 }
 
 export function * importStart () {
@@ -81,7 +94,7 @@ export function * importStart () {
     'base64')
   const workbook = yield call(XLSX.read, data)
 
-  yield call(parseLessons, workbook)
+  yield call(parseGroups, workbook)
 
   console.log('Done')
 }

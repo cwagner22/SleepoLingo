@@ -123,7 +123,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLessons: () => dispatch(LessonActions.loadLessons()),
     loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson))
   }
 }

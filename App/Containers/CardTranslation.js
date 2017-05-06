@@ -33,7 +33,7 @@ class CardTranslation extends React.Component {
 
   speakText (sentence) {
     // Player.speakWordInLanguage(text, 'th-TH', 0.7)
-    this.props.play(sentence, 'th-TH', 0.7)
+    this.props.play(sentence, 'th-TH', 1, 0.7)
   }
 
   renderFullTranslation () {

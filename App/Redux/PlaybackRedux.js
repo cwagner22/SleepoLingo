@@ -8,7 +8,7 @@ const { Types, Creators } = createActions({
   playbackSpeedChange: ['speed'],
   playbackSetPaused: ['isPaused'],
   playbackInit: null,
-  playbackStart: ['sentence', 'language', 'speed', 'volume'],
+  playbackStart: ['sentence', 'language', 'volume', 'speed'],
   playbackSuccess: null,
   playbackError: null,
   playerStop: null,

@@ -15,6 +15,9 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 class LessonScreen extends React.Component {
   componentWillMount () {
     this.props.loadLesson(this.props.lesson)
+    if (this.props.currentLesson !== this.props.lesson) {
+      this.props.downloadLesson(this.props.lesson.cards)
+    }
   }
 
   render () {
@@ -45,7 +48,7 @@ class LessonScreen extends React.Component {
 const mapStateToProps = (state) => {
   // const lessonHelper = new LessonHelper(state.lesson)
   return {
-    // currentLesson: lessonHelper.currentLesson,
+    currentLesson: state.lesson.currentLesson
     // currentLesson: state.lesson.currentLesson,
     // currentCards: lessonHelper.currentCards()
   }

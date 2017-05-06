@@ -48,12 +48,17 @@ export function * downloadLesson (action) {
   var items = []
   for (var i = 0; i < currentCards.length; i++) {
     const c = currentCards[i]
-    const sentence = c.fullSentence ? c.fullSentence : c.sentence
     items = items.concat([{
-      sentence: sentence.original, language: 'en-US'
+      sentence: c.sentence.original, language: 'en-US'
     }, {
-      sentence: sentence.translation, language: 'th-TH'
+      sentence: c.sentence.translation, language: 'th-TH'
     }])
+
+    if (c.fullSentence) {
+      items.push({
+        sentence: c.fullSentence.translation, language: 'th-TH'
+      })
+    }
   }
   items = items.concat([{
     sentence: 'Repeat', language: 'en-US'

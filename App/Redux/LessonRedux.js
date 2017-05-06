@@ -1,16 +1,12 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import { normalize } from 'normalizr'
 import moment from 'moment'
 
-import { lessonsValuesSchema } from '../Redux/schema'
-import lessons from '../Lessons'
 import {sortCards} from '../Realm/realm'
 
 /* ------------- Types and Action Creators ------------- */
 
 const {Types, Creators} = createActions({
-  loadLessons: null,
   lessonStart: null,
   ankiHard: null,
   ankiOk: null,
@@ -46,23 +42,6 @@ export const INITIAL_STATE = Immutable({
 })
 
 /* ------------- Reducers ------------- */
-
-export const loadLessons = (state) => {
-  const normalizedData = normalize(lessons, lessonsValuesSchema)
-  return state.merge(normalizedData.entities)
-}
-
-// export const loadLesson = (state, {lesson}: Object) => {
-//   // Reset cards if new lesson
-//   var resetCards = {}
-//   if (lessonId !== state.currentLessonId) {
-//     resetCards = {cardsDates: {}}
-//   }
-//   return state.merge({
-//     ...resetCards,
-//     currentLessonId: lessonId
-//   })
-// }
 
 export const setCurrentLesson = (state, {lesson}) => {
   return state.merge({
@@ -138,7 +117,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,
   [Types.LOAD_NEXT_CARD]: loadNextCard,
-  [Types.LOAD_LESSONS]: loadLessons,
   // [Types.LOAD_LESSON]: loadLesson,
   [Types.SET_CURRENT_LESSON]: setCurrentLesson,
   [Types.SET_CURRENT_CARD]: setCurrentCard

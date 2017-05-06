@@ -27,7 +27,7 @@ var playingState
 var lessonLoopCounter
 var translationLoopCounter
 
-export function * play (sentence, language, volume, speed) {
+export function * play ({sentence, language, volume, speed}) {
   try {
     const path = Player.getFilePath(sentence, language)
     sound = yield call(loadSound, path, volume, speed)
@@ -189,7 +189,7 @@ function setModifiers () {
   // this.rateTranslation = speed
 }
 
-// todo: max loop, timer
+// todo: max loop, timer?
 const playerShouldContinue = () => true
 
 function * playerLoop () {

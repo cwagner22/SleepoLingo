@@ -18,6 +18,7 @@ import TranslationText from '../Components/TranslationText'
 import Explanation from '../Components/Explanation'
 import { Colors } from '../Themes'
 import images from '../Lessons/images/images'
+import {getWord} from '../Realm/realm'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -61,31 +62,36 @@ class CardTranslation extends React.Component {
   }
 
   renderExplanation () {
-    if (this.props.currentCard.explanation) {
-      return (
-        <View>
-          <Modal
-            animationType={'none'}
-            transparent
-            visible={this.state.modalVisible}
-            onRequestClose={() => { this.setModalVisible(false) }}
-          >
-            <TouchableOpacity style={styles.modalContainer} activeOpacity={0.7}
-              onPressOut={() => { this.setModalVisible(false) }}>
-              <View style={styles.innerContainer}>
-                <Explanation explanation={this.props.currentCard.explanation} />
-              </View>
-            </TouchableOpacity>
-          </Modal>
-          <View>
-            <TouchableHighlight onPress={() => { this.setModalVisible(true) }} style={styles.explanation}
-              underlayColor={Colors.underlayGrey}>
-              <Text>Explanation</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      )
+    let explanation = []
+    const sentence = this.props.currentCard.fullSentence || this.props.currentCard.sentence
+    const words = sentence.translation.split(' ')
+    for (const word of words) {
+      explanation.push(getWord(word))
     }
+
+    return (
+      <View>
+        <Modal
+          animationType={'none'}
+          transparent
+          visible={this.state.modalVisible}
+          onRequestClose={() => { this.setModalVisible(false) }}
+        >
+          <TouchableOpacity style={styles.modalContainer} activeOpacity={0.7}
+            onPressOut={() => { this.setModalVisible(false) }}>
+            <View style={styles.innerContainer}>
+              <Explanation explanation={explanation} />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+        <View>
+          <TouchableHighlight onPress={() => { this.setModalVisible(true) }} style={styles.explanation}
+            underlayColor={Colors.underlayGrey}>
+            <Text>Explanation</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+    )
   }
 
   setModalVisible (visible) {

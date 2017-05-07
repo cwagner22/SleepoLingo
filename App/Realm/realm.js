@@ -23,6 +23,10 @@ export const createWord = (original, transliteration, translation) => {
   })
 }
 
+export const getWord = (word) => {
+  return realm.objects('Word').filtered(`original == "${word}"`)[0]
+}
+
 class Sentence extends Realm.Object {}
 // Sentence.schema = {
 //   name: 'Sentence',Q
@@ -39,7 +43,6 @@ Sentence.schema = {
   // primaryKey: 'id',
   properties: {
     // id: 'int',
-    // List of Strings not possible yet
     original: 'string',
     translation: 'string',
     transliteration: 'string'

@@ -1,7 +1,7 @@
 import { call } from 'redux-saga/effects'
 import XLSX from 'xlsx'
 import RNFS from 'react-native-fs'
-import { createCard, createLesson, createLessonGroup, reset } from '../Realm/realm'
+import { createCard, createLesson, createLessonGroup, reset, createWord } from '../Realm/realm'
 
 const getSentence = (string) => string.split('\n')[0]
 const getFullSentence = (string) => string.split('\n')[1]
@@ -74,19 +74,34 @@ function parseLessons (worksheet) {
   return lessons
 }
 
+function parseDictionary (worksheet) {
+  console.log('Parsing Dictionary, worksheet length: ', worksheet.length)
+  for (var i = 0; i < worksheet.length; i++) {
+    var row = worksheet[i]
+    if (!row.Original || !row.Translation || !row.Transliteration) {
+      break
+    }
+
+    createWord(row.Original, row.Transliteration, row.Translation)
+  }
+}
+
 function parseGroups (workbook) {
   reset()
   console.log(workbook)
   for (var i = 0; i < workbook.SheetNames.length; i++) {
     const name = workbook.SheetNames[i]
-    if (name === 'Words') return
     let worksheet = workbook.Sheets[name]
     let worksheetJSON = XLSX.utils.sheet_to_json(worksheet)
     console.log(worksheetJSON)
 
-    const lessons = parseLessons(worksheetJSON)
-    if (lessons.length) {
-      createLessonGroup(name, lessons)
+    if (name === 'Dictionary') {
+      parseDictionary(worksheetJSON)
+    } else {
+      const lessons = parseLessons(worksheetJSON)
+      if (lessons.length) {
+        createLessonGroup(name, lessons)
+      }
     }
   }
 }

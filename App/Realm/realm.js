@@ -8,15 +8,24 @@ import moment from 'moment'
 class Word extends Realm.Object {}
 Word.schema = {
   name: 'Word',
-  primaryKey: 'val',
+  primaryKey: 'original',
   properties: {
-    val: 'string'
+    original: {type: 'string', indexed: true},
+    translation: 'string',
+    transliteration: 'string'
   }
+}
+
+export const createWord = (original, transliteration, translation) => {
+  let data = { original, transliteration, translation }
+  realm.write(() => {
+    realm.create('Word', data)
+  })
 }
 
 class Sentence extends Realm.Object {}
 // Sentence.schema = {
-//   name: 'Sentence',
+//   name: 'Sentence',Q
 //   // primaryKey: 'id',
 //   properties: {
 //     // id: 'int',

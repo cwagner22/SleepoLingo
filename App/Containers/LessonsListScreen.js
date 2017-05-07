@@ -6,19 +6,17 @@ import { ListView } from 'realm/react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import RNFS from 'react-native-fs'
-// import Realm from 'realm'
 
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
-import {getLessonGroups, isReady} from '../Realm/realm'
+import { getLessonGroups, isReady } from '../Realm/realm'
 // import store from '../store'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
 
 class LessonsListScreen extends React.Component {
-  state = {
-  }
+  state = {}
 
   componentWillMount () {
     this.setupDataSource()
@@ -30,7 +28,6 @@ class LessonsListScreen extends React.Component {
 
     const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
 
-    // let lessonGroups = realm.objects('LessonGroup')
     let data = {}
     for (const group of getLessonGroups()) {
       data[group.name] = group.lessons

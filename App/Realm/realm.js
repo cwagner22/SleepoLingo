@@ -5,25 +5,6 @@ import RNFS from 'react-native-fs'
 import _ from 'lodash'
 import moment from 'moment'
 
-// class Todo extends Realm.Object {}
-// Todo.schema = {
-//   name: 'Todo',
-//   properties: {
-//     done: {type: 'bool', default: false},
-//     text: 'string'
-//   }
-// }
-//
-// class TodoList extends Realm.Object {}
-// TodoList.schema = {
-//   name: 'TodoList',
-//   properties: {
-//     name: 'string',
-//     creationDate: 'date',
-//     items: {type: 'list', objectType: 'Todo'}
-//   }
-// }
-
 class Word extends Realm.Object {}
 Word.schema = {
   name: 'Word',
@@ -103,6 +84,21 @@ export const resetDates = (cards) => {
   })
 }
 
+export const setDate = (card, date) => {
+  if (moment.isMoment(date)) {
+    date = date.toDate()
+  }
+
+  realm.write(() => {
+    try {
+      realm.create('Card', {id: card.id, showDate: date}, true)
+      // card.showDate = date
+    } catch (e) {
+      console.warn(e)
+    }
+  })
+}
+
 export const isReady = (card, allowAlmost) => {
   // card = this.cardWithDate(card)
   var dateCompare = moment()
@@ -112,53 +108,72 @@ export const isReady = (card, allowAlmost) => {
   return !card.showDate || moment(card.showDate).isBefore(dateCompare)
 }
 
-export const sortCards = (cards, allowAlmost = false) => {
-  // let cardsReady = cards.sorted(['showDate', 'index']).filter((card) => {
-  //   // Exclude future cards
-  //   return isReady(card, allowAlmost)
-  // })
+export const ImmutableRealm = (func, option = {}) => {
+  const defaultCopy = (item) => JSON.parse(JSON.stringify(item))
+  const copy = option.copy || defaultCopy // Use deep copy.
+  const success = option.success || true
+  const fail = option.fail || false
 
-  var sortedCardsRady = _.sortBy(cards, ['showDate', 'index'])
+  const defualtErrorHandler = (e) => e
+  const errorHandler = option.errorHandler || defualtErrorHandler
+  return (props) => new Promise((resolve, reject) => {
+    try {
+      const result = func(props, realm) || 'Return is null'
+      const copiedResult = copy(result)
+      resolve({status: success, data: copiedResult})
+    } catch (e) {
+      const error = errorHandler(e)
+      reject({status: fail, error})
+    }
+  })
+}
+
+export const sortCards = (cards, allowAlmost = false) => {
+  var sortedCardsReady = _.sortBy(cards, ['showDate', 'index'])
     .filter((card) => {
       // Exclude future cards
       return isReady(card, allowAlmost)
     })
 
-  if (!sortedCardsRady.length && !allowAlmost) {
+  if (!sortedCardsReady.length && !allowAlmost) {
     return sortCards(cards, true)
   } else {
-    return sortedCardsRady
+    return sortedCardsReady
   }
-  // const sortCards = (wordHelper, wordsWithDates, allowAlmost) => {
-  //   // Sort by date and index
-  //   var sortedWords = _.sortBy(wordsWithDates, ['showDate', (w, i) => i])
-  //     .filter((word) => {
-  //       // Exclude future cards
-  //       return wordHelper.isReady(word, allowAlmost)
-  //     })
-  //
-  //   if (sortedWords.length) {
-  //     return sortedWords
-  //   } else {
-  //     return sortCards(wordHelper, wordsWithDates, true)
-  //   }
-  // }
+}
+
+export const getNextCard = ({id}) => {
+  const lesson = getLesson(id)
+  const cards = sortCards(lesson.cards)
+  const currentCard = cards.length ? cards[0] : null
+  return currentCard
+}
+
+export const getCards = (lessonId) => {
+  const lesson = getLesson(lessonId)
+  return lesson.cards
 }
 
 class Lesson extends Realm.Object {}
 Lesson.schema = {
   name: 'Lesson',
-  // primaryKey: 'id',
+  primaryKey: 'id',
   properties: {
-    // id: 'int',
+    id: 'int',
     name: 'string',
     note: {type: 'string', optional: true},
     cards: {type: 'list', objectType: 'Card'}
   }
 }
 
-export const createLesson = (name, note, cards) => {
+export const getLesson = (id) => {
+  // todo: ImmutableRealm?
+  return realm.objectForPrimaryKey('Lesson', id)
+}
+
+export const createLesson = (id, name, note, cards) => {
   let data = {
+    id,
     name,
     cards
   }
@@ -208,13 +223,15 @@ export const reset = () => {
   })
 }
 
-console.log(RNFS.MainBundlePath, Realm.defaultPath, RNFS.CachesDirectoryPath)
+console.log('Realm.defaultPath', Realm.defaultPath)
+console.log('MainBundlePath', RNFS.MainBundlePath)
+console.log('CachesDirectoryPath', RNFS.CachesDirectoryPath)
 // Bundle path: for readonly? Put seed in ios folder
 // Doc folder: to edit
 const realm = new Realm({
   // path: RNFS.MainBundlePath + '/realm.realm',
-  // path: '/App/Realm/db.realm',
-  path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/db.realm',
+  path: 'db.realm',
+  // path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/db.realm',
   schema: [Word, Sentence, Card, Lesson, LessonGroup],
   // migration: function(oldRealm, newRealm) {
   //   // only apply this change if upgrading to schemaVersion 1
@@ -231,4 +248,5 @@ const realm = new Realm({
   // readOnly: true
   schemaVersion: 1
 })
+// console.log(realm.path);
 // export default realm

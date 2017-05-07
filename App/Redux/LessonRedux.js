@@ -1,8 +1,5 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import moment from 'moment'
-
-import {sortCards} from '../Realm/realm'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -15,10 +12,11 @@ const {Types, Creators} = createActions({
   lessonShowFront: null,
   lessonShowBack: null,
   loadNextCard: null,
+  nextCardLoaded: ['card'],
   downloadLesson: ['currentCards'],
   loadLesson: ['lesson'],
   setCurrentLesson: ['lesson'],
-  setCurrentCard: ['currentCardId']
+  setCurrentCard: ['currentCard']
 })
 
 export const LessonTypes = Types
@@ -30,9 +28,8 @@ export const INITIAL_STATE = Immutable({
   lessons: [],
   cards: [],
   lessonGroups: [],
-  // currentLessonId: null,
   currentLesson: null,
-  currentCardId: null,
+  currentCard: null,
   showAnswer: false,
   showFront: true,
   cardsDates: {},
@@ -52,27 +49,11 @@ export const setCurrentLesson = (state, {lesson}) => {
 export const startLesson = (state) => {
   return state.merge({
     showAnswer: false,
-    currentCardId: null,
+    currentCard: null,
     lessonLoopCounter: 0,
     translationLoopCounter: 0,
     playingState: null
   })
-}
-
-const updateCardDate = (state, showDate) => {
-  return state.setIn(['cardsDates', state.currentCardId], showDate.toDate())
-}
-
-export const ankiHard = (state) => {
-  return updateCardDate(state, moment().add(1, 'm'))
-}
-
-export const ankiOk = (state) => {
-  return updateCardDate(state, moment().add(10, 'm'))
-}
-
-export const ankiEasy = (state) => {
-  return updateCardDate(state, moment().add(1, 'd'))
 }
 
 export const showAnswer = (state) => {
@@ -87,16 +68,11 @@ export const showBack = (state) => {
   return state.merge({showFront: false})
 }
 
-export const loadNextCard = (state) => {
-  // const currentLesson = yield select(getCurrentLesson)
-  // const cards = yield call(sortCards, currentLesson.cards)
-  const cards = sortCards(state.currentLesson.cards)
-  var currentCard = cards.length ? cards[0] : null
-
+export const nextCardLoaded = (state, {card}) => {
   return state.merge({
     showAnswer: false,
     showFront: true,
-    currentCard
+    currentCard: card
   })
 }
 
@@ -110,14 +86,10 @@ export const setCurrentCard = (state, {currentCard}) => {
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_START]: startLesson,
-  [Types.ANKI_HARD]: ankiHard,
-  [Types.ANKI_OK]: ankiOk,
-  [Types.ANKI_EASY]: ankiEasy,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,
-  [Types.LOAD_NEXT_CARD]: loadNextCard,
-  // [Types.LOAD_LESSON]: loadLesson,
+  [Types.NEXT_CARD_LOADED]: nextCardLoaded,
   [Types.SET_CURRENT_LESSON]: setCurrentLesson,
   [Types.SET_CURRENT_CARD]: setCurrentCard
 })

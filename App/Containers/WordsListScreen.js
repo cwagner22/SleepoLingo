@@ -2,18 +2,19 @@ import React from 'react'
 import { View, Text, TouchableHighlight, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import Accordion from 'react-native-collapsible/Accordion'
+import _ from 'lodash'
 
-import LessonHelper from '../Services/LessonHelper'
 import Player from '../Services/Player'
+import {getCards} from '../Realm/realm'
 
 import styles from './Styles/WordsListScreenStyle'
 
 class WordsListScreen extends React.Component {
   _renderHeader (section) {
-    const word = section.full ? section.full : section
+    const sentence = section.fullSentence ? section.fullSentence : section.sentence
     return (
       <View style={styles.header}>
-        <Text style={styles.headerText}>{word.original}</Text>
+        <Text style={styles.headerText}>{sentence.original}</Text>
       </View>
     )
   }
@@ -23,22 +24,23 @@ class WordsListScreen extends React.Component {
   }
 
   _renderContent (section) {
-    const word = section.full ? section.full : section
+    const sentence = section.fullSentence ? section.fullSentence : section.sentence
     return (
-      <TouchableHighlight onPress={() => this.play(word.translation)}>
+      <TouchableHighlight onPress={() => this.play(sentence.translation)}>
         <View style={styles.content}>
-          <Text>{word.translation}</Text>
-          <Text>{word.transliteration}</Text>
+          <Text>{sentence.translation}</Text>
+          <Text>{sentence.transliteration}</Text>
         </View>
       </TouchableHighlight>
     )
   }
 
   render () {
+    const cards = _.toArray(getCards(this.props.currentLesson.id))
     return (
       <ScrollView style={styles.container}>
         <Accordion
-          sections={this.props.currentWords}
+          sections={cards}
           renderHeader={this._renderHeader.bind(this)}
           renderContent={this._renderContent.bind(this)}
         />
@@ -48,9 +50,8 @@ class WordsListScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const lessonHelper = new LessonHelper(state.lesson)
   return {
-    currentWords: lessonHelper.currentWords()
+    currentLesson: state.lesson.currentLesson
   }
 }
 

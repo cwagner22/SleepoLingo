@@ -19,7 +19,7 @@ import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getTemperature } from './TemperatureSagas'
 import { openScreen } from './OpenScreenSagas'
-import { downloadLesson, loadLesson } from './LessonSagas'
+import { downloadLesson, loadLesson, ankiEasy, ankiOk, ankiHard, loadNextCard } from './LessonSagas'
 import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
 import { importStart } from './ImportSagas'
 
@@ -41,6 +41,11 @@ export default function * root () {
 
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
+    takeLatest(LessonTypes.ANKI_EASY, ankiEasy),
+    takeLatest(LessonTypes.ANKI_OK, ankiOk),
+    takeLatest(LessonTypes.ANKI_HARD, ankiHard),
+    takeLatest(LessonTypes.LOAD_NEXT_CARD, loadNextCard),
+
     takeLatest(PlaybackTypes.PLAYBACK_START, play),
     takeLatest(PlaybackTypes.PLAYER_START, start),
     takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),

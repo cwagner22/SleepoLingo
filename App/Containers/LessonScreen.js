@@ -23,8 +23,6 @@ class LessonScreen extends React.Component {
   render () {
     const {lesson} = this.props
 
-    // if (_.isUndefined(lesson)) return null
-
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.container}>
@@ -46,11 +44,8 @@ class LessonScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  // const lessonHelper = new LessonHelper(state.lesson)
   return {
     currentLesson: state.lesson.currentLesson
-    // currentLesson: state.lesson.currentLesson,
-    // currentCards: lessonHelper.currentCards()
   }
 }
 

@@ -1,14 +1,16 @@
 import { call, select, put } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import md5Hex from 'md5-hex'
+import moment from 'moment'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
-import {resetDates} from '../Realm/realm'
+import {resetDates, setDate, getNextCard} from '../Realm/realm'
 
 const api = API.create()
 
 const getCurrentLesson = (state) => state.lesson.currentLesson
+const getCurrentCard = (state) => state.lesson.currentCard
 
 const getFilePath = (sentence, language) => {
   const fileName = md5Hex(sentence) + '.mp3'
@@ -76,4 +78,28 @@ export function * loadLesson ({lesson}) {
     yield call(resetDates, lesson.cards)
     yield put(LessonActions.setCurrentLesson(lesson))
   }
+}
+
+function * updateCardDate (date) {
+  const currentCard = yield select(getCurrentCard)
+  yield call(setDate, currentCard, date)
+}
+
+export function * ankiHard () {
+  yield call(updateCardDate, moment().add(1, 'm'))
+}
+
+export function * ankiOk () {
+  yield call(updateCardDate, moment().add(10, 'm'))
+}
+
+export function * ankiEasy () {
+  yield call(updateCardDate, moment().add(1, 'd'))
+}
+
+export function * loadNextCard (state) {
+  const currentLesson = yield select(getCurrentLesson)
+  const card = yield call(getNextCard, currentLesson)
+
+  yield put(LessonActions.nextCardLoaded(card))
 }

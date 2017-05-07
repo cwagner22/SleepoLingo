@@ -41,8 +41,10 @@ function parseLesson (worksheet) {
   if (!worksheet.length) return
   console.log('Parsing lesson, worksheet length: ', worksheet.length)
   const lessonNameFull = worksheet[0].Original
-  const name = lessonNameFull.substr(lessonNameFull.indexOf(':') + 1)
-  if (!name) return
+  const res = lessonNameFull.match(/Lesson (\d+): (.+)/)
+  const id = res[1]
+  const name = res[2]
+  if (!id || !name) return
 
   let note
   if (worksheet[1].Original && !worksheet[1].Translation && !worksheet[1].Transliteration) {
@@ -53,7 +55,7 @@ function parseLesson (worksheet) {
   worksheet.splice(0, note ? 2 : 1)
   const cards = parseCards(worksheet)
   if (!cards.length) return
-  return createLesson(name, note, cards)
+  return createLesson(Number(id), name, note, cards)
 }
 
 function parseLessons (worksheet) {

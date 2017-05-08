@@ -5,153 +5,109 @@ import RNFS from 'react-native-fs'
 import _ from 'lodash'
 import moment from 'moment'
 
-class Word extends Realm.Object {}
-Word.schema = {
-  name: 'Word',
-  primaryKey: 'original',
-  properties: {
-    original: {type: 'string', indexed: true},
-    translation: 'string',
-    transliteration: 'string'
-  }
-}
-
-export const createWord = (original, transliteration, translation) => {
-  let data = {original, transliteration, translation}
-  realm.write(() => {
-    realm.create('Word', data)
-  })
-}
-
-export const getWord = (word) => {
-  return realm.objects('Word').filtered(`original == "${word}"`)[0]
-}
-
-class Sentence extends Realm.Object {}
-// Sentence.schema = {
-//   name: 'Sentence',Q
-//   // primaryKey: 'id',
-//   properties: {
-//     // id: 'int',
-//     // List of Strings not possible yet
-//     words: {type: 'list', objectType: 'Word'}
-//   }
-// }
-
-Sentence.schema = {
-  name: 'Sentence',
-  // primaryKey: 'id',
-  properties: {
-    // id: 'int',
-    original: 'string',
-    translation: 'string',
-    transliteration: 'string'
-  }
-}
-
-class Card extends Realm.Object {}
-Card.schema = {
-  name: 'Card',
-  primaryKey: 'id',
-  properties: {
-    id: 'int',
-    sentence: {type: 'Sentence'},
-    fullSentence: {type: 'Sentence', optional: true},
-    note: {type: 'string', optional: true},
-    showDate: {type: 'date', optional: true},
-    index: 'int'
-  }
-}
-
-export const createCard = (id, sentence, fullSentence, index, note) => {
-  let data = {
-    sentence,
-    // The order of Results is only guaranteed to stay consistent when the query is sorted. For performance
-    // reasons, insertion order is not guaranteed to be preserved. So we use an index property to be sure.
-    index,
-    id
-  }
-
-  if (note) data.note = note
-  if (fullSentence.original && fullSentence.translation && fullSentence.transliteration) {
-    data.fullSentence = fullSentence
-  }
-
-  let res
-  realm.write(() => {
-    res = realm.create('Card', data, true)
-  })
-  return res
-}
-
-export const setDate = (card, date) => {
-  if (moment.isMoment(date)) {
-    date = date.toDate()
-  }
-
-  realm.write(() => {
-    try {
-      realm.create('Card', {id: card.id, showDate: date}, true)
-      // card.showDate = date
-    } catch (e) {
-      console.warn(e)
+export class Word {
+  static schema = {
+    name: 'Word',
+    primaryKey: 'original',
+    properties: {
+      original: {type: 'string', indexed: true},
+      translation: 'string',
+      transliteration: 'string'
     }
-  })
-}
-
-export const isReady = (card, allowAlmost) => {
-  // card = this.cardWithDate(card)
-  var dateCompare = moment()
-  if (allowAlmost) {
-    dateCompare.add(1, 'm')
   }
-  return !card.showDate || moment(card.showDate).isBefore(dateCompare)
-}
 
-export const ImmutableRealm = (func, option = {}) => {
-  const defaultCopy = (item) => JSON.parse(JSON.stringify(item))
-  const copy = option.copy || defaultCopy // Use deep copy.
-  const success = option.success || true
-  const fail = option.fail || false
-
-  const defualtErrorHandler = (e) => e
-  const errorHandler = option.errorHandler || defualtErrorHandler
-  return (props) => new Promise((resolve, reject) => {
-    try {
-      const result = func(props, realm) || 'Return is null'
-      const copiedResult = copy(result)
-      resolve({status: success, data: copiedResult})
-    } catch (e) {
-      const error = errorHandler(e)
-      reject({status: fail, error})
-    }
-  })
-}
-
-export const sortCards = (cards, allowAlmost = false) => {
-  var sortedCardsReady = _.sortBy(cards, ['showDate', 'index'])
-    .filter((card) => {
-      // Exclude future cards
-      return isReady(card, allowAlmost)
+  static createWord (original, transliteration, translation) {
+    let data = {original, transliteration, translation}
+    realm.write(() => {
+      realm.create('Word', data)
     })
+  }
 
-  if (!sortedCardsReady.length && !allowAlmost) {
-    return sortCards(cards, true)
-  } else {
-    return sortedCardsReady
+  static getWord (word) {
+    return realm.objects('Word').filtered(`original == "${word}"`)[0]
   }
 }
 
-export const getNextCard = ({id}) => {
-  const lesson = getLesson(id)
-  const cards = sortCards(lesson.cards)
-  const currentCard = cards.length ? cards[0] : null
-  return currentCard
+export class Sentence {
+  // Sentence.schema = {
+  //   name: 'Sentence',Q
+  //   // primaryKey: 'id',
+  //   properties: {
+  //     // id: 'int',
+  //     // List of Strings not possible yet
+  //     words: {type: 'list', objectType: 'Word'}
+  //   }
+  // }
+
+  static schema = {
+    name: 'Sentence',
+    // primaryKey: 'id',
+    properties: {
+      // id: 'int',
+      original: 'string',
+      translation: 'string',
+      transliteration: 'string'
+    }
+  }
 }
 
-export const getCards = (lessonId) => {
-  const lesson = getLesson(lessonId)
-  return lesson.cards
+export class Card {
+  static schema = {
+    name: 'Card',
+    primaryKey: 'id',
+    properties: {
+      id: 'int',
+      sentence: {type: 'Sentence'},
+      fullSentence: {type: 'Sentence', optional: true},
+      note: {type: 'string', optional: true},
+      showDate: {type: 'date', optional: true},
+      index: 'int'
+    }
+  }
+
+  static createCard (id, sentence, fullSentence, index, note) {
+    let data = {
+      sentence,
+      // The order of Results is only guaranteed to stay consistent when the query is sorted. For performance
+      // reasons, insertion order is not guaranteed to be preserved. So we use an index property to be sure.
+      index,
+      id
+    }
+
+    if (note) data.note = note
+    if (fullSentence.original && fullSentence.translation && fullSentence.transliteration) {
+      data.fullSentence = fullSentence
+    }
+
+    let res
+    realm.write(() => {
+      res = realm.create('Card', data, true)
+    })
+    return res
+  }
+
+  isReady (allowAlmost) {
+    var dateCompare = moment()
+    if (allowAlmost) {
+      dateCompare.add(1, 'm')
+    }
+    return !this.showDate || moment(this.showDate).isBefore(dateCompare)
+  }
+
+  setDate (date) {
+    if (moment.isMoment(date)) {
+      date = date.toDate()
+    }
+
+    realm.write(() => {
+      try {
+        // realm.create(Card.schema.name, {id: this.card.id, showDate: date}, true)
+        this.showDate = date
+      } catch (e) {
+        console.warn(e)
+      }
+    })
+  }
 }
 
 export class Lesson {
@@ -167,7 +123,39 @@ export class Lesson {
   }
 
   static getLesson (id) {
-    return realm.objectForPrimaryKey('Lesson', id)
+    return realm.objectForPrimaryKey(Lesson.schema.name, id)
+  }
+
+  static createLesson (id, name, note, cards) {
+    let data = {
+      id,
+      name,
+      cards
+    }
+
+    if (note) {
+      data.note = note
+    }
+
+    let res
+    realm.write(() => {
+      res = realm.create(Lesson.schema.name, data, true)
+    })
+    return res
+  }
+
+  sortCards (allowAlmost = false) {
+    var sortedCardsReady = _.sortBy(this.cards, ['showDate', 'index'])
+      .filter((card) => {
+        // Exclude future cards
+        return card.isReady(allowAlmost)
+      })
+
+    if (!sortedCardsReady.length && !allowAlmost) {
+      return this.sortCards(this.cards, true)
+    } else {
+      return sortedCardsReady
+    }
   }
 
   resetDates () {
@@ -177,56 +165,36 @@ export class Lesson {
       }
     })
   }
-}
 
-export const getLesson = (id) => {
-  return realm.objectForPrimaryKey('Lesson', id)
-}
-
-export const createLesson = (id, name, note, cards) => {
-  let data = {
-    id,
-    name,
-    cards
-  }
-
-  if (note) {
-    data.note = note
-  }
-
-  let res
-  realm.write(() => {
-    res = realm.create('Lesson', data, true)
-  })
-  return res
-}
-
-class LessonGroup extends Realm.Object {}
-LessonGroup.schema = {
-  name: 'LessonGroup',
-  // primaryKey: 'id',
-  properties: {
-    // id: 'int',
-    name: 'string',
-    lessons: {type: 'list', objectType: 'Lesson'}
+  getNextCard () {
+    const cards = this.sortCards(this.cards)
+    return cards[0]
   }
 }
 
-export const getLessonGroups = () => {
-  return realm.objects('LessonGroup')
-}
-
-export const createLessonGroup = (name, lessons) => {
-  let data = {
-    name,
-    lessons
+export class LessonGroup {
+  static schema = {
+    name: 'LessonGroup',
+    // primaryKey: 'id',
+    properties: {
+      // id: 'int',
+      name: 'string',
+      lessons: {type: 'list', objectType: 'Lesson'}
+    }
   }
 
-  let res
-  realm.write(() => {
-    res = realm.create('LessonGroup', data, true)
-  })
-  return res
+  createLessonGroup (name, lessons) {
+    let data = {
+      name,
+      lessons
+    }
+
+    let res
+    realm.write(() => {
+      res = realm.create(LessonGroup.schema.name, data, true)
+    })
+    return res
+  }
 }
 
 export const reset = () => {
@@ -234,6 +202,20 @@ export const reset = () => {
     realm.deleteAll()
   })
 }
+
+const schemas = [Word, Sentence, Card, Lesson, LessonGroup]
+
+schemas.forEach((ObjectType) => {
+  const schemaName = ObjectType.schema.name
+
+  ObjectType.get = () => {
+    return realm.objects(schemaName)
+  }
+
+  ObjectType.getFromId = (id) => {
+    return realm.objectForPrimaryKey(schemaName, id)
+  }
+})
 
 console.log('Realm.defaultPath', Realm.defaultPath)
 console.log('MainBundlePath', RNFS.MainBundlePath)
@@ -244,7 +226,7 @@ const realm = new Realm({
   path: RNFS.MainBundlePath + '/default.realm',
   // path: 'default.realm',
   // path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/default.realm',
-  schema: [Word, Sentence, Card, Lesson, LessonGroup],
+  schema: schemas,
   // migration: function(oldRealm, newRealm) {
   //   // only apply this change if upgrading to schemaVersion 1
   //   if (oldRealm.schemaVersion < 1) {

@@ -7,7 +7,7 @@ import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
-import { setDate, getNextCard } from '../Realm/realm'
+import { setDate } from '../Realm/realm'
 
 const api = API.create()
 
@@ -147,7 +147,6 @@ export function * ankiEasy () {
 
 export function * loadNextCard (state) {
   const currentLesson = yield select(getCurrentLesson)
-  const card = yield call(getNextCard, currentLesson)
-
+  const card = yield apply(currentLesson, currentLesson.getNextCard)
   yield put(LessonActions.nextCardLoaded(card))
 }

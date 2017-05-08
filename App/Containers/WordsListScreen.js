@@ -5,7 +5,6 @@ import Accordion from 'react-native-collapsible/Accordion'
 import _ from 'lodash'
 
 import Player from '../Services/Player'
-import {getCards} from '../Realm/realm'
 
 import styles from './Styles/WordsListScreenStyle'
 
@@ -36,7 +35,7 @@ class WordsListScreen extends React.Component {
   }
 
   render () {
-    const cards = _.toArray(getCards(this.props.currentLesson.id))
+    const cards = _.toArray(this.props.currentLesson.cards)
     return (
       <ScrollView style={styles.container}>
         <Accordion

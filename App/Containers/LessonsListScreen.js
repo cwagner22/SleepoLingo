@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs'
 
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
-import { getLessonGroups, isReady } from '../Realm/realm'
+import { LessonGroup } from '../Realm/realm'
 // import store from '../store'
 
 // Styles
@@ -28,7 +28,7 @@ class LessonsListScreen extends React.Component {
     const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
 
     let data = {}
-    for (const group of getLessonGroups()) {
+    for (const group of LessonGroup.get()) {
       data[group.name] = group.lessons
     }
 
@@ -75,7 +75,7 @@ class LessonsListScreen extends React.Component {
 
   nbCardsLeft (lesson) {
     return lesson.cards.reduce((total, card) => {
-      if (isReady(card, true)) {
+      if (card.isReady(true)) {
         total++
       }
       return total

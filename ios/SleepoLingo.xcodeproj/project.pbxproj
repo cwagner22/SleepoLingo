@@ -56,7 +56,7 @@
 		A9E41A34E5DA4E7E8D2F50FD /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBEAF680C3B4720A60227DB /* libAirMaps.a */; };
 		C8528BF3084D4194A14F318D /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F2374C907CEB4867B4E4ED0A /* Zocial.ttf */; };
 		D672C8F2C51D42CAB811CD31 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D93CEE9291524F2BB5620C8F /* SimpleLineIcons.ttf */; };
-		D9FBEA461EBF4AE900163F6D /* db.realm in Resources */ = {isa = PBXBuildFile; fileRef = D9FBEA451EBF4AE900163F6D /* db.realm */; };
+		D949291F1EC07E6F00C9B2CC /* default.realm in Resources */ = {isa = PBXBuildFile; fileRef = D949291E1EC07E6F00C9B2CC /* default.realm */; };
 		DFB9E2FEA11E4B1BB72032FD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D06E2FA634498E95C68C46 /* libz.tbd */; };
 		EB6A2B5008AD418084510553 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 619175902AFD4A7A92135F54 /* libc++.tbd */; };
 /* End PBXBuildFile section */
@@ -383,7 +383,7 @@
 		CEBEAF680C3B4720A60227DB /* libAirMaps.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAirMaps.a; sourceTree = "<group>"; };
 		D6CAEB3CD3FD47B681CC4EF1 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		D93CEE9291524F2BB5620C8F /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		D9FBEA451EBF4AE900163F6D /* db.realm */ = {isa = PBXFileReference; lastKnownFileType = file; name = db.realm; path = ../App/Realm/db.realm; sourceTree = "<group>"; };
+		D949291E1EC07E6F00C9B2CC /* default.realm */ = {isa = PBXFileReference; lastKnownFileType = file; name = default.realm; path = ../App/Realm/default.realm; sourceTree = "<group>"; };
 		DFB2BC8D0C6D43E885505955 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		E30F0ED875AE4080AEC08257 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		F2374C907CEB4867B4E4ED0A /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -644,7 +644,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				D9FBEA451EBF4AE900163F6D /* db.realm */,
+				D949291E1EC07E6F00C9B2CC /* default.realm */,
 				13B07FAE1A68108700A75B9A /* SleepoLingo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* SleepoLingoTests */,
@@ -1222,7 +1222,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				D9FBEA461EBF4AE900163F6D /* db.realm in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				769F144F9F814ED19E76625D /* Entypo.ttf in Resources */,
 				2AD3A3CD02124F2ABFB54AF4 /* EvilIcons.ttf in Resources */,
@@ -1231,6 +1230,7 @@
 				4BC9EE90DE274CB0AB10553F /* Ionicons.ttf in Resources */,
 				59519BF130034720929D0AE6 /* MaterialCommunityIcons.ttf in Resources */,
 				3248E9C099C946FBBA1DCAEA /* MaterialIcons.ttf in Resources */,
+				D949291F1EC07E6F00C9B2CC /* default.realm in Resources */,
 				2197CDD6A6224A9B81EA80ED /* Octicons.ttf in Resources */,
 				D672C8F2C51D42CAB811CD31 /* SimpleLineIcons.ttf in Resources */,
 				C8528BF3084D4194A14F318D /* Zocial.ttf in Resources */,

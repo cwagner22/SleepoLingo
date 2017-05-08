@@ -1,11 +1,13 @@
-import { call, select, put } from 'redux-saga/effects'
+import { call, select, put, race, apply } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import md5Hex from 'md5-hex'
 import moment from 'moment'
+import { Actions as NavigationActions } from 'react-native-router-flux'
+import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
-import {resetDates, setDate, getNextCard} from '../Realm/realm'
+import { setDate, getNextCard } from '../Realm/realm'
 
 const api = API.create()
 
@@ -71,12 +73,58 @@ export function * downloadLesson (action) {
   yield items.map((item) => call(downloadAudioIfNeeded, item.sentence, item.language))
 }
 
+// Because of the way "call" works, if we want to "put" an action
+// after a callback is invoked, we can return a promise that is
+// bound to resolve when the callback is invoked
+function bindCallbackToPromise () {
+  let _resolve
+  const promise = () => {
+    return new Promise((resolve) => {
+      _resolve = resolve
+    })
+  }
+  const cb = (args) => _resolve(args)
+
+  return {
+    promise,
+    cb
+  }
+}
+
 export function * loadLesson ({lesson}) {
   // Reset cards if new lesson
   const currentLesson = yield select(getCurrentLesson)
-  if (lesson !== currentLesson) {
-    yield call(resetDates, lesson.cards)
+  if (lesson.id !== currentLesson.id) {
+    const cancel = bindCallbackToPromise()
+    const confirm = bindCallbackToPromise()
+
+    Alert.alert(
+      'New Lesson',
+      'You\'ve another lesson in progress.',
+      [
+        {text: 'Start new lesson', onPress: confirm.cb},
+        {text: 'Cancel', onPress: cancel.cb}
+      ]
+    )
+
+    // The race will wait for either the cancel or confirm callback to be invoked - which skirts
+    // around the problem of trying to "put" from within a callback: don't put an event, instead
+    // rely strictly on the resolution of a promise
+    const res = yield race({
+      cancel: call(cancel.promise),
+      confirm: call(confirm.promise)
+    })
+
+    if (res.hasOwnProperty('confirm')) {
+      yield apply(lesson, lesson.resetDates)
+      yield put(LessonActions.setCurrentLesson(lesson))
+      yield call(NavigationActions.lesson, {lesson})
+    } else {
+      call(NavigationActions.lessonsList, {type: 'reset'})
+    }
+  } else {
     yield put(LessonActions.setCurrentLesson(lesson))
+    yield call(NavigationActions.lesson, {lesson})
   }
 }
 

@@ -17,7 +17,7 @@ Word.schema = {
 }
 
 export const createWord = (original, transliteration, translation) => {
-  let data = { original, transliteration, translation }
+  let data = {original, transliteration, translation}
   realm.write(() => {
     realm.create('Word', data)
   })
@@ -82,18 +82,6 @@ export const createCard = (id, sentence, fullSentence, index, note) => {
     res = realm.create('Card', data, true)
   })
   return res
-}
-
-export const resetDates = (cards) => {
-  realm.write(() => {
-    try {
-      for (let card of cards) {
-        card.showDate = new Date()
-      }
-    } catch (e) {
-      console.warn(e)
-    }
-  })
 }
 
 export const setDate = (card, date) => {
@@ -166,20 +154,32 @@ export const getCards = (lessonId) => {
   return lesson.cards
 }
 
-class Lesson extends Realm.Object {}
-Lesson.schema = {
-  name: 'Lesson',
-  primaryKey: 'id',
-  properties: {
-    id: 'int',
-    name: 'string',
-    note: {type: 'string', optional: true},
-    cards: {type: 'list', objectType: 'Card'}
+export class Lesson {
+  static schema = {
+    name: 'Lesson',
+    primaryKey: 'id',
+    properties: {
+      id: 'int',
+      name: 'string',
+      note: {type: 'string', optional: true},
+      cards: {type: 'list', objectType: 'Card'}
+    }
+  }
+
+  static getLesson (id) {
+    return realm.objectForPrimaryKey('Lesson', id)
+  }
+
+  resetDates () {
+    realm.write(() => {
+      for (let card of this.cards) {
+        card.showDate = new Date()
+      }
+    })
   }
 }
 
 export const getLesson = (id) => {
-  // todo: ImmutableRealm?
   return realm.objectForPrimaryKey('Lesson', id)
 }
 
@@ -241,9 +241,9 @@ console.log('CachesDirectoryPath', RNFS.CachesDirectoryPath)
 // Bundle path: for readonly? Put seed in ios folder
 // Doc folder: to edit
 const realm = new Realm({
-  // path: RNFS.MainBundlePath + '/realm.realm',
-  path: 'db.realm',
-  // path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/db.realm',
+  path: RNFS.MainBundlePath + '/default.realm',
+  // path: 'default.realm',
+  // path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/default.realm',
   schema: [Word, Sentence, Card, Lesson, LessonGroup],
   // migration: function(oldRealm, newRealm) {
   //   // only apply this change if upgrading to schemaVersion 1
@@ -260,5 +260,5 @@ const realm = new Realm({
   // readOnly: true
   schemaVersion: 1
 })
-// console.log(realm.path);
+console.log('Realm db path', realm.path)
 // export default realm

@@ -4,7 +4,6 @@ import React, { PropTypes } from 'react'
 import { View, Text } from 'react-native'
 import { ListView } from 'realm/react-native'
 import { connect } from 'react-redux'
-import { Actions as NavigationActions } from 'react-native-router-flux'
 import RNFS from 'react-native-fs'
 
 import LessonActions from '../Redux/LessonRedux'
@@ -67,10 +66,7 @@ class LessonsListScreen extends React.Component {
   }
 
   goToLesson (lesson) {
-    // this.props.loadLessonSaga(lessonId)
-    // this.props.loadLesson(lessonId)
-    // this.props.loadLesson(lesson)
-    NavigationActions.lesson({lesson})
+    this.props.loadLesson(lesson)
   }
 
   renderHeader (data, sectionID) {
@@ -79,7 +75,6 @@ class LessonsListScreen extends React.Component {
 
   nbCardsLeft (lesson) {
     return lesson.cards.reduce((total, card) => {
-      // if (this.props.cardHelper.isReady(cardId, true)) {
       if (isReady(card, true)) {
         total++
       }

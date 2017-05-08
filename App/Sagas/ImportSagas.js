@@ -1,6 +1,8 @@
 import { call } from 'redux-saga/effects'
 import XLSX from 'xlsx'
 import RNFS from 'react-native-fs'
+import Secrets from 'react-native-config'
+
 import { createCard, createLesson, createLessonGroup, reset, createWord } from '../Realm/realm'
 
 const getSentence = (string) => string.split('\n')[0]
@@ -113,5 +115,8 @@ export function * importStart () {
 
   yield call(parseGroups, workbook)
 
+  // Overwrite original db
+  yield call(RNFS.unlink, Secrets.LOCAL_REALM)
+  yield call(RNFS.copyFile, RNFS.MainBundlePath + '/default.realm', Secrets.LOCAL_REALM)
   console.log('Done')
 }

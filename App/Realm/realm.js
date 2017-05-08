@@ -16,7 +16,7 @@ export class Word {
     }
   }
 
-  static createWord (original, transliteration, translation) {
+  static create (original, transliteration, translation) {
     let data = {original, transliteration, translation}
     realm.write(() => {
       realm.create('Word', data)
@@ -65,7 +65,7 @@ export class Card {
     }
   }
 
-  static createCard (id, sentence, fullSentence, index, note) {
+  static create (id, sentence, fullSentence, index, note) {
     let data = {
       sentence,
       // The order of Results is only guaranteed to stay consistent when the query is sorted. For performance
@@ -126,7 +126,7 @@ export class Lesson {
     return realm.objectForPrimaryKey(Lesson.schema.name, id)
   }
 
-  static createLesson (id, name, note, cards) {
+  static create (id, name, note, cards) {
     let data = {
       id,
       name,
@@ -183,7 +183,7 @@ export class LessonGroup {
     }
   }
 
-  createLessonGroup (name, lessons) {
+  static create (name, lessons) {
     let data = {
       name,
       lessons

@@ -3,10 +3,26 @@ import XLSX from 'xlsx'
 import RNFS from 'react-native-fs'
 import Secrets from 'react-native-config'
 
-import { createCard, createLesson, createLessonGroup, reset, createWord } from '../Realm/realm'
+import { Card, LessonGroup, Lesson, reset, Sentence, Word } from '../Realm/realm'
 
 const getSentence = (string) => string.split('\n')[0]
 const getFullSentence = (string) => string.split('\n')[1]
+
+function checkWords (card) {
+  let wordsMissing = []
+  const sentences = Sentence.get()
+  for (const s of sentences) {
+    // Check that every words are included in the dictionary
+    const words = s.translation.split(' ')
+    for (const word of words) {
+      if (!Word.getWord(word) && wordsMissing.indexOf(word) === -1) {
+        wordsMissing.push(word)
+      }
+    }
+  }
+
+  console.log('Words missing from dictionary:', wordsMissing)
+}
 
 function parseCards (worksheet) {
   console.log('Parsing cards, worksheet length: ', worksheet.length)
@@ -30,7 +46,7 @@ function parseCards (worksheet) {
     }
 
     console.log(sentence)
-    const card = createCard(Number(row.Id), sentence, fullSentence, i, row.Note)
+    const card = Card.create(Number(row.Id), sentence, fullSentence, i, row.Note)
     cards.push(card)
   }
 
@@ -57,7 +73,7 @@ function parseLesson (worksheet) {
   worksheet.splice(0, note ? 2 : 1)
   const cards = parseCards(worksheet)
   if (!cards.length) return
-  return createLesson(Number(id), name, note, cards)
+  return Lesson.create(Number(id), name, note, cards)
 }
 
 function parseLessons (worksheet) {
@@ -84,7 +100,7 @@ function parseDictionary (worksheet) {
       break
     }
 
-    createWord(row.Original, row.Transliteration, row.Translation)
+    Word.create(row.Original, row.Transliteration, row.Translation)
   }
 }
 
@@ -102,10 +118,12 @@ function parseGroups (workbook) {
     } else {
       const lessons = parseLessons(worksheetJSON)
       if (lessons.length) {
-        createLessonGroup(name, lessons)
+        LessonGroup.create(name, lessons)
       }
     }
   }
+
+  checkWords()
 }
 
 export function * importStart () {

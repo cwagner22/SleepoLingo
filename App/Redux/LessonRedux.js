@@ -53,7 +53,8 @@ export const setCurrentLesson = (state, {lesson}) => {
 export const startLesson = (state) => {
   return state.merge({
     showAnswer: false,
-    currentCard: null,
+    // currentCard: null,
+    currentCardId: null,
     lessonLoopCounter: 0,
     translationLoopCounter: 0,
     playingState: null

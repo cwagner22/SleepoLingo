@@ -18,12 +18,22 @@ import TranslationText from '../Components/TranslationText'
 import Explanation from '../Components/Explanation'
 import { Colors } from '../Themes'
 import images from '../Lessons/images/images'
-import {getWord} from '../Realm/realm'
+import {Word} from '../Realm/realm'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
 
+type CardTranslationProps = {
+  cardId: number,
+  sentence: Object,
+  fullSentence?: Object,
+  note?: string,
+  onPress: () => void
+}
+
 class CardTranslation extends React.Component {
+  props: CardTranslationProps
+
   state = {
     modalVisible: false
   }
@@ -33,40 +43,41 @@ class CardTranslation extends React.Component {
   }
 
   speakText (sentence) {
-    // Player.speakWordInLanguage(text, 'th-TH', 0.7)
     this.props.play(sentence, 'th-TH', 1, 0.7)
   }
 
   renderFullTranslation () {
-    if (this.props.currentCard.fullSentence) {
+    const {fullSentence} = this.props
+    if (this.props.fullSentence) {
       return (
-        <TranslationText translation={this.props.currentCard.fullSentence.translation}
-          transliteration={this.props.currentCard.fullSentence.transliteration}
-          onPress={() => this.speakText(this.props.currentCard.fullSentence.translation)} />
+        <TranslationText translation={fullSentence.translation}
+          transliteration={fullSentence.transliteration}
+          onPress={() => this.speakText(fullSentence.translation)} />
       )
     }
   }
 
   renderImage () {
     return (
-      <Image style={styles.image} resizeMode='contain' source={images[this.props.currentCard.id]} />
+      <Image style={styles.image} resizeMode='contain' source={images[this.props.cardId]} />
     )
   }
 
   renderNote () {
-    if (this.props.currentCard.note) {
+    const {note} = this.props
+    if (note) {
       return (
-        <Text style={styles.note}>{this.props.currentCard.note}</Text>
+        <Text style={styles.note}>{note}</Text>
       )
     }
   }
 
   renderExplanation () {
     let explanation = []
-    const sentence = this.props.currentCard.fullSentence || this.props.currentCard.sentence
+    const sentence = this.props.fullSentence || this.props.sentence
     const words = sentence.translation.split(' ')
     for (const word of words) {
-      explanation.push(getWord(word))
+      explanation.push(Word.getWord(word))
     }
 
     return (
@@ -102,9 +113,9 @@ class CardTranslation extends React.Component {
     return (
       <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
         <View style={[styles.container, {padding: 5}]}>
-          <TranslationText translation={this.props.currentCard.sentence.translation}
-            transliteration={this.props.currentCard.sentence.transliteration}
-            onPress={() => this.speakText(this.props.currentCard.sentence.translation)} />
+          <TranslationText translation={this.props.sentence.translation}
+            transliteration={this.props.sentence.transliteration}
+            onPress={() => this.speakText(this.props.sentence.translation)} />
           {this.renderFullTranslation()}
           {this.renderExplanation()}
           {this.renderImage()}
@@ -112,13 +123,6 @@ class CardTranslation extends React.Component {
         </View>
       </TouchableWithoutFeedback>
     )
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    currentCard: state.lesson.currentCard,
-    lesson: state.lesson
   }
 }
 
@@ -130,4 +134,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CardTranslation)
+export default connect(null, mapDispatchToProps)(CardTranslation)

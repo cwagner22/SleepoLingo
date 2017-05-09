@@ -41,7 +41,9 @@ class AnkiScreen extends React.Component {
       )
     } else {
       return (
-        <CardTranslation onPress={() => { this.props.showFront() }} />
+        <CardTranslation cardId={this.props.currentCard.id} sentence={this.props.currentCard.sentence}
+          fullSentence={this.props.currentCard.fullSentence} note={this.props.currentCard.note}
+          onPress={() => { this.props.showFront() }} />
       )
     }
   }
@@ -69,8 +71,6 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  // const cardHelper = new CardHelper(state.lesson)
-
   return {
     lesson: state.lesson,
     currentCard: state.lesson.currentCardId ? Card.getFromId(state.lesson.currentCardId) : null

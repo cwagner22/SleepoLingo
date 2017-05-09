@@ -2,7 +2,6 @@
 
 import Realm from 'realm'
 import RNFS from 'react-native-fs'
-import _ from 'lodash'
 import moment from 'moment'
 
 export class Word {
@@ -86,28 +85,29 @@ export class Card {
     return res
   }
 
-  isReady (allowAlmost) {
+  isReady (showDates, allowAlmost) {
     var dateCompare = moment()
     if (allowAlmost) {
       dateCompare.add(1, 'm')
     }
-    return !this.showDate || moment(this.showDate).isBefore(dateCompare)
+    const showDate = showDates[this.id]
+    return !showDate || moment(showDate).isBefore(dateCompare)
   }
 
-  setDate (date) {
-    if (moment.isMoment(date)) {
-      date = date.toDate()
-    }
-
-    realm.write(() => {
-      try {
-        // realm.create(Card.schema.name, {id: this.card.id, showDate: date}, true)
-        this.showDate = date
-      } catch (e) {
-        console.warn(e)
-      }
-    })
-  }
+  // setDate (date) {
+  //   if (moment.isMoment(date)) {
+  //     date = date.toDate()
+  //   }
+  //
+  //   realm.write(() => {
+  //     try {
+  //       // realm.create(Card.schema.name, {id: this.card.id, showDate: date}, true)
+  //       this.showDate = date
+  //     } catch (e) {
+  //       console.warn(e)
+  //     }
+  //   })
+  // }
 }
 
 export class Lesson {
@@ -120,10 +120,6 @@ export class Lesson {
       note: {type: 'string', optional: true},
       cards: {type: 'list', objectType: 'Card'}
     }
-  }
-
-  static getLesson (id) {
-    return realm.objectForPrimaryKey(Lesson.schema.name, id)
   }
 
   static create (id, name, note, cards) {
@@ -144,32 +140,32 @@ export class Lesson {
     return res
   }
 
-  sortCards (allowAlmost = false) {
-    var sortedCardsReady = _.sortBy(this.cards, ['showDate', 'index'])
-      .filter((card) => {
-        // Exclude future cards
-        return card.isReady(allowAlmost)
-      })
+  // sortCards (allowAlmost = false) {
+  //   var sortedCardsReady = _.sortBy(this.cards, ['showDate', 'index'])
+  //     .filter((card) => {
+  //       // Exclude future cards
+  //       return card.isReady(allowAlmost)
+  //     })
+  //
+  //   if (!sortedCardsReady.length && !allowAlmost) {
+  //     return this.sortCards(this.cards, true)
+  //   } else {
+  //     return sortedCardsReady
+  //   }
+  // }
 
-    if (!sortedCardsReady.length && !allowAlmost) {
-      return this.sortCards(this.cards, true)
-    } else {
-      return sortedCardsReady
-    }
-  }
+  // resetDates () {
+  //   realm.write(() => {
+  //     for (let card of this.cards) {
+  //       card.showDate = new Date()
+  //     }
+  //   })
+  // }
 
-  resetDates () {
-    realm.write(() => {
-      for (let card of this.cards) {
-        card.showDate = new Date()
-      }
-    })
-  }
-
-  getNextCard () {
-    const cards = this.sortCards(this.cards)
-    return cards[0]
-  }
+  // getNextCard () {
+  //   const cards = this.sortCards(this.cards)
+  //   return cards[0]
+  // }
 }
 
 export class LessonGroup {

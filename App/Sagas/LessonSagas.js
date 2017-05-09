@@ -1,19 +1,16 @@
-import { call, select, put, race, apply } from 'redux-saga/effects'
+import { call, select, put, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import md5Hex from 'md5-hex'
-import moment from 'moment'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
-import { setDate, Lesson } from '../Realm/realm'
 
 const api = API.create()
 
-const getCurrentLesson = (state) => state.lesson.currentLesson
+// const getCurrentLesson = (state) => state.lesson.currentLesson
 const getCurrentLessonId = (state) => state.lesson.currentLessonId
-const getCurrentCard = (state) => state.lesson.currentCard
 
 const getFilePath = (sentence, language) => {
   const fileName = md5Hex(sentence) + '.mp3'
@@ -94,8 +91,8 @@ function bindCallbackToPromise () {
 
 export function * loadLesson ({lesson}) {
   // Reset cards if new lesson
-  const currentLesson = yield select(getCurrentLesson)
-  if (lesson.id !== currentLesson.id) {
+  const currentLessonId = yield select(getCurrentLessonId)
+  if (lesson.id !== currentLessonId) {
     const cancel = bindCallbackToPromise()
     const confirm = bindCallbackToPromise()
 
@@ -117,7 +114,8 @@ export function * loadLesson ({lesson}) {
     })
 
     if (res.hasOwnProperty('confirm')) {
-      yield apply(lesson, lesson.resetDates)
+      // yield apply(lesson, lesson.resetDates)
+      yield put(LessonActions.resetDates())
       yield put(LessonActions.setCurrentLesson(lesson))
       yield call(NavigationActions.lesson, {lesson})
     } else {
@@ -129,26 +127,20 @@ export function * loadLesson ({lesson}) {
   }
 }
 
-function * updateCardDate (date) {
-  const currentCard = yield select(getCurrentCard)
-  yield call(setDate, currentCard, date)
-}
-
-export function * ankiHard () {
-  yield call(updateCardDate, moment().add(1, 'm'))
-}
-
-export function * ankiOk () {
-  yield call(updateCardDate, moment().add(10, 'm'))
-}
-
-export function * ankiEasy () {
-  yield call(updateCardDate, moment().add(1, 'd'))
-}
-
-export function * loadNextCard (state) {
-  const currentLessonId = yield select(getCurrentLessonId)
-  const currentLesson = yield call(Lesson.getLesson, currentLessonId)
-  const card = yield apply(currentLesson, currentLesson.getNextCard)
-  yield put(LessonActions.nextCardLoaded(card))
-}
+// function * updateCardDate (date) {
+//   const currentCard = yield select(getCurrentCard)
+//   // yield call(setDate, currentCard, date)
+//   yield put(LessonActions.setDate(currentCard.id, date.toDate()))
+// }
+//
+// export function * ankiHard () {
+//   yield call(updateCardDate, moment().add(1, 'm'))
+// }
+//
+// export function * ankiOk () {
+//   yield call(updateCardDate, moment().add(10, 'm'))
+// }
+//
+// export function * ankiEasy () {
+//   yield call(updateCardDate, moment().add(1, 'd'))
+// }

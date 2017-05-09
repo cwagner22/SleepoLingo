@@ -75,7 +75,7 @@ class LessonsListScreen extends React.Component {
 
   nbCardsLeft (lesson) {
     return lesson.cards.reduce((total, card) => {
-      if (card.isReady(true)) {
+      if (card.isReady(this.props.showDates, true)) {
         total++
       }
       return total
@@ -110,7 +110,9 @@ LessonsListScreen.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    showDates: state.lesson.showDates
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {

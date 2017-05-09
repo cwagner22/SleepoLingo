@@ -28,8 +28,10 @@ export const INITIAL_STATE = Immutable({
   lessons: [],
   cards: [],
   lessonGroups: [],
-  currentLesson: null,
-  currentCard: null,
+  // currentLesson: null,
+  currentLessonId: null,
+  // currentCard: null,
+  currentCardId: null,
   showAnswer: false,
   showFront: true,
   cardsDates: {},
@@ -42,8 +44,10 @@ export const INITIAL_STATE = Immutable({
 
 export const setCurrentLesson = (state, {lesson}) => {
   return state.merge({
-    currentLesson: lesson
+    // currentLesson: lesson
+    currentLessonId: lesson.id
   })
+  // return Object.assign(state.currentLesson, lesson);
 }
 
 export const startLesson = (state) => {
@@ -72,7 +76,8 @@ export const nextCardLoaded = (state, {card}) => {
   return state.merge({
     showAnswer: false,
     showFront: true,
-    currentCard: card
+    // currentCard: card
+    currentCardId: card.id
   })
 }
 

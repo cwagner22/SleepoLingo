@@ -41,14 +41,11 @@ class LessonScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return {
-    currentLesson: state.lesson.currentLesson
-  }
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson)),
     downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words))
   }
 }

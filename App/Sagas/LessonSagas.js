@@ -7,11 +7,12 @@ import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
-import { setDate } from '../Realm/realm'
+import { setDate, Lesson } from '../Realm/realm'
 
 const api = API.create()
 
 const getCurrentLesson = (state) => state.lesson.currentLesson
+const getCurrentLessonId = (state) => state.lesson.currentLessonId
 const getCurrentCard = (state) => state.lesson.currentCard
 
 const getFilePath = (sentence, language) => {
@@ -146,7 +147,8 @@ export function * ankiEasy () {
 }
 
 export function * loadNextCard (state) {
-  const currentLesson = yield select(getCurrentLesson)
+  const currentLessonId = yield select(getCurrentLessonId)
+  const currentLesson = yield call(Lesson.getLesson, currentLessonId)
   const card = yield apply(currentLesson, currentLesson.getNextCard)
   yield put(LessonActions.nextCardLoaded(card))
 }

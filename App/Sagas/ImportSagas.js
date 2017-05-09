@@ -15,12 +15,23 @@ function checkWords (card) {
     // Check that every words are included in the dictionary
     const words = s.translation.split(' ')
     for (const word of words) {
-      if (!Word.getWord(word) && wordsMissing.indexOf(word) === -1) {
-        wordsMissing.push(word)
+      if (!Word.getWord(word)) {
+        const index = wordsMissing.indexOf(word)
+        if (index !== -1) {
+          // let data = wordsMissing[index]
+          // data.sentences.push(s)
+        } else {
+          wordsMissing.push(word)
+          // wordsMissing.push({
+          //   word,
+          //   sentences: [s]
+          // })
+        }
       }
     }
   }
 
+  // console.log('Words missing from dictionary:', _.toArray(wordsMissing))
   console.log('Words missing from dictionary:', wordsMissing)
 }
 

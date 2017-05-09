@@ -9,6 +9,7 @@ import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
 import CardTranslation from './CardTranslation'
 import AnkiFooter from './AnkiFooter'
+import {Card} from '../Realm/realm'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -72,7 +73,7 @@ const mapStateToProps = (state) => {
 
   return {
     lesson: state.lesson,
-    currentCard: state.lesson.currentCard
+    currentCard: state.lesson.currentCardId ? Card.getFromId(state.lesson.currentCardId) : null
   }
 }
 

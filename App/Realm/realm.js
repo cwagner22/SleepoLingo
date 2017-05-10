@@ -59,6 +59,8 @@ export class Card {
       sentence: {type: 'Sentence'},
       fullSentence: {type: 'Sentence', optional: true},
       note: {type: 'string', optional: true},
+      // List of Strings not possible yet
+      // explanation: {type: 'list', objectType: 'Word', optional: true},
       showDate: {type: 'date', optional: true},
       index: 'int'
     }

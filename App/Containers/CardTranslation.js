@@ -76,8 +76,10 @@ class CardTranslation extends React.Component {
     let explanation = []
     const sentence = this.props.fullSentence || this.props.sentence
     const words = sentence.translation.split(' ')
-    for (const word of words) {
-      explanation.push(Word.getWord(word))
+    for (const wordStr of words) {
+      // todo: look for custom explanation
+      let word = Word.getWord(wordStr)
+      explanation.push(word || wordStr)
     }
 
     return (

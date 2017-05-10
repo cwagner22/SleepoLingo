@@ -8,33 +8,6 @@ import { Card, LessonGroup, Lesson, reset, Sentence, Word } from '../Realm/realm
 const getSentence = (string) => string.split('\n')[0]
 const getFullSentence = (string) => string.split('\n')[1]
 
-function checkWords (card) {
-  let wordsMissing = []
-  const sentences = Sentence.get()
-  for (const s of sentences) {
-    // Check that every words are included in the dictionary
-    const words = s.translation.split(' ')
-    for (const word of words) {
-      if (!Word.getWord(word)) {
-        const index = wordsMissing.indexOf(word)
-        if (index !== -1) {
-          // let data = wordsMissing[index]
-          // data.sentences.push(s)
-        } else {
-          wordsMissing.push(word)
-          // wordsMissing.push({
-          //   word,
-          //   sentences: [s]
-          // })
-        }
-      }
-    }
-  }
-
-  // console.log('Words missing from dictionary:', _.toArray(wordsMissing))
-  console.log('Words missing from dictionary:', wordsMissing)
-}
-
 function parseCards (worksheet) {
   console.log('Parsing cards, worksheet length: ', worksheet.length)
   let cards = []
@@ -101,6 +74,33 @@ function parseLessons (worksheet) {
   }
 
   return lessons
+}
+
+function checkWords (card) {
+  let wordsMissing = []
+  const sentences = Sentence.get()
+  for (const s of sentences) {
+    // Check that every words are included in the dictionary
+    const words = s.translation.split(' ')
+    for (const word of words) {
+      if (isNaN(word) && !Word.getWord(word)) {
+        const index = wordsMissing.indexOf(word)
+        if (index !== -1) {
+          // let data = wordsMissing[index]
+          // data.sentences.push(s)
+        } else {
+          wordsMissing.push(word)
+          // wordsMissing.push({
+          //   word,
+          //   sentences: [s]
+          // })
+        }
+      }
+    }
+  }
+
+  // console.log('Words missing from dictionary:', _.toArray(wordsMissing))
+  console.log('Words missing from dictionary:', wordsMissing)
 }
 
 function parseDictionary (worksheet) {

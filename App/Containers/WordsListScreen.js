@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import Accordion from 'react-native-collapsible/Accordion'
 import _ from 'lodash'
 
-import Player from '../Services/Player'
+import {Lesson} from '../Realm/realm'
+import PlaybackActions from '../Redux/PlaybackRedux'
 
 import styles from './Styles/WordsListScreenStyle'
 
@@ -19,7 +20,7 @@ class WordsListScreen extends React.Component {
   }
 
   play (text) {
-    Player.speakWordInLanguage(text, 'th-TH', 0.7)
+    this.props.play(text, 'th-TH', 1, 0.7)
   }
 
   _renderContent (section) {
@@ -50,12 +51,15 @@ class WordsListScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentLesson: state.lesson.currentLesson
+    currentLesson: Lesson.getFromId(state.lesson.currentLessonId)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    play: (sentence, language, volume, speed) => dispatch(
+      PlaybackActions.playbackStart(sentence, language, volume, speed))
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WordsListScreen)

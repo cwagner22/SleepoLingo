@@ -237,7 +237,8 @@ const realm = new Realm({
   //     }
   //   }
   // }
-  // readOnly: true
+  // Reading from bundle is read only, overwise we have to copy the db to Documents folder
+  readOnly: true,
   schemaVersion: 1
 })
 console.log('Realm db path', realm.path)

@@ -1,27 +1,14 @@
-// @flow
-
 import { combineReducers } from 'redux'
 import configureStore from './CreateStore'
 import rootSaga from '../Sagas/'
 
 export default () => {
   /* ------------- Assemble The Reducers ------------- */
-  const appReducer = combineReducers({
-    temperature: require('./TemperatureRedux').reducer,
+  const rootReducer = combineReducers({
+    github: require('./GithubRedux').reducer,
     login: require('./LoginRedux').reducer,
-    search: require('./SearchRedux').reducer,
-    lesson: require('./LessonRedux').reducer,
-    playback: require('./PlaybackRedux').reducer
-    // import: require('./ImportRedux').reducer
+    search: require('./SearchRedux').reducer
   })
-
-  const rootReducer = (state, action) => {
-    if (action.type === 'RESET_STATE') {
-      state = undefined
-    }
-
-    return appReducer(state, action)
-  }
 
   return configureStore(rootReducer, rootSaga)
 }

@@ -2,9 +2,10 @@ import immutablePersistenceTransform from '../Services/ImmutablePersistenceTrans
 import dateTransform from '../Services/DateTransform'
 import { AsyncStorage } from 'react-native'
 
+// More info here:  https://shift.infinite.red/shipping-persistant-reducers-7341691232b1
 const REDUX_PERSIST = {
   active: true,
-  reducerVersion: '26',
+  reducerVersion: '26.0',
   storeConfig: {
     storage: AsyncStorage,
     blacklist: ['login', 'search'], // reducer keys that you do NOT want stored to persistence here

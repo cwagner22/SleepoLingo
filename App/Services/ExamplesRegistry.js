@@ -1,15 +1,16 @@
-// @flow
-
 import React from 'react'
 import { Text, View } from 'react-native'
 import R from 'ramda'
 import { ApplicationStyles } from '../Themes'
-import DebugSettings from '../Config/DebugSettings'
-let globalExamplesRegistry = []
+import DebugConfig from '../Config/DebugConfig'
+let globalComponentExamplesRegistry = []
+let globalPluginExamplesRegistry = []
 
-export const addExample = (title: string, usage: () => React$Element<*>) => { if (DebugSettings.includeExamples) globalExamplesRegistry.push({title, usage}) }
+export const addComponentExample = (title, usage = () => {}) => { if (DebugConfig.includeExamples) globalComponentExamplesRegistry.push({title, usage}) } // eslint-disable-line
 
-const renderExample = (example: Object) => {
+export const addPluginExample = (title, usage = () => {}) => { if (DebugConfig.includeExamples) globalPluginExamplesRegistry.push({title, usage}) } // eslint-disable-line
+
+const renderComponentExample = (example) => {
   return (
     <View key={example.title}>
       <View style={ApplicationStyles.darkLabelContainer}>
@@ -20,10 +21,25 @@ const renderExample = (example: Object) => {
   )
 }
 
-export const renderExamples = () => R.map(renderExample, globalExamplesRegistry)
+const renderPluginExample = (example) => {
+  return (
+    <View key={example.title}>
+      <View style={ApplicationStyles.darkLabelContainer}>
+        <Text style={ApplicationStyles.darkLabel}>{example.title}</Text>
+      </View>
+      {example.usage.call()}
+    </View>
+  )
+}
+
+export const renderComponentExamples = () => R.map(renderComponentExample, globalComponentExamplesRegistry)
+
+export const renderPluginExamples = () => R.map(renderPluginExample, globalPluginExamplesRegistry)
 
 // Default for readability
 export default {
-  render: renderExamples,
-  add: addExample
+  renderComponentExamples,
+  addComponentExample,
+  renderPluginExamples,
+  addPluginExample
 }

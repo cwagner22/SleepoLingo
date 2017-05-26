@@ -1,5 +1,3 @@
-// @flow
-
 const colors = {
   background: '#1F0808',
   clear: 'rgba(0,0,0,0)',
@@ -20,6 +18,10 @@ const colors = {
   ember: 'rgba(164, 0, 48, 0.5)',
   fire: '#e73536',
   drawer: 'rgba(30, 30, 29, 0.95)',
+  eggplant: '#251a34',
+  border: '#483F53',
+  banner: '#5F3E63',
+  text: '#E0D7E5',
   fernFrond: '#6F8741',
   cedar: '#42241E',
   wattle: '#d1ca48',

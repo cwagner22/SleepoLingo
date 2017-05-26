@@ -1,15 +1,12 @@
-// @flow
-
 import React, { Component } from 'react'
 import { View, StatusBar } from 'react-native'
-
-import NavigationRouter from '../Navigation/NavigationRouter'
+import Navigation from '../Navigation/AppNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
 import ReduxPersist from '../Config/ReduxPersist'
 
 // Styles
-import styles from './Styles/RootContainerStyle'
+import styles from './Styles/RootContainerStyles'
 
 class RootContainer extends Component {
   componentDidMount () {
@@ -17,36 +14,13 @@ class RootContainer extends Component {
     if (!ReduxPersist.active) {
       this.props.startup()
     }
-
-    // console.log('unlink')
-    // RNFS.unlink(RNFS.DocumentDirectoryPath + '/default.realm.lock')
-    // RNFS.unlink(RNFS.DocumentDirectoryPath + '/default.realm.management')
-    // RNFS.unlink(RNFS.DocumentDirectoryPath + '/default.realm')
-    // // RNFS.moveFile(RNFS.MainBundlePath+"/db.realm", RNFS.DocumentDirectoryPath+"/db.realm")
-    // RNFS.copyFile(RNFS.MainBundlePath + '/db.realm', RNFS.DocumentDirectoryPath + '/db.realm')
-    //   .then((success) => {
-    //     // Realm.copyBundledRealmFiles()
-    //     console.log('copyBundledRealmFiles')
-    //     // console.log(realm.path, RNFS.DocumentDirectoryPath);
-    //     // return realm
-    //     // realm = new Realm({
-    //     //   // path: 'newDefault.realm',
-    //     //   schema: [{name: 'Dog', properties: {name: 'string'}}]
-    //     // });
-    //     // this.setState({realm: realm});
-    //     // return realm;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.message)
-    //   })
-    // // Realm.copyBundledRealmFiles()
   }
 
   render () {
     return (
       <View style={styles.applicationView}>
         <StatusBar barStyle='light-content' />
-        <NavigationRouter />
+        <Navigation />
       </View>
     )
   }

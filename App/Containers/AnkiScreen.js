@@ -3,13 +3,12 @@
 import React from 'react'
 import { View, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Actions as NavigationActions } from 'react-native-router-flux'
 
 import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
 import CardTranslation from './CardTranslation'
 import AnkiFooter from './AnkiFooter'
-import {Card} from '../Realm/realm'
+import { Card } from '../Realm/realm'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -25,9 +24,15 @@ class AnkiScreen extends React.Component {
       Alert.alert(
         'Well done',
         'No more cards, come back later!',
-        [
-          {text: 'OK', onPress: () => NavigationActions.lessonsList({type: 'reset'})}
-        ]
+        [{
+          text: 'OK',
+          onPress: () => this.props.navigation.reset({
+            index: 0,
+            actions: [
+              this.props.navigation.navigate({routeName: 'LessonsListScreen'})
+            ]
+          })
+        }]
       )
     }
   }

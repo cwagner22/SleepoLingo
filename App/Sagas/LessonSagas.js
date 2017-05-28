@@ -1,7 +1,7 @@
 import { call, select, put, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import md5Hex from 'md5-hex'
-import { Actions as NavigationActions } from 'react-native-router-flux'
+import { NavigationActions } from 'react-navigation'
 import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
@@ -114,16 +114,20 @@ export function * loadLesson ({lesson}) {
     })
 
     if (res.hasOwnProperty('confirm')) {
-      // yield apply(lesson, lesson.resetDates)
       yield put(LessonActions.resetDates())
       yield put(LessonActions.setCurrentLesson(lesson))
-      yield call(NavigationActions.lesson, {lesson})
+      yield put(NavigationActions.navigate({ routeName: 'LessonScreen', params: {lesson} }))
     } else {
-      call(NavigationActions.lessonsList, {type: 'reset'})
+      yield put(NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'LessonsListScreen' })
+        ]
+      }))
     }
   } else {
     yield put(LessonActions.setCurrentLesson(lesson))
-    yield call(NavigationActions.lesson, {lesson})
+    yield put(NavigationActions.navigate({ routeName: 'LessonScreen', params: {lesson} }))
   }
 }
 

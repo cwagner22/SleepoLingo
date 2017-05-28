@@ -8,12 +8,18 @@ import DebugConfig from '../Config/DebugConfig'
 import { StartupTypes } from '../Redux/StartupRedux'
 import { GithubTypes } from '../Redux/GithubRedux'
 import { LoginTypes } from '../Redux/LoginRedux'
+import { LessonTypes } from '../Redux/LessonRedux'
+import { PlaybackTypes } from '../Redux/PlaybackRedux'
+import { ImportTypes } from '../Redux/ImportRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getUserAvatar } from './GithubSagas'
+import { downloadLesson, loadLesson } from './LessonSagas'
+import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
+import { importStart } from './ImportSagas'
 
 /* ------------- API ------------- */
 
@@ -28,6 +34,17 @@ export default function * root () {
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
     takeLatest(LoginTypes.LOGIN_REQUEST, login),
+
+    takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
+    takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
+
+    takeLatest(PlaybackTypes.PLAYBACK_START, play),
+    takeLatest(PlaybackTypes.PLAYER_START, start),
+    takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),
+    takeLatest(PlaybackTypes.PLAYER_PREV, playerPrev),
+    takeLatest(PlaybackTypes.PLAYER_STOP, playerStop),
+
+    takeLatest(ImportTypes.IMPORT_START, importStart),
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)

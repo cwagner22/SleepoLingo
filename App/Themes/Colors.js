@@ -22,10 +22,18 @@ const colors = {
   border: '#483F53',
   banner: '#5F3E63',
   text: '#E0D7E5',
+
   fernFrond: '#6F8741',
   cedar: '#42241E',
   wattle: '#d1ca48',
   capePalliser: '#ab683f',
+
+  mightyState: '#556270',
+  pacifica: '#4ECDC4',
+  appleChic: '#C7F464',
+  cheeryPink: '#FF6B6B',
+  grandmasPillow: '#C44D58',
+
   underlayGrey: '#f3f3f3'
 }
 

@@ -10,8 +10,6 @@ import LessonActions from '../Redux/LessonRedux'
 // Styles
 import styles from './Styles/LessonScreenStyle'
 
-import { Actions as NavigationActions } from 'react-native-router-flux'
-
 class LessonScreen extends React.Component {
   componentWillMount () {
     this.props.downloadLesson(this.props.lesson.cards)
@@ -32,11 +30,11 @@ class LessonScreen extends React.Component {
   }
 
   startDay () {
-    NavigationActions.anki()
+    this.props.navigation.navigate({routeName: 'AnkiScreen'})
   }
 
   startNight () {
-    NavigationActions.playback()
+    this.props.navigation.navigate({routeName: 'PlaybackScreen'})
   }
 }
 

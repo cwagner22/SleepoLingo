@@ -9,7 +9,7 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
-    backgroundColor: Colors.fire,
+    backgroundColor: Colors.grandmasPillow,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -22,7 +22,6 @@ export default StyleSheet.create({
     fontSize: Fonts.size.medium,
     marginVertical: Metrics.baseMargin,
     flex: 1
-
   },
   rightContainer: {
     justifyContent: 'center',

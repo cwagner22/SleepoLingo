@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import { Actions as NavigationActions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import Sound from 'react-native-sound'
@@ -43,7 +42,7 @@ class PlayerScreen extends React.Component {
     BackgroundTimer.setTimeout(() => {
       // Force component to stop right now. Pop() will be called once the app is active.
       this.componentWillUnmount()
-      NavigationActions.pop()
+      this.props.navigation.back()
     }, 60 * 60 * 1000)
   }
 
@@ -53,7 +52,7 @@ class PlayerScreen extends React.Component {
 
   stopPlayback () {
     // todo: crashes for no reason
-    NavigationActions.pop()
+    this.props.navigation.back()
     // NavigationActions.lesson(this.props.currentLessonId)
   }
 

@@ -70,7 +70,11 @@ class LessonsListScreen extends React.Component {
   }
 
   renderHeader (data, sectionID) {
-    return <Text style={styles.boldLabel}>{sectionID}</Text>
+    return (
+      <View>
+        <Text style={styles.boldLabel}>{sectionID}</Text>
+      </View>
+    )
   }
 
   nbCardsLeft (lesson) {

@@ -12,8 +12,8 @@ import styles from './Styles/LessonScreenStyles'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
-    const {lesson} = this.props.navigation.state.params
-    this.props.downloadLesson(lesson.cards)
+    // const {lesson} = this.props.navigation.state.params
+    // this.props.downloadLesson(lesson.cards)
   }
 
   render () {

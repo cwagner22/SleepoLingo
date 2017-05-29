@@ -1,14 +1,14 @@
 // @flow
 
 import React, { PropTypes } from 'react'
-import { View, Text } from 'react-native'
-import { ListView } from 'realm/react-native'
+import { View, Text, ListView } from 'react-native'
+// import { ListView } from 'realm/react-native'
 import { connect } from 'react-redux'
 import RNFS from 'react-native-fs'
 
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
-import { LessonGroup } from '../Realm/realm'
+// import { LessonGroup } from '../Realm/realm'
 // import store from '../store'
 
 // Styles
@@ -28,10 +28,17 @@ class LessonsListScreen extends React.Component {
     const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
 
     let data = {}
-    for (const group of LessonGroup.get()) {
+    const groups = [{
+      id: 0,
+      name: 'Basics',
+      lessons: [{
+        id: 0,
+        name: 'aa'
+      }]
+    }]
+    for (const group of groups) {
       data[group.name] = group.lessons
     }
-
     // Datasource is always in state
     this.setState({
       dataSource: ds.cloneWithRowsAndSections(data)
@@ -78,12 +85,13 @@ class LessonsListScreen extends React.Component {
   }
 
   nbCardsLeft (lesson) {
-    return lesson.cards.reduce((total, card) => {
-      if (card.isReady(this.props.showDates, true)) {
-        total++
-      }
-      return total
-    }, 0)
+    return 10
+    // return lesson.cards.reduce((total, card) => {
+    //   if (card.isReady(this.props.showDates, true)) {
+    //     total++
+    //   }
+    //   return total
+    // }, 0)
   }
 
   renderRow (lesson, sectionID) {

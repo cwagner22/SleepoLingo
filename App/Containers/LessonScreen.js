@@ -12,11 +12,12 @@ import styles from './Styles/LessonScreenStyle'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
-    this.props.downloadLesson(this.props.lesson.cards)
+    const {lesson} = this.props.navigation.state.params
+    this.props.downloadLesson(lesson.cards)
   }
 
   render () {
-    const {lesson} = this.props
+    const {lesson} = this.props.navigation.state.params
 
     return (
       <View style={styles.mainContainer}>

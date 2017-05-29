@@ -3,12 +3,12 @@
 import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
+import { Card, Button } from 'react-native-elements'
 
-import FullButton from '../Components/FullButton'
 import LessonActions from '../Redux/LessonRedux'
 
 // Styles
-import styles from './Styles/LessonScreenStyle'
+import styles from './Styles/LessonScreenStyles'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
@@ -21,21 +21,27 @@ class LessonScreen extends React.Component {
 
     return (
       <View style={styles.mainContainer}>
-        <ScrollView style={styles.container}>
-          <Text style={styles.componentLabel}>{lesson.note}</Text>
-        </ScrollView>
-        <FullButton text='Day' onPress={() => this.startDay()} />
-        <FullButton text='Night' onPress={() => this.startNight()} />
+        <Card title='Lesson Notes' containerStyle={{flex: 1}} wrapperStyle={{flex: 1}}>
+          <ScrollView>
+            <Text style={styles.componentLabel}>{lesson.note}</Text>
+          </ScrollView>
+          <View>
+            <Button title='START STUDY' buttonStyle={styles.button} onPress={() => this.startDay()} />
+          </View>
+        </Card>
+        {/* <FullButton text='Night' onPress={() => this.startNight()} /> */}
       </View>
     )
   }
 
   startDay () {
-    this.props.navigation.navigate({routeName: 'AnkiScreen'})
+    const {lesson} = this.props.navigation.state.params
+
+    this.props.navigation.navigate('AnkiScreen', {title: lesson.name})
   }
 
   startNight () {
-    this.props.navigation.navigate({routeName: 'PlaybackScreen'})
+    this.props.navigation.navigate('PlaybackScreen')
   }
 }
 

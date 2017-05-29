@@ -3,6 +3,7 @@
 import React from 'react'
 import { View, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import { Card as CardElem } from 'react-native-elements'
 
 import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from './CardOriginal'
@@ -68,7 +69,9 @@ class AnkiScreen extends React.Component {
 
     return (
       <View style={styles.mainContainer}>
-        {this.renderCard()}
+        <CardElem containerStyle={{flex: 1}} wrapperStyle={{flex: 1}}>
+          {this.renderCard()}
+        </CardElem>
         {this.renderFooter()}
       </View>
     )

@@ -9,7 +9,7 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
-    backgroundColor: Colors.grandmasPillow,
+    backgroundColor: Colors.cheeryPink,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',

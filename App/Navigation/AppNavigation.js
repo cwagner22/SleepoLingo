@@ -9,20 +9,62 @@ import ImportScreen from '../Containers/ImportScreen'
 
 import styles from './Styles/NavigationStyles'
 
-// Manifest of possible screens
-const PrimaryNav = StackNavigator({
-  LaunchScreen: { screen: LaunchScreen },
+export const Lessons = StackNavigator({
   LessonsListScreen: {
     screen: LessonsListScreen,
-    navigationOptions: { title: 'Lessons' }
+    navigationOptions: {title: 'Lessons'}
   },
-  LessonScreen: { screen: LessonScreen },
-  AnkiScreen: { screen: AnkiScreen },
-  PlaybackScreen: { screen: PlaybackScreen },
-  ImportScreen: { screen: ImportScreen },
+  LessonScreen: {
+    screen: LessonScreen,
+    navigationOptions: ({navigation}) => ({
+      title: navigation.state.params.lesson.name,
+      headerBackTitle: 'Back'
+    })
+  },
+  AnkiScreen: {
+    screen: AnkiScreen,
+    navigationOptions: ({navigation}) => ({
+      title: navigation.state.params.title
+    })
+  },
+  PlaybackScreen: {
+    screen: PlaybackScreen
+  },
+  ImportScreen: {
+    screen: ImportScreen
+  }
+}, {
+  // cardStyle: {
+  //   opacity: 1,
+  //   backgroundColor: '#3e243f'
+  // },
+  // initialRouteName: 'PresentationScreen',
+  // headerMode: 'none',
+  // // Keeping this here for future when we can make
+  navigationOptions: {
+    // header: {
+    //   // left: (
+    //   //   <TouchableOpacity onPress={() => window.alert('pop')}><Image source={Images.closeButton}
+    //   //     style={{marginHorizontal: 10}} /></TouchableOpacity>
+    //   // ),
+    //   style: styles.header
+    // },
+    // headerStyle: styles.header,
+    // headerTitleStyle: styles.headerTitle,
+    // headerBackTitleStyle: styles.headerTitle,
+    // headerTintColor: '#fff',
+  }
+})
+
+// Manifest of possible screens
+const PrimaryNav = StackNavigator({
+  LaunchScreen: {screen: LaunchScreen},
+  LessonsListScreen: {
+    screen: Lessons
+  },
   LoginScreen: {
     screen: LoginScreen,
-    navigationOptions: { title: 'Login' }
+    navigationOptions: {title: 'Login'}
   }
 }, {
   // Default config for all screens

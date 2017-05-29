@@ -72,7 +72,7 @@ class LessonsListScreen extends React.Component {
   renderHeader (data, sectionID) {
     return (
       <View>
-        <Text style={styles.boldLabel}>{sectionID}</Text>
+        <Text style={styles.header}>{sectionID}</Text>
       </View>
     )
   }

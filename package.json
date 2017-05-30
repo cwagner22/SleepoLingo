@@ -23,7 +23,7 @@
     "lint": "standard --verbose | snazzy",
     "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
     "fixcode": "standard --fix",
-    "postinstall0": "rndebugger-open",
+    "postinstall": "rndebugger-open",
     "revert-debug": "rndebugger-open --revert"
   },
   "dependencies": {

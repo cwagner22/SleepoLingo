@@ -26,6 +26,7 @@ const colors = {
   easternBlue: '#2D96A2',
   pastelGreen: '#76CF7E',
   cheeryPink: '#ff6b6b',
+  stiletto: '#8A3034',
 
   underlayGrey: '#f3f3f3'
 }

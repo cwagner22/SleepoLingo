@@ -3,13 +3,14 @@
 import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
-import { Card, Button } from 'react-native-elements'
+import { Card, Button, Icon } from 'react-native-elements'
 
 import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
 
 // Styles
 import styles from './Styles/LessonScreenStyles'
+import { Colors } from '../Themes/'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
@@ -34,7 +35,8 @@ class LessonScreen extends React.Component {
             <Button title='START STUDY' buttonStyle={styles.button} onPress={() => this.startDay()} />
           </View>
         </Card>
-        {/* <FullButton text='Night' onPress={() => this.startNight()} /> */}
+        <Icon reverse name='hotel' color={Colors.easternBlue} raised onPress={() => this.startNight()}
+          containerStyle={styles.nightButton} />
       </View>
     )
   }

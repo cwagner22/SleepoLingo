@@ -34,7 +34,6 @@ class LessonsListScreen extends React.Component {
 
     // Datasource is always in state
     this.setState({
-      lesson: data['Basics'][0],
       dataSource: ds.cloneWithRowsAndSections(data)
     })
   }
@@ -79,13 +78,12 @@ class LessonsListScreen extends React.Component {
   }
 
   nbCardsLeft (lesson) {
-    return 10
-    // return lesson.cards.reduce((total, card) => {
-    //   if (card.isReady(this.props.showDates, true)) {
-    //     total++
-    //   }
-    //   return total
-    // }, 0)
+    return lesson.cards.reduce((total, card) => {
+      if (card.isReady(this.props.showDates, true)) {
+        total++
+      }
+      return total
+    }, 0)
   }
 
   renderRow (lesson, sectionID) {

@@ -13,11 +13,12 @@ import styles from './Styles/LessonScreenStyles'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
+    const {lesson} = this.props
+
     this.props.navigation.setParams({
-      title: this.props.lesson.name
+      title: lesson.name
     })
-    // const {lesson} = this.props.navigation.state.params
-    // this.props.downloadLesson(lesson.cards)
+    this.props.downloadLesson(lesson.cards)
   }
 
   render () {

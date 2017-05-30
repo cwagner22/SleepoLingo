@@ -3,7 +3,7 @@ import XLSX from 'xlsx'
 import RNFS from 'react-native-fs'
 import Secrets from 'react-native-config'
 
-import { Card, LessonGroup, Lesson, reset, Sentence, Word } from '../Realm/realm'
+import { Card, LessonGroup, Lesson, reset, write, Sentence, Word } from '../Realm/realm'
 
 const getSentence = (string) => string.split('\n')[0]
 const getFullSentence = (string) => string.split('\n')[1]
@@ -116,25 +116,27 @@ function parseDictionary (worksheet) {
 }
 
 function parseGroups (workbook) {
-  reset()
-  console.log(workbook)
-  for (var i = 0; i < workbook.SheetNames.length; i++) {
-    const name = workbook.SheetNames[i]
-    let worksheet = workbook.Sheets[name]
-    let worksheetJSON = XLSX.utils.sheet_to_json(worksheet)
-    console.log(worksheetJSON)
+  write(() => {
+    reset()
+    console.log(workbook)
+    for (var i = 0; i < workbook.SheetNames.length; i++) {
+      const name = workbook.SheetNames[i]
+      let worksheet = workbook.Sheets[name]
+      let worksheetJSON = XLSX.utils.sheet_to_json(worksheet)
+      console.log(worksheetJSON)
 
-    if (name === 'Dictionary') {
-      parseDictionary(worksheetJSON)
-    } else {
-      const lessons = parseLessons(worksheetJSON)
-      if (lessons.length) {
-        LessonGroup.create(name, lessons)
+      if (name === 'Dictionary') {
+        parseDictionary(worksheetJSON)
+      } else {
+        const lessons = parseLessons(worksheetJSON)
+        if (lessons.length) {
+          LessonGroup.create(name, lessons)
+        }
       }
     }
-  }
 
-  checkWords()
+    checkWords()
+  })
 }
 
 export function * importStart () {

@@ -23,11 +23,11 @@
     "lint": "standard --verbose | snazzy",
     "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
     "fixcode": "standard --fix",
-    "postinstall": "rndebugger-open",
+    "postinstall0": "rndebugger-open",
     "revert-debug": "rndebugger-open --revert"
   },
   "dependencies": {
-    "apisauce": "^0.10.0",
+    "apisauce": "^0.13.0",
     "format-json": "^1.0.3",
     "lodash": "^4.17.2",
     "md5-hex": "^2.0.0",

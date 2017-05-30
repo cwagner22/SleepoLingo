@@ -17,7 +17,8 @@ export const Lessons = StackNavigator({
   LessonScreen: {
     screen: LessonScreen,
     navigationOptions: ({navigation}) => ({
-      title: navigation.state.params.lesson.name,
+      // title: navigation.state.params.lesson.name,
+      title: navigation.state.params && navigation.state.params.title,
       headerBackTitle: 'Back'
     })
   },
@@ -29,9 +30,6 @@ export const Lessons = StackNavigator({
   },
   PlaybackScreen: {
     screen: PlaybackScreen
-  },
-  ImportScreen: {
-    screen: ImportScreen
   }
 }, {
   // cardStyle: {
@@ -61,6 +59,9 @@ const PrimaryNav = StackNavigator({
   LaunchScreen: {screen: LaunchScreen},
   LessonsListScreen: {
     screen: Lessons
+  },
+  ImportScreen: {
+    screen: ImportScreen
   },
   LoginScreen: {
     screen: LoginScreen,

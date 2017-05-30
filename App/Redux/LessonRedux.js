@@ -18,8 +18,8 @@ const {Types, Creators} = createActions({
   loadNextCard: null,
   nextCardLoaded: ['card'],
   downloadLesson: ['currentCards'],
-  loadLesson: ['lesson'],
-  setCurrentLesson: ['lesson'],
+  loadLesson: ['lessonId'],
+  setCurrentLesson: ['lessonId'],
   setCurrentCard: ['currentCard'],
   // setDate: ['card', 'date'],
   resetDates: null
@@ -48,10 +48,10 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
-export const setCurrentLesson = (state, {lesson}) => {
+export const setCurrentLesson = (state, {lessonId}) => {
   return state.merge({
     // currentLesson: lesson
-    currentLessonId: lesson.id
+    currentLessonId: lessonId
   })
   // return Object.assign(state.currentLesson, lesson);
 }

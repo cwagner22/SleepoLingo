@@ -90,10 +90,10 @@ function bindCallbackToPromise () {
   }
 }
 
-export function * loadLesson ({lesson}) {
+export function * loadLesson ({lessonId}) {
   // Reset cards if new lesson
   const currentLessonId = yield select(getCurrentLessonId)
-  if (lesson.id !== currentLessonId) {
+  if (lessonId !== currentLessonId) {
     const cancel = bindCallbackToPromise()
     const confirm = bindCallbackToPromise()
 
@@ -116,14 +116,14 @@ export function * loadLesson ({lesson}) {
 
     if (res.hasOwnProperty('confirm')) {
       yield put(LessonActions.resetDates())
-      yield put(LessonActions.setCurrentLesson(lesson))
-      yield call(NavigatorService.navigate, 'LessonScreen', {lesson})
+      yield put(LessonActions.setCurrentLesson(lessonId))
+      yield call(NavigatorService.navigate, 'LessonScreen', {lessonId})
     } else {
       yield call(NavigatorService.reset, 'LessonsListScreen')
     }
   } else {
-    yield put(LessonActions.setCurrentLesson(lesson))
-    yield call(NavigatorService.navigate, 'LessonScreen', {lesson})
+    yield put(LessonActions.setCurrentLesson(lessonId))
+    yield call(NavigatorService.navigate, 'LessonScreen')
     // yield put(NavigationActions.navigate({ routeName: 'LessonScreen', params: {lesson} }))
   }
 }

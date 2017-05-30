@@ -5,6 +5,7 @@ import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Card, Button } from 'react-native-elements'
 
+import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
 
 // Styles
@@ -12,12 +13,15 @@ import styles from './Styles/LessonScreenStyles'
 
 class LessonScreen extends React.Component {
   componentWillMount () {
+    this.props.navigation.setParams({
+      title: this.props.lesson.name
+    })
     // const {lesson} = this.props.navigation.state.params
     // this.props.downloadLesson(lesson.cards)
   }
 
   render () {
-    const {lesson} = this.props.navigation.state.params
+    const {lesson} = this.props
 
     return (
       <View style={styles.mainContainer}>
@@ -35,9 +39,7 @@ class LessonScreen extends React.Component {
   }
 
   startDay () {
-    const {lesson} = this.props.navigation.state.params
-
-    this.props.navigation.navigate('AnkiScreen', {title: lesson.name})
+    this.props.navigation.navigate('AnkiScreen', {title: this.props.lesson.name})
   }
 
   startNight () {
@@ -46,7 +48,9 @@ class LessonScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    lesson: Lesson.getFromId(state.lesson.currentLessonId)
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {

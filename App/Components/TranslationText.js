@@ -19,7 +19,7 @@ class TranslationText extends React.Component {
     return (
       <TouchableHighlight onPress={this.props.onPress} style={styles.container}
         underlayColor={Colors.underlayGrey}>
-        <View>
+        <View style={styles.innerContainer}>
           <Text style={styles.title}>{this.props.translation}</Text>
           <Text
             style={styles.title}>{this.props.transliteration && this.props.transliteration}</Text>

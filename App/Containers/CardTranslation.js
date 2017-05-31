@@ -7,10 +7,10 @@ import {
   Image,
   Text,
   Modal,
-  TouchableHighlight,
   TouchableOpacity
 } from 'react-native'
 import { connect } from 'react-redux'
+import { Icon } from 'react-native-elements'
 
 import LessonActions from '../Redux/LessonRedux'
 import PlaybackActions from '../Redux/PlaybackRedux'
@@ -18,10 +18,10 @@ import TranslationText from '../Components/TranslationText'
 import Explanation from '../Components/Explanation'
 import { Colors } from '../Themes'
 import images from '../Lessons/images/images'
-import {Word} from '../Realm/realm'
+import { Word } from '../Realm/realm'
 
 // Styles
-import styles from './Styles/AnkiScreenStyle'
+import styles from './Styles/CardTranslationStyles'
 
 type CardTranslationProps = {
   cardId: number,
@@ -46,6 +46,18 @@ class CardTranslation extends React.Component {
     this.props.play(sentence, 'th-TH', 1, 0.7)
   }
 
+  renderTranslation () {
+    return (
+      <View style={styles.translationContainer}>
+        <TranslationText translation={this.props.sentence.translation}
+          transliteration={this.props.sentence.transliteration}
+          onPress={() => this.speakText(this.props.sentence.translation)} />
+        {this.renderFullTranslation()}
+        {this.renderExplanation()}
+      </View>
+    )
+  }
+
   renderFullTranslation () {
     const {fullSentence} = this.props
     if (this.props.fullSentence) {
@@ -65,7 +77,7 @@ class CardTranslation extends React.Component {
 
   renderNote () {
     const {note} = this.props
-    if (note) {
+    if (!note) {
       return (
         <Text style={styles.note}>{note}</Text>
       )
@@ -92,17 +104,13 @@ class CardTranslation extends React.Component {
         >
           <TouchableOpacity style={styles.modalContainer} activeOpacity={0.7}
             onPressOut={() => { this.setModalVisible(false) }}>
-            <View style={styles.innerContainer}>
+            <View style={styles.innerExplanationContainer}>
               <Explanation explanation={explanation} />
             </View>
           </TouchableOpacity>
         </Modal>
-        <View>
-          <TouchableHighlight onPress={() => { this.setModalVisible(true) }} style={styles.explanation}
-            underlayColor={Colors.underlayGrey}>
-            <Text>Explanation</Text>
-          </TouchableHighlight>
-        </View>
+        <Icon reverse name='g-translate' color={Colors.easternBlue} raised onPress={() => this.setModalVisible(true)}
+          containerStyle={styles.explanationButton} />
       </View>
     )
   }
@@ -114,14 +122,12 @@ class CardTranslation extends React.Component {
   render () {
     return (
       <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
-        <View style={[styles.container, {padding: 5}]}>
-          <TranslationText translation={this.props.sentence.translation}
-            transliteration={this.props.sentence.transliteration}
-            onPress={() => this.speakText(this.props.sentence.translation)} />
-          {this.renderFullTranslation()}
-          {this.renderExplanation()}
-          {this.renderImage()}
-          {this.renderNote()}
+        <View style={{flex: 1}}>
+          {this.renderTranslation()}
+          <View style={{flex: 1}}>
+            {this.renderImage()}
+            {this.renderNote()}
+          </View>
         </View>
       </TouchableWithoutFeedback>
     )

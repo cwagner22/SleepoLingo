@@ -4,6 +4,7 @@ import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Card, Button, Icon } from 'react-native-elements'
+import ActionButton from 'react-native-action-button'
 
 import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
@@ -35,8 +36,8 @@ class LessonScreen extends React.Component {
             <Button title='START STUDY' buttonStyle={styles.button} onPress={() => this.startDay()} />
           </View>
         </Card>
-        <Icon reverse name='hotel' color={Colors.easternBlue} raised onPress={() => this.startNight()}
-          containerStyle={styles.nightButton} />
+        <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetY={85}
+          icon={<Icon name='hotel' color='white' />} />
       </View>
     )
   }

@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon } from 'react-native-elements'
+import ActionButton from 'react-native-action-button'
 
 import LessonActions from '../Redux/LessonRedux'
 import PlaybackActions from '../Redux/PlaybackRedux'
@@ -53,7 +54,6 @@ class CardTranslation extends React.Component {
           transliteration={this.props.sentence.transliteration}
           onPress={() => this.speakText(this.props.sentence.translation)} />
         {this.renderFullTranslation()}
-        {this.renderExplanation()}
       </View>
     )
   }
@@ -109,8 +109,10 @@ class CardTranslation extends React.Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        <Icon reverse name='g-translate' color={Colors.easternBlue} raised onPress={() => this.setModalVisible(true)}
-          containerStyle={styles.explanationButton} />
+        <View style={styles.explanationButton}>
+          <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetX={5} offsetY={0}
+            size={51} icon={<Icon name='g-translate' color='white' />} />
+        </View>
       </View>
     )
   }
@@ -124,6 +126,7 @@ class CardTranslation extends React.Component {
       <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
         <View style={{flex: 1}}>
           {this.renderTranslation()}
+          {this.renderExplanation()}
           <View style={{flex: 1}}>
             {this.renderImage()}
             {this.renderNote()}

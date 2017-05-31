@@ -21,10 +21,7 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   explanationButton: {
-    position: 'absolute',
-    top: -30,
-    right: 5,
-    zIndex: 20
+    marginTop: -25
   },
   translationContainer: {
     minHeight: '50%',

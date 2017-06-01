@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import React, { PropTypes } from 'react'
 import {
   View,
   TouchableWithoutFeedback,
@@ -24,16 +24,14 @@ import { Word } from '../Realm/realm'
 // Styles
 import styles from './Styles/CardTranslationStyles'
 
-type CardTranslationProps = {
-  cardId: number,
-  sentence: Object,
-  fullSentence?: Object,
-  note?: string,
-  onPress: () => void
-}
-
 class CardTranslation extends React.Component {
-  props: CardTranslationProps
+  static propTypes = {
+    cardId: PropTypes.number,
+    sentence: PropTypes.object,
+    fullSentence: PropTypes.object,
+    note: PropTypes.string,
+    onPress: PropTypes.func
+  }
 
   state = {
     modalVisible: false
@@ -110,7 +108,7 @@ class CardTranslation extends React.Component {
           </TouchableOpacity>
         </Modal>
         <View style={styles.explanationButton}>
-          <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetX={5} offsetY={0}
+          <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.setModalVisible(true)} offsetX={5} offsetY={0}
             size={51} icon={<Icon name='g-translate' color='white' />} />
         </View>
       </View>

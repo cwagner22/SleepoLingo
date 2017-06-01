@@ -4,6 +4,7 @@ import React from 'react'
 import { View, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { Card as CardElem } from 'react-native-elements'
+import FlipCard from 'react-native-flip-card'
 
 import LessonActions from '../Redux/LessonRedux'
 import CardOriginal from '../Components/CardOriginal'
@@ -15,6 +16,10 @@ import { Card } from '../Realm/realm'
 import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
+  state = {
+    flip: false
+  }
+
   componentWillMount () {
     this.props.startLesson()
     this.props.loadNextCard()
@@ -38,28 +43,16 @@ class AnkiScreen extends React.Component {
     }
   }
 
-  renderCard () {
-    if (this.props.lesson.showFront) {
-      return (
-        <CardOriginal text={this.props.currentCard.sentence.original}
-          fullText={this.props.currentCard.fullSentence && this.props.currentCard.fullSentence.original}
-          onPress={() => { this.props.showBack() }} />
-      )
-    } else {
-      return (
-        <CardTranslation cardId={this.props.currentCard.id} sentence={this.props.currentCard.sentence}
-          fullSentence={this.props.currentCard.fullSentence} note={this.props.currentCard.note}
-          onPress={() => { this.props.showFront() }} />
-      )
-    }
-  }
-
   renderFooter () {
     if (this.props.lesson.showAnswer) {
       return (
         <AnkiFooter />
       )
     }
+  }
+
+  flip () {
+    this.setState({flip: !this.state.flip})
   }
 
   render () {
@@ -69,9 +62,24 @@ class AnkiScreen extends React.Component {
 
     return (
       <View style={styles.mainContainer}>
-        <CardElem containerStyle={{flex: 1, padding: 5}} wrapperStyle={{flex: 1}}>
-          {this.renderCard()}
-        </CardElem>
+        <FlipCard style={styles.card}
+          flip={this.state.flip}
+          friction={6}
+          perspective={1000}
+          clickable={false}
+          flipHorizontal
+          flipVertical={false}>
+          <CardElem containerStyle={{flex: 1, padding: 5}} wrapperStyle={{flex: 1}}>
+            <CardOriginal text={this.props.currentCard.sentence.original}
+              fullText={this.props.currentCard.fullSentence && this.props.currentCard.fullSentence.original}
+              onPress={() => this.flip()} />
+          </CardElem>
+          <CardElem containerStyle={{flex: 1, padding: 5}} wrapperStyle={{flex: 1}}>
+            <CardTranslation cardId={this.props.currentCard.id} sentence={this.props.currentCard.sentence}
+              fullSentence={this.props.currentCard.fullSentence} note={this.props.currentCard.note}
+              onPress={() => this.flip()} />
+          </CardElem>
+        </FlipCard>
         {this.renderFooter()}
       </View>
     )
@@ -88,8 +96,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
-    showFront: () => dispatch(LessonActions.lessonShowFront()),
-    showBack: () => dispatch(LessonActions.lessonShowBack()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
     startLesson: () => dispatch(LessonActions.lessonStart())
   }

@@ -1,17 +1,14 @@
 // @flow
 
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { View, Text } from 'react-native'
 
 import styles from './Styles/ExplanationStyle'
 
-type ExplanationProps = {
-  explanation: Object,
-  // onPress: () => void
-}
-
 export default class Explanation extends React.Component {
-  props: ExplanationProps
+  static propTypes = {
+    explanation: PropTypes.array
+  }
 
   renderExplanation () {
     return this.props.explanation.map((e, i) => {

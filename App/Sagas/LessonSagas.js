@@ -99,7 +99,7 @@ export function * loadLesson ({lessonId}) {
 
     Alert.alert(
       'New Lesson',
-      'You\'ve another lesson in progress.',
+      'You have another lesson in progress.',
       [
         {text: 'Start new lesson', onPress: confirm.cb},
         {text: 'Cancel', onPress: cancel.cb}
@@ -117,6 +117,7 @@ export function * loadLesson ({lessonId}) {
     if (res.hasOwnProperty('confirm')) {
       yield put(LessonActions.resetDates())
       yield put(LessonActions.setCurrentLesson(lessonId))
+      yield put(LessonActions.updateCompletedLesson(false))
       yield call(NavigatorService.navigate, 'LessonScreen', {lessonId})
     } else {
       yield call(NavigatorService.reset, 'LessonsListScreen')

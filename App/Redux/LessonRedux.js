@@ -22,7 +22,8 @@ const {Types, Creators} = createActions({
   setCurrentLesson: ['lessonId'],
   setCurrentCard: ['currentCard'],
   // setDate: ['card', 'date'],
-  resetDates: null
+  resetDates: null,
+  lessonUpdateCompleted: ['isCompleted']
 })
 
 export const LessonTypes = Types
@@ -41,6 +42,7 @@ export const INITIAL_STATE = Immutable({
   showAnswer: false,
   showFront: true,
   showDates: {},
+  completedLessons: {},
   lessonLoopCounter: null,
   forcePlay: null,
   translationLoopCounter: null
@@ -134,6 +136,10 @@ const updateCardDate = (state, showDate) => {
   return state.setIn(['showDates', state.currentCardId], showDate.toDate())
 }
 
+const lessonUpdateCompleted = (state, isCompleted) => {
+  return state.setIn(['completedLessons', state.currentCardId], isCompleted)
+}
+
 export const ankiHard = (state) => {
   return updateCardDate(state, moment().add(1, 'm'))
 }
@@ -161,5 +167,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOAD_NEXT_CARD]: loadNextCard,
   [Types.ANKI_HARD]: ankiHard,
   [Types.ANKI_OK]: ankiOk,
-  [Types.ANKI_EASY]: ankiEasy
+  [Types.ANKI_EASY]: ankiEasy,
+  [Types.LESSON_UPDATE_COMPLETED]: lessonUpdateCompleted
 })

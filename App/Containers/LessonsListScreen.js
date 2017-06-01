@@ -87,8 +87,10 @@ class LessonsListScreen extends React.Component {
   }
 
   renderRow (lesson, sectionID) {
+    const isCompleted = !!this.props.completedLessons[lesson.id]
     return (
-      <LessonButton text={lesson.name} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.goToLesson(lesson)} />
+      <LessonButton text={lesson.name} nbLeft={this.nbCardsLeft(lesson)} onPress={() => this.goToLesson(lesson)}
+        isCompleted={isCompleted} />
     )
   }
 
@@ -115,7 +117,8 @@ LessonsListScreen.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    showDates: state.lesson.showDates
+    showDates: state.lesson.showDates,
+    completedLessons: state.lesson.completedLessons
   }
 }
 

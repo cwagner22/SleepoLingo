@@ -26,29 +26,34 @@ class AnkiScreen extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.currentCard !== this.props.currentCard && !nextProps.currentCard) {
-      Alert.alert(
-        'Well done',
-        'No more cards, come back later!',
-        [{
-          text: 'OK',
-          onPress: () => this.props.navigation.reset({
-            index: 0,
-            actions: [
-              this.props.navigation.navigate({routeName: 'LessonsListScreen'})
-            ]
-          })
-        }]
-      )
+    if (nextProps.currentCard !== this.props.currentCard) {
+      this.setState({flip: false})
+
+      if (!nextProps.currentCard) {
+        this.props.lessonUpdateCompleted(true)
+        Alert.alert(
+          'Well done',
+          'No more cards, come back later!',
+          [{
+            text: 'OK',
+            onPress: () => this.props.navigation.reset({
+              index: 0,
+              actions: [
+                this.props.navigation.navigate({routeName: 'LessonsListScreen'})
+              ]
+            })
+          }]
+        )
+      }
     }
   }
 
   renderFooter () {
-    if (this.props.lesson.showAnswer) {
-      return (
-        <AnkiFooter />
-      )
-    }
+    // if (this.props.lesson.showAnswer) {
+    return (
+      <AnkiFooter />
+    )
+    // }
   }
 
   flip () {
@@ -64,9 +69,9 @@ class AnkiScreen extends React.Component {
       <View style={styles.mainContainer}>
         <FlipCard style={styles.card}
           flip={this.state.flip}
-          friction={6}
-          perspective={1000}
-          clickable={false}
+          friction={15}
+          perspective={1500}
+          clickable
           flipHorizontal
           flipVertical={false}>
           <CardElem containerStyle={{flex: 1, padding: 5}} wrapperStyle={{flex: 1}}>
@@ -97,7 +102,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
-    startLesson: () => dispatch(LessonActions.lessonStart())
+    startLesson: () => dispatch(LessonActions.lessonStart()),
+    lessonUpdateCompleted: (isCompleted) => dispatch(LessonActions.lessonUpdateCompleted(isCompleted))
   }
 }
 

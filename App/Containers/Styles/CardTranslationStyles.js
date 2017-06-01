@@ -20,11 +20,8 @@ export default StyleSheet.create({
     padding: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
-  explanationButton: {
-    marginTop: -25
-  },
   translationContainer: {
-    minHeight: '50%',
+    minHeight: '40%',
     flex: -1,
     justifyContent: 'center'
   },

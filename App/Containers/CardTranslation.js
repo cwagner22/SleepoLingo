@@ -52,6 +52,10 @@ class CardTranslation extends React.Component {
           transliteration={this.props.sentence.transliteration}
           onPress={() => this.speakText(this.props.sentence.translation)} />
         {this.renderFullTranslation()}
+        <View style={styles.explanationButton}>
+          <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.setModalVisible(true)} offsetX={5} offsetY={0}
+            size={51} icon={<Icon name='g-translate' color='white' />} />
+        </View>
       </View>
     )
   }
@@ -107,10 +111,6 @@ class CardTranslation extends React.Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        <View style={styles.explanationButton}>
-          <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.setModalVisible(true)} offsetX={5} offsetY={0}
-            size={51} icon={<Icon name='g-translate' color='white' />} />
-        </View>
       </View>
     )
   }
@@ -125,7 +125,7 @@ class CardTranslation extends React.Component {
         <View style={{flex: 1}}>
           {this.renderTranslation()}
           {this.renderExplanation()}
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, zIndex: -1}}>
             {this.renderImage()}
             {this.renderNote()}
           </View>

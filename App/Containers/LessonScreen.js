@@ -3,11 +3,12 @@
 import React from 'react'
 import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
-import { Card, Button, Icon } from 'react-native-elements'
+import { Card, Icon } from 'react-native-elements'
 import ActionButton from 'react-native-action-button'
 
 import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
+import RoundedButton from '../Components/RoundedButton'
 
 // Styles
 import styles from './Styles/LessonScreenStyles'
@@ -33,7 +34,9 @@ class LessonScreen extends React.Component {
             <Text style={styles.componentLabel}>{lesson.note}</Text>
           </ScrollView>
           <View>
-            <Button title='START STUDY' buttonStyle={styles.button} onPress={() => this.startDay()} />
+            <RoundedButton onPress={() => this.startDay()} styles={styles.button}>
+              START STUDY
+            </RoundedButton>
           </View>
         </Card>
         <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetY={85}

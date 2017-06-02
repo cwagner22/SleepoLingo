@@ -27,8 +27,13 @@ class AnkiFooter extends React.Component {
   }
 
   render () {
+    let answerStyles = {}
+    if (!this.props.showAnswer) {
+      answerStyles.opacity = 0
+    }
+
     return (
-      <View style={styles.ankiFooter}>
+      <View style={[styles.ankiFooter, answerStyles]} pointerEvents={this.props.showAnswer ? 'auto' : 'none'}>
         <AnkiButton styles={styles.ankiHard} text='Hard' subText='(1 min)' onPress={() => this.hard()} />
         <AnkiButton styles={styles.ankiOk} text='OK' subText='(10 mins)' onPress={() => this.ok()} />
         <AnkiButton styles={styles.ankiEasy} text='Easy' subText='(1 day)' onPress={() => this.easy()} />
@@ -39,7 +44,8 @@ class AnkiFooter extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentWord: state.lesson.currentWord
+    currentWord: state.lesson.currentWord,
+    showAnswer: state.lesson.showAnswer
   }
 }
 

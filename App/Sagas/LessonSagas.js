@@ -7,6 +7,7 @@ import { Alert } from 'react-native'
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
 import NavigatorService from '../Services/Navigator'
+import { navigateToAnki, navigateToLesson } from '../Navigation/NavigationActions'
 
 const api = API.create()
 
@@ -117,32 +118,24 @@ export function * loadLesson ({lessonId}) {
     if (res.hasOwnProperty('confirm')) {
       yield put(LessonActions.resetDates())
       yield put(LessonActions.setCurrentLesson(lessonId))
-      yield put(LessonActions.updateCompletedLesson(false))
-      yield call(NavigatorService.navigate, 'LessonScreen', {lessonId})
+      yield put(LessonActions.lessonUpdateCompleted(false))
+      // yield call(NavigatorService.navigate, 'LessonScreen', {lessonId})
+      yield put(navigateToLesson())
     } else {
       yield call(NavigatorService.reset, 'LessonsListScreen')
     }
   } else {
     yield put(LessonActions.setCurrentLesson(lessonId))
-    yield call(NavigatorService.navigate, 'LessonScreen')
+    // yield call(NavigatorService.navigate, 'LessonScreen')
+    yield put(navigateToLesson())
     // yield put(NavigationActions.navigate({ routeName: 'LessonScreen', params: {lesson} }))
   }
 }
 
-// function * updateCardDate (date) {
-//   const currentCard = yield select(getCurrentCard)
-//   // yield call(setDate, currentCard, date)
-//   yield put(LessonActions.setDate(currentCard.id, date.toDate()))
-// }
-//
-// export function * ankiHard () {
-//   yield call(updateCardDate, moment().add(1, 'm'))
-// }
-//
-// export function * ankiOk () {
-//   yield call(updateCardDate, moment().add(10, 'm'))
-// }
-//
-// export function * ankiEasy () {
-//   yield call(updateCardDate, moment().add(1, 'd'))
-// }
+// Moved the dispatched actions from componentWillMount since the reducers were loaded too late. (mapStateToProps,
+// componentWillReceiveProps and render already called)
+export function * startAnki () {
+  yield put(LessonActions.lessonStart())
+  yield put(LessonActions.loadNextCard())
+  yield put(navigateToAnki())
+}

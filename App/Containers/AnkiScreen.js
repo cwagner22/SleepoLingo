@@ -3,33 +3,32 @@
 import React from 'react'
 import { View, Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Card as CardElem } from 'react-native-elements'
-import FlipCard from 'react-native-flip-card'
+import Swiper from 'react-native-swiper-animated'
 
 import LessonActions from '../Redux/LessonRedux'
-import CardOriginal from '../Components/CardOriginal'
-import CardTranslation from './CardTranslation'
 import AnkiFooter from './AnkiFooter'
-import { Card } from '../Realm/realm'
+import AnkiCard from '../Components/AnkiCard'
+import { Lesson } from '../Realm/realm'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
-  state = {
-    flip: false
-  }
-
   componentWillMount () {
-    this.props.startLesson()
-    this.props.loadNextCard()
+    this.props.navigation.setParams({
+      title: this.props.lessonName
+    })
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.currentCard !== this.props.currentCard) {
-      this.setState({flip: false})
+    if (nextProps.currentCardId !== this.props.currentCardId) {
+      // Next card
+      if (this.props.currentCardId) {
+        // todo: create jumpToIndexAnimated
+        this.swiper.jumpToIndex(this.props.cardIds.indexOf(nextProps.currentCardId))
+      }
 
-      if (!nextProps.currentCard) {
+      if (!nextProps.currentCardId) {
         this.props.lessonUpdateCompleted(true)
         Alert.alert(
           'Well done',
@@ -48,53 +47,35 @@ class AnkiScreen extends React.Component {
     }
   }
 
-  renderFooter () {
-    // if (this.props.lesson.showAnswer) {
-    return (
-      <AnkiFooter />
-    )
-    // }
-  }
-
-  flip () {
-    this.setState({flip: !this.state.flip})
-  }
+  swiper = null
 
   render () {
-    if (!this.props.currentCard) {
-      return null
-    }
-
     return (
-      <View style={styles.mainContainer}>
-        <FlipCard style={styles.card}
-          flip={this.state.flip}
-          friction={15}
-          perspective={1500}
-          clickable
-          flipHorizontal
-          flipVertical={false}>
-          <CardElem containerStyle={{flex: 1, padding: 5}} wrapperStyle={{flex: 1}}>
-            <CardOriginal text={this.props.currentCard.sentence.original}
-              fullText={this.props.currentCard.fullSentence && this.props.currentCard.fullSentence.original}
-              onPress={() => this.flip()} />
-          </CardElem>
-          <CardElem containerStyle={{flex: 1, padding: 5}} wrapperStyle={{flex: 1}}>
-            <CardTranslation cardId={this.props.currentCard.id} sentence={this.props.currentCard.sentence}
-              fullSentence={this.props.currentCard.fullSentence} note={this.props.currentCard.note}
-              onPress={() => this.flip()} />
-          </CardElem>
-        </FlipCard>
-        {this.renderFooter()}
+      <View style={{flex: 1}}>
+        <Swiper
+          ref={(swiper) => {
+            this.swiper = swiper
+          }}
+          style={styles.wrapper}
+          showPagination={false}
+        >
+          {this.props.cardIds.map(cardId => (
+            <AnkiCard cardId={cardId} key={cardId} />
+          ))}
+        </Swiper>
+        <AnkiFooter />
       </View>
     )
   }
 }
 
 const mapStateToProps = (state) => {
+  const lesson = Lesson.getFromId(state.lesson.currentLessonId)
   return {
     lesson: state.lesson,
-    currentCard: state.lesson.currentCardId ? Card.getFromId(state.lesson.currentCardId) : null
+    lessonName: lesson.name,
+    currentCardId: state.lesson.currentCardId,
+    cardIds: lesson.cards.map(c => c.id)
   }
 }
 
@@ -102,6 +83,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
+    loadNextCards: () => dispatch(LessonActions.loadNextCards()),
     startLesson: () => dispatch(LessonActions.lessonStart()),
     lessonUpdateCompleted: (isCompleted) => dispatch(LessonActions.lessonUpdateCompleted(isCompleted))
   }

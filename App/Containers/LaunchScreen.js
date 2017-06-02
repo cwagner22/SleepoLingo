@@ -1,17 +1,19 @@
 import React from 'react'
 import { ScrollView, Text, Image, View } from 'react-native'
+import { connect } from 'react-redux'
 
 import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
 import RoundedButton from '../Components/RoundedButton'
+import { navigateToLessons } from '../Navigation/NavigationActions'
 
 import { Images } from '../Themes'
 
 // Styles
 import styles from './Styles/LaunchScreenStyles'
 
-export default class LaunchScreen extends React.Component {
+class LaunchScreen extends React.Component {
   openLessonsList = () => {
-    this.props.navigation.navigate('LessonsListScreen')
+    this.props.navigateToLessons()
   }
 
   openImport = () => {
@@ -48,3 +50,11 @@ export default class LaunchScreen extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    navigateToLessons: (lessonId) => dispatch(navigateToLessons(lessonId))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(LaunchScreen)

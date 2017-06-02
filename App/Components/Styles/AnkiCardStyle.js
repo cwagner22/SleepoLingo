@@ -5,7 +5,7 @@ import { ApplicationStyles } from '../../Themes/'
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
-  wrapper: {
-    backgroundColor: 'transparent'
+  card: {
+    borderWidth: 0
   }
 })

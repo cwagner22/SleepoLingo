@@ -46,7 +46,8 @@ class LessonScreen extends React.Component {
   }
 
   startDay () {
-    this.props.navigation.navigate('AnkiScreen', {title: this.props.lesson.name})
+    this.props.startAnki()
+    // this.props.navigation.navigate('AnkiScreen', {title: this.props.lesson.name})
   }
 
   startNight () {
@@ -62,7 +63,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words))
+    downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words)),
+    startAnki: () => dispatch(LessonActions.lessonStartAnki())
   }
 }
 

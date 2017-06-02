@@ -25,7 +25,7 @@ export const Lessons = StackNavigator({
   AnkiScreen: {
     screen: AnkiScreen,
     navigationOptions: ({navigation}) => ({
-      title: navigation.state.params.title
+      title: navigation.state.params && navigation.state.params.title
     })
   },
   PlaybackScreen: {
@@ -80,7 +80,7 @@ const PrimaryNav = StackNavigator({
 
 export default PrimaryNav
 
-// export const reducer = (state, action) => {
-//   const newState = PrimaryNav.router.getStateForAction(action, state)
-//   return newState || state
-// }
+export const reducer = (state, action) => {
+  const newState = PrimaryNav.router.getStateForAction(action, state)
+  return newState || state
+}

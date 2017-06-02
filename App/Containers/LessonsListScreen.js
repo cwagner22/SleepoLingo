@@ -9,6 +9,7 @@ import RNFS from 'react-native-fs'
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
 import { LessonGroup } from '../Realm/realm'
+import { navigateToLesson } from '../Navigation/NavigationActions'
 // import store from '../store'
 
 // Styles
@@ -67,6 +68,7 @@ class LessonsListScreen extends React.Component {
 
   goToLesson (lesson) {
     this.props.loadLesson(lesson.id)
+    // this.props.navigateToLesson(lesson.id)
   }
 
   renderHeader (data, sectionID) {
@@ -124,7 +126,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson))
+    loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson)),
+    navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
   }
 }
 

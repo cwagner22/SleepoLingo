@@ -17,7 +17,7 @@ import { ImportTypes } from '../Redux/ImportRedux'
 import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getUserAvatar } from './GithubSagas'
-import { downloadLesson, loadLesson } from './LessonSagas'
+import { downloadLesson, loadLesson, startAnki } from './LessonSagas'
 import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
 import { importStart } from './ImportSagas'
 
@@ -37,6 +37,7 @@ export default function * root () {
 
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
+    takeLatest(LessonTypes.LESSON_START_ANKI, startAnki),
 
     takeLatest(PlaybackTypes.PLAYBACK_START, play),
     takeLatest(PlaybackTypes.PLAYER_START, start),

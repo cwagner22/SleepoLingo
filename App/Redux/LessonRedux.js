@@ -16,6 +16,7 @@ const {Types, Creators} = createActions({
   lessonShowFront: null,
   lessonShowBack: null,
   loadNextCard: null,
+  loadNextCards: null,
   nextCardLoaded: ['card'],
   downloadLesson: ['currentCards'],
   loadLesson: ['lessonId'],
@@ -23,7 +24,8 @@ const {Types, Creators} = createActions({
   setCurrentCard: ['currentCard'],
   // setDate: ['card', 'date'],
   resetDates: null,
-  lessonUpdateCompleted: ['isCompleted']
+  lessonUpdateCompleted: ['isCompleted'],
+  lessonStartAnki: null
 })
 
 export const LessonTypes = Types
@@ -107,7 +109,8 @@ export const resetDates = (state) => {
 // }
 
 function sortCards (state, cards, allowAlmost = false) {
-  var sortedCardsReady = _.sortBy(cards, [(c) => state.showDates[c.id], 'index'])
+  // var sortedCardsReady = _.sortBy(cards, [(c) => state.showDates[c.id], 'index'])
+  var sortedCardsReady = _.sortBy(cards, [(c) => c.isReady(state.showDates, allowAlmost), 'index'])
     .filter((card) => {
       // Exclude future cards
       return card.isReady(state.showDates, allowAlmost)
@@ -129,6 +132,17 @@ export const loadNextCard = (state) => {
     showAnswer: false,
     showFront: true,
     currentCardId
+  })
+}
+
+export const loadNextCards = (state) => {
+  const currentLesson = Lesson.getFromId(state.currentLessonId)
+  const sortedCards = sortCards(state, currentLesson.cards, false)
+
+  return state.merge({
+    showAnswer: false,
+    showFront: true,
+    cards: sortedCards.map(c => c.id)
   })
 }
 
@@ -165,6 +179,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.RESET_DATES]: resetDates,
   // [Types.SET_DATE]: setDate
   [Types.LOAD_NEXT_CARD]: loadNextCard,
+  [Types.LOAD_NEXT_CARDS]: loadNextCards,
   [Types.ANKI_HARD]: ankiHard,
   [Types.ANKI_OK]: ankiOk,
   [Types.ANKI_EASY]: ankiEasy,

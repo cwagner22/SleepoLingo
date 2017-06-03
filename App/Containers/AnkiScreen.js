@@ -24,8 +24,7 @@ class AnkiScreen extends React.Component {
     if (nextProps.currentCardId !== this.props.currentCardId) {
       // Next card
       if (this.props.currentCardId) {
-        // todo: create jumpToIndexAnimated
-        this.swiper.jumpToIndex(this.props.cardIds.indexOf(nextProps.currentCardId))
+        this.swiper.jumpToIndex(this.props.cardIds.indexOf(nextProps.currentCardId), true)
       }
 
       if (!nextProps.currentCardId) {

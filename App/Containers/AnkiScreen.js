@@ -58,6 +58,8 @@ class AnkiScreen extends React.Component {
           }}
           style={styles.wrapper}
           showPagination={false}
+          swiper={false}
+          index={this.props.cardIds.indexOf(this.props.currentCardId)}
         >
           {this.props.cardIds.map(cardId => (
             <AnkiCard cardId={cardId} key={cardId} />

@@ -29,5 +29,8 @@ export default StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#fff',
     padding: 20
+  },
+  explanationButton: {
+    marginTop: -12
   }
 })

@@ -14,23 +14,9 @@ export default StyleSheet.create({
   note: {
     padding: 5
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
-  },
   translationContainer: {
     minHeight: '40%',
     flex: -1,
     justifyContent: 'center'
-  },
-  innerExplanationContainer: {
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    padding: 20
-  },
-  explanationButton: {
-    marginTop: -12
   }
 })

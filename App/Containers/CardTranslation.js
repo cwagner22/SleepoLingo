@@ -3,23 +3,15 @@
 import React, { PropTypes } from 'react'
 import {
   View,
-  TouchableWithoutFeedback,
   Image,
-  Text,
-  Modal,
-  TouchableOpacity
+  Text
 } from 'react-native'
 import { connect } from 'react-redux'
-import { Icon } from 'react-native-elements'
-import ActionButton from 'react-native-action-button'
 
 import LessonActions from '../Redux/LessonRedux'
 import PlaybackActions from '../Redux/PlaybackRedux'
-import TranslationText from '../Components/TranslationText'
-import Explanation from '../Components/Explanation'
-import { Colors } from '../Themes'
+import TranslationText from './TranslationText'
 import images from '../Lessons/images/images'
-import { Word } from '../Realm/realm'
 
 // Styles
 import styles from './Styles/CardTranslationStyles'
@@ -33,29 +25,20 @@ class CardTranslation extends React.Component {
     onPress: PropTypes.func
   }
 
-  state = {
-    modalVisible: false
-  }
-
   componentWillMount () {
     this.props.showAnswer()
   }
 
-  speakText (sentence) {
-    this.props.play(sentence, 'th-TH', 1, 0.7)
-  }
-
   renderTranslation () {
+    const {sentence, fullSentence} = this.props
+
     return (
       <View style={styles.translationContainer}>
-        <TranslationText translation={this.props.sentence.translation}
-          transliteration={this.props.sentence.transliteration}
-          onPress={() => this.speakText(this.props.sentence.translation)} />
+        <TranslationText translation={sentence.translation}
+          transliteration={sentence.transliteration}
+          showExplanation={!fullSentence}
+          />
         {this.renderFullTranslation()}
-        <View style={styles.explanationButton}>
-          <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.setModalVisible(true)} offsetX={5} offsetY={0}
-            size={51} icon={<Icon name='g-translate' color='white' />} />
-        </View>
       </View>
     )
   }
@@ -66,7 +49,8 @@ class CardTranslation extends React.Component {
       return (
         <TranslationText translation={fullSentence.translation}
           transliteration={fullSentence.transliteration}
-          onPress={() => this.speakText(fullSentence.translation)} />
+          showExplanation
+        />
       )
     }
   }
@@ -86,51 +70,17 @@ class CardTranslation extends React.Component {
     }
   }
 
-  renderExplanation () {
-    let explanation = []
-    const sentence = this.props.fullSentence || this.props.sentence
-    const words = sentence.translation.split(' ')
-    for (const wordStr of words) {
-      // todo: look for custom explanation
-      let word = Word.getWord(wordStr)
-      explanation.push(word || wordStr)
-    }
-
-    return (
-      <View>
-        <Modal
-          animationType={'none'}
-          transparent
-          visible={this.state.modalVisible}
-          onRequestClose={() => { this.setModalVisible(false) }}
-        >
-          <TouchableOpacity style={styles.modalContainer} activeOpacity={0.7}
-            onPressOut={() => { this.setModalVisible(false) }}>
-            <View style={styles.innerExplanationContainer}>
-              <Explanation explanation={explanation} />
-            </View>
-          </TouchableOpacity>
-        </Modal>
-      </View>
-    )
-  }
-
-  setModalVisible (visible) {
-    this.setState({modalVisible: visible})
-  }
-
   render () {
     return (
-      <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
+      <View style={styles.container}>
         <View style={{flex: 1}}>
           {this.renderTranslation()}
-          {this.renderExplanation()}
-          <View style={{flex: 1, zIndex: -1}}>
+          <View style={{flex: 1}}>
             {this.renderImage()}
             {this.renderNote()}
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     )
   }
 }

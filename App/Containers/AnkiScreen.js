@@ -55,7 +55,7 @@ class AnkiScreen extends React.Component {
   swiper = null
 
   render () {
-    if (!this.props.currentCard) {
+    if (!this.props.currentCardId) {
       return this.renderNoCards()
     }
     return (
@@ -67,7 +67,7 @@ class AnkiScreen extends React.Component {
           style={styles.wrapper}
           showPagination={false}
           swiper={false}
-          // index={this.currentCardIndex()}
+          index={this.currentCardIndex()}
           backPressToBack={false}
         >
           {this.props.cardIds.map(cardId => (

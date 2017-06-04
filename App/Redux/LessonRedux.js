@@ -22,7 +22,6 @@ const {Types, Creators} = createActions({
   loadLesson: ['lessonId'],
   setCurrentLesson: ['lessonId'],
   setCurrentCard: ['currentCard'],
-  // setDate: ['card', 'date'],
   resetDates: null,
   lessonUpdateCompleted: ['isCompleted'],
   lessonStartAnki: null
@@ -54,10 +53,8 @@ export const INITIAL_STATE = Immutable({
 
 export const setCurrentLesson = (state, {lessonId}) => {
   return state.merge({
-    // currentLesson: lesson
     currentLessonId: lessonId
   })
-  // return Object.assign(state.currentLesson, lesson);
 }
 
 export const startLesson = (state) => {
@@ -83,15 +80,6 @@ export const showBack = (state) => {
   return state.merge({showFront: false})
 }
 
-// export const nextCardLoaded = (state, {card}) => {
-//   return state.merge({
-//     showAnswer: false,
-//     showFront: true,
-//     // currentCard: card
-//     currentCardId: card.id
-//   })
-// }
-
 export const setCurrentCard = (state, {currentCard}) => {
   return state.merge({
     currentCard
@@ -103,10 +91,6 @@ export const resetDates = (state) => {
     showDates: {}
   })
 }
-
-// export const setDate = (state, {cardId, showDate}) => {
-//   return state.setIn(['showDates', cardId], showDate.toDate())
-// }
 
 function sortCards (state, cards, allowAlmost = false) {
   // var sortedCardsReady = _.sortBy(cards, [(c) => state.showDates[c.id], 'index'])
@@ -127,6 +111,10 @@ export const loadNextCard = (state) => {
   const currentLesson = Lesson.getFromId(state.currentLessonId)
   const sortedCards = sortCards(state, currentLesson.cards, false)
   const currentCardId = sortedCards.length ? sortedCards[0].id : null
+
+  if (!currentCardId) {
+    state = lessonUpdateCompleted(state, true)
+  }
 
   return state.merge({
     showAnswer: false,
@@ -150,8 +138,8 @@ const updateCardDate = (state, showDate) => {
   return state.setIn(['showDates', state.currentCardId], showDate.toDate())
 }
 
-const lessonUpdateCompleted = (state, isCompleted) => {
-  return state.setIn(['completedLessons', state.currentCardId], isCompleted)
+const lessonUpdateCompleted = (state, {isCompleted}) => {
+  return state.setIn(['completedLessons', state.currentLessonId], isCompleted)
 }
 
 export const ankiHard = (state) => {

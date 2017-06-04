@@ -6,13 +6,13 @@ import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
-import NavigatorService from '../Services/Navigator'
 import { navigateToAnki, navigateToLesson } from '../Navigation/NavigationActions'
 
 const api = API.create()
 
 // const getCurrentLesson = (state) => state.lesson.currentLesson
 const getCurrentLessonId = (state) => state.lesson.currentLessonId
+const isCompleted = (state, lessonId) => !!state.lesson.completedLessons[lessonId]
 
 const getFilePath = (sentence, language) => {
   const fileName = md5Hex(sentence) + '.mp3'
@@ -91,10 +91,45 @@ function bindCallbackToPromise () {
   }
 }
 
+function * processLessonAlert (res, lessonId) {
+  if (res.hasOwnProperty('confirm')) {
+    yield put(LessonActions.resetDates())
+    yield put(LessonActions.setCurrentLesson(lessonId))
+    yield put(LessonActions.lessonUpdateCompleted(false))
+    yield put(navigateToLesson())
+  } else {
+    // yield call(NavigatorService.reset, 'LessonsListScreen')
+  }
+}
+
 export function * loadLesson ({lessonId}) {
-  // Reset cards if new lesson
   const currentLessonId = yield select(getCurrentLessonId)
-  if (lessonId !== currentLessonId) {
+  const completed = yield select(isCompleted, lessonId)
+  const currentLessonCompleted = yield select(isCompleted, currentLessonId)
+
+  if (completed) {
+    const cancel = bindCallbackToPromise()
+    const confirm = bindCallbackToPromise()
+
+    Alert.alert(
+      'Lesson Completed',
+      'You have already completed this lesson.',
+      [
+        {text: 'Start again', onPress: confirm.cb},
+        {text: 'Cancel', onPress: cancel.cb}
+      ]
+    )
+
+    // The race will wait for either the cancel or confirm callback to be invoked - which skirts
+    // around the problem of trying to "put" from within a callback: don't put an event, instead
+    // rely strictly on the resolution of a promise
+    const res = yield race({
+      cancel: call(cancel.promise),
+      confirm: call(confirm.promise)
+    })
+
+    yield call(processLessonAlert, res, lessonId)
+  } else if (!currentLessonCompleted && lessonId !== currentLessonId) {
     const cancel = bindCallbackToPromise()
     const confirm = bindCallbackToPromise()
 
@@ -115,20 +150,10 @@ export function * loadLesson ({lessonId}) {
       confirm: call(confirm.promise)
     })
 
-    if (res.hasOwnProperty('confirm')) {
-      yield put(LessonActions.resetDates())
-      yield put(LessonActions.setCurrentLesson(lessonId))
-      yield put(LessonActions.lessonUpdateCompleted(false))
-      // yield call(NavigatorService.navigate, 'LessonScreen', {lessonId})
-      yield put(navigateToLesson())
-    } else {
-      yield call(NavigatorService.reset, 'LessonsListScreen')
-    }
+    yield call(processLessonAlert, res, lessonId)
   } else {
     yield put(LessonActions.setCurrentLesson(lessonId))
-    // yield call(NavigatorService.navigate, 'LessonScreen')
     yield put(navigateToLesson())
-    // yield put(NavigationActions.navigate({ routeName: 'LessonScreen', params: {lesson} }))
   }
 }
 

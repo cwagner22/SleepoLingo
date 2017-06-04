@@ -57,17 +57,6 @@ export const setCurrentLesson = (state, {lessonId}) => {
   })
 }
 
-export const startLesson = (state) => {
-  return state.merge({
-    showAnswer: false,
-    // currentCard: null,
-    currentCardId: null,
-    lessonLoopCounter: 0,
-    translationLoopCounter: 0,
-    playingState: null
-  })
-}
-
 export const showAnswer = (state) => {
   return state.merge({showAnswer: true})
 }
@@ -112,11 +101,12 @@ export const loadNextCard = (state) => {
   const sortedCards = sortCards(state, currentLesson.cards, false)
   const currentCardId = sortedCards.length ? sortedCards[0].id : null
 
+  let newState = state
   if (!currentCardId) {
-    state = lessonUpdateCompleted(state, true)
+    newState = lessonUpdateCompleted(state, {isCompleted: true})
   }
 
-  return state.merge({
+  return newState.merge({
     showAnswer: false,
     showFront: true,
     currentCardId
@@ -157,7 +147,7 @@ export const ankiEasy = (state) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.LESSON_START]: startLesson,
+  // [Types.LESSON_START]: startLesson,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,

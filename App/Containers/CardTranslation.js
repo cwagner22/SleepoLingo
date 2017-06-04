@@ -4,7 +4,8 @@ import React, { PropTypes } from 'react'
 import {
   View,
   Image,
-  Text
+  Text,
+  TouchableWithoutFeedback
 } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -72,15 +73,15 @@ class CardTranslation extends React.Component {
 
   render () {
     return (
-      <View style={styles.container}>
+      <TouchableWithoutFeedback style={styles.container} onPress={() => this.props.onPress()}>
         <View style={{flex: 1}}>
           {this.renderTranslation()}
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, zIndex: -1}}>
             {this.renderImage()}
             {this.renderNote()}
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     )
   }
 }

@@ -53,7 +53,8 @@ class TranslationText extends React.Component {
           </TouchableOpacity>
         </Modal>
         <View style={styles.explanationButton}>
-          <Icon name='g-translate' reverse color={Colors.easternBlue} size={15} iconStyle={styles.explanationIcon} />
+          <Icon name='g-translate' reverse color={Colors.easternBlue} size={23} iconStyle={styles.explanationIcon}
+            onPress={() => this.setModalVisible(true)} />
         </View>
       </View>
     )

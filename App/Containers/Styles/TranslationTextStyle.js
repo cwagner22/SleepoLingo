@@ -20,11 +20,12 @@ export default StyleSheet.create({
   explanationButton: {
     alignItems: 'flex-end',
     position: 'absolute',
-    bottom: -30,
-    right: 0
+    bottom: -45,
+    right: 0,
+    zIndex: 99 // Probably don't need that
   },
   explanationIcon: {
-    fontSize: 17
+    fontSize: 25
   },
   modalContainer: {
     flex: 1,

@@ -5,11 +5,12 @@ import { TouchableHighlight, View, Text, Modal, TouchableOpacity } from 'react-n
 import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 
-import styles from './Styles/TranslationTextStyle'
 import { Colors } from '../Themes/index'
 import PlaybackActions from '../Redux/PlaybackRedux'
 import { Word } from '../Realm/realm'
 import Explanation from '../Components/Explanation'
+
+import styles from './Styles/TranslationTextStyle'
 
 class TranslationText extends React.Component {
   static propTypes = {

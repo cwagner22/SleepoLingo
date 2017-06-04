@@ -9,8 +9,6 @@ import RNFS from 'react-native-fs'
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
 import { LessonGroup } from '../Realm/realm'
-import { navigateToLesson } from '../Navigation/NavigationActions'
-// import store from '../store'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
@@ -126,8 +124,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson)),
-    navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
+    loadLesson: (lesson) => dispatch(LessonActions.loadLesson(lesson))
+    // navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
   }
 }
 

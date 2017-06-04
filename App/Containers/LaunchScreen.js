@@ -53,7 +53,7 @@ class LaunchScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    navigateToLessons: (lessonId) => dispatch(navigateToLessons(lessonId))
+    navigateToLessons: () => dispatch(navigateToLessons())
   }
 }
 

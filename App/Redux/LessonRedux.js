@@ -117,7 +117,7 @@ function sortCards (state, cards, allowAlmost = false) {
     })
 
   if (!sortedCardsReady.length && !allowAlmost) {
-    return this.sortCards(state, cards, true)
+    return sortCards(state, cards, true)
   } else {
     return sortedCardsReady
   }

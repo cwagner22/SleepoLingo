@@ -15,7 +15,8 @@ const { Types, Creators } = createActions({
   playerStart: null,
   playerNext: null,
   playerPrev: null,
-  playerReady: null
+  playerReady: null,
+  setPlayingState: ['playingState']
 })
 
 export const PlaybackTypes = Types
@@ -27,14 +28,17 @@ export const INITIAL_STATE = Immutable({
   volume: 1,
   speed: 1,
   isPaused: true,
-  playing: false
-  // finished: false
+  playing: false,
+  playingState: null
 })
 
 /* ------------- Reducers ------------- */
 
 export const init = (state, { volume }: Object) => {
-  return state.merge({ lessonLoopIndex: 0 })
+  return state.merge({
+    lessonLoopIndex: 0,
+    playingState: null
+  })
 }
 
 export const changeVolume = (state, { volume }: Object) => {
@@ -65,6 +69,10 @@ export const start = (state, { language }) => {
   return state.merge({ playing: true })
 }
 
+export const setPlayingState = (state, { playingState }) => {
+  return state.merge({ playingState })
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -74,5 +82,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLAYBACK_INIT]: init,
   [Types.PLAYBACK_SUCCESS]: success,
   [Types.PLAYBACK_ERROR]: error,
-  [Types.PLAYBACK_START]: start
+  [Types.PLAYBACK_START]: start,
+  [Types.SET_PLAYING_STATE]: setPlayingState
 })

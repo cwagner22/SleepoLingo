@@ -1,5 +1,5 @@
-import { call, put, fork, select, cancel, cancelled } from 'redux-saga/effects'
-import { delay, takeLatest } from 'redux-saga'
+import { call, put, fork, select, cancel, cancelled, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 
 import Player from '../Services/Player'
 import loadSound from '../Services/Sound'
@@ -57,6 +57,7 @@ function * playCard () {
   const sentenceStr = translation ? sentence.translation : sentence.original
   const language = translation ? 'th-TH' : 'en-US'
 
+  yield put(PlaybackActions.setPlayingState(playingState))
   yield call(play, sentenceStr, language, this.volume * volume, this.speed * speed)
 }
 
@@ -104,26 +105,31 @@ export function * loadCard (next: true) {
   const lessonState = yield select(getLessonState)
   const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
   const currentCards = currentLesson.cards
-
-  var currentIndex = currentCards.findIndex((c) => c.id === lessonState.currentCardId)
   let currentCardId
 
-  if (next) {
-    if (++currentIndex >= currentCards.length) {
-      // if (allowRestart) {
-      // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
-      lessonLoopCounter++
-      currentIndex = 0
-      // } else {
-      //   index = currentCards.length - 1
-      // }
-      // } else {
-      //
-      // }
-    }
-    currentCardId = currentCards[Math.max(0, currentIndex)].id
+  if (!lessonState.currentCardId) {
+    // Init
+    currentCardId = currentCards[0].id
   } else {
-    currentCardId = currentCards[Math.max(0, --currentIndex)].id
+    var currentIndex = currentCards.findIndex((c) => c.id === lessonState.currentCardId)
+
+    if (next) {
+      if (++currentIndex >= currentCards.length) {
+        // if (allowRestart) {
+        // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
+        lessonLoopCounter++
+        currentIndex = 0
+        // } else {
+        //   index = currentCards.length - 1
+        // }
+        // } else {
+        //
+        // }
+      }
+      currentCardId = currentCards[Math.max(0, currentIndex)].id
+    } else {
+      currentCardId = currentCards[Math.max(0, --currentIndex)].id
+    }
   }
 
   yield put(LessonActions.setCurrentCard(currentCardId))

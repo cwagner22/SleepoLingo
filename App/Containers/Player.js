@@ -4,14 +4,13 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
-import Sound from 'react-native-sound'
 import BackgroundTimer from 'react-native-background-timer'
 
 import VolumeSlider from '../Components/VolumeSlider'
 import SpeedSlider from '../Components/SpeedSlider'
-import API from '../Services/TranslateApi'
 import PlaybackActions from '../Redux/PlaybackRedux'
-import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
+import LessonActions from '../Redux/LessonRedux'
+import { LESSON_LOOP_MAX } from '../Sagas/PlaybackSagas'
 import { Lesson, Card } from '../Realm/realm'
 
 // Styles
@@ -20,20 +19,8 @@ import { Lesson, Card } from '../Realm/realm'
 const TRANSLATION_LOOP_MAX = 3
 
 class PlayerScreen extends React.Component {
-  constructor (props: Object) {
-    super(props)
-    this.api = API.create()
-    this.state = {
-      // Set your state here
-    }
-    this._cancelablePromise = null
-    this._ttsDeferred = null
-
-    // Enable playback in silence mode (iOS only)
-    Sound.setCategory('Playback', true)
-
+  componentWillMount () {
     this.scheduleTimer()
-
     this.props.playerStart()
   }
 
@@ -164,7 +151,7 @@ const mapStateToProps = (state) => {
     sameWord: state.lesson.sameWord,
     isPaused: state.playback.isPaused,
     playback: state.playback,
-    currentCard: Card.getFromId(state.lesson.currentCardId),
+    currentCard: state.lesson.currentCardId && Card.getFromId(state.lesson.currentCardId),
     currentCards: currentLesson.cards
   }
 }

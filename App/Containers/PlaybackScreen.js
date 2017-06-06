@@ -5,7 +5,8 @@ import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 
 import Player from './Player'
-import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
+import LessonActions from '../Redux/LessonRedux'
+import { LESSON_LOOP_MAX } from '../Sagas/PlaybackSagas'
 import { Lesson, Card } from '../Realm/realm'
 
 // Styles
@@ -17,15 +18,15 @@ class PlaybackScreen extends React.Component {
   }
 
   showWord () {
-    if (this.props.currentWord) {
-      const sentence = this.props.currentCards.fullSentence ? this.props.currentCards.fullSentence.translation
-        : this.props.currentCards.sentence.translation
-      return <Text>{ sentence.translation}</Text>
+    if (this.props.currentCard) {
+      const sentence = this.props.currentCard.fullSentence || this.props.currentCard.sentence
+      const sentenceStr = this.props.playingState === 'ORIGINAL' ? sentence.original : sentence.translation
+      return <Text>{ sentenceStr }</Text>
     }
   }
 
   showStatus () {
-    if (this.props.currentWord) {
+    if (this.props.currentCard) {
       return (
         <View>
           <Text>{this.props.currentCardIndex + 1} / {this.props.currentCards.length}</Text>
@@ -56,7 +57,8 @@ const mapStateToProps = (state) => {
     currentCardIndex: currentLesson.cards.findIndex((c) => c.id === state.lesson.currentCardId),
     isPaused: state.playback.isPaused,
     currentCards: currentLesson.cards,
-    currentCard: Card.getFromId(state.lesson.currentCardId)
+    currentCard: state.lesson.currentCardId && Card.getFromId(state.lesson.currentCardId),
+    playingState: state.playback.playingState
   }
 }
 

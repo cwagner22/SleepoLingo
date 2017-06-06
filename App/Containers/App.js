@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { Platform } from 'react-native'
 import Realm from 'realm'
+import Sound from 'react-native-sound'
 
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
@@ -25,8 +26,13 @@ class App extends Component {
     if (Platform.OS === 'android') {
       // RNFS.MainBundlePath is not working for android and I don't know how to referencee the bundle/asset path for
       // the readlm db...
+      // todo: unlink dest files? (see rootcontainer git history)
+      // todo: remove realm from redux?
       Realm.copyBundledRealmFiles()
     }
+
+    // Enable playback in silence mode (iOS only)
+    Sound.setCategory('Playback', true)
   }
 
   render () {

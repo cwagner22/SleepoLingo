@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable'
 import moment from 'moment'
 import _ from 'lodash'
 
-// import {Lesson} from '../Realm/realm'
+import {Lesson} from '../Realm/realm'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -20,7 +20,7 @@ const {Types, Creators} = createActions({
   downloadLesson: ['currentCards'],
   loadLesson: ['lessonId'],
   setCurrentLesson: ['lessonId'],
-  setCurrentCard: ['currentCard'],
+  setCurrentCard: ['currentCardId'],
   resetDates: null,
   lessonUpdateCompleted: ['isCompleted'],
   lessonStartAnki: null
@@ -79,9 +79,9 @@ export const showBack = (state) => {
   return state.merge({showFront: false})
 }
 
-export const setCurrentCard = (state, {currentCard}) => {
+export const setCurrentCard = (state, {currentCardId}) => {
   return state.merge({
-    currentCard
+    currentCardId
   })
 }
 
@@ -107,9 +107,7 @@ function sortCards (state, cards, allowAlmost = false) {
 }
 
 export const loadNextCard = (state) => {
-  // const currentLesson = Lesson.getFromId(state.currentLessonId)
-  // todo: revert if still crashes
-  const currentLesson = 0
+  const currentLesson = Lesson.getFromId(state.currentLessonId)
   const sortedCards = sortCards(state, currentLesson.cards, false)
   const currentCardId = sortedCards.length ? sortedCards[0].id : null
 
@@ -148,7 +146,7 @@ export const ankiEasy = (state) => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  // [Types.LESSON_START]: startLesson,
+  [Types.LESSON_START]: startLesson,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,

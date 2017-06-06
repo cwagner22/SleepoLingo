@@ -6,9 +6,7 @@ import android.util.Log;
 import com.facebook.react.ReactApplication;
 import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import net.no_mad.tts.TextToSpeechPackage;
 import com.zmxv.RNSound.RNSoundPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.rnfs.RNFSPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -37,9 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RealmReactPackage(),
             new VectorIconsPackage(),
-            new TextToSpeechPackage(),
             new RNSoundPackage(),
-            new MapsPackage(),
             new ReactNativeI18n(),
             new RNFSPackage(),
             new RNDeviceInfo(),

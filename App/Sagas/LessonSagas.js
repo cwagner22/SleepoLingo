@@ -1,12 +1,11 @@
 import { call, select, put, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
-import md5Hex from 'md5-hex'
-// import { NavigationActions } from 'react-navigation'
 import { Alert } from 'react-native'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
 import { navigateToAnki, navigateToLesson } from '../Navigation/NavigationActions'
+import Player from '../Services/Player'
 
 const api = API.create()
 
@@ -14,20 +13,11 @@ const api = API.create()
 const getCurrentLessonId = (state) => state.lesson.currentLessonId
 const isCompleted = (state, lessonId) => !!state.lesson.completedLessons[lessonId]
 
-const getFilePath = (sentence, language) => {
-  const fileName = md5Hex(sentence) + '.mp3'
-  return getLanguagePath(language) + '/' + fileName
-}
-
-const getLanguagePath = (language) => {
-  return RNFS.CachesDirectoryPath + '/' + language
-}
-
 const downloadAudioIfNeeded = (sentence, language) => {
-  const path = getFilePath(sentence, language)
+  const path = Player.getFilePath(sentence, language)
   const url = api.ttsURL(sentence, language)
 
-  return RNFS.mkdir(getLanguagePath(language))
+  return RNFS.mkdir(Player.getLanguagePath(language))
     .then(() => RNFS.exists(path))
     .then((exists) => {
       console.log(sentence, path, exists)
@@ -59,9 +49,11 @@ export function * downloadLesson (action) {
     }])
 
     if (c.fullSentence) {
-      items.push({
+      items = items.concat([{
+        sentence: c.fullSentence.original, language: 'en-US'
+      }, {
         sentence: c.fullSentence.translation, language: 'th-TH'
-      })
+      }])
     }
   }
   items = items.concat([{

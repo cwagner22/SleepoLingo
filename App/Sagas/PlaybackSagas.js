@@ -5,8 +5,7 @@ import Player from '../Services/Player'
 import loadSound from '../Services/Sound'
 import PlaybackActions, { PlaybackTypes } from '../Redux/PlaybackRedux'
 import LessonActions from '../Redux/LessonRedux'
-import LessonHelper from '../Services/LessonHelper'
-import CardHelper from '../Services/CardHelper'
+import { Lesson, Card } from '../Realm/realm'
 
 export const LESSON_LOOP_MAX = 2
 const TRANSLATION_LOOP_MAX = 3
@@ -27,7 +26,11 @@ var playingState
 var lessonLoopCounter
 var translationLoopCounter
 
-export function * play ({sentence, language, volume, speed}) {
+export function * playSaga ({sentence, language, volume, speed}) {
+  yield call(play, sentence, language, volume, speed)
+}
+
+function * play (sentence, language, volume, speed) {
   try {
     const path = Player.getFilePath(sentence, language)
     sound = yield call(loadSound, path, volume, speed)
@@ -45,9 +48,7 @@ export function * play ({sentence, language, volume, speed}) {
 
 function * playCard () {
   const lessonState = yield select(getLessonState)
-  const cardHelper = new CardHelper(lessonState)
-  const currentCard = cardHelper.currentCard
-
+  const currentCard = Card.getFromId(lessonState.currentCardId)
   const playbackState = yield select(getPlaybackState)
 
   const {speed, volume} = playbackState
@@ -101,8 +102,9 @@ export function * loadPrevCard () {
 export function * loadCard (next: true) {
   playingState = 'ORIGINAL'
   const lessonState = yield select(getLessonState)
-  const lessonHelper = new LessonHelper(lessonState)
-  var currentCards = lessonHelper.currentCards()
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
+  const currentCards = currentLesson.cards
+
   var currentIndex = currentCards.findIndex((c) => c.id === lessonState.currentCardId)
   let currentCardId
 

@@ -12,8 +12,7 @@ import SpeedSlider from '../Components/SpeedSlider'
 import API from '../Services/TranslateApi'
 import PlaybackActions from '../Redux/PlaybackRedux'
 import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
-import LessonHelper from '../Services/LessonHelper'
-import CardHelper from '../Services/CardHelper'
+import { Lesson, Card } from '../Realm/realm'
 
 // Styles
 // import styles from './Styles/PlayerStyle'
@@ -154,8 +153,7 @@ class PlayerScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const lessonHelper = new LessonHelper(state.lesson)
-  const cardHelper = new CardHelper(state.lesson)
+  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId)
 
   return {
     volume: state.playback.volume,
@@ -166,8 +164,8 @@ const mapStateToProps = (state) => {
     sameWord: state.lesson.sameWord,
     isPaused: state.playback.isPaused,
     playback: state.playback,
-    currentCard: cardHelper.currentCard,
-    currentCards: lessonHelper.currentCards()
+    currentCard: Card.getFromId(state.lesson.currentCardId),
+    currentCards: currentLesson.cards
   }
 }
 

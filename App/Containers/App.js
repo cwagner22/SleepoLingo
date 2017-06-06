@@ -2,6 +2,9 @@ import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
+import { Platform } from 'react-native'
+import Realm from 'realm'
+
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
 
@@ -18,6 +21,14 @@ const store = createStore()
  * We separate like this to play nice with React Native's hot reloading.
  */
 class App extends Component {
+  componentWillMount () {
+    if (Platform.OS === 'android') {
+      // RNFS.MainBundlePath is not working for android and I don't know how to referencee the bundle/asset path for
+      // the readlm db...
+      Realm.copyBundledRealmFiles()
+    }
+  }
+
   render () {
     return (
       <Provider store={store}>

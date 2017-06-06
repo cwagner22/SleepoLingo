@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable'
 import moment from 'moment'
 import _ from 'lodash'
 
-import {Lesson} from '../Realm/realm'
+// import {Lesson} from '../Realm/realm'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -16,7 +16,6 @@ const {Types, Creators} = createActions({
   lessonShowFront: null,
   lessonShowBack: null,
   loadNextCard: null,
-  loadNextCards: null,
   nextCardLoaded: ['card'],
   downloadLesson: ['currentCards'],
   loadLesson: ['lessonId'],
@@ -50,6 +49,17 @@ export const INITIAL_STATE = Immutable({
 })
 
 /* ------------- Reducers ------------- */
+
+export const startLesson = (state) => {
+  return state.merge({
+    showAnswer: false,
+    // currentCard: null,
+    currentCardId: null,
+    lessonLoopCounter: 0,
+    translationLoopCounter: 0,
+    playingState: null
+  })
+}
 
 export const setCurrentLesson = (state, {lessonId}) => {
   return state.merge({
@@ -97,7 +107,9 @@ function sortCards (state, cards, allowAlmost = false) {
 }
 
 export const loadNextCard = (state) => {
-  const currentLesson = Lesson.getFromId(state.currentLessonId)
+  // const currentLesson = Lesson.getFromId(state.currentLessonId)
+  // todo: revert if still crashes
+  const currentLesson = 0
   const sortedCards = sortCards(state, currentLesson.cards, false)
   const currentCardId = sortedCards.length ? sortedCards[0].id : null
 
@@ -110,17 +122,6 @@ export const loadNextCard = (state) => {
     showAnswer: false,
     showFront: true,
     currentCardId
-  })
-}
-
-export const loadNextCards = (state) => {
-  const currentLesson = Lesson.getFromId(state.currentLessonId)
-  const sortedCards = sortCards(state, currentLesson.cards, false)
-
-  return state.merge({
-    showAnswer: false,
-    showFront: true,
-    cards: sortedCards.map(c => c.id)
   })
 }
 
@@ -157,7 +158,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.RESET_DATES]: resetDates,
   // [Types.SET_DATE]: setDate
   [Types.LOAD_NEXT_CARD]: loadNextCard,
-  [Types.LOAD_NEXT_CARDS]: loadNextCards,
+  // [Types.LOAD_NEXT_CARDS]: loadNextCards,
   [Types.ANKI_HARD]: ankiHard,
   [Types.ANKI_OK]: ankiOk,
   [Types.ANKI_EASY]: ankiEasy,

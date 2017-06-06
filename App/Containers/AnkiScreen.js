@@ -94,7 +94,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
-    loadNextCards: () => dispatch(LessonActions.loadNextCards()),
     startLesson: () => dispatch(LessonActions.lessonStart()),
     lessonUpdateCompleted: (isCompleted) => dispatch(LessonActions.lessonUpdateCompleted(isCompleted)),
     navigateToLessons: () => dispatch(NavigationActions.reset('LessonsListScreen'))

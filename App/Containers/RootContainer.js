@@ -10,6 +10,12 @@ import ReduxPersist from '../Config/ReduxPersist'
 import styles from './Styles/RootContainerStyles'
 
 class RootContainer extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   console.log('copy');
+  //   Realm.copyBundledRealmFiles();
+  // }
+
   componentDidMount () {
     // if redux persist is not active fire startup action
     if (!ReduxPersist.active) {

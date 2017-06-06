@@ -5,9 +5,8 @@ import { View, ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 
 import Player from './Player'
-import LessonHelper from '../Services/LessonHelper'
-import CardHelper from '../Services/CardHelper'
 import LessonActions, { LESSON_LOOP_MAX } from '../Redux/LessonRedux'
+import { Lesson, Card } from '../Realm/realm'
 
 // Styles
 import styles from './Styles/PlaybackScreenStyle'
@@ -50,17 +49,14 @@ class PlaybackScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const lessonHelper = new LessonHelper(state.lesson)
-  const cardHelper = new CardHelper(state.lesson)
-  const currentCards = lessonHelper.currentCards()
-
+  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId)
   return {
     lesson: state.playback.lesson,
     lessonLoopCounter: state.lesson.lessonLoopCounter,
-    currentCardIndex: currentCards.findIndex((c) => c.id === state.lesson.currentCardId),
+    currentCardIndex: currentLesson.cards.findIndex((c) => c.id === state.lesson.currentCardId),
     isPaused: state.playback.isPaused,
-    currentCards,
-    currentCard: cardHelper.currentCard
+    currentCards: currentLesson.cards,
+    currentCard: Card.getFromId(state.lesson.currentCardId)
   }
 }
 

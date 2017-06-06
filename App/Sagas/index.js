@@ -18,7 +18,7 @@ import { startup } from './StartupSagas'
 import { login } from './LoginSagas'
 import { getUserAvatar } from './GithubSagas'
 import { downloadLesson, loadLesson, startAnki } from './LessonSagas'
-import { play, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
+import { playSaga, start, playerNext, playerPrev, playerStop } from './PlaybackSagas'
 import { importStart } from './ImportSagas'
 
 /* ------------- API ------------- */
@@ -39,7 +39,7 @@ export default function * root () {
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
     takeLatest(LessonTypes.LESSON_START_ANKI, startAnki),
 
-    takeLatest(PlaybackTypes.PLAYBACK_START, play),
+    takeLatest(PlaybackTypes.PLAYBACK_START, playSaga),
     takeLatest(PlaybackTypes.PLAYER_START, start),
     takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),
     takeLatest(PlaybackTypes.PLAYER_PREV, playerPrev),

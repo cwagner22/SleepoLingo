@@ -55,3 +55,4 @@ fastlane/screenshots
 *.xlsx
 *.management
 *.realm.lock
+*.snap

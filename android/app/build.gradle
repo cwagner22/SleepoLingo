@@ -128,9 +128,7 @@ android {
 dependencies {
     compile project(':realm')
     compile project(':react-native-vector-icons')
-    compile project(':react-native-tts')
     compile project(':react-native-sound')
-    compile project(':react-native-maps')
     compile project(':react-native-i18n')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')
@@ -147,3 +145,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+task copyRealm(type: Copy) {
+    from '../../App/Realm/default.realm'
+    into 'src/main/assets/'
+}
+preBuild.dependsOn copyRealm

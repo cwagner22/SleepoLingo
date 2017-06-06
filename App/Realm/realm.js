@@ -2,6 +2,7 @@
 
 // Inspired from https://github.com/realm/realm-js/issues/141#issuecomment-299721505
 
+import { Platform } from 'react-native'
 import Realm from 'realm'
 import RNFS from 'react-native-fs'
 import moment from 'moment'
@@ -213,7 +214,7 @@ console.log('CachesDirectoryPath', RNFS.CachesDirectoryPath)
 // Bundle path: for readonly? Put seed in ios folder
 // Doc folder: to edit
 const realm = new Realm({
-  path: RNFS.MainBundlePath + '/default.realm',
+  path: (Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath) + '/default.realm',
   // path: 'default.realm',
   // path: '/Users/christophe/Development/Projects/SleepoLingo/App/Realm/default.realm',
   schema: schemas,

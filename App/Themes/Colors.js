@@ -28,6 +28,9 @@ const colors = {
   cheeryPink: '#ff6b6b',
   stiletto: '#8A3034',
 
+  darkViolet: '#1d036a',
+  darkGrey: '#92929d',
+
   underlayGrey: '#f3f3f3'
 }
 

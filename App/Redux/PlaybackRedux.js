@@ -5,7 +5,7 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   playbackVolChange: ['volume'],
-  playbackSpeedChange: ['speed'],
+  playbackSpeedChange: null,
   playbackSetPaused: ['isPaused'],
   playbackInit: null,
   playbackStart: ['sentence', 'language', 'volume', 'speed'],
@@ -45,7 +45,9 @@ export const changeVolume = (state, { volume }: Object) => {
   return state.merge({ volume })
 }
 
-export const changeSpeed = (state, { speed }: Object) => {
+export const changeSpeed = (state) => {
+  let speed = state.speed + 0.25
+  speed = speed <= 2 ? speed : 0.25
   return state.merge({ speed })
 }
 

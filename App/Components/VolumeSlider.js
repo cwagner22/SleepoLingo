@@ -2,11 +2,11 @@
 
 import React from 'react'
 import {
-  Slider,
-  Text,
   View
 } from 'react-native'
+import { Slider, Icon } from 'react-native-elements'
 
+import { Colors } from '../Themes/'
 import styles from '../Containers/Styles/VolumeSliderStyle'
 
 type VolumeSliderProps = {
@@ -17,13 +17,36 @@ type VolumeSliderProps = {
 export default class VolumeSlider extends React.Component {
   props: VolumeSliderProps
 
+  renderVolumeIcon () {
+    return (
+      <Icon iconStyle={styles.buttonIcon} name='play-arrow' />
+    )
+  }
+
   render () {
     return (
-      <View>
-        <Text style={styles.text} >
-          {this.props.volume && +this.props.volume.toFixed(1)}
-        </Text>
-        <Slider value={this.props.volume} step={0.1} onValueChange={this.props.onChange} />
+      <View style={styles.container}>
+        <Icon iconStyle={styles.volIcon} name='volume-down' />
+
+        <Slider
+          style={{flex: 1}}
+          value={this.props.volume}
+          step={0.1}
+          onValueChange={this.props.onChange}
+          // minimumTrackTintColor='#8F8E9A'
+          // maximumTrackTintColor='#36373F'
+          // thumbTouchSize={{width: 40, height: 40}}
+          // thumbTintColor='#92919F'
+          thumbStyle={{
+            width: 15,
+            height: 15
+          }}
+          thumbTintColor={Colors.darkGrey}
+          minimumTrackTintColor={Colors.darkGrey}
+          maximumTrackTintColor='rgba(255,255,255, 0.1)'
+        />
+
+        <Icon iconStyle={styles.volIcon} name='volume-up' />
       </View>
     )
   }

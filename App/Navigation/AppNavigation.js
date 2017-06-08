@@ -4,7 +4,7 @@ import LoginScreen from '../Containers/LoginScreen'
 import LessonsListScreen from '../Containers/LessonsListScreen'
 import LessonScreen from '../Containers/LessonScreen'
 import AnkiScreen from '../Containers/AnkiScreen'
-import PlaybackScreen from '../Containers/PlaybackScreen'
+import PlayerScreen from '../Containers/PlayerScreen'
 import ImportScreen from '../Containers/ImportScreen'
 
 import styles from './Styles/NavigationStyles'
@@ -28,8 +28,8 @@ export const Lessons = StackNavigator({
       title: navigation.state.params && navigation.state.params.title
     })
   },
-  PlaybackScreen: {
-    screen: PlaybackScreen
+  PlayerScreen: {
+    screen: PlayerScreen
   }
 }, {
   // cardStyle: {

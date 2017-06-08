@@ -9,6 +9,7 @@ import ActionButton from 'react-native-action-button'
 import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
 import RoundedButton from '../Components/RoundedButton'
+import NavigationActions from '../Navigation/NavigationActions'
 
 // Styles
 import styles from './Styles/LessonScreenStyles'
@@ -51,7 +52,7 @@ class LessonScreen extends React.Component {
   }
 
   startNight () {
-    this.props.navigation.navigate('PlaybackScreen')
+    this.props.navigateToPlayerScreen()
   }
 }
 
@@ -64,7 +65,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words)),
-    startAnki: () => dispatch(LessonActions.lessonStartAnki())
+    startAnki: () => dispatch(LessonActions.lessonStartAnki()),
+    navigateToPlayerScreen: (lessonId) => dispatch(NavigationActions.navigate('PlayerScreen'))
   }
 }
 

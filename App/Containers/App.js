@@ -26,7 +26,7 @@ class App extends Component {
     if (Platform.OS === 'android') {
       // RNFS.MainBundlePath is not working for android and I don't know how to referencee the bundle/asset path for
       // the readlm db...
-      // todo: unlink dest files? (see rootcontainer git history)
+      // todo: unlink dest files? (see rootcontainer git history) Or use fs.copyFileAssets to Doc dir
       // todo: remove realm from redux?
       Realm.copyBundledRealmFiles()
     }

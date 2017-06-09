@@ -19,7 +19,8 @@ export const Lessons = StackNavigator({
     navigationOptions: ({navigation}) => ({
       // title: navigation.state.params.lesson.name,
       title: navigation.state.params && navigation.state.params.title,
-      headerBackTitle: 'Back'
+      headerBackTitle: 'Back',
+      header: navigation.state.params && navigation.state.params.headerVisible ? undefined : null
     })
   },
   AnkiScreen: {
@@ -29,7 +30,10 @@ export const Lessons = StackNavigator({
     })
   },
   PlayerScreen: {
-    screen: PlayerScreen
+    screen: PlayerScreen,
+    navigationOptions: () => ({
+      header: null
+    })
   }
 }, {
   // cardStyle: {
@@ -38,6 +42,7 @@ export const Lessons = StackNavigator({
   // },
   // initialRouteName: 'PresentationScreen',
   // headerMode: 'none',
+  // headerMode: 'screen',
   // // Keeping this here for future when we can make
   navigationOptions: {
     // header: {

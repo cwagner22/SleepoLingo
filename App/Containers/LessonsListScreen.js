@@ -27,7 +27,13 @@ class LessonsListScreen extends React.Component {
     const ds = new ListView.DataSource({rowHasChanged, sectionHeaderHasChanged})
 
     let data = {}
-    for (const group of LessonGroup.get()) {
+    const groups = LessonGroup.get()
+
+    // for (const group of groups) { // not working on android
+    //   data[group.name] = group.lessons
+    // }
+    for (var i = 0; i < groups.length; i++) {
+      const group = groups[i]
       data[group.name] = group.lessons
     }
 

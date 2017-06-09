@@ -6,6 +6,8 @@ import { Platform } from 'react-native'
 import Realm from 'realm'
 import Sound from 'react-native-sound'
 
+// Realm.copyBundledRealmFiles()
+
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
 

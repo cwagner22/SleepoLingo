@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon } from 'react-native-elements'
 
@@ -17,8 +17,8 @@ import styles from './Styles/PlayerScreenStyle'
 
 class PlayerScreen extends React.Component {
   componentWillMount () {
+    StatusBar.setBarStyle('light-content')
     this.props.startLesson()
-    // this.props.playerStart()
   }
 
   renderWord () {

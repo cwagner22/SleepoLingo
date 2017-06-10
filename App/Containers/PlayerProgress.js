@@ -36,7 +36,7 @@ class PlayerProgress extends React.Component {
 
     return (
       <View style={styles.progress}>
-        <Text>{`${nbLeft} cards remaining`}</Text>
+        <Text style={styles.text}>{`${nbLeft} cards remaining`}</Text>
       </View>
     )
   }

@@ -6,15 +6,16 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   btnsContainer: {
-    marginTop: 'auto',
-    height: 50,
-    backgroundColor: 'white'
+    // marginTop: 'auto',
+    // height: 50,
+    // backgroundColor: 'white'
   },
   btns: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 50
+    marginRight: 50,
+    paddingVertical: 10
   },
   speedButton: {
     width: 50,
@@ -24,5 +25,8 @@ export default StyleSheet.create({
   },
   button: {
     flex: 1
+  },
+  buttonIcon: {
+    color: 'white'
   }
 })

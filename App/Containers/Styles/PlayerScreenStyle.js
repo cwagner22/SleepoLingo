@@ -30,6 +30,17 @@ export default StyleSheet.create({
     color: 'white'
   },
   stopText: {
-    color: 'white'
+    color: 'white',
+    marginTop: -10,
+    fontWeight: 'bold'
+    // fontFamily: Fonts.type.bold,
+  },
+  infoText: {
+    color: 'white',
+    fontStyle: 'italic',
+    // fontFamily: Fonts.type.emphasis,
+    fontSize: 14,
+    marginTop: 5,
+    textAlign: 'center'
   }
 })

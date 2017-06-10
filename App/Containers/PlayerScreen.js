@@ -38,12 +38,21 @@ class PlayerScreen extends React.Component {
     }
   }
 
+  renderInfoText () {
+    const text = this.props.lessonLoopCounter === 0 ? 'Focus on the audio lesson until the end'
+      : 'Good night. Playing the lesson one more time so you listen while drifting off'
+
+    return (
+      <Text style={styles.infoText}>{text}</Text>
+    )
+  }
+
   renderStop () {
     return (
       <View style={styles.stop}>
         <Icon iconStyle={styles.stopIcon} name='keyboard-arrow-up' />
         <Text style={styles.stopText}>STOP</Text>
-        <Text style={styles.stopText}>Focus/Good night</Text>
+        { this.renderInfoText() }
       </View>
     )
   }
@@ -68,7 +77,8 @@ const mapStateToProps = (state) => {
     currentCards: currentLesson.cards,
     currentCard: state.lesson.currentCardId && Card.getFromId(state.lesson.currentCardId),
     playingState: state.playback.playingState,
-    volume: state.playback.volume
+    volume: state.playback.volume,
+    lessonLoopCounter: state.lesson.lessonLoopCounter
   }
 }
 

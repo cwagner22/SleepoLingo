@@ -6,6 +6,12 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   progress: {
-    backgroundColor: 'pink'
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+    padding: 7
+  },
+  text: {
+    color: 'white',
+    textAlign: 'center'
   }
 })

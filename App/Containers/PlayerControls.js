@@ -53,13 +53,13 @@ class PlayerControls extends React.Component {
     if (this.props.isPaused) {
       return (
         <TouchableOpacity onPress={this.resumePlayback.bind(this)} style={styles.button}>
-          <Icon iconStyle={styles.buttonIcon} name='play-arrow' />
+          <Icon iconStyle={styles.buttonIcon} name='play-arrow' size={35} />
         </TouchableOpacity>
       )
     } else {
       return (
         <TouchableOpacity onPress={this.pausePlayback.bind(this)} style={styles.button}>
-          <Icon iconStyle={styles.buttonIcon} name='pause' />
+          <Icon iconStyle={styles.buttonIcon} name='pause' size={35} />
         </TouchableOpacity>
       )
     }
@@ -69,15 +69,15 @@ class PlayerControls extends React.Component {
     return (
       <View style={styles.btns}>
         <TouchableOpacity onPress={this.props.changeSpeed} style={styles.speedButton}>
-          <Text>{this.props.speed}</Text>
-          <Icon size={12} name='close' />
+          <Text style={{color: 'white'}}>{this.props.speed}</Text>
+          <Icon size={16} name='close' color='white' />
         </TouchableOpacity>
         <TouchableOpacity onPress={this.props.playerPrev} style={styles.button}>
-          <Icon iconStyle={styles.buttonIcon} name='skip-previous' />
+          <Icon iconStyle={styles.buttonIcon} name='skip-previous' size={35} />
         </TouchableOpacity>
         {this.renderPlayPauseButton()}
         <TouchableOpacity onPress={this.props.playerNext} style={styles.button}>
-          <Icon iconStyle={styles.buttonIcon} name='skip-next' />
+          <Icon iconStyle={styles.buttonIcon} name='skip-next' size={35} />
         </TouchableOpacity>
       </View>
     )

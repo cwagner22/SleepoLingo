@@ -92,6 +92,22 @@ export function * playerStop () {
   }
 }
 
+export function * playerPause () {
+  if (task) {
+    yield cancel(task)
+    yield cancel(playerLoopTask)
+  }
+  yield put(PlaybackActions.playbackSetPaused(true))
+}
+
+export function * playerResume () {
+  translationLoopCounter = 0
+  playingState = null
+  playerLoopTask = yield fork(playerLoop)
+  yield put(PlaybackActions.playerReady())
+  yield put(PlaybackActions.playbackSetPaused(false))
+}
+
 export function * loadNextCard () {
   yield call(loadCard, true)
 }
@@ -211,4 +227,5 @@ export function * start () {
   yield call(setModifiers)
   playerLoopTask = yield fork(playerLoop)
   yield put(PlaybackActions.playerReady())
+  yield put(PlaybackActions.playbackSetPaused(false))
 }

@@ -16,13 +16,8 @@ import styles from './Styles/PlayerControlsStyle'
 
 class PlayerControls extends React.Component {
   componentWillMount () {
-    // this.props.playerStart()
     // this.scheduleTimer()
   }
-
-  // componentWillUnmount () {
-  //   this.props.playerStop()
-  // }
 
   scheduleTimer () {
     BackgroundTimer.setTimeout(() => {
@@ -32,33 +27,16 @@ class PlayerControls extends React.Component {
     }, 60 * 60 * 1000)
   }
 
-  stopPlayback () {
-    // todo: crashes for no reason
-    this.props.navigation.back()
-    // NavigationActions.lesson(this.props.currentLessonId)
-  }
-
-  resumePlayback () {
-    this.props.setPaused(false)
-    // Restart word playback from original
-    this.speakWord()
-  }
-
-  pausePlayback () {
-    this.cancelPromises()
-    this.props.setPaused(true)
-  }
-
   renderPlayPauseButton () {
     if (this.props.isPaused) {
       return (
-        <TouchableOpacity onPress={this.resumePlayback.bind(this)} style={styles.button}>
+        <TouchableOpacity onPress={this.props.playerResume} style={styles.button}>
           <Icon iconStyle={styles.buttonIcon} name='play-arrow' size={35} />
         </TouchableOpacity>
       )
     } else {
       return (
-        <TouchableOpacity onPress={this.pausePlayback.bind(this)} style={styles.button}>
+        <TouchableOpacity onPress={this.props.playerPause} style={styles.button}>
           <Icon iconStyle={styles.buttonIcon} name='pause' size={35} />
         </TouchableOpacity>
       )
@@ -115,9 +93,11 @@ const mapDispatchToProps = (dispatch) => {
     play: (sentence, language, volume, speed) => dispatch(
       PlaybackActions.playbackStart(sentence, language, volume, speed)),
     loadPlayingState: () => dispatch(LessonActions.loadPlayingState()),
-    // playerStart: () => dispatch(PlaybackActions.playerStart()),
+    playerStart: () => dispatch(PlaybackActions.playerStart()),
     playerNext: () => dispatch(PlaybackActions.playerNext()),
     playerPrev: () => dispatch(PlaybackActions.playerPrev()),
+    playerPause: () => dispatch(PlaybackActions.playerPause()),
+    playerResume: () => dispatch(PlaybackActions.playerResume()),
     changeSpeed: () => dispatch(PlaybackActions.playbackSpeedChange())
   }
 }

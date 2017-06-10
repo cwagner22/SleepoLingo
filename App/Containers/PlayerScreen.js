@@ -58,8 +58,13 @@ class PlayerScreen extends React.Component {
   }
 
   render () {
+    const bgStyle = {
+      backgroundColor: this.props.lessonLoopCounter === 0 ? '#0e1a29'
+        : '#0c0f1c'
+    }
+
     return (
-      <View style={styles.mainContainer}>
+      <View style={[styles.mainContainer, bgStyle]}>
         {this.renderWord()}
         {this.renderStop()}
         <VolumeSlider volume={this.props.volume} onChange={(volume) => this.props.changeVol(volume)} />

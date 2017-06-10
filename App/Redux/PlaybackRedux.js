@@ -12,6 +12,8 @@ const { Types, Creators } = createActions({
   playbackSuccess: null,
   playbackError: null,
   playerStop: null,
+  playerPause: null,
+  playerResume: null,
   playerStart: null,
   playerNext: null,
   playerPrev: null,

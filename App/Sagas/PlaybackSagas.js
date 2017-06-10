@@ -73,18 +73,6 @@ function * playMessageEnd () {
   yield call(play, sentenceStr, 'en-US', this.volume * volume, this.speed * speed)
 }
 
-export function * playerNext () {
-  yield call(playerStop)
-  yield call(loadNextCard)
-  task = yield fork(playCard)
-}
-
-export function * playerPrev () {
-  yield call(playerStop)
-  yield call(loadPrevCard)
-  task = yield fork(playCard)
-}
-
 export function * playerStop () {
   if (task) {
     yield cancel(task)
@@ -92,11 +80,27 @@ export function * playerStop () {
   }
 }
 
+function * forcePlayerWithLoadedCard () {
+  translationLoopCounter = 0
+  playingState = 'ORIGINAL'
+  playerLoopTask = yield fork(playerLoop)
+  task = yield fork(playCard)
+}
+
+export function * playerNext () {
+  yield call(playerStop)
+  yield call(loadNextCard)
+  yield call(forcePlayerWithLoadedCard)
+}
+
+export function * playerPrev () {
+  yield call(playerStop)
+  yield call(loadPrevCard)
+  yield call(forcePlayerWithLoadedCard)
+}
+
 export function * playerPause () {
-  if (task) {
-    yield cancel(task)
-    yield cancel(playerLoopTask)
-  }
+  yield call(playerStop)
   yield put(PlaybackActions.playbackSetPaused(true))
 }
 

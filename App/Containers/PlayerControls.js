@@ -16,13 +16,13 @@ import styles from './Styles/PlayerControlsStyle'
 
 class PlayerControls extends React.Component {
   componentWillMount () {
-    this.props.playerStart()
-    this.scheduleTimer()
+    // this.props.playerStart()
+    // this.scheduleTimer()
   }
 
-  componentWillUnmount () {
-    this.props.playerStop()
-  }
+  // componentWillUnmount () {
+  //   this.props.playerStop()
+  // }
 
   scheduleTimer () {
     BackgroundTimer.setTimeout(() => {
@@ -115,10 +115,9 @@ const mapDispatchToProps = (dispatch) => {
     play: (sentence, language, volume, speed) => dispatch(
       PlaybackActions.playbackStart(sentence, language, volume, speed)),
     loadPlayingState: () => dispatch(LessonActions.loadPlayingState()),
-    playerStart: () => dispatch(PlaybackActions.playerStart()),
+    // playerStart: () => dispatch(PlaybackActions.playerStart()),
     playerNext: () => dispatch(PlaybackActions.playerNext()),
     playerPrev: () => dispatch(PlaybackActions.playerPrev()),
-    playerStop: () => dispatch(PlaybackActions.playerStop()),
     changeSpeed: () => dispatch(PlaybackActions.playbackSpeedChange())
   }
 }

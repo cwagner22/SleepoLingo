@@ -18,6 +18,10 @@ import styles from './Styles/LessonScreenStyles'
 import { Colors } from '../Themes/'
 
 class LessonScreen extends React.Component {
+  state = {
+    modalVisible: false
+  }
+
   componentWillMount () {
     const {lesson} = this.props
 
@@ -26,6 +30,15 @@ class LessonScreen extends React.Component {
       headerVisible: true
     })
     this.props.downloadLesson(lesson.cards)
+  }
+
+  renderNightButton () {
+    if (!this.state.modalVisible) {
+      return (
+        <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetY={85}
+          icon={<Icon name='hotel' color='white' />} />
+      )
+    }
   }
 
   render () {
@@ -53,13 +66,12 @@ class LessonScreen extends React.Component {
           onClosed={() => this.onPlayerClose()}
           // onOpened={this.onOpen}
           // onClosingState={this.onClosingState}
-          backdropOpacity={0.85}
+          backdropOpacity={0.95}
           // swipeArea={Dimensions.get('window').height*0.65}
         >
           <PlayerScreen />
         </Modal>
-        <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetY={85}
-          icon={<Icon name='hotel' color='white' />} />
+        { this.renderNightButton() }
       </View>
     )
   }
@@ -73,6 +85,7 @@ class LessonScreen extends React.Component {
     this.props.navigation.setParams({
       headerVisible: true
     })
+    this.setState({modalVisible: false})
     StatusBar.setBarStyle('dark-content')
   }
 
@@ -80,6 +93,7 @@ class LessonScreen extends React.Component {
     this.props.navigation.setParams({
       headerVisible: false
     })
+    this.setState({modalVisible: true})
     this.refs.nightPlayerModal.open()
     // PlayerScreen.open()
     // this.props.navigateToPlayerScreen()

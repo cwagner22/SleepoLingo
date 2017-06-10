@@ -207,6 +207,7 @@ function * playerLoop () {
 export function * start () {
   lessonLoopCounter = 0
   translationLoopCounter = 0
+  playingState = null
   yield call(setModifiers)
   playerLoopTask = yield fork(playerLoop)
   yield put(PlaybackActions.playerReady())

@@ -19,6 +19,11 @@ class PlayerScreen extends React.Component {
   componentWillMount () {
     StatusBar.setBarStyle('light-content')
     this.props.startLesson()
+    this.props.playerStart()
+  }
+
+  componentWillUnmount () {
+    this.props.playerStop()
   }
 
   renderWord () {
@@ -71,7 +76,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     startLesson: () => dispatch(LessonActions.lessonStart()),
     changeVol: (volume) => dispatch(PlaybackActions.playbackVolChange(volume)),
-    changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed))
+    changeSpeed: (speed) => dispatch(PlaybackActions.playbackSpeedChange(speed)),
+    playerStart: () => dispatch(PlaybackActions.playerStart()),
+    playerStop: () => dispatch(PlaybackActions.playerStop())
   }
 }
 

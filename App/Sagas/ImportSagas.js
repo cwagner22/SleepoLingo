@@ -140,7 +140,7 @@ function parseGroups (workbook) {
 }
 
 export function * importStart () {
-  const data = yield call(RNFS.readFile, '/Users/christophe/Development/Projects/SleepoLingo/App/Lessons/lessons.xlsx',
+  const data = yield call(RNFS.readFile, Secrets.LOCAL_XLSX,
     'base64')
   const workbook = yield call(XLSX.read, data)
 

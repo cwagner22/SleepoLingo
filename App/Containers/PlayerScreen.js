@@ -40,7 +40,7 @@ class PlayerScreen extends React.Component {
 
   renderInfoText () {
     const text = this.props.lessonLoopCounter === 0 ? 'Focus on the audio lesson until the end'
-      : 'Good night. Playing the lesson one more time so you listen while drifting off'
+      : 'Good night. Playing the lesson one more time so you can listen while drifting off'
 
     return (
       <Text style={styles.infoText}>{text}</Text>
@@ -83,7 +83,7 @@ const mapStateToProps = (state) => {
     currentCard: state.lesson.currentCardId && Card.getFromId(state.lesson.currentCardId),
     playingState: state.playback.playingState,
     volume: state.playback.volume,
-    lessonLoopCounter: state.lesson.lessonLoopCounter
+    lessonLoopCounter: state.playback.lessonLoopCounter
   }
 }
 

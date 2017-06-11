@@ -65,10 +65,10 @@ function * playMessageEnd () {
   const playbackState = yield select(getPlaybackState)
   const {speed, volume} = playbackState
   var sentenceStr
-  if (isFocusMode()) {
-    sentenceStr = 'Repeat'
-  } else if (lessonLoopCounter === LESSON_LOOP_MAX + 1) {
+  if (!isFocusMode()) {
     sentenceStr = 'Good night'
+  } else {
+    sentenceStr = 'Repeat'
   }
   yield call(play, sentenceStr, 'en-US', this.volume * volume, this.speed * speed)
 }
@@ -82,7 +82,7 @@ export function * playerStop () {
 
 function * forcePlayerWithLoadedCard () {
   translationLoopCounter = 0
-  playingState = 'ORIGINAL'
+  // playingState = 'ORIGINAL'
   playerLoopTask = yield fork(playerLoop)
   task = yield fork(playCard)
 }
@@ -152,13 +152,15 @@ export function * loadCard (next: true) {
     }
   }
 
+  yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter))
   yield put(LessonActions.setCurrentCard(currentCardId))
 }
 
-const isFocusMode = () => lessonLoopCounter <= LESSON_LOOP_MAX
-
 export function * loadPlayingState () {
-  if (!playerShouldContinue()) return
+  if (!playerShouldContinue()) {
+    yield cancel(playerLoopTask)
+    return
+  }
 
   if (!playingState) {
     // init
@@ -217,8 +219,9 @@ function setModifiers () {
   // this.rateTranslation = speed
 }
 
-// todo: max loop, timer?
-const playerShouldContinue = () => true
+const isFocusMode = () => lessonLoopCounter < LESSON_LOOP_MAX - 1
+
+const playerShouldContinue = () => lessonLoopCounter < LESSON_LOOP_MAX
 
 function * playerLoop () {
   yield takeLatest([PlaybackTypes.PLAYER_READY, PlaybackTypes.PLAYBACK_SUCCESS], loadPlayingState)

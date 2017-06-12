@@ -1,6 +1,9 @@
 import { call, select, put, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import { Alert } from 'react-native'
+import PromisePool from 'es6-promise-pool'
+import Toast from 'react-native-simple-toast'
+import RNFetchBlob from 'react-native-fetch-blob'
 
 import API from '../Services/TranslateApi'
 import LessonActions from '../Redux/LessonRedux'
@@ -9,31 +12,57 @@ import Player from '../Services/Player'
 
 const api = API.create()
 
-// const getCurrentLesson = (state) => state.lesson.currentLesson
 const getCurrentLessonId = (state) => state.lesson.currentLessonId
 const isCompleted = (state, lessonId) => !!state.lesson.completedLessons[lessonId]
 
-const downloadAudioIfNeeded = (sentence, language) => {
-  const path = Player.getFilePath(sentence, language)
-  const url = api.ttsURL(sentence, language)
+const downloadItem = (item) => {
+  const path = Player.getFilePath(item.sentence, item.language)
+  const url = api.ttsURL(item.sentence, item.language)
 
-  return RNFS.mkdir(Player.getLanguagePath(language))
-    .then(() => RNFS.exists(path))
-    .then((exists) => {
-      console.log(sentence, path, exists)
-      if (!exists) {
-        // write the file
-        return RNFS.downloadFile({
-          fromUrl: url,
-          toFile: path,
-          background: true
-          // progressDivider: 5,
-          // progress: onProgress,
-        }).promise.then((success) => {
-          console.log('FILE WRITTEN!', url, path)
-        })
-      }
+  // saga progress: https://stackoverflow.com/questions/41616861/calling-yield-inside-react-redux-saga-callback
+  return RNFetchBlob.config({
+    fileCache: true,
+    path
+  })
+    .fetch('GET', url)
+    .then((res) => {
+      console.log('The file saved to ', res.path())
     })
+}
+
+const downloadAll = (items) => {
+  const generatePromises = function * () {
+    for (let i = 0; i < items.length; i++) {
+      yield downloadItem(items[i])
+    }
+  }
+
+  // Create a pool.
+  var pool = new PromisePool(generatePromises(), 5)
+
+  // Start the pool.
+  return pool.start()
+}
+
+export function * getItemsNotCached (items, language) {
+  const path = Player.getLanguagePath(language)
+  console.log('Audio cache', path)
+  yield call(RNFS.mkdir, path, {NSURLIsExcludedFromBackupKey: true})
+
+  const files = yield call(RNFS.readDir, path)
+  const itemsNotCached = items.filter(item => item.language === language)
+    .filter((item) => {
+      const filePath = Player.getFilePath(item.sentence, language)
+      for (let file of files) {
+        if (file.path === filePath) {
+          return false
+        }
+      }
+
+      return true
+    })
+
+  return itemsNotCached
 }
 
 export function * downloadLesson (action) {
@@ -62,7 +91,20 @@ export function * downloadLesson (action) {
     sentence: 'Good night', language: 'en-US'
   }])
 
-  yield items.map((item) => call(downloadAudioIfNeeded, item.sentence, item.language))
+  let itemsToDownload = yield call(getItemsNotCached, items, 'en-US')
+  const itemsToDownloadTrans = yield call(getItemsNotCached, items, 'th-TH')
+  itemsToDownload = itemsToDownload.concat(itemsToDownloadTrans)
+
+  if (itemsToDownload.length) {
+    try {
+      Toast.show('Downloading lesson for offline use')
+      yield call(downloadAll, itemsToDownload)
+      Toast.show('Download completed')
+    } catch (error) {
+      console.log('Download error', error)
+      Toast.show('Download error')
+    }
+  }
 }
 
 // Because of the way "call" works, if we want to "put" an action

@@ -33,9 +33,13 @@ class TranslationText extends React.Component {
     let explanation = []
     const words = this.props.translation.split(' ')
     for (const wordStr of words) {
-      // todo: look for custom explanation
-      let word = Word.getWord(wordStr)
-      explanation.push(word || wordStr)
+      // todo: look for custom explanation?
+      let word = Word.getWord(wordStr) || Word.getWordFromTranslation(wordStr)
+      if (word) {
+        explanation.push(word)
+      } else {
+        console.log(`${word} not found`)
+      }
     }
 
     return (

@@ -83,7 +83,7 @@ function checkWords (card) {
     // Check that every words are included in the dictionary
     const words = s.translation.split(' ')
     for (const word of words) {
-      if (!Word.getWord(word)) {
+      if (!Word.getWord(word) && !Word.getWordFromTranslation(word)) {
         const index = wordsMissing.indexOf(word)
         if (index !== -1) {
           // let data = wordsMissing[index]

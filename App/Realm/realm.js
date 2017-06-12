@@ -26,6 +26,10 @@ export class Word {
   static getWord (word) {
     return realm.objects('Word').filtered(`original == "${word}"`)[0]
   }
+
+  static getWordFromTranslation (word) {
+    return realm.objects('Word').filtered(`translation == "${word}"`)[0]
+  }
 }
 
 export class Sentence {

@@ -36,7 +36,7 @@ class AnkiFooter extends React.Component {
       <View style={[styles.ankiFooter, answerStyles]} pointerEvents={this.props.showAnswer ? 'auto' : 'none'}>
         <AnkiButton styles={styles.ankiHard} text='Hard' subText='(1 min)' onPress={() => this.hard()} />
         <AnkiButton styles={styles.ankiOk} text='OK' subText='(10 mins)' onPress={() => this.ok()} />
-        <AnkiButton styles={styles.ankiEasy} text='Easy' subText='(1 day)' onPress={() => this.easy()} />
+        <AnkiButton styles={styles.ankiEasy} text='Easy' subText='(2 days)' onPress={() => this.easy()} />
       </View>
     )
   }

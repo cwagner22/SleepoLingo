@@ -140,7 +140,7 @@ export const ankiOk = (state) => {
 }
 
 export const ankiEasy = (state) => {
-  return updateCardDate(state, moment().add(1, 'd'))
+  return updateCardDate(state, moment().add(2, 'd'))
 }
 
 /* ------------- Hookup Reducers To Types ------------- */

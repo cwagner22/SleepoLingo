@@ -16,6 +16,14 @@ import styles from './Styles/LessonsListScreenStyle'
 class LessonsListScreen extends React.Component {
   state = {}
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: (
+        <Text style={styles.bigHeader}>SleepoLingo</Text>
+      )
+    }
+  }
+
   componentWillMount () {
     this.setupDataSource()
   }
@@ -105,6 +113,7 @@ class LessonsListScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        <Text style={styles.pickLesson}>Pick a lesson</Text>
         <ListView
           renderSectionHeader={this.renderHeader}
           contentContainerStyle={styles.listContent}

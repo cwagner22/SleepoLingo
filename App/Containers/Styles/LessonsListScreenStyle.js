@@ -16,11 +16,25 @@ export default StyleSheet.create({
     marginVertical: Metrics.smallMargin,
     justifyContent: 'center'
   },
+  bigHeader: {
+    fontWeight: 'bold',
+    fontFamily: 'Alterlight-Regular',
+    fontSize: 32,
+    color: Colors.cheeryPink,
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 5 // to show hidden part of the title
+  },
   header: {
     fontWeight: 'bold',
     alignSelf: 'center',
     textAlign: 'center',
     marginVertical: Metrics.smallMargin
+  },
+  pickLesson: {
+    fontWeight: 'bold',
+    paddingVertical: Metrics.baseMargin,
+    paddingHorizontal: Metrics.section
   },
   boldLabel: {
     fontWeight: 'bold',
@@ -30,6 +44,6 @@ export default StyleSheet.create({
     marginVertical: Metrics.smallMargin
   },
   listContent: {
-    marginTop: Metrics.baseMargin
+    // marginTop: Metrics.baseMargin
   }
 })

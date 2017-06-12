@@ -11,8 +11,7 @@ import styles from './Styles/NavigationStyles'
 
 export const Lessons = StackNavigator({
   LessonsListScreen: {
-    screen: LessonsListScreen,
-    navigationOptions: {title: 'Lessons'}
+    screen: LessonsListScreen
   },
   LessonScreen: {
     screen: LessonScreen,

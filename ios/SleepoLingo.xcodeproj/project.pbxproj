@@ -59,6 +59,7 @@
 		BFDBD9A712EA4D6EB56AA725 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BBC608730BF24EE8836765D1 /* libRNVectorIcons.a */; };
 		C1F1864A3771474DB580ABF7 /* libcxxreact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A510F5926F41DF9EACAA9D /* libcxxreact.a */; };
 		D04DD78C92424210B25EB2C1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E82A23886BE4059BE24EBEB /* Octicons.ttf */; };
+		D33B9E2CCC724EC98D262805 /* Alterlight-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3357AE4084E54579A12737FD /* Alterlight-Regular.ttf */; };
 		D34D778A504A4D5CB1D4E5B8 /* libyoga.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A2464E7BB42FF90ACC9A5 /* libyoga.a */; };
 		D92C378F1EEDD3020095D811 /* default.realm in Resources */ = {isa = PBXBuildFile; fileRef = D92C378E1EEDD3020095D811 /* default.realm */; };
 		F71DA7226CCE4177A54AB05D /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A215C8731ED345539AE3F026 /* libRNFetchBlob.a */; };
@@ -381,6 +382,7 @@
 		2D02E47B1E0B4A5D006451C7 /* SleepoLingo-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SleepoLingo-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SleepoLingo-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SleepoLingo-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		314115F057E447E580058AC5 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
+		3357AE4084E54579A12737FD /* Alterlight-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Alterlight-Regular.ttf"; path = "../App/Fonts/Alterlight-Regular.ttf"; sourceTree = "<group>"; };
 		34A52AB77F204D058FF70D20 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		3FBF2491FC5F4026994E6564 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		40A510F5926F41DF9EACAA9D /* libcxxreact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libcxxreact.a; sourceTree = "<group>"; };
@@ -686,6 +688,7 @@
 				9E82A23886BE4059BE24EBEB /* Octicons.ttf */,
 				BF8F8A8AA1AB4234896DDC28 /* SimpleLineIcons.ttf */,
 				34A52AB77F204D058FF70D20 /* Zocial.ttf */,
+				3357AE4084E54579A12737FD /* Alterlight-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1276,6 +1279,7 @@
 				D04DD78C92424210B25EB2C1 /* Octicons.ttf in Resources */,
 				55EF8961AFCD4315B67AD05F /* SimpleLineIcons.ttf in Resources */,
 				9766B4FD98B2459E976B216D /* Zocial.ttf in Resources */,
+				D33B9E2CCC724EC98D262805 /* Alterlight-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

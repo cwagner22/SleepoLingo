@@ -1,5 +1,5 @@
 import { call, put, fork, select, cancel, cancelled, takeLatest } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import BackgroundTimer from 'react-native-background-timer'
 
 import Player from '../Services/Player'
 import loadSound from '../Services/Sound'
@@ -25,6 +25,18 @@ var sound, task, playerLoopTask
 var playingState
 var lessonLoopCounter
 var translationLoopCounter
+
+// Replicate redux-saga/delay with react-native-background-timer
+const bgDelay = (ms, val = true) => {
+  let timeoutId
+  const promise = new Promise(resolve => {
+    timeoutId = BackgroundTimer.setTimeout(() => resolve(val), ms)
+  })
+
+  promise['@@redux-saga/cancelPromise'] = () => BackgroundTimer.clearTimeout(timeoutId)
+
+  return promise
+}
 
 export function * playSaga ({sentence, language, volume, speed}) {
   yield call(play, sentence, language, volume, speed)
@@ -189,16 +201,16 @@ export function * loadPlayingState () {
 function * processPlayingState () {
   switch (playingState) {
     case 'ORIGINAL':
-      yield call(delay, this.originalTimeout)
+      yield call(bgDelay, this.originalTimeout)
       yield call(playCard)
       break
     case 'TRANSLATION':
-      yield call(delay, this.translationTimeout)
+      yield call(bgDelay, this.translationTimeout)
       yield call(playCard)
       break
     case 'RESTART':
       yield call(setModifiers)
-      yield call(delay, this.repeatAllTimeout)
+      yield call(bgDelay, this.repeatAllTimeout)
       // todo: should happen before word incremented/loop restarted?
       yield call(playMessageEnd)
       break

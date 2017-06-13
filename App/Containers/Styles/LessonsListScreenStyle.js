@@ -19,7 +19,7 @@ export default StyleSheet.create({
   bigHeader: {
     fontWeight: 'bold',
     fontFamily: 'Alterlight-Regular',
-    fontSize: 32,
+    fontSize: 30,
     color: Colors.cheeryPink,
     flex: 1,
     justifyContent: 'center',

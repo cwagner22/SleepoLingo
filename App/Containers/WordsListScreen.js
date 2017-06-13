@@ -1,49 +1,73 @@
 import React from 'react'
 import { View, Text, TouchableHighlight, ScrollView } from 'react-native'
+import { List, ListItem } from 'react-native-elements'
 import { connect } from 'react-redux'
-import Accordion from 'react-native-collapsible/Accordion'
+import Collapsible from 'react-native-collapsible'
 import _ from 'lodash'
 
-import {Lesson} from '../Realm/realm'
+import { Lesson } from '../Realm/realm'
 import PlaybackActions from '../Redux/PlaybackRedux'
 
 import styles from './Styles/WordsListScreenStyle'
+import { Colors } from '../Themes/index'
 
 class WordsListScreen extends React.Component {
-  _renderHeader (section) {
-    const sentence = section.fullSentence ? section.fullSentence : section.sentence
-    return (
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{sentence.original}</Text>
-      </View>
-    )
+  state = {
+    activeSection: null
   }
 
   play (text) {
     this.props.play(text, 'th-TH', 1, 0.7)
   }
 
-  _renderContent (section) {
-    const sentence = section.fullSentence ? section.fullSentence : section.sentence
+  _toggleSection (section) {
+    const activeSection = this.state.activeSection === section ? false : section
+    this.setState({activeSection})
+  }
+
+  renderItem (card) {
+    const sentence = card.fullSentence ? card.fullSentence : card.sentence
+    const isCollapsed = this.state.activeSection !== card.id
+    const rightIcon = {
+      name: isCollapsed ? 'expand-more' : 'expand-less'
+    }
+
     return (
-      <TouchableHighlight onPress={() => this.play(sentence.translation)}>
-        <View style={styles.content}>
-          <Text>{sentence.translation}</Text>
-          <Text>{sentence.transliteration}</Text>
-        </View>
-      </TouchableHighlight>
+      <ListItem
+        title={
+          <View>
+            <Text style={styles.title}>{sentence.original}</Text>
+            <Collapsible collapsed={isCollapsed} style={styles.collapsibleContainer}>
+              <TouchableHighlight onPress={() => this.play(sentence.translation)} underlayColor={Colors.underlayGrey}>
+                <View>
+                  <Text style={styles.collapsibleText}>{sentence.translation}</Text>
+                  <Text style={styles.collapsibleText}>{sentence.transliteration}</Text>
+                </View>
+              </TouchableHighlight>
+            </Collapsible>
+          </View>
+        }
+        onPress={() => this._toggleSection(card.id)}
+        key={card.id}
+        rightIcon={rightIcon}
+      />
     )
   }
 
-  render () {
+  renderList () {
     const cards = _.toArray(this.props.currentLesson.cards)
+
+    return cards.map((card) => {
+      return this.renderItem(card)
+    })
+  }
+
+  render () {
     return (
-      <ScrollView style={styles.container}>
-        <Accordion
-          sections={cards}
-          renderHeader={this._renderHeader.bind(this)}
-          renderContent={this._renderContent.bind(this)}
-        />
+      <ScrollView>
+        <List>
+          {this.renderList()}
+        </List>
       </ScrollView>
     )
   }

@@ -6,6 +6,7 @@ import LessonScreen from '../Containers/LessonScreen'
 import AnkiScreen from '../Containers/AnkiScreen'
 import PlayerScreen from '../Containers/PlayerScreen'
 import ImportScreen from '../Containers/ImportScreen'
+import WordsListScreen from '../Containers/WordsListScreen'
 
 import styles from './Styles/NavigationStyles'
 
@@ -23,15 +24,25 @@ export const Lessons = StackNavigator({
     })
   },
   AnkiScreen: {
-    screen: AnkiScreen,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.state.params && navigation.state.params.title
-    })
+    screen: AnkiScreen
+    // navigationOptions: ({navigation}) => ({
+    //   title: navigation.state.params && navigation.state.params.title,
+    //   headerRight: (
+    //     <Text>All Words</Text>
+    //   )
+    // })
   },
   PlayerScreen: {
     screen: PlayerScreen,
     navigationOptions: () => ({
       header: null
+    })
+  },
+  WordsListScreen: {
+    screen: WordsListScreen,
+    navigationOptions: ({navigation}) => ({
+      title: 'Words',
+      headerBackTitle: 'Back'
     })
   }
 }, {
@@ -74,7 +85,7 @@ const PrimaryNav = StackNavigator({
 }, {
   // Default config for all screens
   headerMode: 'none',
-  initialRouteName: 'LaunchScreen',
+  initialRouteName: __DEV__ ? 'LaunchScreen' : 'LessonsListScreen',
   navigationOptions: {
     header: {
       style: styles.header

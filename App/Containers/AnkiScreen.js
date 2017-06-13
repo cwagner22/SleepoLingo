@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Button } from 'react-native'
 import { connect } from 'react-redux'
 import Swiper from 'react-native-swiper-animated'
 import { Card } from 'react-native-elements'
@@ -17,6 +17,17 @@ import NavigationActions from '../Navigation/NavigationActions'
 import styles from './Styles/AnkiScreenStyle'
 
 class AnkiScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+
+    return {
+      title: params.title,
+      headerRight: (
+        <Button onPress={() => params.navigateToWords()} title='All Words' />
+      )
+    }
+  }
+
   componentWillMount () {
     this.props.navigation.setParams({
       title: this.props.lessonName
@@ -32,6 +43,10 @@ class AnkiScreen extends React.Component {
         }
       }
     }
+  }
+
+  componentDidMount () {
+    this.props.navigation.setParams({ navigateToWords: this.props.navigateToWords })
   }
 
   currentCardIndex () {
@@ -96,7 +111,8 @@ const mapDispatchToProps = (dispatch) => {
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
     startLesson: () => dispatch(LessonActions.lessonStart()),
     lessonUpdateCompleted: (isCompleted) => dispatch(LessonActions.lessonUpdateCompleted(isCompleted)),
-    navigateToLessons: () => dispatch(NavigationActions.reset('LessonsListScreen'))
+    navigateToLessons: () => dispatch(NavigationActions.reset('LessonsListScreen')),
+    navigateToWords: () => dispatch(NavigationActions.navigate('WordsListScreen'))
   }
 }
 

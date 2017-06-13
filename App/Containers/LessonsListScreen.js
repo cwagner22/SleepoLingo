@@ -121,6 +121,7 @@ class LessonsListScreen extends React.Component {
           renderRow={this.renderRow.bind(this)}
           enableEmptySections
         />
+        <Text style={styles.footer}>Use the contact section to leave me any suggestions. More languages will be added in the future 😉</Text>
       </View>
     )
   }

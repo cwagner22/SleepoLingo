@@ -15,12 +15,12 @@ const reset = (routeName: string, params?: NavigationParams) => {
   })
 }
 
-const navigate = (routeName: string, params?: NavigationParams) => NavigationActions.navigate({routeName})
+const navigate = (routeName: string, params?: NavigationParams) => NavigationActions.navigate({routeName, params})
+const navigateWrapper = (routeName: string, params?: NavigationParams) => () => navigate(routeName, params)
 
-const navigateTo = routeName => () => NavigationActions.navigate({ routeName })
-export const navigateToLesson = navigateTo('LessonScreen')
-export const navigateToLessons = navigateTo('LessonsListScreen')
-export const navigateToAnki = navigateTo('AnkiScreen')
+export const navigateToLesson = navigateWrapper('LessonScreen')
+export const navigateToLessons = navigateWrapper('LessonsListScreen')
+export const navigateToAnki = navigateWrapper('AnkiScreen')
 
 export default {
   reset,

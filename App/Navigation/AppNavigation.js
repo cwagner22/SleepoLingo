@@ -1,4 +1,6 @@
 import { StackNavigator } from 'react-navigation'
+import { enhance } from './react-navigation-addons'
+
 import LaunchScreen from '../Containers/LaunchScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import LessonsListScreen from '../Containers/LessonsListScreen'
@@ -10,18 +12,13 @@ import WordsListScreen from '../Containers/WordsListScreen'
 
 import styles from './Styles/NavigationStyles'
 
-export const Lessons = StackNavigator({
+// Use react-navigation-addons for the setOptions feature
+export const Lessons = enhance(StackNavigator)({
   LessonsListScreen: {
     screen: LessonsListScreen
   },
   LessonScreen: {
-    screen: LessonScreen,
-    navigationOptions: ({navigation}) => ({
-      // title: navigation.state.params.lesson.name,
-      title: navigation.state.params && navigation.state.params.title,
-      headerBackTitle: 'Back',
-      header: navigation.state.params && navigation.state.params.headerVisible ? undefined : null
-    })
+    screen: LessonScreen
   },
   AnkiScreen: {
     screen: AnkiScreen
@@ -41,8 +38,8 @@ export const Lessons = StackNavigator({
   WordsListScreen: {
     screen: WordsListScreen,
     navigationOptions: ({navigation}) => ({
-      title: 'Words',
-      headerBackTitle: 'Back'
+      title: 'Words'
+      // headerBackTitle: 'Back'
     })
   }
 }, {

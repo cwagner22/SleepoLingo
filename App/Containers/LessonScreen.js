@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, ScrollView, Text, StatusBar } from 'react-native'
+import { View, ScrollView, Text, StatusBar, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { Card, Icon } from 'react-native-elements'
 import ActionButton from 'react-native-action-button'
@@ -17,6 +17,9 @@ import PlayerScreen from './PlayerScreen'
 import styles from './Styles/LessonScreenStyles'
 import { Colors } from '../Themes/'
 
+// const MyTitle = ({ navigation, text }) => <Text text={text} navigation={navigation} />;
+// const MyConnectedTitle = connect(storeState => ({ text: storeState.title }))(MyTitle);
+
 class LessonScreen extends React.Component {
   state = {
     modalVisible: false
@@ -24,11 +27,12 @@ class LessonScreen extends React.Component {
 
   componentWillMount () {
     const {lesson} = this.props
-
-    this.props.navigation.setParams({
+    this.props.navigation.setOptions({
       title: lesson.name,
-      headerVisible: true
+      gesturesEnabled: Platform.OS === 'ios',
+      headerBackTitle: 'Back'
     })
+
     this.props.downloadLesson(lesson.cards)
   }
 
@@ -82,21 +86,21 @@ class LessonScreen extends React.Component {
   }
 
   onPlayerClose () {
-    this.props.navigation.setParams({
-      headerVisible: true
+    this.props.navigation.setOptions({
+      header: undefined, // Default header
+      gesturesEnabled: Platform.OS === 'ios'
     })
     this.setState({modalVisible: false})
     StatusBar.setBarStyle('dark-content')
   }
 
   startNight () {
-    this.props.navigation.setParams({
-      headerVisible: false
+    this.props.navigation.setOptions({
+      header: null,
+      gesturesEnabled: false
     })
     this.setState({modalVisible: true})
     this.refs.nightPlayerModal.open()
-    // PlayerScreen.open()
-    // this.props.navigateToPlayerScreen()
   }
 }
 

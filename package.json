@@ -63,6 +63,7 @@
     "redux-saga": "^0.14.3",
     "reduxsauce": "0.4.1",
     "seamless-immutable": "^7.0.1",
+    "shallowequal": "^1.0.1",
     "traverse": "^0.6.6",
     "xlsx": "^0.9.13"
   },

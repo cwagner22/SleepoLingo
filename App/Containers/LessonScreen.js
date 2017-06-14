@@ -25,6 +25,18 @@ class LessonScreen extends React.Component {
     modalVisible: false
   }
 
+  // static navigationOptions = ({ navigation }) => {
+  //   const { params = {} } = navigation.state
+  //
+  //   return {
+  //     headerLeft: (
+  //       <TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')}>
+  //         <Icon name='menu' />
+  //       </TouchableOpacity>
+  //     )
+  //   }
+  // }
+
   componentWillMount () {
     const {lesson} = this.props
     this.props.navigation.setOptions({

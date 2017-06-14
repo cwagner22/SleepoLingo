@@ -1,4 +1,5 @@
-import { StackNavigator } from 'react-navigation'
+import React from 'react'
+import { StackNavigator, DrawerNavigator } from 'react-navigation'
 import { enhance } from './react-navigation-addons'
 
 import LaunchScreen from '../Containers/LaunchScreen'
@@ -9,8 +10,12 @@ import AnkiScreen from '../Containers/AnkiScreen'
 import PlayerScreen from '../Containers/PlayerScreen'
 import ImportScreen from '../Containers/ImportScreen'
 import WordsListScreen from '../Containers/WordsListScreen'
+import DrawerButton from '../Components/DrawerButton'
+import SettingsScreen from '../Containers/SettingsScreen'
+import ContactScreen from '../Containers/ContactScreen'
 
 import styles from './Styles/NavigationStyles'
+import { Colors } from '../Themes/'
 
 // Use react-navigation-addons for the setOptions feature
 export const Lessons = enhance(StackNavigator)({
@@ -51,18 +56,56 @@ export const Lessons = enhance(StackNavigator)({
   // headerMode: 'none',
   // headerMode: 'screen',
   // // Keeping this here for future when we can make
-  navigationOptions: {
-    // header: {
-    //   // left: (
-    //   //   <TouchableOpacity onPress={() => window.alert('pop')}><Image source={Images.closeButton}
-    //   //     style={{marginHorizontal: 10}} /></TouchableOpacity>
-    //   // ),
-    //   style: styles.header
-    // },
-    // headerStyle: styles.header,
-    // headerTitleStyle: styles.headerTitle,
-    // headerBackTitleStyle: styles.headerTitle,
-    // headerTintColor: '#fff',
+  // header: {
+  //   // left: (
+  //   //   <TouchableOpacity onPress={() => window.alert('pop')}><Image source={Images.closeButton}
+  //   //     style={{marginHorizontal: 10}} /></TouchableOpacity>
+  //   // ),
+  //   style: styles.header
+  // },
+  // headerStyle: styles.header,
+  // headerTitleStyle: styles.headerTitle,
+  // headerBackTitleStyle: styles.headerTitle,
+  // headerTintColor: '#fff',
+})
+
+const Settings = StackNavigator({
+  SettingsScreen: {
+    screen: SettingsScreen,
+    navigationOptions: ({navigation}) => ({
+      drawerLabel: 'Settings',
+      title: 'Settings',
+      headerLeft: <DrawerButton navigation={navigation} />
+    })
+  }
+}, {
+})
+
+const Contact = StackNavigator({
+  ContactScreen: {
+    screen: ContactScreen,
+    navigationOptions: ({navigation}) => ({
+      drawerLabel: 'Contact',
+      title: 'Contact',
+      headerLeft: <DrawerButton navigation={navigation} />
+    })
+  }
+}, {
+})
+
+const Drawer = DrawerNavigator({
+  LessonsListScreen: {
+    screen: Lessons
+  },
+  SettingsScreen: {
+    screen: Settings
+  },
+  ContactScreen: {
+    screen: Contact
+  }
+}, {
+  contentOptions: {
+    activeTintColor: Colors.cheeryPink
   }
 })
 
@@ -70,7 +113,7 @@ export const Lessons = enhance(StackNavigator)({
 const PrimaryNav = StackNavigator({
   LaunchScreen: {screen: LaunchScreen},
   LessonsListScreen: {
-    screen: Lessons
+    screen: Drawer
   },
   ImportScreen: {
     screen: ImportScreen

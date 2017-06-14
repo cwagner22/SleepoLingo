@@ -31,6 +31,7 @@ class RootContainer extends Component {
           // ref={navigatorRef => {
           // NavigatorService.setContainer(navigatorRef)
           // }}
+          // screenProps={this.props.settings}
           navigation={addNavigationHelpers({
             dispatch: this.props.dispatch,
             state: this.props.nav

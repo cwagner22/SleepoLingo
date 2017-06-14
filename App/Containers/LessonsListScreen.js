@@ -9,6 +9,7 @@ import RNFS from 'react-native-fs'
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
 import { LessonGroup } from '../Realm/realm'
+import DrawerButton from '../Components/DrawerButton'
 
 // Styles
 import styles from './Styles/LessonsListScreenStyle'
@@ -20,7 +21,9 @@ class LessonsListScreen extends React.Component {
     return {
       headerTitle: (
         <Text style={styles.bigHeader}>SleepoLingo</Text>
-      )
+      ),
+      headerLeft: <DrawerButton navigation={navigation} />,
+      drawerLabel: 'Lessons'
     }
   }
 

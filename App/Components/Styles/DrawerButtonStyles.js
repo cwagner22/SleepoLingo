@@ -1,9 +1,7 @@
-import { Metrics, Colors, Fonts } from '../../Themes'
+import { Metrics } from '../../Themes'
 
 export default {
-  text: {
-    ...Fonts.style.h5,
-    color: Colors.snow,
-    marginVertical: Metrics.baseMargin
+  iconStyle: {
+    marginHorizontal: Metrics.baseMargin
   }
 }

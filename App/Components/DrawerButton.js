@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
+import { Icon } from 'react-native-elements'
+
 import styles from './Styles/DrawerButtonStyles'
-import ExamplesRegistry from '../Services/ExamplesRegistry'
+// import ExamplesRegistry from '../Services/ExamplesRegistry'
 
 // Note that this file (App/Components/DrawerButton) needs to be
 // imported in your app somewhere, otherwise your component won't be
@@ -9,23 +11,23 @@ import ExamplesRegistry from '../Services/ExamplesRegistry'
 
 // Ignore in coverage report
 /* istanbul ignore next */
-ExamplesRegistry.addComponentExample('Drawer Button', () =>
-  <DrawerButton
-    text='Example left drawer button'
-    onPress={() => window.alert('Your drawers are showing')}
-  />
-)
+// ExamplesRegistry.addComponentExample('Drawer Button', () =>
+//   <DrawerButton
+//     text='Example left drawer button'
+//     onPress={() => window.alert('Your drawers are showing')}
+//   />
+// )
 
 class DrawerButton extends Component {
   static propTypes = {
-    text: PropTypes.string,
-    onPress: PropTypes.func
+    navigation: PropTypes.object.isRequired
   }
 
   render () {
     return (
-      <TouchableOpacity onPress={this.props.onPress}>
-        <Text style={styles.text}>{this.props.text}</Text>
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('DrawerOpen')}>
+        <Icon name='menu' style={styles.iconStyle}
+        />
       </TouchableOpacity>
     )
   }

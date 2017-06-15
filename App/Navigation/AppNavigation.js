@@ -1,6 +1,5 @@
 import React from 'react'
 import { StackNavigator, DrawerNavigator } from 'react-navigation'
-import { enhance } from './react-navigation-addons'
 
 import LaunchScreen from '../Containers/LaunchScreen'
 import LoginScreen from '../Containers/LoginScreen'
@@ -18,7 +17,7 @@ import styles from './Styles/NavigationStyles'
 import { Colors } from '../Themes/'
 
 // Use react-navigation-addons for the setOptions feature
-export const Lessons = enhance(StackNavigator)({
+export const Lessons = StackNavigator({
   LessonsListScreen: {
     screen: LessonsListScreen
   },

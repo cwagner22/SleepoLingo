@@ -44,6 +44,7 @@ class RootContainer extends Component {
 
 const mapStateToProps = (state) => ({
   nav: state.nav
+  // settings: {currentLessonId: state.lesson.currentLessonId}
 })
 
 // wraps dispatch to create nicer functions to call within our component

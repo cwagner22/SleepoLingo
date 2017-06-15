@@ -23,7 +23,10 @@ class LessonsListScreen extends React.Component {
         <Text style={styles.bigHeader}>SleepoLingo</Text>
       ),
       headerLeft: <DrawerButton navigation={navigation} />,
-      drawerLabel: 'Lessons'
+      drawerLabel: 'Lessons',
+      headerBackTitle: 'Back' // 'Lessons' may be better but is too long and causes overlapping. Since we are using a
+      // custom component with headerTitle in the next screens the widths calculations are not made (only for string)
+      // See: react-navigation/src/views/Header.js
     }
   }
 

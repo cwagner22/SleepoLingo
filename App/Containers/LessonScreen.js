@@ -12,38 +12,38 @@ import LessonActions from '../Redux/LessonRedux'
 import RoundedButton from '../Components/RoundedButton'
 import NavigationActions from '../Navigation/NavigationActions'
 import PlayerScreen from './PlayerScreen'
+import LessonTitle from './LessonTitle'
 
 // Styles
 import styles from './Styles/LessonScreenStyles'
 import { Colors } from '../Themes/'
-
-// const MyTitle = ({ navigation, text }) => <Text text={text} navigation={navigation} />;
-// const MyConnectedTitle = connect(storeState => ({ text: storeState.title }))(MyTitle);
 
 class LessonScreen extends React.Component {
   state = {
     modalVisible: false
   }
 
-  // static navigationOptions = ({ navigation }) => {
-  //   const { params = {} } = navigation.state
-  //
-  //   return {
-  //     headerLeft: (
-  //       <TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')}>
-  //         <Icon name='menu' />
-  //       </TouchableOpacity>
-  //     )
-  //   }
-  // }
+  static navigationOptions = ({ navigation, screenProps }) => {
+    const { params = {} } = navigation.state
+
+    return {
+      // Use a custom component to display the lesson name. Setting it in
+      // componentWillMount with setOptions/setParams causes some delay, maybe because of redux
+      headerTitle: <LessonTitle />,
+      // Hide header when modal visible
+      header: params.modalVisible ? null : undefined,
+      gesturesEnabled: params.modalVisible && Platform.OS === 'ios',
+      headerBackTitle: 'Back'
+    }
+  }
 
   componentWillMount () {
     const {lesson} = this.props
-    this.props.navigation.setOptions({
-      title: lesson.name,
-      gesturesEnabled: Platform.OS === 'ios',
-      headerBackTitle: 'Back'
-    })
+    // this.props.navigation.setOptions({
+    //   // title: lesson.name,
+    //   // gesturesEnabled: Platform.OS === 'ios',
+    //   headerBackTitle: 'Back'
+    // })
 
     this.props.downloadLesson(lesson.cards)
   }
@@ -98,18 +98,24 @@ class LessonScreen extends React.Component {
   }
 
   onPlayerClose () {
-    this.props.navigation.setOptions({
-      header: undefined, // Default header
-      gesturesEnabled: Platform.OS === 'ios'
+    // this.props.navigation.setOptions({
+    //   header: undefined, // Default header
+    //   gesturesEnabled: Platform.OS === 'ios'
+    // })
+    this.props.navigation.setParams({
+      modalVisible: false
     })
     this.setState({modalVisible: false})
     StatusBar.setBarStyle('dark-content')
   }
 
   startNight () {
-    this.props.navigation.setOptions({
-      header: null,
-      gesturesEnabled: false
+    // this.props.navigation.setOptions({
+    //   header: null,
+    //   gesturesEnabled: false
+    // })
+    this.props.navigation.setParams({
+      modalVisible: true
     })
     this.setState({modalVisible: true})
     this.refs.nightPlayerModal.open()

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
 import RoundedButton from '../Components/RoundedButton'
-import { navigateToLessons } from '../Navigation/NavigationActions'
+import NavigationActions from '../Navigation/NavigationActions'
 
 import { Images } from '../Themes'
 
@@ -53,7 +53,7 @@ class LaunchScreen extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    navigateToLessons: () => dispatch(navigateToLessons())
+    navigateToLessons: () => dispatch(NavigationActions.navigate('LessonsList'))
   }
 }
 

@@ -18,7 +18,7 @@ import { Colors } from '../Themes/'
 
 // Wrapping DrawerNavigator with a StackNavigator having a header causes some display issues
 const Drawer = DrawerNavigator({
-  LessonsListScreen: {
+  LessonsList: {
     screen: StackNavigator({
       LessonsListScreen: {
         screen: LessonsListScreen
@@ -51,7 +51,7 @@ const Drawer = DrawerNavigator({
       })
     })
   },
-  SettingsScreen: {
+  Settings: {
     screen: StackNavigator({
       SettingsScreen: {
         screen: SettingsScreen,
@@ -63,7 +63,7 @@ const Drawer = DrawerNavigator({
       }
     })
   },
-  ContactScreen: {
+  Contact: {
     screen: StackNavigator({
       ContactScreen: {
         screen: ContactScreen,
@@ -84,7 +84,7 @@ const Drawer = DrawerNavigator({
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
   LaunchScreen: {screen: LaunchScreen},
-  LessonsListScreen: {
+  LessonsList: {
     screen: Drawer
   },
   ImportScreen: {
@@ -97,7 +97,7 @@ const PrimaryNav = StackNavigator({
 }, {
   // Default config for all screens
   headerMode: 'none',
-  initialRouteName: __DEV__ ? 'LaunchScreen' : 'LessonsListScreen'
+  initialRouteName: __DEV__ ? 'LaunchScreen' : 'LessonsList'
   // navigationOptions: {
   //   header: {
   //     style: styles.header

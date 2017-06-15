@@ -12,6 +12,7 @@ import AnkiCard from '../Components/AnkiCard'
 import { Lesson } from '../Realm/realm'
 import RoundedButton from '../Components/RoundedButton'
 import NavigationActions from '../Navigation/NavigationActions'
+import LessonTitle from './LessonTitle'
 
 // Styles
 import styles from './Styles/AnkiScreenStyle'
@@ -21,17 +22,11 @@ class AnkiScreen extends React.Component {
     const { params = {} } = navigation.state
 
     return {
-      title: params.title,
+      headerTitle: <LessonTitle />,
       headerRight: (
         <Button onPress={() => params.navigateToWords()} title='All Words' />
       )
     }
-  }
-
-  componentWillMount () {
-    this.props.navigation.setParams({
-      title: this.props.lessonName
-    })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -99,7 +94,6 @@ const mapStateToProps = (state) => {
   const lesson = Lesson.getFromId(state.lesson.currentLessonId)
   return {
     lesson: state.lesson,
-    lessonName: lesson.name,
     currentCardId: state.lesson.currentCardId,
     cardIds: lesson.cards.map(c => c.id)
   }

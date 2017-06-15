@@ -32,7 +32,7 @@ class LessonScreen extends React.Component {
       headerTitle: <LessonTitle />,
       // Hide header when modal visible
       header: params.modalVisible ? null : undefined,
-      gesturesEnabled: params.modalVisible && Platform.OS === 'ios',
+      gesturesEnabled: !params.modalVisible && Platform.OS === 'ios',
       headerBackTitle: 'Back'
     }
   }

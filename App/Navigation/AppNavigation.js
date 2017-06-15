@@ -13,94 +13,67 @@ import DrawerButton from '../Components/DrawerButton'
 import SettingsScreen from '../Containers/SettingsScreen'
 import ContactScreen from '../Containers/ContactScreen'
 
-import styles from './Styles/NavigationStyles'
+// import styles from './Styles/NavigationStyles'
 import { Colors } from '../Themes/'
 
-// Use react-navigation-addons for the setOptions feature
-export const Lessons = StackNavigator({
-  LessonsListScreen: {
-    screen: LessonsListScreen
-  },
-  LessonScreen: {
-    screen: LessonScreen
-  },
-  AnkiScreen: {
-    screen: AnkiScreen
-    // navigationOptions: ({navigation}) => ({
-    //   title: navigation.state.params && navigation.state.params.title,
-    //   headerRight: (
-    //     <Text>All Words</Text>
-    //   )
-    // })
-  },
-  PlayerScreen: {
-    screen: PlayerScreen,
-    navigationOptions: () => ({
-      header: null
-    })
-  },
-  WordsListScreen: {
-    screen: WordsListScreen,
-    navigationOptions: ({navigation}) => ({
-      title: 'Words'
-      // headerBackTitle: 'Back'
-    })
-  }
-}, {
-  // cardStyle: {
-  //   opacity: 1,
-  //   backgroundColor: '#3e243f'
-  // },
-  // initialRouteName: 'PresentationScreen',
-  // headerMode: 'none',
-  // headerMode: 'screen',
-  // // Keeping this here for future when we can make
-  // header: {
-  //   // left: (
-  //   //   <TouchableOpacity onPress={() => window.alert('pop')}><Image source={Images.closeButton}
-  //   //     style={{marginHorizontal: 10}} /></TouchableOpacity>
-  //   // ),
-  //   style: styles.header
-  // },
-  // headerStyle: styles.header,
-  // headerTitleStyle: styles.headerTitle,
-  // headerBackTitleStyle: styles.headerTitle,
-  // headerTintColor: '#fff',
-})
-
-const Settings = StackNavigator({
-  SettingsScreen: {
-    screen: SettingsScreen,
-    navigationOptions: ({navigation}) => ({
-      drawerLabel: 'Settings',
-      title: 'Settings',
-      headerLeft: <DrawerButton navigation={navigation} />
-    })
-  }
-}, {
-})
-
-const Contact = StackNavigator({
-  ContactScreen: {
-    screen: ContactScreen,
-    navigationOptions: ({navigation}) => ({
-      drawerLabel: 'Contact',
-      title: 'Contact',
-      headerLeft: <DrawerButton navigation={navigation} />
-    })
-  }
-}, {
-})
-
+// Wrapping DrawerNavigator with a StackNavigator having a header causes some display issues
 const Drawer = DrawerNavigator({
   LessonsListScreen: {
-    screen: Lessons
+    screen: StackNavigator({
+      LessonsListScreen: {
+        screen: LessonsListScreen
+        // navigationOptions: ({navigation}) => ({
+        //   // header: null
+        // })
+      },
+      LessonScreen: {
+        screen: LessonScreen
+      },
+      AnkiScreen: {
+        screen: AnkiScreen
+      },
+      PlayerScreen: {
+        screen: PlayerScreen,
+        navigationOptions: () => ({
+          header: null
+        })
+      },
+      WordsListScreen: {
+        screen: WordsListScreen,
+        navigationOptions: ({navigation}) => ({
+          title: 'Words'
+          // headerBackTitle: 'Back'
+        })
+      }
+    }, {
+      navigationOptions: ({navigation}) => ({
+        drawerLockMode: 'locked-closed' // seems enough to allow only the first page to open the drawer
+      })
+    })
   },
   SettingsScreen: {
-    screen: Settings
+    screen: StackNavigator({
+      SettingsScreen: {
+        screen: SettingsScreen,
+        navigationOptions: ({navigation}) => ({
+          drawerLabel: 'Settings',
+          title: 'Settings',
+          headerLeft: <DrawerButton navigation={navigation} />
+        })
+      }
+    })
   },
   ContactScreen: {
-    screen: Contact
+    screen: StackNavigator({
+      ContactScreen: {
+        screen: ContactScreen,
+        navigationOptions: ({navigation}) => ({
+          drawerLabel: 'Contact',
+          title: 'Contact',
+          headerLeft: <DrawerButton navigation={navigation} />
+        })
+      }
+    })
   }
 }, {
   contentOptions: {
@@ -124,12 +97,12 @@ const PrimaryNav = StackNavigator({
 }, {
   // Default config for all screens
   headerMode: 'none',
-  initialRouteName: __DEV__ ? 'LaunchScreen' : 'LessonsListScreen',
-  navigationOptions: {
-    header: {
-      style: styles.header
-    }
-  }
+  initialRouteName: __DEV__ ? 'LaunchScreen' : 'LessonsListScreen'
+  // navigationOptions: {
+  //   header: {
+  //     style: styles.header
+  //   }
+  // }
 })
 
 export default PrimaryNav

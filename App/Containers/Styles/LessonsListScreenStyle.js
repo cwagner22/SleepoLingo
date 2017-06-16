@@ -27,21 +27,18 @@ export default StyleSheet.create({
   },
   header: {
     fontWeight: 'bold',
-    alignSelf: 'center',
-    textAlign: 'center',
-    marginVertical: Metrics.smallMargin
+    alignSelf: 'flex-start',
+    // textAlign: 'center',
+    marginVertical: Metrics.smallMargin,
+    marginHorizontal: Metrics.section,
+    color: Colors.charcoal,
+    backgroundColor: Colors.transparent
   },
   pickLesson: {
     fontWeight: 'bold',
     paddingVertical: Metrics.baseMargin,
-    paddingHorizontal: Metrics.section
-  },
-  boldLabel: {
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    color: Colors.snow,
-    textAlign: 'center',
-    marginVertical: Metrics.smallMargin
+    paddingHorizontal: Metrics.section,
+    textAlign: 'center'
   },
   listContent: {
     // marginTop: Metrics.baseMargin

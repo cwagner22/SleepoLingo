@@ -31,7 +31,6 @@ export default class VolumeSlider extends React.Component {
         <Slider
           style={{flex: 1}}
           value={this.props.volume}
-          step={0.1}
           onValueChange={this.props.onChange}
           // minimumTrackTintColor='#8F8E9A'
           // maximumTrackTintColor='#36373F'

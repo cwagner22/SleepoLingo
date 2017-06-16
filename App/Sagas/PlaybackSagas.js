@@ -244,3 +244,9 @@ export function * start () {
   yield put(PlaybackActions.playerReady())
   yield put(PlaybackActions.playbackSetPaused(false))
 }
+
+export function * playerVolChange ({ volume }) {
+  if (sound) {
+    sound.setVolume(volume)
+  }
+}

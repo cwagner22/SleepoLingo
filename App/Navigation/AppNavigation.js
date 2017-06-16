@@ -47,7 +47,7 @@ const Drawer = DrawerNavigator({
       }
     }, {
       navigationOptions: ({navigation}) => ({
-        drawerLockMode: 'locked-closed' // seems enough to allow only the first page to open the drawer
+        drawerLockMode: 'locked-closed'
       })
     })
   },

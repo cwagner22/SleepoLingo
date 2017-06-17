@@ -51,7 +51,7 @@ export const changeVolume = (state, { volume }: Object) => {
 
 export const changeSpeed = (state) => {
   let speed = state.speed + 0.25
-  speed = speed <= 2 ? speed : 0.25
+  speed = speed <= 2 ? speed : 0.5
   return state.merge({ speed })
 }
 

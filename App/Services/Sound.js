@@ -48,6 +48,9 @@ const loadSound = (path, volume = 1, speed = 0.7) => {
     },
     setVolume (volume) {
       sound.setVolume(volume)
+    },
+    setSpeed (speed) {
+      sound.setSpeed(speed)
     }
   }
 }

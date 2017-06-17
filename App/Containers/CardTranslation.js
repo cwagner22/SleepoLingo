@@ -64,7 +64,7 @@ class CardTranslation extends React.Component {
 
   renderNote () {
     const {note} = this.props
-    if (!note) {
+    if (note) {
       return (
         <Text style={styles.note}>{note}</Text>
       )

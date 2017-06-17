@@ -253,3 +253,10 @@ export function * playerVolChange ({ volume }) {
     sound.setVolume(volume)
   }
 }
+
+export function * playerSpeedChange ({ speed }) {
+  if (sound) {
+    const playbackState = yield select(getPlaybackState)
+    sound.setSpeed(playbackState.speed)
+  }
+}

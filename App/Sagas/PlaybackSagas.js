@@ -9,8 +9,8 @@ import { Lesson, Card } from '../Realm/realm'
 
 export const LESSON_LOOP_MAX = 4
 const TRANSLATION_LOOP_MAX = 3
-const ORIGINAL_TIMEOUT = 1000
-const ORIGINAL_TIMEOUT_SLEEP = 2000
+// const ORIGINAL_TIMEOUT = 1000
+// const ORIGINAL_TIMEOUT_SLEEP = 2000
 const TRANSLATION_TIMEOUT = 1000
 const TRANSLATION_TIMEOUT_SLEEP = 2000
 const NEXT_WORD_TIMEOUT = 2000
@@ -164,7 +164,7 @@ export function * loadCard (next: true) {
   }
 }
 
-export function * loadPlayingState () {
+export function * loadPlayingState (action) {
   if (!playerShouldContinue()) {
     yield cancel(playerLoopTask)
     return
@@ -191,13 +191,16 @@ export function * loadPlayingState () {
     playingState = 'ORIGINAL'
   }
 
-  task = yield fork(processPlayingState)
+  task = yield fork(processPlayingState, action)
 }
 
-function * processPlayingState () {
+function * processPlayingState (action) {
   switch (playingState) {
     case 'ORIGINAL':
-      yield call(bgDelay, this.originalTimeout)
+      if (action.type === PlaybackTypes.PLAYBACK_SUCCESS) {
+        yield call(bgDelay, this.nextWordTimeout)
+      }
+      // yield call(bgDelay, this.originalTimeout)
       yield call(playCard)
       break
     case 'TRANSLATION':
@@ -217,12 +220,12 @@ function setModifiers () {
   const _isFocusMode = isFocusMode()
   this.volume = _isFocusMode ? 1 : 0.8
 
-  this.originalTimeout = _isFocusMode ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
+  // this.originalTimeout = _isFocusMode ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
   this.translationTimeout = _isFocusMode ? TRANSLATION_TIMEOUT : TRANSLATION_TIMEOUT_SLEEP
   this.nextWordTimeout = _isFocusMode ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
   this.repeatAllTimeout = _isFocusMode ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
 
-  this.speed = _isFocusMode ? 0.6 : 0.5
+  this.speed = _isFocusMode ? 0.55 : 0.45
   // this.rateOriginal = speed
   // this.rateTranslation = speed
 }

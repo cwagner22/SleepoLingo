@@ -19,7 +19,9 @@ const { Types, Creators } = createActions({
   playerPrev: null,
   playerReady: null,
   setPlayingState: ['playingState'],
-  setLessonLoopCounter: ['lessonLoopCounter']
+  setLessonLoopCounter: ['lessonLoopCounter'],
+  playbackSetDuration: ['duration'],
+  playbackSetElapsedTime: ['elapsedTime']
 })
 
 export const PlaybackTypes = Types
@@ -33,7 +35,9 @@ export const INITIAL_STATE = Immutable({
   isPaused: true,
   playing: false,
   playingState: null,
-  lessonLoopCounter: null
+  lessonLoopCounter: null,
+  elapsedTime: null,
+  duration: null
 })
 
 /* ------------- Reducers ------------- */
@@ -83,6 +87,14 @@ export const setLessonLoopCounter = (state, { lessonLoopCounter }) => {
   return state.merge({ lessonLoopCounter })
 }
 
+export const setDuration = (state, { duration }) => {
+  return state.merge({ duration })
+}
+
+export const setElapsedTime = (state, { elapsedTime }) => {
+  return state.merge({ elapsedTime })
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -94,5 +106,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLAYBACK_ERROR]: error,
   [Types.PLAYBACK_START]: start,
   [Types.SET_PLAYING_STATE]: setPlayingState,
-  [Types.SET_LESSON_LOOP_COUNTER]: setLessonLoopCounter
+  [Types.SET_LESSON_LOOP_COUNTER]: setLessonLoopCounter,
+  [Types.PLAYBACK_SET_ELAPSED_TIME]: setElapsedTime,
+  [Types.PLAYBACK_SET_DURATION]: setDuration
 })

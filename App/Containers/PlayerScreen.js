@@ -4,6 +4,7 @@ import React from 'react'
 import { View, Text, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon } from 'react-native-elements'
+import LinearGradient from 'react-native-linear-gradient'
 
 import PlaybackControls from './PlayerControls'
 import PlayerProgress from './PlayerProgress'
@@ -11,6 +12,7 @@ import LessonActions from '../Redux/LessonRedux'
 import { Lesson, Card } from '../Realm/realm'
 import VolumeSlider from '../Components/VolumeSlider'
 import PlaybackActions from '../Redux/PlaybackRedux'
+import { isFocusMode } from '../Sagas/PlaybackSagas'
 
 // Styles
 import styles from './Styles/PlayerScreenStyle'
@@ -39,7 +41,7 @@ class PlayerScreen extends React.Component {
   }
 
   renderInfoText () {
-    const text = this.props.lessonLoopCounter === 0 ? 'Focus on the audio lesson until the end'
+    const text = isFocusMode() ? 'Focus on the audio lesson until the end'
       : 'Good night. Playing the lesson one more time so you can listen while drifting off'
 
     return (
@@ -58,19 +60,19 @@ class PlayerScreen extends React.Component {
   }
 
   render () {
-    const bgStyle = {
-      backgroundColor: this.props.lessonLoopCounter === 0 ? '#0e1a29'
-        : '#0c0f1c'
-    }
+    // const bgStyle = {
+    // backgroundColor: isFocusMode() ? '#0e1a29' : '#0c0f1c'
+    // }
 
     return (
-      <View style={[styles.mainContainer, bgStyle]}>
+      // 09203f
+      <LinearGradient colors={['#0c0f1c', '#0e1a29']} style={styles.mainContainer}>
         {this.renderWord()}
         {this.renderStop()}
         <VolumeSlider volume={this.props.volume} onChange={(volume) => this.props.changeVol(volume)} />
         <PlayerProgress />
         <PlaybackControls />
-      </View>
+      </LinearGradient>
     )
   }
 }
@@ -82,8 +84,7 @@ const mapStateToProps = (state) => {
     currentCards: currentLesson.cards,
     currentCard: state.lesson.currentCardId && Card.getFromId(state.lesson.currentCardId),
     playingState: state.playback.playingState,
-    volume: state.playback.volume,
-    lessonLoopCounter: state.playback.lessonLoopCounter
+    volume: state.playback.volume
   }
 }
 

@@ -1,5 +1,9 @@
 import { call, put, fork, select, cancel, cancelled, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import BackgroundTimer from 'react-native-background-timer'
+import Sound from 'react-native-sound'
+import Promise from 'bluebird'
+import moment from 'moment'
 
 import Player from '../Services/Player'
 import loadSound from '../Services/Sound'
@@ -26,6 +30,7 @@ var playingState
 var lessonLoopCounter
 var translationLoopCounter
 var currentCardId
+// var time
 
 // Replicate redux-saga/delay with react-native-background-timer
 const bgDelay = (ms, val = true) => {
@@ -74,6 +79,7 @@ function * playCard () {
   yield put(LessonActions.setCurrentCard(currentCardId))
   yield put(PlaybackActions.setPlayingState(playingState))
   yield call(play, sentenceStr, language, this.volume * volume, this.speed * speed)
+  // add duration to elapsed time
 }
 
 function * playMessageEnd () {
@@ -209,9 +215,9 @@ function * processPlayingState (action) {
       break
     case 'RESTART':
       yield call(setModifiers)
-      yield call(bgDelay, this.repeatAllTimeout)
-      // todo: should happen before word incremented/loop restarted?
+      yield call(bgDelay, this.nextWordTimeout)
       yield call(playMessageEnd)
+      yield call(bgDelay, this.repeatAllTimeout)
       break
   }
 }
@@ -230,7 +236,7 @@ function setModifiers () {
   // this.rateTranslation = speed
 }
 
-const isFocusMode = () => lessonLoopCounter < LESSON_LOOP_MAX - 1
+export const isFocusMode = () => lessonLoopCounter < LESSON_LOOP_MAX - 1
 
 const playerShouldContinue = () => lessonLoopCounter < LESSON_LOOP_MAX
 
@@ -246,17 +252,85 @@ export function * start () {
   playerLoopTask = yield fork(playerLoop)
   yield put(PlaybackActions.playerReady())
   yield put(PlaybackActions.playbackSetPaused(false))
+  yield fork(calculateTotalTime)
+  yield fork(calculateProgress)
 }
 
-export function * playerVolChange ({ volume }) {
+export function * playerVolChange ({volume}) {
   if (sound) {
     sound.setVolume(volume)
   }
 }
 
-export function * playerSpeedChange ({ speed }) {
+export function * playerSpeedChange ({speed}) {
   if (sound) {
     const playbackState = yield select(getPlaybackState)
     sound.setSpeed(playbackState.speed)
   }
+}
+
+function _durationOfFile (path) {
+  return new Promise((resolve, reject) => {
+    const _sound = new Sound(path, '', (error) => {
+      if (error) {
+        console.log('failed to load the sound', error)
+        reject(error)
+      }
+
+      if (!_sound.getDuration()) {
+        console.log(path, 'no duration')
+      }
+      resolve(_sound.getDuration())
+    })
+  })
+}
+
+function _durationOfFiles (paths) {
+  return Promise.map(paths, (path) => {
+    return _durationOfFile(path)
+  }, {concurrency: 5}).then((duration) => {
+    return duration.reduce((d, total) => (total + d))
+  })
+}
+
+function * calculateTotalTime () {
+  const lessonState = yield select(getLessonState)
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
+  const currentCards = currentLesson.cards
+
+  let duration = 0
+
+  const paths = []
+  currentCards.map(c => {
+    const sentence = c.getSentence()
+    paths.push(Player.getFilePath(sentence.original, 'en-US'))
+    paths.push(Player.getFilePath(sentence.translation, 'th-TH'))
+  })
+
+  duration = yield call(_durationOfFiles, paths)
+  console.log(duration)
+
+  duration *= 1000 * LESSON_LOOP_MAX
+
+  let timeoutsDuration = (currentCards.length - 1) * (TRANSLATION_TIMEOUT * TRANSLATION_LOOP_MAX + NEXT_WORD_TIMEOUT)
+  timeoutsDuration += REPEAT_ALL_TIMEOUT
+
+  const msgsEndDuration = 1200 * LESSON_LOOP_MAX
+  duration += timeoutsDuration + msgsEndDuration
+
+  console.log(duration)
+  yield put(PlaybackActions.playbackSetDuration(duration))
+}
+
+function * calculateProgress () {
+  let startTime = moment()
+
+  while (true) {
+    yield call(delay, 1000)
+    const elaspedTime = moment().diff(startTime)
+    yield put(PlaybackActions.playbackSetElapsedTime(elaspedTime))
+  }
+  // const lessonState = yield select(getLessonState)
+  // const playbackState = yield select(getPlaybackState)
+  // const elapsed =
 }

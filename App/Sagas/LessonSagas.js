@@ -38,7 +38,7 @@ const downloadAll = (items) => {
   }
 
   // Create a pool.
-  var pool = new PromisePool(generatePromises(), 5)
+  var pool = new PromisePool(generatePromises, 5)
 
   // Start the pool.
   return pool.start()

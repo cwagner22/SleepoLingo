@@ -17,6 +17,7 @@ import ContactScreen from '../Containers/ContactScreen'
 import { Colors } from '../Themes/'
 
 // Wrapping DrawerNavigator with a StackNavigator having a header causes some display issues
+// See: https://github.com/react-community/react-navigation/issues/131#issuecomment-309236263
 const Drawer = DrawerNavigator({
   LessonsList: {
     screen: StackNavigator({
@@ -81,6 +82,9 @@ const Drawer = DrawerNavigator({
   }
 })
 
+// const forceDevScreen = 'LaunchScreen'
+const forceDevScreen = 'LessonsList'
+
 // Manifest of possible screens
 const PrimaryNav = StackNavigator({
   LaunchScreen: {screen: LaunchScreen},
@@ -97,7 +101,7 @@ const PrimaryNav = StackNavigator({
 }, {
   // Default config for all screens
   headerMode: 'none',
-  initialRouteName: __DEV__ ? 'LaunchScreen' : 'LessonsList'
+  initialRouteName: __DEV__ ? forceDevScreen : 'LessonsList'
   // navigationOptions: {
   //   header: {
   //     style: styles.header

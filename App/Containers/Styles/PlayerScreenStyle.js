@@ -6,8 +6,7 @@ import { ApplicationStyles } from '../../Themes/'
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   mainContainer: {
-    flex: 1,
-    backgroundColor: '#0e1a29'
+    flex: 1
   },
   sentenceContainer: {
     alignItems: 'center',

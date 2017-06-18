@@ -97,20 +97,9 @@ export class Card {
     return !showDate || moment(showDate).isBefore(dateCompare)
   }
 
-  // setDate (date) {
-  //   if (moment.isMoment(date)) {
-  //     date = date.toDate()
-  //   }
-  //
-  //   realm.write(() => {
-  //     try {
-  //       // realm.create(Card.schema.name, {id: this.card.id, showDate: date}, true)
-  //       this.showDate = date
-  //     } catch (e) {
-  //       console.warn(e)
-  //     }
-  //   })
-  // }
+  getSentence () {
+    return this.fullSentence || this.sentence
+  }
 }
 
 export class Lesson {

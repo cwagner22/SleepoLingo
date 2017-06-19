@@ -1,4 +1,4 @@
-import { call, put, fork, select, cancel, cancelled, takeEvery, spawn } from 'redux-saga/effects'
+import { call, put, fork, select, cancel, cancelled, takeEvery } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import BackgroundTimer from 'react-native-background-timer'
 import Sound from 'react-native-sound'
@@ -110,7 +110,7 @@ function * forcePlayerWithLoadedCard () {
   translationLoopCounter = 0
   playingState = 'ORIGINAL'
   playerLoopProcessTask = yield fork(playerLoopProcess)
-  progressTask = yield spawn(calculateProgress)
+  progressTask = yield fork(calculateProgress)
   yield fork(playCard)
 }
 
@@ -149,12 +149,6 @@ export function * loadCard (next: true) {
   const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
   const currentCards = currentLesson.cards
 
-  // if (!currentIndex) {
-  //   // Init
-  //   currentIndex = 0
-  // } else {
-  // var currentIndex = currentCards.findIndex((c) => c.id === lessonState.currentCardId)
-
   if (lessonState.currentCardId) {
     if (next) {
       if (++currentIndex >= currentCards.length) {
@@ -174,7 +168,6 @@ export function * loadCard (next: true) {
       currentIndex = Math.max(0, --currentIndex)
     }
   }
-  // }
 
   currentCardId = currentCards[currentIndex].id
 }
@@ -207,9 +200,8 @@ export function * loadPlayingState (action) {
   }
 
   if (action.type === PlaybackTypes.PLAYBACK_SUCCESS && playingState === 'ORIGINAL') {
-    debug('Restart calculateProgress')
     yield cancel(progressTask)
-    progressTask = yield spawn(calculateProgress)
+    progressTask = yield fork(calculateProgress)
   }
 
   yield call(processPlayingState, action)
@@ -286,6 +278,8 @@ export function * playerSpeedChange ({speed}) {
     const playbackState = yield select(getPlaybackState)
     sound.setSpeed(playbackState.speed)
   }
+
+  yield cancel(progressTask)
   yield fork(calculateTotalTime)
 }
 

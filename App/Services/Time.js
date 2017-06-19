@@ -14,12 +14,13 @@ export default {
   },
 
   formattedTime: (timeInMs) => {
+    if (timeInMs < 0) return ''
     let timeInSeconds = Math.floor(timeInMs / 1000)
     let minutes = Math.floor(timeInSeconds / 60)
     let seconds = timeInSeconds - minutes * 60
 
     if (isNaN(timeInSeconds) || isNaN(minutes) || isNaN(seconds) || (minutes < 0 && seconds < 0)) {
-      return ''
+      return (`0:00`)
     } else {
       return (`${withLeadingZero(minutes)}:${withLeadingZero(seconds.toFixed(0))}`)
     }

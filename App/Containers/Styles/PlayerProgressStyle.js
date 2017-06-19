@@ -15,13 +15,13 @@ export default StyleSheet.create({
   progressBar: {
   },
   timeElapsed: {
-    color: Colors.darkGrey,
+    color: Colors.snow,
     fontSize: 10,
     padding: 5,
     width: 60
   },
   timeLeft: {
-    color: Colors.darkGrey,
+    color: Colors.snow,
     textAlign: 'right',
     fontSize: 10,
     padding: 5,

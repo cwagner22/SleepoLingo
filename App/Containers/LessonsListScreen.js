@@ -5,6 +5,7 @@ import { View, Text } from 'react-native'
 import { ListView } from 'realm/react-native'
 import { connect } from 'react-redux'
 import RNFS from 'react-native-fs'
+// import { Sentry } from 'react-native-sentry'
 
 import LessonActions from '../Redux/LessonRedux'
 import LessonButton from '../Components/LessonButton'
@@ -87,6 +88,11 @@ class LessonsListScreen extends React.Component {
   }
 
   goToLesson (lesson) {
+    // Sentry.captureMessage('test2');
+    // Sentry.captureException(new Error('Oops!'), {
+    //   logger: 'my.module'
+    // });
+    // throw new Error('er0r2')
     this.props.loadLesson(lesson.id)
     // this.props.navigateToLesson(lesson.id)
   }

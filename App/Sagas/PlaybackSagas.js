@@ -1,4 +1,4 @@
-import { call, put, fork, select, cancel, cancelled, takeEvery } from 'redux-saga/effects'
+import { call, put, fork, select, cancel, cancelled, takeEvery, spawn } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import BackgroundTimer from 'react-native-background-timer'
 import Sound from 'react-native-sound'
@@ -15,7 +15,7 @@ import { Lesson, Card } from '../Realm/realm'
 Debug.enable('app:player')
 const debug = Debug('app:player')
 
-export const LESSON_LOOP_MAX = 4
+export const LESSON_LOOP_MAX = 1
 const TRANSLATION_LOOP_MAX = 3
 // const ORIGINAL_TIMEOUT = 1000
 // const ORIGINAL_TIMEOUT_SLEEP = 2000
@@ -30,12 +30,9 @@ const getLessonState = (state) => state.lesson
 const getPlaybackState = (state) => state.playback
 
 var sound, playerLoopProcessTask, progressTask
-var playingState
-var lessonLoopCounter
-var translationLoopCounter
-var currentCardId
-var currentIndex
+var playingState, lessonLoopCounter, translationLoopCounter, currentCardId, currentIndex
 var cachedFilesDurations
+// var playing
 
 // Replicate redux-saga/delay with react-native-background-timer
 const bgDelay = (ms, val = true) => {
@@ -102,15 +99,17 @@ export function * playerStop () {
   // if (task) {
   //   yield cancel(task)
   // }
-  yield cancel(progressTask)
+  // playing = false
+  yield call(stopCalculateProgress)
   yield cancel(playerLoopProcessTask)
 }
 
 function * forcePlayerWithLoadedCard () {
+  // playing = true
   translationLoopCounter = 0
   playingState = 'ORIGINAL'
   playerLoopProcessTask = yield fork(playerLoopProcess)
-  progressTask = yield fork(calculateProgress)
+  yield call(startCalculateProgress)
   yield fork(playCard)
 }
 
@@ -200,8 +199,7 @@ export function * loadPlayingState (action) {
   }
 
   if (action.type === PlaybackTypes.PLAYBACK_SUCCESS && playingState === 'ORIGINAL') {
-    yield cancel(progressTask)
-    progressTask = yield fork(calculateProgress)
+    yield call(restartCalculateProgress)
   }
 
   yield call(processPlayingState, action)
@@ -255,6 +253,7 @@ function * playerLoopProcess () {
 }
 
 export function * start () {
+  // playing = true
   lessonLoopCounter = 0
   translationLoopCounter = 0
   currentIndex = 0
@@ -265,6 +264,7 @@ export function * start () {
   playerLoopProcessTask = yield fork(playerLoopProcess)
   yield put(PlaybackActions.playerReady())
   yield fork(calculateTotalTime)
+  yield call(startCalculateProgress)
 }
 
 export function * playerVolChange ({volume}) {
@@ -279,11 +279,12 @@ export function * playerSpeedChange ({speed}) {
     sound.setSpeed(playbackState.speed)
   }
 
-  yield cancel(progressTask)
   yield fork(calculateTotalTime)
+  yield call(restartCalculateProgress)
 }
 
 function * calculateTotalTime () {
+  debug('starting calculateTotalTime()')
   const lessonState = yield select(getLessonState)
   const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
   const nbCards = currentLesson.cards.length
@@ -291,12 +292,11 @@ function * calculateTotalTime () {
   const filesDuration = yield call(durationOfFilesTotal, LESSON_LOOP_MAX - 1, nbCards - 1, nbCards)
   const timeoutsDuration = getTimeoutsDurationTotal(LESSON_LOOP_MAX - 1, nbCards - 1, nbCards)
 
-  const duration = timeoutsDuration + timeoutsDuration
+  const duration = filesDuration + timeoutsDuration
 
-  console.log(`Total duration: ${duration.toFixed()}, Files duration: ${filesDuration.toFixed()}, Timeouts duration: ${timeoutsDuration.toFixed()}`)
+  console.log(
+    `Total duration: ${duration.toFixed()}, Files duration: ${filesDuration.toFixed()}, Timeouts duration: ${timeoutsDuration.toFixed()}`)
   yield put(PlaybackActions.playbackSetDuration(duration))
-
-  progressTask = yield fork(calculateProgress)
 }
 
 function fileDuration (path) {
@@ -405,6 +405,21 @@ function * getElapsedTime () {
   debug(
     `Time previous cards - Total: ${duration.toFixed()}, Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`)
   return duration
+}
+
+function * startCalculateProgress () {
+  progressTask = yield spawn(calculateProgress)
+}
+
+function * stopCalculateProgress () {
+  if (progressTask) {
+    yield cancel(progressTask)
+  }
+}
+
+function * restartCalculateProgress () {
+  yield call(stopCalculateProgress)
+  yield call(startCalculateProgress)
 }
 
 function * calculateProgress () {

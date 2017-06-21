@@ -1,3 +1,5 @@
+// /* global ErrorUtils:false */
+
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
@@ -35,7 +37,23 @@ class App extends Component {
 
     // Enable playback in silence mode (iOS only)
     Sound.setCategory('Playback', true)
+
+    // Use instead?: react-native-exception-handler
+    // Intercept react-native error handling
+    // this.defaultHandler = ErrorUtils.getGlobalHandler()
+    // ErrorUtils.setGlobalHandler(this.wrapGlobalHandler.bind(this))
   }
+
+  // async wrapGlobalHandler (error, isFatal) {
+  //   // If the error kills our app in Release mode, make sure we don't rehydrate
+  //   // with an invalid Redux state and cleanly go back to login page instead
+  //   // if (isFatal && !__DEV__) AsyncStorage.clear()
+  //
+  //   if (isFatal) console.error(error)
+  //
+  //   // Once finished, make sure react-native also gets the error
+  //   if (this.defaultHandler) this.defaultHandler(error, isFatal)
+  // }
 
   render () {
     return (

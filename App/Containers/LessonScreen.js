@@ -10,7 +10,6 @@ import Modal from 'react-native-modalbox'
 import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
 import RoundedButton from '../Components/RoundedButton'
-import NavigationActions from '../Navigation/NavigationActions'
 import PlayerScreen from './PlayerScreen'
 import LessonTitle from './LessonTitle'
 
@@ -46,6 +45,13 @@ class LessonScreen extends React.Component {
     // })
 
     this.props.downloadLesson(lesson.cards)
+  }
+
+  componentWillReceiveProps (newProps) {
+    if (this.state.modalVisible && newProps.playerRunning !== this.props.playerRunning && !newProps.playerRunning) {
+      // Audio finished, force the player to close since it's still open
+      this.refs.nightPlayerModal.close()
+    }
   }
 
   renderNightButton () {
@@ -124,15 +130,15 @@ class LessonScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: Lesson.getFromId(state.lesson.currentLessonId)
+    lesson: Lesson.getFromId(state.lesson.currentLessonId),
+    playerRunning: state.playback.playerRunning
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words)),
-    startAnki: () => dispatch(LessonActions.lessonStartAnki()),
-    navigateToPlayerScreen: (lessonId) => dispatch(NavigationActions.navigate('PlayerScreen'))
+    startAnki: () => dispatch(LessonActions.lessonStartAnki())
   }
 }
 

@@ -25,6 +25,7 @@ class PlayerScreen extends React.Component {
   }
 
   componentWillUnmount () {
+    // User closed the player
     this.props.playerStop()
   }
 

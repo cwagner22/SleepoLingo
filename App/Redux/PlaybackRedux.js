@@ -42,10 +42,19 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
-export const init = (state, { volume }: Object) => {
+export const playerStart = (state, { volume }: Object) => {
   return state.merge({
     lessonLoopCounter: 0,
-    playingState: null
+    playingState: null,
+    elapsedTime: 0,
+    duration: 0,
+    playerRunning: true
+  })
+}
+
+export const playerStop = (state, { volume }: Object) => {
+  return state.merge({
+    playerRunning: false
   })
 }
 
@@ -76,7 +85,9 @@ export const error = (state) => {
 }
 
 export const start = (state, { language }) => {
-  return state.merge({ playing: true })
+  return state.merge({
+    playing: true
+  })
 }
 
 export const setPlayingState = (state, { playingState }) => {
@@ -101,7 +112,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLAYBACK_VOL_CHANGE]: changeVolume,
   [Types.PLAYBACK_SPEED_CHANGE]: changeSpeed,
   [Types.PLAYBACK_SET_PAUSED]: setPaused,
-  [Types.PLAYBACK_INIT]: init,
+  [Types.PLAYER_START]: playerStart,
+  [Types.PLAYER_STOP]: playerStop,
   [Types.PLAYBACK_SUCCESS]: success,
   [Types.PLAYBACK_ERROR]: error,
   [Types.PLAYBACK_START]: start,

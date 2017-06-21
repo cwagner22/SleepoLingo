@@ -173,8 +173,7 @@ export function * loadCard (next: true) {
 
 export function * loadPlayingState (action) {
   if (!playerShouldContinue()) {
-    yield cancel(playerLoopProcessTask)
-    return
+    yield put(PlaybackActions.playerStop())
   }
 
   if (!playingState) {
@@ -262,7 +261,8 @@ export function * start () {
   yield call(setModifiers)
 
   playerLoopProcessTask = yield fork(playerLoopProcess)
-  yield put(PlaybackActions.playerReady())
+  yield put(PlaybackActions.playerReady()) // start playerLoopProcess
+
   yield fork(calculateTotalTime)
   yield call(startCalculateProgress)
 }
@@ -289,8 +289,8 @@ function * calculateTotalTime () {
   const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
   const nbCards = currentLesson.cards.length
 
-  const filesDuration = yield call(durationOfFilesTotal, LESSON_LOOP_MAX - 1, nbCards - 1, nbCards)
-  const timeoutsDuration = getTimeoutsDurationTotal(LESSON_LOOP_MAX - 1, nbCards - 1, nbCards)
+  const filesDuration = yield call(durationOfFilesTotal, nbCards - 1, nbCards, true)
+  const timeoutsDuration = getTimeoutsDurationTotal(nbCards - 1, nbCards, true)
 
   const duration = filesDuration + timeoutsDuration
 
@@ -340,11 +340,12 @@ function cacheFilesDurations (currentCards) {
 const applySpeedToFileDuration = (duration, speed) => duration * 1000 * (1 / (this.speed * speed))
 
 function * durationOfFiles (index) {
+  // Return total duration of all the files played until the current index (included), for one loop
   const playbackState = yield select(getPlaybackState)
   const {speed} = playbackState
 
   let duration = 0
-  for (var i = 0; i < index; i++) {
+  for (var i = 0; i <= index; i++) {
     var cachedFileDuration = cachedFilesDurations[i]
     duration += cachedFileDuration.original + cachedFileDuration.translation * TRANSLATION_LOOP_MAX
   }
@@ -352,7 +353,16 @@ function * durationOfFiles (index) {
   return applySpeedToFileDuration(duration, speed)
 }
 
-function * durationOfFilesTotal (lessonLoopCounter, index, nbCards) {
+function * durationOfFilesTotal (index, nbCards, full: bool) {
+  // Return total duration of all the files played until the current index, including previous loops.
+  // If full is true, include the previous loops and the current index
+  let _lessonLoopCounter
+  if (!full) {
+    _lessonLoopCounter = lessonLoopCounter
+  } else {
+    _lessonLoopCounter = LESSON_LOOP_MAX - 1
+  }
+
   const playbackState = yield select(getPlaybackState)
   const {speed} = playbackState
   const lessonState = yield select(getLessonState)
@@ -367,28 +377,30 @@ function * durationOfFilesTotal (lessonLoopCounter, index, nbCards) {
   let filesDuration = 0
   let fullFilesDuration
   // Duration from previous loop
-  for (let i = 0; i < lessonLoopCounter; i++) {
+  for (let i = 0; i < _lessonLoopCounter; i++) {
     if (!fullFilesDuration) fullFilesDuration = yield call(durationOfFiles, nbCards - 1)
     filesDuration += fullFilesDuration + msgEndDuration
   }
 
   // Current loop duration
-  filesDuration += yield call(durationOfFiles, index)
+  filesDuration += yield call(durationOfFiles, full ? index : index - 1)
 
-  if (index === nbCards - 1) filesDuration += msgEndDuration
+  if (full) filesDuration += msgEndDuration
   return filesDuration
 }
 
 function getTimeoutsDuration (index) {
-  return index * (TRANSLATION_TIMEOUT * TRANSLATION_LOOP_MAX + NEXT_WORD_TIMEOUT)
+  // Return total duration of all the timeouts played until the current index (included), for one loop
+  return (index + 1) * (TRANSLATION_TIMEOUT * TRANSLATION_LOOP_MAX + NEXT_WORD_TIMEOUT)
 }
 
-function getTimeoutsDurationTotal (lessonLoopCounter, index, nbCards) {
+function getTimeoutsDurationTotal (index, nbCards, includeLast: bool) {
+  // Return total duration of all the timeouts played until the current index, including previous loops.
   let timeoutsDuration = 0
   for (let i = 0; i < lessonLoopCounter; i++) {
     timeoutsDuration += getTimeoutsDuration(nbCards - 1) + REPEAT_ALL_TIMEOUT
   }
-  timeoutsDuration += getTimeoutsDuration(currentIndex) + (index === nbCards - 1 ? REPEAT_ALL_TIMEOUT : 0)
+  timeoutsDuration += getTimeoutsDuration(includeLast ? index : index - 1) + (includeLast ? REPEAT_ALL_TIMEOUT : 0)
   return timeoutsDuration
 }
 
@@ -398,8 +410,8 @@ function * getElapsedTime () {
   // const index = currentLesson.cards.findIndex((c) => c.id === lessonState.currentCardId)
   const nbCards = currentLesson.cards.length
 
-  const filesDuration = yield call(durationOfFilesTotal, lessonLoopCounter, currentIndex, nbCards)
-  const timeoutsDuration = getTimeoutsDurationTotal(lessonLoopCounter, currentIndex, nbCards)
+  const filesDuration = yield call(durationOfFilesTotal, currentIndex, nbCards, false)
+  const timeoutsDuration = getTimeoutsDurationTotal(currentIndex, nbCards, false)
 
   const duration = filesDuration + timeoutsDuration
   debug(

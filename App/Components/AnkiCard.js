@@ -18,7 +18,7 @@ export default class AnkiCard extends React.Component {
   }
 
   componentWillMount () {
-    this.setState({card: Card.getFromId(this.props.cardId)})
+    this.setState({card: Card.getFromId(this.props.cardId, true)})
   }
 
   state = {

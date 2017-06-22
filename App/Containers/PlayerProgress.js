@@ -52,7 +52,7 @@ class PlayerProgress extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId)
+  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId, true)
 
   return {
     currentCards: currentLesson.cards,

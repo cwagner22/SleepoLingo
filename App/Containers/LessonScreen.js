@@ -130,7 +130,7 @@ class LessonScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    lesson: Lesson.getFromId(state.lesson.currentLessonId),
+    lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
     playerRunning: state.playback.playerRunning
   }
 }

@@ -196,8 +196,16 @@ schemas.forEach((ObjectType) => {
     return realm.objects(schemaName)
   }
 
-  ObjectType.getFromId = (id) => {
-    return realm.objectForPrimaryKey(schemaName, id)
+  ObjectType.getFromId = (id, cache: bool) => {
+    if (cache) {
+      if (!ObjectType.currentObject || ObjectType.currentObject.id !== id) {
+        // Cache object
+        ObjectType.currentObject = realm.objectForPrimaryKey(schemaName, id)
+      }
+      return ObjectType.currentObject
+    } else {
+      return realm.objectForPrimaryKey(schemaName, id)
+    }
   }
 })
 

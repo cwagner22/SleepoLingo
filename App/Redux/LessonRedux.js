@@ -107,7 +107,7 @@ function sortCards (state, cards, allowAlmost = false) {
 }
 
 export const loadNextCard = (state) => {
-  const currentLesson = Lesson.getFromId(state.currentLessonId)
+  const currentLesson = Lesson.getFromId(state.currentLessonId, true)
   const sortedCards = sortCards(state, currentLesson.cards, false)
   const currentCardId = sortedCards.length ? sortedCards[0].id : null
 

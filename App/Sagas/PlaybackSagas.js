@@ -15,7 +15,7 @@ import { Lesson, Card } from '../Realm/realm'
 Debug.enable('app:player')
 const debug = Debug('app:player')
 
-export const LESSON_LOOP_MAX = 1
+export const LESSON_LOOP_MAX = 4
 const TRANSLATION_LOOP_MAX = 3
 // const ORIGINAL_TIMEOUT = 1000
 // const ORIGINAL_TIMEOUT_SLEEP = 2000
@@ -67,7 +67,7 @@ function * play (sentence, language, volume, speed) {
 }
 
 function * playCard () {
-  const currentCard = Card.getFromId(currentCardId)
+  const currentCard = Card.getFromId(currentCardId, true)
   const playbackState = yield select(getPlaybackState)
 
   const {speed, volume} = playbackState
@@ -145,7 +145,7 @@ export function * loadPrevCard () {
 export function * loadCard (next: true) {
   playingState = 'ORIGINAL'
   const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
   const currentCards = currentLesson.cards
 
   if (lessonState.currentCardId) {
@@ -286,7 +286,7 @@ export function * playerSpeedChange ({speed}) {
 function * calculateTotalTime () {
   debug('starting calculateTotalTime()')
   const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
   const nbCards = currentLesson.cards.length
 
   const filesDuration = yield call(durationOfFilesTotal, nbCards - 1, nbCards, true)
@@ -366,7 +366,7 @@ function * durationOfFilesTotal (index, nbCards, full: bool) {
   const playbackState = yield select(getPlaybackState)
   const {speed} = playbackState
   const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
   const currentCards = currentLesson.cards
   if (!cachedFilesDurations) {
     yield call(cacheFilesDurations, currentCards)
@@ -406,7 +406,7 @@ function getTimeoutsDurationTotal (index, nbCards, includeLast: bool) {
 
 function * getElapsedTime () {
   const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId)
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
   // const index = currentLesson.cards.findIndex((c) => c.id === lessonState.currentCardId)
   const nbCards = currentLesson.cards.length
 

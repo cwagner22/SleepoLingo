@@ -8,8 +8,6 @@ import { Icon } from 'react-native-elements'
 
 import PlaybackActions from '../Redux/PlaybackRedux'
 import LessonActions from '../Redux/LessonRedux'
-// import { LESSON_LOOP_MAX } from '../Sagas/PlaybackSagas'
-import { Lesson, Card } from '../Realm/realm'
 
 // Styles
 import styles from './Styles/PlayerControlsStyle'
@@ -71,17 +69,8 @@ class PlayerControls extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId)
-
   return {
-    lessonLoopCounter: state.lesson.lessonLoopCounter,
-    translationLoopCounter: state.lesson.translationLoopCounter,
-    playingState: state.lesson.playingState,
-    sameWord: state.lesson.sameWord,
     isPaused: state.playback.isPaused,
-    playback: state.playback,
-    currentCard: state.lesson.currentCardId && Card.getFromId(state.lesson.currentCardId),
-    currentCards: currentLesson.cards,
     speed: state.playback.speed
   }
 }

@@ -75,7 +75,7 @@ class WordsListScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentLesson: Lesson.getFromId(state.lesson.currentLessonId)
+    currentLesson: Lesson.getFromId(state.lesson.currentLessonId, true)
   }
 }
 

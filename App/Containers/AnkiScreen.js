@@ -91,7 +91,7 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const lesson = Lesson.getFromId(state.lesson.currentLessonId)
+  const lesson = Lesson.getFromId(state.lesson.currentLessonId, true)
   return {
     lesson: state.lesson,
     currentCardId: state.lesson.currentCardId,

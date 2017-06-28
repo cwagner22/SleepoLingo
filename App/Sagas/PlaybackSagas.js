@@ -394,13 +394,20 @@ function getTimeoutsDuration (index) {
   return (index + 1) * (TRANSLATION_TIMEOUT * TRANSLATION_LOOP_MAX + NEXT_WORD_TIMEOUT)
 }
 
-function getTimeoutsDurationTotal (index, nbCards, includeLast: bool) {
+function getTimeoutsDurationTotal (index, nbCards, full: bool) {
   // Return total duration of all the timeouts played until the current index, including previous loops.
+  let _lessonLoopCounter
+  if (!full) {
+    _lessonLoopCounter = lessonLoopCounter
+  } else {
+    _lessonLoopCounter = LESSON_LOOP_MAX - 1
+  }
+
   let timeoutsDuration = 0
-  for (let i = 0; i < lessonLoopCounter; i++) {
+  for (let i = 0; i < _lessonLoopCounter; i++) {
     timeoutsDuration += getTimeoutsDuration(nbCards - 1) + REPEAT_ALL_TIMEOUT
   }
-  timeoutsDuration += getTimeoutsDuration(includeLast ? index : index - 1) + (includeLast ? REPEAT_ALL_TIMEOUT : 0)
+  timeoutsDuration += getTimeoutsDuration(full ? index : index - 1) + (full ? REPEAT_ALL_TIMEOUT : 0)
   return timeoutsDuration
 }
 

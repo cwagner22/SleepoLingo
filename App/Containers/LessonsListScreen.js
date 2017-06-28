@@ -92,7 +92,7 @@ class LessonsListScreen extends React.Component {
     // Sentry.captureException(new Error('Oops!'), {
     //   logger: 'my.module'
     // });
-    // throw new Error('er0r2')
+    // throw new Error('yest error')
     this.props.loadLesson(lesson.id)
     // this.props.navigateToLesson(lesson.id)
   }

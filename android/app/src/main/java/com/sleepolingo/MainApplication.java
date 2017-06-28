@@ -3,14 +3,14 @@ package com.sleepolingo;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import io.sentry.RNSentryPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.zmxv.RNSound.RNSoundPackage;
+import io.sentry.RNSentryPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.rnfs.RNFSPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
@@ -34,14 +34,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNSentryPackage(MainApplication.this),
-            new LinearGradientPackage(),
-            new RNFetchBlobPackage(),
             new RealmReactPackage(),
             new VectorIconsPackage(),
             new RNSoundPackage(),
+            new RNSentryPackage(MainApplication.this),
+            new LinearGradientPackage(),
             new ReactNativeI18n(),
             new RNFSPackage(),
+            new RNFetchBlobPackage(),
             new RNDeviceInfo(),
             new ReactNativeConfigPackage(),
             new BackgroundTimerPackage()

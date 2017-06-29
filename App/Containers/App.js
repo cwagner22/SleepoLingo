@@ -5,8 +5,8 @@ import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { Platform } from 'react-native'
-import Realm from 'realm'
 import Sound from 'react-native-sound'
+import RNFS from 'react-native-fs'
 
 // Realm.copyBundledRealmFiles()
 
@@ -28,11 +28,10 @@ const store = createStore()
 class App extends Component {
   componentWillMount () {
     if (Platform.OS === 'android') {
-      // RNFS.MainBundlePath is not working for android and I don't know how to referencee the bundle/asset path for
-      // the readlm db...
-      // todo: unlink dest files? (see rootcontainer git history) Or use fs.copyFileAssets to Doc dir
-      // todo: remove realm from redux?
-      Realm.copyBundledRealmFiles()
+      // RNFS.MainBundlePath is not supported for android so we have to copy the db to the documents folder
+      // https://github.com/realm/realm-js/issues/1047
+      // Realm.copyBundledRealmFiles() doesn't overwrite
+      RNFS.copyFileAssets('default.realm', RNFS.DocumentDirectoryPath + '/default.realm')
     }
 
     // Enable playback in silence mode (iOS only)

@@ -41,5 +41,9 @@ export default StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     textAlign: 'center'
+  },
+  settingsModal: {
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })

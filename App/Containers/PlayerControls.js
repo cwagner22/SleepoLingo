@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import BackgroundTimer from 'react-native-background-timer'
@@ -8,11 +8,16 @@ import { Icon } from 'react-native-elements'
 
 import PlaybackActions from '../Redux/PlaybackRedux'
 import LessonActions from '../Redux/LessonRedux'
+import NavigationActions from '../Navigation/NavigationActions'
 
 // Styles
 import styles from './Styles/PlayerControlsStyle'
 
 class PlayerControls extends React.Component {
+  static propTypes = {
+    openSettings: PropTypes.func
+  }
+
   componentWillMount () {
     // this.scheduleTimer()
   }
@@ -55,6 +60,9 @@ class PlayerControls extends React.Component {
         <TouchableOpacity onPress={this.props.playerNext} style={styles.button}>
           <Icon iconStyle={styles.buttonIcon} name='skip-next' size={35} />
         </TouchableOpacity>
+        <TouchableOpacity onPress={this.props.goToSettings} style={styles.settingsButton}>
+          <Icon size={20} name='settings' color='white' />
+        </TouchableOpacity>
       </View>
     )
   }
@@ -87,7 +95,8 @@ const mapDispatchToProps = (dispatch) => {
     playerPrev: () => dispatch(PlaybackActions.playerPrev()),
     playerPause: () => dispatch(PlaybackActions.playerPause()),
     playerResume: () => dispatch(PlaybackActions.playerResume()),
-    changeSpeed: () => dispatch(PlaybackActions.playbackSpeedChange())
+    changeSpeed: () => dispatch(PlaybackActions.playbackSpeedChange()),
+    goToSettings: (lessonId) => dispatch(NavigationActions.navigate('PlayerSettingsScreen'))
   }
 }
 

@@ -57,8 +57,14 @@ class LessonScreen extends React.Component {
   renderNightButton () {
     if (!this.state.modalVisible) {
       return (
-        <ActionButton buttonColor={Colors.easternBlue} onPress={() => this.startNight()} offsetY={85}
-          icon={<Icon name='hotel' color='white' />} />
+        <ActionButton
+          buttonColor={Colors.easternBlue}
+          onPress={() => this.startNight()}
+          offsetY={85}
+          icon={<Icon name='hotel' color='white' />}
+          elevation={5}
+          zIndex={5}
+        />
       )
     }
   }

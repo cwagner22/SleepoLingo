@@ -8,7 +8,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import io.sentry.RNSentryPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.i18n.reactnativei18n.ReactNativeI18n;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -39,7 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNSoundPackage(),
             new RNSentryPackage(MainApplication.this),
             new LinearGradientPackage(),
-            new ReactNativeI18n(),
+            new RNI18nPackage(),
             new RNFSPackage(),
             new RNFetchBlobPackage(),
             new RNDeviceInfo(),

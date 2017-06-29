@@ -1,13 +1,11 @@
 import React from 'react'
-import { Text } from 'react-native'
 import { connect } from 'react-redux'
+import { HeaderTitle } from 'react-navigation'
 
 import { Lesson } from '../Realm/realm'
 
-import styles from './Styles/LessonTitleStyles'
-
 const LessonTitle = ({ currentLesson }) => (
-  <Text style={styles.title} accessibilityTraits='header' numberOfLines={1}>{currentLesson.name}</Text>
+  <HeaderTitle>{currentLesson.name}</HeaderTitle>
 )
 
 const mapStateToProps = (state) => {

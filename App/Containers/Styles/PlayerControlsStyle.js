@@ -14,7 +14,6 @@ export default StyleSheet.create({
     // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 50,
     paddingVertical: 10
   },
   speedButton: {
@@ -22,6 +21,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  settingsButton: {
+    width: 50
   },
   button: {
     flex: 1

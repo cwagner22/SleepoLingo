@@ -5,6 +5,7 @@ import Sound from 'react-native-sound'
 import Promise from 'bluebird'
 import moment from 'moment'
 import Debug from 'debug'
+import _ from 'lodash'
 
 import Player from '../Services/Player'
 import loadSound from '../Services/Sound'
@@ -318,7 +319,9 @@ function fileDuration (path) {
 function cacheFilesDurations (currentCards) {
   debug('Caching files durations')
 
-  return Promise.map(currentCards, (card) => {
+  // Promise.map/props don't work on android with realm for some reason...
+  return Promise.map(_.range(currentCards.length), (i) => {
+    const card = currentCards[i]
     const sentence = card.getSentence()
 
     return Promise.join(fileDuration(Player.getFilePath(sentence.original, 'en-US')),
@@ -445,7 +448,8 @@ function * calculateProgress () {
   let startTime = moment()
 
   while (true) {
-    const elaspedTime = yield call(getElapsedTime)
+    // If the files durations have not been cached yet then set it to 0 for now
+    const elaspedTime = cachedFilesDurations ? yield call(getElapsedTime) : 0
     const totalElaspedTime = elaspedTime + moment().diff(startTime)
     debug(`Time total - ${totalElaspedTime.toFixed()}, Since current card: ${moment().diff(startTime)}`)
     yield put(PlaybackActions.playbackSetElapsedTime(totalElaspedTime))

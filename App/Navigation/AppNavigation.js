@@ -1,5 +1,5 @@
 import React from 'react'
-import { StackNavigator, DrawerNavigator } from 'react-navigation'
+import { StackNavigator, DrawerNavigator, HeaderBackButton } from 'react-navigation'
 
 import LaunchScreen from '../Containers/LaunchScreen'
 import LoginScreen from '../Containers/LoginScreen'
@@ -12,45 +12,66 @@ import WordsListScreen from '../Containers/WordsListScreen'
 import DrawerButton from '../Components/DrawerButton'
 import SettingsScreen from '../Containers/SettingsScreen'
 import ContactScreen from '../Containers/ContactScreen'
+import PlayerSettingsScreen from '../Containers/PlayerSettingsScreen'
 
 // import styles from './Styles/NavigationStyles'
 import { Colors } from '../Themes/'
+
+// To be able to use modals with cards we have to wrap the cards stack inside a modal stack
+// https://github.com/react-community/react-navigation/issues/707#issuecomment-299859578
+const MainCardNavigator = StackNavigator({
+  LessonsListScreen: {
+    screen: LessonsListScreen
+    // navigationOptions: ({navigation}) => ({
+    //   // header: null
+    // })
+  },
+  LessonScreen: {
+    screen: LessonScreen
+  },
+  AnkiScreen: {
+    screen: AnkiScreen
+  },
+  PlayerScreen: {
+    screen: PlayerScreen,
+    navigationOptions: () => ({
+      header: null
+    })
+  },
+  WordsListScreen: {
+    screen: WordsListScreen,
+    navigationOptions: ({navigation}) => ({
+      title: 'Words'
+      // headerBackTitle: 'Back'
+    })
+  }
+}, {
+  headerMode: 'none',
+  navigationOptions: ({navigation}) => ({
+    // Keep drawer locked by default, unlock it in the LessonsListScreen
+    drawerLockMode: 'locked-closed',
+    // We have to manually add the headerLeft back...
+    headerLeft: <HeaderBackButton title='Back' onPress={() => navigation.dispatch({ type: 'Navigation/BACK' })} />
+  })
+})
+
+const MainModalNavigator = StackNavigator({
+  LessonsListScreen: {
+    screen: MainCardNavigator
+  },
+  PlayerSettingsScreen: {
+    screen: PlayerSettingsScreen
+  }
+}, {
+  mode: 'modal'
+  // headerMode: 'none'
+})
 
 // Wrapping DrawerNavigator with a StackNavigator having a header causes some display issues
 // See: https://github.com/react-community/react-navigation/issues/131#issuecomment-309236263
 const Drawer = DrawerNavigator({
   LessonsList: {
-    screen: StackNavigator({
-      LessonsListScreen: {
-        screen: LessonsListScreen
-        // navigationOptions: ({navigation}) => ({
-        //   // header: null
-        // })
-      },
-      LessonScreen: {
-        screen: LessonScreen
-      },
-      AnkiScreen: {
-        screen: AnkiScreen
-      },
-      PlayerScreen: {
-        screen: PlayerScreen,
-        navigationOptions: () => ({
-          header: null
-        })
-      },
-      WordsListScreen: {
-        screen: WordsListScreen,
-        navigationOptions: ({navigation}) => ({
-          title: 'Words'
-          // headerBackTitle: 'Back'
-        })
-      }
-    }, {
-      navigationOptions: ({navigation}) => ({
-        drawerLockMode: 'locked-closed'
-      })
-    })
+    screen: MainModalNavigator
   },
   Settings: {
     screen: StackNavigator({

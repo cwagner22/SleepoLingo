@@ -6,7 +6,6 @@ import LoginScreen from '../Containers/LoginScreen'
 import LessonsListScreen from '../Containers/LessonsListScreen'
 import LessonScreen from '../Containers/LessonScreen'
 import AnkiScreen from '../Containers/AnkiScreen'
-import PlayerScreen from '../Containers/PlayerScreen'
 import ImportScreen from '../Containers/ImportScreen'
 import WordsListScreen from '../Containers/WordsListScreen'
 import DrawerButton from '../Components/DrawerButton'
@@ -32,12 +31,6 @@ const MainCardNavigator = StackNavigator({
   AnkiScreen: {
     screen: AnkiScreen
   },
-  PlayerScreen: {
-    screen: PlayerScreen,
-    navigationOptions: () => ({
-      header: null
-    })
-  },
   WordsListScreen: {
     screen: WordsListScreen,
     navigationOptions: ({navigation}) => ({
@@ -62,8 +55,18 @@ const MainModalNavigator = StackNavigator({
   PlayerSettingsScreen: {
     screen: PlayerSettingsScreen
   }
+  // PlayerScreen: {
+  //   screen: PlayerScreen,
+  //   navigationOptions: () => ({
+  //     header: null
+  //   })
+  // }
 }, {
-  mode: 'modal'
+  mode: 'modal',
+  navigationOptions: ({navigation}) => ({
+    // Keep drawer locked by default, unlock it in the LessonsListScreen
+    drawerLockMode: 'locked-closed'
+  })
   // headerMode: 'none'
 })
 

@@ -22,8 +22,8 @@ class LessonScreen extends React.Component {
     modalVisible: false
   }
 
-  static navigationOptions = ({ navigation, screenProps }) => {
-    const { params = {} } = navigation.state
+  static navigationOptions = ({navigation, screenProps}) => {
+    const {params = {}} = navigation.state
 
     return {
       // Use a custom component to display the lesson name. Setting it in
@@ -54,36 +54,41 @@ class LessonScreen extends React.Component {
     }
   }
 
-  renderNightButton () {
+  renderCard () {
     if (!this.state.modalVisible) {
+      const {lesson} = this.props
+
       return (
-        <ActionButton
-          buttonColor={Colors.easternBlue}
-          onPress={() => this.startNight()}
-          offsetY={85}
-          icon={<Icon name='hotel' color='white' />}
-          elevation={5}
-          zIndex={5}
-        />
+        <View style={{flex: 1}}>
+          <Card title='Lesson Notes' containerStyle={{flex: 1}} wrapperStyle={{flex: 1}}>
+            <ScrollView>
+              <Text style={styles.componentLabel}>{lesson.note}</Text>
+            </ScrollView>
+            <View>
+              <RoundedButton onPress={() => this.startDay()} styles={styles.button}>
+                START STUDY
+              </RoundedButton>
+            </View>
+          </Card>
+
+          <ActionButton
+            buttonColor={Colors.easternBlue}
+            onPress={() => this.startNight()}
+            offsetY={85}
+            icon={<Icon name='hotel' color='white' />}
+            elevation={5}
+            zIndex={5}
+          />
+        </View>
       )
     }
   }
 
   render () {
-    const {lesson} = this.props
-
     return (
       <View style={styles.mainContainer}>
-        <Card title='Lesson Notes' containerStyle={{flex: 1}} wrapperStyle={{flex: 1}}>
-          <ScrollView>
-            <Text style={styles.componentLabel}>{lesson.note}</Text>
-          </ScrollView>
-          <View>
-            <RoundedButton onPress={() => this.startDay()} styles={styles.button}>
-              START STUDY
-            </RoundedButton>
-          </View>
-        </Card>
+        { this.renderCard() }
+
         <Modal
           style={styles.mainContainer}
           // style={[styles.modal, styles.modal1]}
@@ -99,7 +104,6 @@ class LessonScreen extends React.Component {
         >
           <PlayerScreen />
         </Modal>
-        { this.renderNightButton() }
       </View>
     )
   }

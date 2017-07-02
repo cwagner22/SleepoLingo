@@ -5,7 +5,6 @@ import { View, Text, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Icon } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
-import Modal from 'react-native-modalbox'
 
 import PlaybackControls from './PlayerControls'
 import PlayerProgress from './PlayerProgress'
@@ -69,23 +68,6 @@ class PlayerScreen extends React.Component {
     return (
       // 09203f
       <LinearGradient colors={['#0c0f1c', '#0e1a29']} style={styles.mainContainer}>
-        <Modal
-          style={styles.settingsModal}
-          // style={[styles.modal, styles.modal1]}
-          ref={'settingsModal'}
-          // ref={(elem) => (elem.open())}
-          swipeToClose
-          // entry='top'
-          // onClosed={() => this.onPlayerClose()}
-          // onOpened={this.onOpen}
-          // onClosingState={this.onClosingState}
-          // backdropOpacity={0.95}
-          // swipeArea={Dimensions.get('window').height*0.65}
-        >
-          {/* <PlayerSettingsModalScreen /> */}
-
-          <Text style={styles.text}>Basic modal</Text>
-        </Modal>
         {this.renderWord()}
         {this.renderStop()}
         <VolumeSlider volume={this.props.volume} onChange={(volume) => this.props.changeVol(volume)} />

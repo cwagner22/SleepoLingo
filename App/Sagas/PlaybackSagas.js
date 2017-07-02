@@ -16,7 +16,6 @@ import { Lesson, Card } from '../Realm/realm'
 Debug.enable('app:player')
 const debug = Debug('app:player')
 
-export const LESSON_LOOP_MAX = 4
 const TRANSLATION_LOOP_MAX = 3
 // const ORIGINAL_TIMEOUT = 1000
 // const ORIGINAL_TIMEOUT_SLEEP = 2000
@@ -33,7 +32,7 @@ const getPlaybackState = (state) => state.playback
 var sound, playerLoopProcessTask, progressTask
 var playingState, lessonLoopCounter, translationLoopCounter, currentCardId, currentIndex
 var cachedFilesDurations
-// var playing
+var lessonLoopMax
 
 // Replicate redux-saga/delay with react-native-background-timer
 const bgDelay = (ms, val = true) => {
@@ -242,9 +241,9 @@ function setModifiers () {
   // this.rateTranslation = speed
 }
 
-export const isFocusMode = () => lessonLoopCounter < LESSON_LOOP_MAX - 1
+export const isFocusMode = () => lessonLoopCounter < lessonLoopMax - 1 || lessonLoopMax === 1
 
-const playerShouldContinue = () => lessonLoopCounter < LESSON_LOOP_MAX
+const playerShouldContinue = () => lessonLoopCounter < lessonLoopMax
 
 function * playerLoopProcess () {
   yield put(PlaybackActions.playbackSetPaused(false))
@@ -274,7 +273,7 @@ export function * playerVolChange ({volume}) {
   }
 }
 
-export function * playerSpeedChange ({speed}) {
+export function * playerSpeedChange () {
   if (sound) {
     const playbackState = yield select(getPlaybackState)
     sound.setSpeed(playbackState.speed)
@@ -282,6 +281,11 @@ export function * playerSpeedChange ({speed}) {
 
   yield fork(calculateTotalTime)
   yield call(restartCalculateProgress)
+}
+
+export function * playbackLoopMaxChange (action) {
+  lessonLoopMax = action.lessonLoopMax
+  yield fork(calculateTotalTime)
 }
 
 function * calculateTotalTime () {
@@ -363,7 +367,7 @@ function * durationOfFilesTotal (index, nbCards, full: bool) {
   if (!full) {
     _lessonLoopCounter = lessonLoopCounter
   } else {
-    _lessonLoopCounter = LESSON_LOOP_MAX - 1
+    _lessonLoopCounter = lessonLoopMax - 1
   }
 
   const playbackState = yield select(getPlaybackState)
@@ -403,7 +407,7 @@ function getTimeoutsDurationTotal (index, nbCards, full: bool) {
   if (!full) {
     _lessonLoopCounter = lessonLoopCounter
   } else {
-    _lessonLoopCounter = LESSON_LOOP_MAX - 1
+    _lessonLoopCounter = lessonLoopMax - 1
   }
 
   let timeoutsDuration = 0

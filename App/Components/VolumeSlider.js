@@ -7,7 +7,7 @@ import {
 import { Slider, Icon } from 'react-native-elements'
 
 import { Colors } from '../Themes/'
-import styles from '../Containers/Styles/VolumeSliderStyle'
+import styles from './Styles/VolumeSliderStyle'
 
 type VolumeSliderProps = {
   volume: number,

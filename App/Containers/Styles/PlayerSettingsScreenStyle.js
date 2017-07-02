@@ -1,15 +1,41 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { ApplicationStyles, Colors, Metrics } from '../../Themes/'
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   mainContainer: {
     flex: 1,
-    marginTop: Metrics.baseMargin
+    ...Platform.select({
+      ios: {
+        marginTop: Metrics.baseMargin
+      },
+      android: {
+        backgroundColor: 'white'
+      }
+    })
   },
   header: {
-    color: Colors.darkGrey
+    ...Platform.select({
+      ios: {
+        color: Colors.darkGrey,
+        marginTop: 15
+      },
+      android: {
+        color: '#009688',
+        marginBottom: 10,
+        fontWeight: 'bold'
+      }
+    })
+  },
+  title: {
+    ...Platform.select({
+      ios: {},
+      android: {
+        color: 'black',
+        fontSize: 16
+      }
+    })
   }
 })

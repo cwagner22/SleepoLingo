@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import ProgressBar from 'react-native-progress/Bar'
 
 import { Lesson } from '../Realm/realm'
-import { LESSON_LOOP_MAX } from '../Sagas/PlaybackSagas'
 import Time from '../Services/Time'
 
 // Styles
@@ -27,19 +26,19 @@ class PlayerProgress extends React.Component {
   }
 
   render () {
-    const {currentCards, currentCardIndex, lessonLoopCounter, elapsedTime, duration} = this.props
+    const {currentCards, currentCardIndex, lessonLoopCounter, elapsedTime, duration, lessonLoopMax} = this.props
     const nbLeft = currentCards.length - currentCardIndex
 
     const nbPlayedPreviousLoop = lessonLoopCounter * currentCards.length
     const nbPlayed = nbPlayedPreviousLoop + currentCardIndex
-    const progress = nbPlayed / (currentCards.length * LESSON_LOOP_MAX)
+    const progress = nbPlayed / (currentCards.length * lessonLoopMax)
 
     return (
       <View>
         <View style={styles.infoContainer}>
           <Text style={styles.timeElapsed}>{Time.formattedTime(elapsedTime)}</Text>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{`${nbLeft} cards remaining (${lessonLoopCounter + 1}/${LESSON_LOOP_MAX})`}</Text>
+            <Text style={styles.text}>{`${nbLeft} cards remaining (${lessonLoopCounter + 1}/${lessonLoopMax})`}</Text>
           </View>
           <Text style={styles.timeLeft}>{Time.formattedTime(duration - elapsedTime)}</Text>
         </View>
@@ -59,7 +58,8 @@ const mapStateToProps = (state) => {
     currentCardIndex: currentLesson.cards.findIndex((c) => c.id === state.lesson.currentCardId),
     lessonLoopCounter: state.playback.lessonLoopCounter,
     duration: state.playback.duration,
-    elapsedTime: state.playback.elapsedTime
+    elapsedTime: state.playback.elapsedTime,
+    lessonLoopMax: state.playback.lessonLoopMax
   }
 }
 

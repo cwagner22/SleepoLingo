@@ -21,7 +21,9 @@ const { Types, Creators } = createActions({
   setPlayingState: ['playingState'],
   setLessonLoopCounter: ['lessonLoopCounter'],
   playbackSetDuration: ['duration'],
-  playbackSetElapsedTime: ['elapsedTime']
+  playbackSetElapsedTime: ['elapsedTime'],
+  playbackLoopMaxChange: ['lessonLoopMax'],
+  playbackSetControlOS: ['controlOS']
 })
 
 export const PlaybackTypes = Types
@@ -36,8 +38,10 @@ export const INITIAL_STATE = Immutable({
   playing: false,
   playingState: null,
   lessonLoopCounter: null,
+  lessonLoopMax: 4,
   elapsedTime: null,
-  duration: null
+  duration: null,
+  controlOS: false
 })
 
 /* ------------- Reducers ------------- */
@@ -106,6 +110,14 @@ export const setElapsedTime = (state, { elapsedTime }) => {
   return state.merge({ elapsedTime })
 }
 
+export const playbackLoopMaxChange = (state, { lessonLoopMax }) => {
+  return state.merge({ lessonLoopMax })
+}
+
+export const setControlOS = (state, { controlOS }) => {
+  return state.merge({ controlOS })
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -120,5 +132,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_PLAYING_STATE]: setPlayingState,
   [Types.SET_LESSON_LOOP_COUNTER]: setLessonLoopCounter,
   [Types.PLAYBACK_SET_ELAPSED_TIME]: setElapsedTime,
-  [Types.PLAYBACK_SET_DURATION]: setDuration
+  [Types.PLAYBACK_SET_DURATION]: setDuration,
+  [Types.PLAYBACK_LOOP_MAX_CHANGE]: playbackLoopMaxChange,
+  [Types.PLAYBACK_SET_CONTROL_O_S]: setControlOS
 })

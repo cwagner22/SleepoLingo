@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import BackgroundTimer from 'react-native-background-timer'
@@ -14,10 +14,6 @@ import NavigationActions from '../Navigation/NavigationActions'
 import styles from './Styles/PlayerControlsStyle'
 
 class PlayerControls extends React.Component {
-  static propTypes = {
-    openSettings: PropTypes.func
-  }
-
   componentWillMount () {
     // this.scheduleTimer()
   }

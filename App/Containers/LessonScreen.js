@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { View, ScrollView, Text, StatusBar, Platform } from 'react-native'
+import { View, ScrollView, Text, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { Card, Icon } from 'react-native-elements'
 import ActionButton from 'react-native-action-button'
@@ -122,7 +122,6 @@ class LessonScreen extends React.Component {
       modalVisible: false
     })
     this.setState({modalVisible: false})
-    StatusBar.setBarStyle('dark-content')
   }
 
   startNight () {

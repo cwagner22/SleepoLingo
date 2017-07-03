@@ -1,9 +1,8 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
 import { Metrics, Colors, Fonts } from '../../Themes/'
 
-export default StyleSheet.create({
+export default {
   button: {
     height: 45,
     borderRadius: 5,
@@ -29,10 +28,11 @@ export default StyleSheet.create({
     borderLeftWidth: 1,
     borderColor: Colors.snow,
     // height: 44,
-    width: 50
+    width: 50,
+    height: '100%'
   },
   nbLeft: {
     fontSize: 23,
     color: Colors.snow
   }
-})
+}

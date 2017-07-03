@@ -18,7 +18,7 @@ import styles from './Styles/LessonsListScreenStyle'
 class LessonsListScreen extends React.Component {
   state = {}
 
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = ({navigation}) => {
     return {
       headerTitle: (
         <Text style={styles.bigHeader}>SleepoLingo</Text>

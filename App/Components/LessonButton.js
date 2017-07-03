@@ -1,8 +1,8 @@
 // @flow
 
 import React, { PropTypes } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { View, Text } from 'react-native'
+import { Button, Icon } from 'native-base'
 
 import styles from './Styles/LessonButtonStyle'
 import { Colors } from '../Themes/'
@@ -38,12 +38,12 @@ export default class LessonButton extends React.Component {
 
   render () {
     return (
-      <TouchableOpacity style={[styles.button, this.completedStyle()]} onPress={this.props.onPress}>
+      <Button style={styles.button} onPress={this.props.onPress} block>
         <Text style={styles.buttonText}>{this.props.text}</Text>
         <View style={styles.rightContainer}>
           {this.renderNbLeft()}
         </View>
-      </TouchableOpacity>
+      </Button>
     )
   }
 }

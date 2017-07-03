@@ -3,9 +3,10 @@
 import React from 'react'
 import { View, ScrollView, Text, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { Card, Icon } from 'react-native-elements'
+import { Card } from 'react-native-elements'
 import ActionButton from 'react-native-action-button'
 import Modal from 'react-native-modalbox'
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { Lesson } from '../Realm/realm'
 import LessonActions from '../Redux/LessonRedux'
@@ -75,7 +76,7 @@ class LessonScreen extends React.Component {
             buttonColor={Colors.easternBlue}
             onPress={() => this.startNight()}
             offsetY={85}
-            icon={<Icon name='hotel' color='white' />}
+            icon={<MIcon name='hotel' color='white' size={24} />}
             elevation={5}
             zIndex={5}
           />
@@ -95,6 +96,7 @@ class LessonScreen extends React.Component {
           ref={'nightPlayerModal'}
           // ref={(elem) => (elem.open())}
           swipeToClose
+          backButtonClose
           entry='top'
           onClosed={() => this.onPlayerClose()}
           // onOpened={this.onOpen}

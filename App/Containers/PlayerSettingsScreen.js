@@ -18,10 +18,10 @@ class PlayerSettingsScreen extends React.Component {
   static navigationOptions = ({navigation, screenProps}) => {
     return {
       title: 'Settings',
-      headerLeft: null,
-      headerRight: (
+      headerLeft: Platform.OS === 'ios' ? null : undefined,
+      headerRight: Platform.OS === 'ios' ? (
         <Button onPress={() => navigation.goBack()} title='Done' />
-      )
+      ) : null
     }
   }
 
@@ -75,10 +75,9 @@ class PlayerSettingsScreen extends React.Component {
   }
 
   render () {
-    const itemWidth = Platform.OS === 'ios' ? 50 : 70
     return (
       <View style={styles.mainContainer}>
-        <SettingsList borderColor={Platform.OS === 'ios' ? '#c8c7cc' : '#d6d5d9'} defaultItemSize={itemWidth}>
+        <SettingsList borderColor={Platform.OS === 'ios' ? '#c8c7cc' : '#d6d5d9'} defaultItemSize={50}>
           { Platform.OS === 'ios' ? (
             <SettingsList.Header headerText='Player' headerStyle={styles.header} />
           ) : (
@@ -87,7 +86,6 @@ class PlayerSettingsScreen extends React.Component {
               title='Player'
               titleStyle={styles.header}
               borderHide={'Both'}
-              itemWidth={50}
             />
           )}
           {/* <Slider value={this.props.lessonLoopMax} onChange={this.props.changeLoopMax} /> */}
@@ -117,6 +115,7 @@ class PlayerSettingsScreen extends React.Component {
               title='Number Of Repeats'
               titleStyle={styles.title}
               titleInfoStyle={styles.titleInfo}
+              itemWidth={70}
               onPress={() => this.openNumberOfRepeats()} />
           )}
         </SettingsList>

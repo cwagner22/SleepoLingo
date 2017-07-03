@@ -1,7 +1,7 @@
 import { call, select, put, race } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import { Alert } from 'react-native'
-import PromisePool from 'es6-promise-pool'
+import Promise from 'bluebird'
 import Toast from 'react-native-simple-toast'
 import RNFetchBlob from 'react-native-fetch-blob'
 
@@ -31,17 +31,9 @@ const downloadItem = (item) => {
 }
 
 const downloadAll = (items) => {
-  const generatePromises = function * () {
-    for (let i = 0; i < items.length; i++) {
-      yield downloadItem(items[i])
-    }
-  }
-
-  // Create a pool.
-  var pool = new PromisePool(generatePromises, 5)
-
-  // Start the pool.
-  return pool.start()
+  return Promise.map(items, downloadItem, {
+    concurrency: 5
+  })
 }
 
 export function * getItemsNotCached (items, language) {
@@ -101,8 +93,8 @@ export function * downloadLesson (action) {
       yield call(downloadAll, itemsToDownload)
       Toast.show('Download completed')
     } catch (error) {
-      console.log('Download error', error)
-      Toast.show('Download error')
+      console.error('Download error', error)
+      Toast.show('Download error' + error)
     }
   }
 }

@@ -48,12 +48,19 @@ const MainCardNavigator = StackNavigator({
   })
 })
 
+// Modals + Main StackNavigator
 const MainModalNavigator = StackNavigator({
   LessonsListScreen: {
     screen: MainCardNavigator
+    // navigationOptions: ({navigation}) => ({
+    //   drawerLockMode: 'unlocked'
+    // })
   },
   PlayerSettingsScreen: {
-    screen: PlayerSettingsScreen
+    screen: PlayerSettingsScreen,
+    navigationOptions: ({navigation}) => ({
+      drawerLockMode: 'locked-closed'
+    })
   }
   // PlayerScreen: {
   //   screen: PlayerScreen,
@@ -62,11 +69,7 @@ const MainModalNavigator = StackNavigator({
   //   })
   // }
 }, {
-  mode: 'modal',
-  navigationOptions: ({navigation}) => ({
-    // Keep drawer locked by default, unlock it in the LessonsListScreen
-    drawerLockMode: 'locked-closed'
-  })
+  mode: 'modal'
   // headerMode: 'none'
 })
 

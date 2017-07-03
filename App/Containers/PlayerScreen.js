@@ -25,7 +25,7 @@ class PlayerScreen extends React.Component {
   }
 
   componentWillUnmount () {
-    // User closed the player
+    StatusBar.setBarStyle('dark-content')
     this.props.playerStop()
   }
 

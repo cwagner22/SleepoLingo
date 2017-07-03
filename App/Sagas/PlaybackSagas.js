@@ -252,12 +252,15 @@ function * playerLoopProcess () {
 }
 
 export function * start () {
+  const playbackState = yield select(getPlaybackState)
+  lessonLoopMax = playbackState.lessonLoopMax
   // playing = true
   lessonLoopCounter = 0
   translationLoopCounter = 0
   currentIndex = 0
   playingState = null
   cachedFilesDurations = null
+
   yield call(setModifiers)
 
   playerLoopProcessTask = yield fork(playerLoopProcess)

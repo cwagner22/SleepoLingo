@@ -24,7 +24,6 @@ export default StyleSheet.create({
       },
       android: {
         color: '#009688',
-        marginBottom: 10,
         fontWeight: 'bold'
       }
     })

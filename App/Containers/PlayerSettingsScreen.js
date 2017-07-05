@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react'
-import { View, Button, StatusBar, Platform } from 'react-native'
+import { Button, StatusBar, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import SettingsList from 'react-native-settings-list'
 import DialogAndroid from 'react-native-dialogs'
 import Picker from 'react-native-picker'
+import { Container, Content, List, ListItem, Body, Switch, Right, Text, Icon, Separator } from 'native-base'
 
 import PlaybackActions from '../Redux/PlaybackRedux'
 
@@ -76,50 +76,39 @@ class PlayerSettingsScreen extends React.Component {
 
   render () {
     return (
-      <View style={styles.mainContainer}>
-        <SettingsList borderColor={Platform.OS === 'ios' ? '#c8c7cc' : '#d6d5d9'} defaultItemSize={50}>
-          { Platform.OS === 'ios' ? (
-            <SettingsList.Header headerText='Player' headerStyle={styles.header} />
-          ) : (
-            <SettingsList.Item
-              hasNavArrow={false}
-              title='Player'
-              titleStyle={styles.header}
-              borderHide={'Both'}
-            />
-          )}
-          {/* <Slider value={this.props.lessonLoopMax} onChange={this.props.changeLoopMax} /> */}
-
-          <SettingsList.Item
-            hasNavArrow={false}
-            switchState={this.props.controlOS}
-            switchOnValueChange={this.props.setControlOS}
-            // switchState={this.state.switchValue}
-            hasSwitch
-            title='Control Player From OS'
-            // itemWidth={70}
-            titleStyle={styles.title}
-          />
-          { Platform.OS === 'ios' ? (
-            <SettingsList.Item
-              hasNavArrow
-              titleInfo={this.props.lessonLoopMax.toString()}
-              title='Number Of Repeats'
-              titleStyle={styles.title}
-              onPress={() => this.openNumberOfRepeats()} />
-          ) : (
-            <SettingsList.Item
-              hasNavArrow={false}
-              titleInfo={`Repeat the lesson ${this.props.lessonLoopMax} times`}
-              titleInfoPosition='Bottom'
-              title='Number Of Repeats'
-              titleStyle={styles.title}
-              titleInfoStyle={styles.titleInfo}
-              itemWidth={70}
-              onPress={() => this.openNumberOfRepeats()} />
-          )}
-        </SettingsList>
-      </View>
+      <Container style={styles.mainContainer}>
+        <Content>
+          <List style={styles.list}>
+            <Separator style={styles.header}>
+              <Text style={styles.headerText} uppercase={Platform.OS === 'ios'}>Player</Text>
+            </Separator>
+            <ListItem onPress={() => {}}>
+              <Text>Control Player From OS</Text>
+              <Right>
+                <Switch value={false} />
+              </Right>
+            </ListItem>
+            { Platform.OS === 'ios' ? (
+              <ListItem last icon onPress={() => this.openNumberOfRepeats()}>
+                <Body>
+                  <Text>Number Of Repeats</Text>
+                </Body>
+                <Right>
+                  <Text>{this.props.lessonLoopMax}</Text>
+                  <Icon name='arrow-forward' />
+                </Right>
+              </ListItem>
+            ) : (
+              <ListItem last onPress={() => this.openNumberOfRepeats()}>
+                <Body style={styles.bodyMulti}>
+                  <Text>Number Of Repeats</Text>
+                  <Text note>{`Repeat the lesson ${this.props.lessonLoopMax} times`}</Text>
+                </Body>
+              </ListItem>
+            )}
+          </List>
+        </Content>
+      </Container>
     )
   }
 }

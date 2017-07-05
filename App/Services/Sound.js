@@ -14,11 +14,12 @@ const loadSound = (path, volume = 1, speed = 0.7) => {
       return dfd.reject(error)
     }
 
-    sound
-      .setVolume(volume)
-      .setSpeed(speed)
+    sound.setVolume(volume)
 
     play()
+
+    // After play() because setSpeed was blocking the playback on physical android devices (dev only?)
+    sound.setSpeed(speed)
   })
 
   const play = () => {
@@ -27,8 +28,11 @@ const loadSound = (path, volume = 1, speed = 0.7) => {
         if (success) {
           dfd.resolve()
         } else {
-          dfd.reject(new Error({isCanceled: true}))
+          dfd.reject()
         }
+        // _hasFinished = true
+        // Physical android devices: play() was retuning an error after some time (dev only?)
+        sound.release()
       })
   }
 
@@ -41,10 +45,10 @@ const loadSound = (path, volume = 1, speed = 0.7) => {
       play()
     },
     cancel () {
-      sound.stop()
       // if (!_hasFinished) {
       //   dfd.reject({isCanceled: true})
       // }
+      sound.stop()
     },
     setVolume (volume) {
       sound.setVolume(volume)

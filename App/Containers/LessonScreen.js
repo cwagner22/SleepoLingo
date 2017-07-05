@@ -72,6 +72,16 @@ class LessonScreen extends React.Component {
             </View>
           </Card>
 
+          {/*        <Fab
+            // active={this.state.active}
+            // direction='up'
+            containerStyle={{ bottom: 80, right: 30 }}
+            style={{ backgroundColor: Colors.easternBlue }}
+            position='bottomRight'
+            onPress={() => this.startNight()}>
+            <MIcon name='hotel' color='white' size={24} />
+          </Fab> */}
+
           <ActionButton
             buttonColor={Colors.easternBlue}
             onPress={() => this.startNight()}
@@ -92,15 +102,10 @@ class LessonScreen extends React.Component {
 
         <Modal
           style={styles.mainContainer}
-          // style={[styles.modal, styles.modal1]}
           ref={'nightPlayerModal'}
-          // ref={(elem) => (elem.open())}
           swipeToClose
-          backButtonClose
           entry='top'
           onClosed={() => this.onPlayerClose()}
-          // onOpened={this.onOpen}
-          // onClosingState={this.onClosingState}
           backdropOpacity={0.95}
           // swipeArea={Dimensions.get('window').height*0.65}
         >

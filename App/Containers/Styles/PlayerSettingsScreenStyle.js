@@ -1,9 +1,11 @@
 // @flow
 
-import { StyleSheet, Platform } from 'react-native'
+import { Platform } from 'react-native'
+import variables from 'native-base/src/theme/variables/platform'
+
 import { ApplicationStyles, Colors, Metrics } from '../../Themes/'
 
-export default StyleSheet.create({
+export default {
   ...ApplicationStyles.screen,
   mainContainer: {
     flex: 1,
@@ -16,25 +18,33 @@ export default StyleSheet.create({
       }
     })
   },
-  header: {
+  list: {
     ...Platform.select({
       ios: {
-        color: Colors.darkGrey,
-        marginTop: 15
-      },
-      android: {
-        color: '#009688',
-        fontWeight: 'bold'
+        backgroundColor: 'white'
       }
     })
   },
-  title: {
+  header: {
     ...Platform.select({
-      ios: {},
+      ios: {
+        backgroundColor: '#E9E9EF'
+      },
       android: {
-        color: 'black',
-        fontSize: 16
+        backgroundColor: Colors.snow
       }
     })
+  },
+  headerText: {
+    ...Platform.select({
+      android: {
+        color: '#009688',
+        fontWeight: 'bold',
+        fontSize: 14
+      }
+    })
+  },
+  bodyMulti: {
+    marginLeft: -variables.listItemPadding
   }
-})
+}

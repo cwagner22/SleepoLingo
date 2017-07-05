@@ -57,10 +57,10 @@ function * play (sentence, language, volume, speed) {
     yield sound.promise
     yield put(PlaybackActions.playbackSuccess())
   } catch (e) {
-    console.error(e)
+    console.error('Playback error')
     yield put(PlaybackActions.playbackError(e))
   } finally {
-    if (cancelled()) {
+    if (yield cancelled()) {
       sound.cancel()
     }
   }

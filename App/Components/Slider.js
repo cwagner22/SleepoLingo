@@ -1,6 +1,7 @@
 // @flow
 
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Slider as RNSlider } from 'react-native-elements'
 
 import { Colors } from '../Themes/'

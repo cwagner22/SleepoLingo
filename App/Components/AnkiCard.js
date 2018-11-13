@@ -1,6 +1,7 @@
 // @flow
 
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { View } from 'react-native'
 import { Card as CardElem } from 'react-native-elements'
 import FlipCard from 'react-native-flip-card'

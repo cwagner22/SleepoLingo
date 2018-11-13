@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.zmxv.RNSound.RNSoundPackage;
-import io.sentry.RNSentryPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;

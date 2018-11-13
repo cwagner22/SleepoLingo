@@ -1,7 +1,8 @@
 /* @flow */
 /* eslint-disable */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import hoist from 'hoist-non-react-statics';
 import shallowEqual from 'shallowequal';
 

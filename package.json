@@ -43,7 +43,7 @@
     "prop-types": "^15.6.2",
     "querystringify": "1.0.0",
     "ramda": "^0.24.1",
-    "react": "^16.6.0-alpha.8af6728",
+    "react": "^16.6.3",
     "react-native": "^0.57.4",
     "react-native-action-button": "^2.8.5",
     "react-native-animatable": "^1.3.0",
@@ -141,7 +141,8 @@
   },
   "rnpm": {
     "assets": [
-      "App/Fonts"
+      "App/Fonts",
+      "App/Realm/default.realm"
     ]
   }
 }

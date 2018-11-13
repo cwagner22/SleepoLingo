@@ -147,7 +147,11 @@ export function * importStart () {
   yield call(parseGroups, workbook)
 
   // Overwrite original db
-  yield call(RNFS.unlink, Secrets.LOCAL_REALM)
+  try {
+    yield call(RNFS.unlink, Secrets.LOCAL_REALM)
+  } catch (e) {
+    // file doesn't exist
+  }
   yield call(RNFS.copyFile, RNFS.MainBundlePath + '/default.realm', Secrets.LOCAL_REALM)
   console.log('Done')
 }

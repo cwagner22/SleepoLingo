@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { Platform } from 'react-native'
 import Sound from 'react-native-sound'
-import RNFS from 'react-native-fs'
+// import RNFS from 'react-native-fs'
 
 // Realm.copyBundledRealmFiles()
 
@@ -31,7 +31,7 @@ class App extends Component {
       // RNFS.MainBundlePath is not supported for android so we have to copy the db to the documents folder
       // https://github.com/realm/realm-js/issues/1047
       // Realm.copyBundledRealmFiles() doesn't overwrite
-      RNFS.copyFileAssets('default.realm', RNFS.DocumentDirectoryPath + '/default.realm')
+      // RNFS.copyFileAssets('default.realm', RNFS.DocumentDirectoryPath + '/default.realm')
     }
 
     // Enable playback in silence mode (iOS only)

@@ -140,18 +140,18 @@ function parseGroups (workbook) {
 }
 
 export function * importStart () {
-  const data = yield call(RNFS.readFile, Secrets.LOCAL_XLSX,
-    'base64')
+  const data = yield call(RNFS.readFile, Secrets.REALM_PATH + '/lessons.xlsx', 'base64')
   const workbook = yield call(XLSX.read, data)
 
   yield call(parseGroups, workbook)
 
+  const dbPath = Secrets.REALM_PATH + '/default.realm'
   // Overwrite original db
   try {
-    yield call(RNFS.unlink, Secrets.LOCAL_REALM)
+    yield call(RNFS.unlink, dbPath)
   } catch (e) {
     // file doesn't exist
   }
-  yield call(RNFS.copyFile, RNFS.MainBundlePath + '/default.realm', Secrets.LOCAL_REALM)
+  yield call(RNFS.copyFile, RNFS.MainBundlePath + '/default.realm', dbPath)
   console.log('Done')
 }

@@ -1,20 +1,41 @@
 // /* global ErrorUtils:false */
 
-import '../Config'
-import DebugConfig from '../Config/DebugConfig'
-import React, { Component } from 'react'
-import { Provider } from 'react-redux'
-import { Platform } from 'react-native'
-import Sound from 'react-native-sound'
+import "../Config";
+import DebugConfig from "../Config/DebugConfig";
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import { Platform } from "react-native";
+import Sound from "react-native-sound";
 // import RNFS from 'react-native-fs'
 
 // Realm.copyBundledRealmFiles()
 
-import RootContainer from './RootContainer'
-import createStore from '../Redux'
+import RootContainer from "./RootContainer";
+import createStore from "../Redux";
+
+import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
+import { Database } from "@nozbe/watermelondb";
+import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
+
+import { mySchema } from "../Models/schema";
+import Sentence from "../Models/Sentence";
+import Card from "../Models/Card";
+import Lesson from "../Models/Lesson";
+import LessonGroup from "../Models/LessonGroup";
 
 // create our store
-const store = createStore()
+const store = createStore();
+
+// set up the database
+const adapter = new SQLiteAdapter({
+  dbName: "SleepoLingo",
+  schema: mySchema
+});
+
+const database = new Database({
+  adapter,
+  modelClasses: [Sentence, Card, Lesson, LessonGroup]
+});
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -26,8 +47,8 @@ const store = createStore()
  * We separate like this to play nice with React Native's hot reloading.
  */
 class App extends Component {
-  componentWillMount () {
-    if (Platform.OS === 'android') {
+  componentWillMount() {
+    if (Platform.OS === "android") {
       // RNFS.MainBundlePath is not supported for android so we have to copy the db to the documents folder
       // https://github.com/realm/realm-js/issues/1047
       // Realm.copyBundledRealmFiles() doesn't overwrite
@@ -35,7 +56,7 @@ class App extends Component {
     }
 
     // Enable playback in silence mode (iOS only)
-    Sound.setCategory('Playback', true)
+    Sound.setCategory("Playback", true);
 
     // Use instead?: react-native-exception-handler
     // Intercept react-native error handling
@@ -54,16 +75,16 @@ class App extends Component {
   //   if (this.defaultHandler) this.defaultHandler(error, isFatal)
   // }
 
-  render () {
+  render() {
     return (
-      <Provider store={store}>
-        <RootContainer />
-      </Provider>
-    )
+      <DatabaseProvider database={database}>
+        <Provider store={store}>
+          <RootContainer />
+        </Provider>
+      </DatabaseProvider>
+    );
   }
 }
 
 // allow reactotron overlay for fast design in dev mode
-export default DebugConfig.useReactotron
-  ? console.tron.overlay(App)
-  : App
+export default (DebugConfig.useReactotron ? console.tron.overlay(App) : App);

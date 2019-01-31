@@ -136,6 +136,17 @@ repositories {
 }
 
 dependencies {
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-sound')
+    implementation project(':react-native-picker')
+    implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-i18n')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-fetch-blob')
+    implementation project(':react-native-dialogs')
+    implementation project(':react-native-device-info')
+    implementation project(':react-native-config')
+    implementation project(':react-native-background-timer')
     compile project(':react-native-picker')
     compile project(':react-native-dialogs')
     compile project(':realm')

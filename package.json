@@ -60,7 +60,7 @@
     "react-native-flip-card": "^3.5.2",
     "react-native-fs": "^2.12.1",
     "react-native-i18n": "^2.0.15",
-    "react-native-linear-gradient": "^2.4.3",
+    "react-native-linear-gradient": "^2.5.3",
     "react-native-modalbox": "^1.6.0",
     "react-native-picker": "git+https://github.com/ssomnoremac/react-native-picker.git",
     "react-native-progress": "^3.5.0",
@@ -71,6 +71,7 @@
     "react-navigation": "git+https://github.com/martnu/react-navigation.git",
     "react-redux": "^5.1.1",
     "react-test-renderer": "^15.6.2",
+    "react-timer-mixin": "^0.13.4",
     "redux": "^3.7.1",
     "redux-persist": "^4.10.2",
     "redux-saga": "^0.15.4",
@@ -82,6 +83,7 @@
     "xlsx": "^0.11.19"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.3.0",
     "babel-eslint": "8.0.0",
     "babel-jest": "21.0.2",
     "babel-preset-es2015": "^6.24.1",

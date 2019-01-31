@@ -1,13 +1,11 @@
-import { createReducer, createActions } from 'reduxsauce'
-import Immutable from 'seamless-immutable'
-import moment from 'moment'
-import _ from 'lodash'
-
-import {Lesson} from '../Realm/realm'
+import { createReducer, createActions } from "reduxsauce";
+import Immutable from "seamless-immutable";
+import moment from "moment";
+import _ from "lodash";
 
 /* ------------- Types and Action Creators ------------- */
 
-const {Types, Creators} = createActions({
+const { Types, Creators } = createActions({
   lessonStart: null,
   ankiHard: null,
   ankiOk: null,
@@ -16,18 +14,18 @@ const {Types, Creators} = createActions({
   lessonShowFront: null,
   lessonShowBack: null,
   loadNextCard: null,
-  nextCardLoaded: ['card'],
-  downloadLesson: ['currentCards'],
-  loadLesson: ['lessonId'],
-  setCurrentLesson: ['lessonId'],
-  setCurrentCard: ['currentCardId'],
+  nextCardLoaded: ["card"],
+  downloadLesson: ["currentCards"],
+  loadLesson: ["lessonId"],
+  setCurrentLesson: ["lessonId"],
+  setCurrentCard: ["currentCardId"],
   resetDates: null,
-  lessonUpdateCompleted: ['isCompleted'],
+  lessonUpdateCompleted: ["isCompleted"],
   lessonStartAnki: null
-})
+});
 
-export const LessonTypes = Types
-export default Creators
+export const LessonTypes = Types;
+export default Creators;
 
 /* ------------- Initial State ------------- */
 
@@ -46,11 +44,11 @@ export const INITIAL_STATE = Immutable({
   lessonLoopCounter: null,
   forcePlay: null,
   translationLoopCounter: null
-})
+});
 
 /* ------------- Reducers ------------- */
 
-export const startLesson = (state) => {
+export const startLesson = state => {
   return state.merge({
     showAnswer: false,
     // currentCard: null,
@@ -58,90 +56,92 @@ export const startLesson = (state) => {
     lessonLoopCounter: 0,
     translationLoopCounter: 0,
     playingState: null
-  })
-}
+  });
+};
 
-export const setCurrentLesson = (state, {lessonId}) => {
+export const setCurrentLesson = (state, { lessonId }) => {
   return state.merge({
     currentLessonId: lessonId
-  })
-}
+  });
+};
 
-export const showAnswer = (state) => {
-  return state.merge({showAnswer: true})
-}
+export const showAnswer = state => {
+  return state.merge({ showAnswer: true });
+};
 
-export const showFront = (state) => {
-  return state.merge({showFront: true})
-}
+export const showFront = state => {
+  return state.merge({ showFront: true });
+};
 
-export const showBack = (state) => {
-  return state.merge({showFront: false})
-}
+export const showBack = state => {
+  return state.merge({ showFront: false });
+};
 
-export const setCurrentCard = (state, {currentCardId}) => {
+export const setCurrentCard = (state, { currentCardId }) => {
   return state.merge({
     currentCardId
-  })
-}
+  });
+};
 
-export const resetDates = (state) => {
+export const resetDates = state => {
   return state.merge({
     showDates: {}
-  })
-}
+  });
+};
 
-function sortCards (state, cards, allowAlmost = false) {
+function sortCards(state, cards, allowAlmost = false) {
   // var sortedCardsReady = _.sortBy(cards, [(c) => state.showDates[c.id], 'index'])
-  var sortedCardsReady = _.sortBy(cards, [(c) => c.isReady(state.showDates, allowAlmost), 'index'])
-    .filter((card) => {
-      // Exclude future cards
-      return card.isReady(state.showDates, allowAlmost)
-    })
+  var sortedCardsReady = _.sortBy(cards, [
+    c => c.isReady(state.showDates, allowAlmost),
+    "index"
+  ]).filter(card => {
+    // Exclude future cards
+    return card.isReady(state.showDates, allowAlmost);
+  });
 
   if (!sortedCardsReady.length && !allowAlmost) {
-    return sortCards(state, cards, true)
+    return sortCards(state, cards, true);
   } else {
-    return sortedCardsReady
+    return sortedCardsReady;
   }
 }
 
-export const loadNextCard = (state) => {
-  const currentLesson = Lesson.getFromId(state.currentLessonId, true)
-  const sortedCards = sortCards(state, currentLesson.cards, false)
-  const currentCardId = sortedCards.length ? sortedCards[0].id : null
+export const loadNextCard = state => {
+  const currentLesson = Lesson.getFromId(state.currentLessonId, true);
+  const sortedCards = sortCards(state, currentLesson.cards, false);
+  const currentCardId = sortedCards.length ? sortedCards[0].id : null;
 
-  let newState = state
+  let newState = state;
   if (!currentCardId) {
-    newState = lessonUpdateCompleted(state, {isCompleted: true})
+    newState = lessonUpdateCompleted(state, { isCompleted: true });
   }
 
   return newState.merge({
     showAnswer: false,
     showFront: true,
     currentCardId
-  })
-}
+  });
+};
 
 const updateCardDate = (state, showDate) => {
-  return state.setIn(['showDates', state.currentCardId], showDate.toDate())
-}
+  return state.setIn(["showDates", state.currentCardId], showDate.toDate());
+};
 
-const lessonUpdateCompleted = (state, {isCompleted}) => {
-  return state.setIn(['completedLessons', state.currentLessonId], isCompleted)
-}
+const lessonUpdateCompleted = (state, { isCompleted }) => {
+  return state.setIn(["completedLessons", state.currentLessonId], isCompleted);
+};
 
-export const ankiHard = (state) => {
-  return updateCardDate(state, moment().add(1, 'm'))
-}
+export const ankiHard = state => {
+  return updateCardDate(state, moment().add(1, "m"));
+};
 
-export const ankiOk = (state) => {
-  return updateCardDate(state, moment().add(10, 'm'))
-}
+export const ankiOk = state => {
+  return updateCardDate(state, moment().add(10, "m"));
+};
 
-export const ankiEasy = (state) => {
-  return updateCardDate(state, moment().add(2, 'd'))
-}
+export const ankiEasy = state => {
+  return updateCardDate(state, moment().add(2, "d"));
+};
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -161,4 +161,4 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ANKI_OK]: ankiOk,
   [Types.ANKI_EASY]: ankiEasy,
   [Types.LESSON_UPDATE_COMPLETED]: lessonUpdateCompleted
-})
+});

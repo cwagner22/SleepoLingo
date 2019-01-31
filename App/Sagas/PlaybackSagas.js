@@ -1,160 +1,185 @@
-import { call, put, fork, select, cancel, cancelled, takeEvery, spawn } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
-import BackgroundTimer from 'react-native-background-timer'
-import Sound from 'react-native-sound'
-import Promise from 'bluebird'
-import moment from 'moment'
-import Debug from 'debug'
-import _ from 'lodash'
+import {
+  call,
+  put,
+  fork,
+  select,
+  cancel,
+  cancelled,
+  takeEvery,
+  spawn
+} from "redux-saga/effects";
+import { delay } from "redux-saga";
+import BackgroundTimer from "react-native-background-timer";
+import Sound from "react-native-sound";
+import Promise from "bluebird";
+import moment from "moment";
+import Debug from "debug";
+import _ from "lodash";
 
-import Player from '../Services/Player'
-import loadSound from '../Services/Sound'
-import PlaybackActions, { PlaybackTypes } from '../Redux/PlaybackRedux'
-import LessonActions from '../Redux/LessonRedux'
-import { Lesson, Card } from '../Realm/realm'
+import Player from "../Services/Player";
+import loadSound from "../Services/Sound";
+import PlaybackActions, { PlaybackTypes } from "../Redux/PlaybackRedux";
+import LessonActions from "../Redux/LessonRedux";
 
-Debug.enable('app:player')
-const debug = Debug('app:player')
+Debug.enable("app:player");
+const debug = Debug("app:player");
 
-const TRANSLATION_LOOP_MAX = 3
+const TRANSLATION_LOOP_MAX = 3;
 // const ORIGINAL_TIMEOUT = 1000
 // const ORIGINAL_TIMEOUT_SLEEP = 2000
-const TRANSLATION_TIMEOUT = 1000
-const TRANSLATION_TIMEOUT_SLEEP = 2000
-const NEXT_WORD_TIMEOUT = 2000
-const NEXT_WORD_TIMEOUT_SLEEP = 4000
-const REPEAT_ALL_TIMEOUT = 4000
-const REPEAT_ALL_TIMEOUT_SLEEP = 4000
+const TRANSLATION_TIMEOUT = 1000;
+const TRANSLATION_TIMEOUT_SLEEP = 2000;
+const NEXT_WORD_TIMEOUT = 2000;
+const NEXT_WORD_TIMEOUT_SLEEP = 4000;
+const REPEAT_ALL_TIMEOUT = 4000;
+const REPEAT_ALL_TIMEOUT_SLEEP = 4000;
 
-const getLessonState = (state) => state.lesson
-const getPlaybackState = (state) => state.playback
+const getLessonState = state => state.lesson;
+const getPlaybackState = state => state.playback;
 
-var sound, playerLoopProcessTask, progressTask
-var playingState, lessonLoopCounter, translationLoopCounter, currentCardId, currentIndex
-var cachedFilesDurations
-var lessonLoopMax
+var sound, playerLoopProcessTask, progressTask;
+var playingState,
+  lessonLoopCounter,
+  translationLoopCounter,
+  currentCardId,
+  currentIndex;
+var cachedFilesDurations;
+var lessonLoopMax;
 
 // Replicate redux-saga/delay with react-native-background-timer
 const bgDelay = (ms, val = true) => {
-  let timeoutId
+  let timeoutId;
   const promise = new Promise(resolve => {
-    timeoutId = BackgroundTimer.setTimeout(() => resolve(val), ms)
-  })
+    timeoutId = BackgroundTimer.setTimeout(() => resolve(val), ms);
+  });
 
-  promise['@@redux-saga/cancelPromise'] = () => BackgroundTimer.clearTimeout(timeoutId)
+  promise["@@redux-saga/cancelPromise"] = () =>
+    BackgroundTimer.clearTimeout(timeoutId);
 
-  return promise
+  return promise;
+};
+
+export function* playSaga({ sentence, language, volume, speed }) {
+  yield call(play, sentence, language, volume, speed);
 }
 
-export function * playSaga ({sentence, language, volume, speed}) {
-  yield call(play, sentence, language, volume, speed)
-}
-
-function * play (sentence, language, volume, speed) {
+function* play(sentence, language, volume, speed) {
   try {
-    const path = Player.getFilePath(sentence, language)
-    sound = yield call(loadSound, path, volume, speed)
-    yield sound.promise
-    yield put(PlaybackActions.playbackSuccess())
+    const path = Player.getFilePath(sentence, language);
+    sound = yield call(loadSound, path, volume, speed);
+    yield sound.promise;
+    yield put(PlaybackActions.playbackSuccess());
   } catch (e) {
-    console.error('Playback error')
-    yield put(PlaybackActions.playbackError(e))
+    console.error("Playback error");
+    yield put(PlaybackActions.playbackError(e));
   } finally {
     if (yield cancelled()) {
-      sound.cancel()
+      sound.cancel();
     }
   }
 }
 
-function * playCard () {
-  const currentCard = Card.getFromId(currentCardId, true)
-  const playbackState = yield select(getPlaybackState)
+function* playCard() {
+  const currentCard = Card.getFromId(currentCardId, true);
+  const playbackState = yield select(getPlaybackState);
 
-  const {speed, volume} = playbackState
-  const sentence = currentCard.getSentence()
-  const translation = playingState === 'TRANSLATION'
-  const sentenceStr = translation ? sentence.translation : sentence.original
-  const language = translation ? 'th-TH' : 'en-US'
+  const { speed, volume } = playbackState;
+  const sentence = currentCard.getSentence();
+  const translation = playingState === "TRANSLATION";
+  const sentenceStr = translation ? sentence.translation : sentence.original;
+  const language = translation ? "th-TH" : "en-US";
 
-  yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter))
-  yield put(LessonActions.setCurrentCard(currentCardId))
-  yield put(PlaybackActions.setPlayingState(playingState))
+  yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
+  yield put(LessonActions.setCurrentCard(currentCardId));
+  yield put(PlaybackActions.setPlayingState(playingState));
 
-  yield call(play, sentenceStr, language, this.volume * volume, this.speed * speed)
+  yield call(
+    play,
+    sentenceStr,
+    language,
+    this.volume * volume,
+    this.speed * speed
+  );
 }
 
-function * playMessageEnd () {
-  const playbackState = yield select(getPlaybackState)
-  const {speed, volume} = playbackState
-  var sentenceStr
+function* playMessageEnd() {
+  const playbackState = yield select(getPlaybackState);
+  const { speed, volume } = playbackState;
+  var sentenceStr;
   if (!isFocusMode()) {
-    sentenceStr = 'Good night'
+    sentenceStr = "Good night";
   } else {
-    sentenceStr = 'Repeat'
+    sentenceStr = "Repeat";
   }
-  yield call(play, sentenceStr, 'en-US', this.volume * volume, this.speed * speed)
+  yield call(
+    play,
+    sentenceStr,
+    "en-US",
+    this.volume * volume,
+    this.speed * speed
+  );
 }
 
-export function * playerStop () {
+export function* playerStop() {
   // if (task) {
   //   yield cancel(task)
   // }
   // playing = false
-  yield call(stopCalculateProgress)
-  yield cancel(playerLoopProcessTask)
+  yield call(stopCalculateProgress);
+  yield cancel(playerLoopProcessTask);
 }
 
-function * forcePlayerWithLoadedCard () {
+function* forcePlayerWithLoadedCard() {
   // playing = true
-  translationLoopCounter = 0
-  playingState = 'ORIGINAL'
-  playerLoopProcessTask = yield fork(playerLoopProcess)
-  yield call(startCalculateProgress)
-  yield fork(playCard)
+  translationLoopCounter = 0;
+  playingState = "ORIGINAL";
+  playerLoopProcessTask = yield fork(playerLoopProcess);
+  yield call(startCalculateProgress);
+  yield fork(playCard);
 }
 
-export function * playerNext () {
-  yield call(playerStop)
-  yield call(loadNextCard)
-  yield call(forcePlayerWithLoadedCard)
+export function* playerNext() {
+  yield call(playerStop);
+  yield call(loadNextCard);
+  yield call(forcePlayerWithLoadedCard);
 }
 
-export function * playerPrev () {
-  yield call(playerStop)
-  yield call(loadPrevCard)
-  yield call(forcePlayerWithLoadedCard)
+export function* playerPrev() {
+  yield call(playerStop);
+  yield call(loadPrevCard);
+  yield call(forcePlayerWithLoadedCard);
 }
 
-export function * playerPause () {
-  yield call(playerStop)
-  yield put(PlaybackActions.playbackSetPaused(true))
+export function* playerPause() {
+  yield call(playerStop);
+  yield put(PlaybackActions.playbackSetPaused(true));
 }
 
-export function * playerResume () {
-  yield call(forcePlayerWithLoadedCard)
+export function* playerResume() {
+  yield call(forcePlayerWithLoadedCard);
 }
 
-export function * loadNextCard () {
-  yield call(loadCard, true)
+export function* loadNextCard() {
+  yield call(loadCard, true);
 }
 
-export function * loadPrevCard () {
-  yield call(loadCard, false)
+export function* loadPrevCard() {
+  yield call(loadCard, false);
 }
 
-export function * loadCard (next: true) {
-  playingState = 'ORIGINAL'
-  const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
-  const currentCards = currentLesson.cards
+export function* loadCard(next: true) {
+  playingState = "ORIGINAL";
+  const lessonState = yield select(getLessonState);
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true);
+  const currentCards = currentLesson.cards;
 
   if (lessonState.currentCardId) {
     if (next) {
       if (++currentIndex >= currentCards.length) {
         // if (allowRestart) {
         // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
-        lessonLoopCounter++
-        currentIndex = 0
+        lessonLoopCounter++;
+        currentIndex = 0;
         // } else {
         //   index = currentCards.length - 1
         // }
@@ -162,304 +187,351 @@ export function * loadCard (next: true) {
         //
         // }
       }
-      currentIndex = Math.max(0, currentIndex)
+      currentIndex = Math.max(0, currentIndex);
     } else {
-      currentIndex = Math.max(0, --currentIndex)
+      currentIndex = Math.max(0, --currentIndex);
     }
   }
 
-  currentCardId = currentCards[currentIndex].id
+  currentCardId = currentCards[currentIndex].id;
 }
 
-export function * loadPlayingState (action) {
+export function* loadPlayingState(action) {
   if (!playerShouldContinue()) {
-    yield put(PlaybackActions.playerStop())
+    yield put(PlaybackActions.playerStop());
   }
 
   if (!playingState) {
     // init
-    yield call(loadNextCard)
-  } else if (playingState === 'ORIGINAL') {
+    yield call(loadNextCard);
+  } else if (playingState === "ORIGINAL") {
     // translation
-    playingState = 'TRANSLATION'
-  } else if (playingState === 'TRANSLATION') {
+    playingState = "TRANSLATION";
+  } else if (playingState === "TRANSLATION") {
     if (++translationLoopCounter >= TRANSLATION_LOOP_MAX) {
       // next word
-      const oldlessonLoopCounter = lessonLoopCounter
-      yield call(loadNextCard)
+      const oldlessonLoopCounter = lessonLoopCounter;
+      yield call(loadNextCard);
       // newState = navigateCurrentWord(state, action)
-      translationLoopCounter = 0
+      translationLoopCounter = 0;
       if (lessonLoopCounter !== oldlessonLoopCounter) {
-        playingState = 'RESTART'
+        playingState = "RESTART";
       }
     }
-  } else if (playingState === 'RESTART') {
-    playingState = 'ORIGINAL'
+  } else if (playingState === "RESTART") {
+    playingState = "ORIGINAL";
   }
 
-  if (action.type === PlaybackTypes.PLAYBACK_SUCCESS && playingState === 'ORIGINAL') {
-    yield call(restartCalculateProgress)
+  if (
+    action.type === PlaybackTypes.PLAYBACK_SUCCESS &&
+    playingState === "ORIGINAL"
+  ) {
+    yield call(restartCalculateProgress);
   }
 
-  yield call(processPlayingState, action)
+  yield call(processPlayingState, action);
 }
 
-function * processPlayingState (action) {
+function* processPlayingState(action) {
   switch (playingState) {
-    case 'ORIGINAL':
-      const init = action.type === PlaybackTypes.PLAYER_READY
+    case "ORIGINAL":
+      const init = action.type === PlaybackTypes.PLAYER_READY;
       if (!init) {
-        yield call(bgDelay, this.nextWordTimeout)
+        yield call(bgDelay, this.nextWordTimeout);
       }
       // yield call(bgDelay, this.originalTimeout)
-      yield call(playCard)
-      break
-    case 'TRANSLATION':
-      yield call(bgDelay, this.translationTimeout)
-      yield call(playCard)
-      break
-    case 'RESTART':
-      yield call(setModifiers)
-      yield call(bgDelay, this.nextWordTimeout)
-      yield call(playMessageEnd)
-      yield call(bgDelay, this.repeatAllTimeout)
-      break
+      yield call(playCard);
+      break;
+    case "TRANSLATION":
+      yield call(bgDelay, this.translationTimeout);
+      yield call(playCard);
+      break;
+    case "RESTART":
+      yield call(setModifiers);
+      yield call(bgDelay, this.nextWordTimeout);
+      yield call(playMessageEnd);
+      yield call(bgDelay, this.repeatAllTimeout);
+      break;
   }
 }
 
-function setModifiers () {
-  const _isFocusMode = isFocusMode()
-  this.volume = _isFocusMode ? 1 : 0.8
+function setModifiers() {
+  const _isFocusMode = isFocusMode();
+  this.volume = _isFocusMode ? 1 : 0.8;
 
   // this.originalTimeout = _isFocusMode ? ORIGINAL_TIMEOUT : ORIGINAL_TIMEOUT_SLEEP
-  this.translationTimeout = _isFocusMode ? TRANSLATION_TIMEOUT : TRANSLATION_TIMEOUT_SLEEP
-  this.nextWordTimeout = _isFocusMode ? NEXT_WORD_TIMEOUT : NEXT_WORD_TIMEOUT_SLEEP
-  this.repeatAllTimeout = _isFocusMode ? REPEAT_ALL_TIMEOUT : REPEAT_ALL_TIMEOUT_SLEEP
+  this.translationTimeout = _isFocusMode
+    ? TRANSLATION_TIMEOUT
+    : TRANSLATION_TIMEOUT_SLEEP;
+  this.nextWordTimeout = _isFocusMode
+    ? NEXT_WORD_TIMEOUT
+    : NEXT_WORD_TIMEOUT_SLEEP;
+  this.repeatAllTimeout = _isFocusMode
+    ? REPEAT_ALL_TIMEOUT
+    : REPEAT_ALL_TIMEOUT_SLEEP;
 
-  this.speed = _isFocusMode ? 0.55 : 0.45
+  this.speed = _isFocusMode ? 0.55 : 0.45;
   // this.rateOriginal = speed
   // this.rateTranslation = speed
 }
 
-export const isFocusMode = () => lessonLoopCounter < lessonLoopMax - 1 || lessonLoopMax === 1
+export const isFocusMode = () =>
+  lessonLoopCounter < lessonLoopMax - 1 || lessonLoopMax === 1;
 
-const playerShouldContinue = () => lessonLoopCounter < lessonLoopMax
+const playerShouldContinue = () => lessonLoopCounter < lessonLoopMax;
 
-function * playerLoopProcess () {
-  yield put(PlaybackActions.playbackSetPaused(false))
+function* playerLoopProcess() {
+  yield put(PlaybackActions.playbackSetPaused(false));
   // takeLatest cancelled the task at the end for no reason
-  yield takeEvery([PlaybackTypes.PLAYER_READY, PlaybackTypes.PLAYBACK_SUCCESS], loadPlayingState)
+  yield takeEvery(
+    [PlaybackTypes.PLAYER_READY, PlaybackTypes.PLAYBACK_SUCCESS],
+    loadPlayingState
+  );
 }
 
-export function * start () {
-  const playbackState = yield select(getPlaybackState)
-  lessonLoopMax = playbackState.lessonLoopMax
+export function* start() {
+  const playbackState = yield select(getPlaybackState);
+  lessonLoopMax = playbackState.lessonLoopMax;
   // playing = true
-  lessonLoopCounter = 0
-  translationLoopCounter = 0
-  currentIndex = 0
-  playingState = null
-  cachedFilesDurations = null
+  lessonLoopCounter = 0;
+  translationLoopCounter = 0;
+  currentIndex = 0;
+  playingState = null;
+  cachedFilesDurations = null;
 
-  yield call(setModifiers)
+  yield call(setModifiers);
 
-  playerLoopProcessTask = yield fork(playerLoopProcess)
-  yield put(PlaybackActions.playerReady()) // start playerLoopProcess
+  playerLoopProcessTask = yield fork(playerLoopProcess);
+  yield put(PlaybackActions.playerReady()); // start playerLoopProcess
 
-  yield fork(calculateTotalTime)
-  yield call(startCalculateProgress)
+  yield fork(calculateTotalTime);
+  yield call(startCalculateProgress);
 }
 
-export function * playerVolChange ({volume}) {
+export function* playerVolChange({ volume }) {
   if (sound) {
-    sound.setVolume(volume)
+    sound.setVolume(volume);
   }
 }
 
-export function * playerSpeedChange () {
+export function* playerSpeedChange() {
   if (sound) {
-    const playbackState = yield select(getPlaybackState)
-    sound.setSpeed(playbackState.speed)
+    const playbackState = yield select(getPlaybackState);
+    sound.setSpeed(playbackState.speed);
   }
 
-  yield fork(calculateTotalTime)
-  yield call(restartCalculateProgress)
+  yield fork(calculateTotalTime);
+  yield call(restartCalculateProgress);
 }
 
-export function * playbackLoopMaxChange (action) {
-  lessonLoopMax = action.lessonLoopMax
-  yield fork(calculateTotalTime)
+export function* playbackLoopMaxChange(action) {
+  lessonLoopMax = action.lessonLoopMax;
+  yield fork(calculateTotalTime);
 }
 
-function * calculateTotalTime () {
-  debug('starting calculateTotalTime()')
-  const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
-  const nbCards = currentLesson.cards.length
+function* calculateTotalTime() {
+  debug("starting calculateTotalTime()");
+  const lessonState = yield select(getLessonState);
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true);
+  const nbCards = currentLesson.cards.length;
 
-  const filesDuration = yield call(durationOfFilesTotal, nbCards - 1, nbCards, true)
-  const timeoutsDuration = getTimeoutsDurationTotal(nbCards - 1, nbCards, true)
+  const filesDuration = yield call(
+    durationOfFilesTotal,
+    nbCards - 1,
+    nbCards,
+    true
+  );
+  const timeoutsDuration = getTimeoutsDurationTotal(nbCards - 1, nbCards, true);
 
-  const duration = filesDuration + timeoutsDuration
+  const duration = filesDuration + timeoutsDuration;
 
   console.log(
-    `Total duration: ${duration.toFixed()}, Files duration: ${filesDuration.toFixed()}, Timeouts duration: ${timeoutsDuration.toFixed()}`)
-  yield put(PlaybackActions.playbackSetDuration(duration))
+    `Total duration: ${duration.toFixed()}, Files duration: ${filesDuration.toFixed()}, Timeouts duration: ${timeoutsDuration.toFixed()}`
+  );
+  yield put(PlaybackActions.playbackSetDuration(duration));
 }
 
-function fileDuration (path) {
+function fileDuration(path) {
   return new Promise((resolve, reject) => {
-    const _sound = new Sound(path, '', (error) => {
+    const _sound = new Sound(path, "", error => {
       if (error) {
-        console.log('failed to load the sound', error)
-        reject(error)
+        console.log("failed to load the sound", error);
+        reject(error);
       }
 
       if (!_sound.getDuration()) {
-        console.log(path, 'no duration')
+        console.log(path, "no duration");
       }
-      resolve(_sound.getDuration())
-    })
-  })
+      resolve(_sound.getDuration());
+    });
+  });
 }
 
-function cacheFilesDurations (currentCards) {
-  debug('Caching files durations')
+function cacheFilesDurations(currentCards) {
+  debug("Caching files durations");
 
   // Promise.map/props don't work on android with realm for some reason...
-  return Promise.map(_.range(currentCards.length), (i) => {
-    const card = currentCards[i]
-    const sentence = card.getSentence()
+  return Promise.map(
+    _.range(currentCards.length),
+    i => {
+      const card = currentCards[i];
+      const sentence = card.getSentence();
 
-    return Promise.join(fileDuration(Player.getFilePath(sentence.original, 'en-US')),
-      fileDuration(Player.getFilePath(sentence.translation, 'th-TH')))
-      .then((durations) => {
+      return Promise.join(
+        fileDuration(Player.getFilePath(sentence.original, "en-US")),
+        fileDuration(Player.getFilePath(sentence.translation, "th-TH"))
+      ).then(durations => {
         return {
           original: durations[0],
           translation: durations[1]
-        }
-      })
-  }, {
-    concurrency: 5
-  }).then((durations) => {
-    debug(durations)
-    cachedFilesDurations = durations
-  })
+        };
+      });
+    },
+    {
+      concurrency: 5
+    }
+  ).then(durations => {
+    debug(durations);
+    cachedFilesDurations = durations;
+  });
 }
 
-const applySpeedToFileDuration = (duration, speed) => duration * 1000 * (1 / (this.speed * speed))
+const applySpeedToFileDuration = (duration, speed) =>
+  duration * 1000 * (1 / (this.speed * speed));
 
-function * durationOfFiles (index) {
+function* durationOfFiles(index) {
   // Return total duration of all the files played until the current index (included), for one loop
-  const playbackState = yield select(getPlaybackState)
-  const {speed} = playbackState
+  const playbackState = yield select(getPlaybackState);
+  const { speed } = playbackState;
 
-  let duration = 0
+  let duration = 0;
   for (var i = 0; i <= index; i++) {
-    var cachedFileDuration = cachedFilesDurations[i]
-    duration += cachedFileDuration.original + cachedFileDuration.translation * TRANSLATION_LOOP_MAX
+    var cachedFileDuration = cachedFilesDurations[i];
+    duration +=
+      cachedFileDuration.original +
+      cachedFileDuration.translation * TRANSLATION_LOOP_MAX;
   }
 
-  return applySpeedToFileDuration(duration, speed)
+  return applySpeedToFileDuration(duration, speed);
 }
 
-function * durationOfFilesTotal (index, nbCards, full: bool) {
+function* durationOfFilesTotal(index, nbCards, full: boolean) {
   // Return total duration of all the files played until the current index, including previous loops.
   // If full is true, include the previous loops and the current index
-  let _lessonLoopCounter
+  let _lessonLoopCounter;
   if (!full) {
-    _lessonLoopCounter = lessonLoopCounter
+    _lessonLoopCounter = lessonLoopCounter;
   } else {
-    _lessonLoopCounter = lessonLoopMax - 1
+    _lessonLoopCounter = lessonLoopMax - 1;
   }
 
-  const playbackState = yield select(getPlaybackState)
-  const {speed} = playbackState
-  const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
-  const currentCards = currentLesson.cards
+  const playbackState = yield select(getPlaybackState);
+  const { speed } = playbackState;
+  const lessonState = yield select(getLessonState);
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true);
+  const currentCards = currentLesson.cards;
   if (!cachedFilesDurations) {
-    yield call(cacheFilesDurations, currentCards)
+    yield call(cacheFilesDurations, currentCards);
   }
 
   // todo: read real val
-  const msgEndDuration = applySpeedToFileDuration(1.0, speed)
-  let filesDuration = 0
-  let fullFilesDuration
+  const msgEndDuration = applySpeedToFileDuration(1.0, speed);
+  let filesDuration = 0;
+  let fullFilesDuration;
   // Duration from previous loop
   for (let i = 0; i < _lessonLoopCounter; i++) {
-    if (!fullFilesDuration) fullFilesDuration = yield call(durationOfFiles, nbCards - 1)
-    filesDuration += fullFilesDuration + msgEndDuration
+    if (!fullFilesDuration)
+      fullFilesDuration = yield call(durationOfFiles, nbCards - 1);
+    filesDuration += fullFilesDuration + msgEndDuration;
   }
 
   // Current loop duration
-  filesDuration += yield call(durationOfFiles, full ? index : index - 1)
+  filesDuration += yield call(durationOfFiles, full ? index : index - 1);
 
-  if (full) filesDuration += msgEndDuration
-  return filesDuration
+  if (full) filesDuration += msgEndDuration;
+  return filesDuration;
 }
 
-function getTimeoutsDuration (index) {
+function getTimeoutsDuration(index) {
   // Return total duration of all the timeouts played until the current index (included), for one loop
-  return (index + 1) * (TRANSLATION_TIMEOUT * TRANSLATION_LOOP_MAX + NEXT_WORD_TIMEOUT)
+  return (
+    (index + 1) *
+    (TRANSLATION_TIMEOUT * TRANSLATION_LOOP_MAX + NEXT_WORD_TIMEOUT)
+  );
 }
 
-function getTimeoutsDurationTotal (index, nbCards, full: bool) {
+function getTimeoutsDurationTotal(index, nbCards, full: boolean) {
   // Return total duration of all the timeouts played until the current index, including previous loops.
-  let _lessonLoopCounter
+  let _lessonLoopCounter;
   if (!full) {
-    _lessonLoopCounter = lessonLoopCounter
+    _lessonLoopCounter = lessonLoopCounter;
   } else {
-    _lessonLoopCounter = lessonLoopMax - 1
+    _lessonLoopCounter = lessonLoopMax - 1;
   }
 
-  let timeoutsDuration = 0
+  let timeoutsDuration = 0;
   for (let i = 0; i < _lessonLoopCounter; i++) {
-    timeoutsDuration += getTimeoutsDuration(nbCards - 1) + REPEAT_ALL_TIMEOUT
+    timeoutsDuration += getTimeoutsDuration(nbCards - 1) + REPEAT_ALL_TIMEOUT;
   }
-  timeoutsDuration += getTimeoutsDuration(full ? index : index - 1) + (full ? REPEAT_ALL_TIMEOUT : 0)
-  return timeoutsDuration
+  timeoutsDuration +=
+    getTimeoutsDuration(full ? index : index - 1) +
+    (full ? REPEAT_ALL_TIMEOUT : 0);
+  return timeoutsDuration;
 }
 
-function * getElapsedTime () {
-  const lessonState = yield select(getLessonState)
-  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true)
+function* getElapsedTime() {
+  const lessonState = yield select(getLessonState);
+  const currentLesson = Lesson.getFromId(lessonState.currentLessonId, true);
   // const index = currentLesson.cards.findIndex((c) => c.id === lessonState.currentCardId)
-  const nbCards = currentLesson.cards.length
+  const nbCards = currentLesson.cards.length;
 
-  const filesDuration = yield call(durationOfFilesTotal, currentIndex, nbCards, false)
-  const timeoutsDuration = getTimeoutsDurationTotal(currentIndex, nbCards, false)
+  const filesDuration = yield call(
+    durationOfFilesTotal,
+    currentIndex,
+    nbCards,
+    false
+  );
+  const timeoutsDuration = getTimeoutsDurationTotal(
+    currentIndex,
+    nbCards,
+    false
+  );
 
-  const duration = filesDuration + timeoutsDuration
+  const duration = filesDuration + timeoutsDuration;
   debug(
-    `Time previous cards - Total: ${duration.toFixed()}, Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`)
-  return duration
+    `Time previous cards - Total: ${duration.toFixed()}, Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`
+  );
+  return duration;
 }
 
-function * startCalculateProgress () {
-  progressTask = yield spawn(calculateProgress)
+function* startCalculateProgress() {
+  progressTask = yield spawn(calculateProgress);
 }
 
-function * stopCalculateProgress () {
+function* stopCalculateProgress() {
   if (progressTask) {
-    yield cancel(progressTask)
+    yield cancel(progressTask);
   }
 }
 
-function * restartCalculateProgress () {
-  yield call(stopCalculateProgress)
-  yield call(startCalculateProgress)
+function* restartCalculateProgress() {
+  yield call(stopCalculateProgress);
+  yield call(startCalculateProgress);
 }
 
-function * calculateProgress () {
-  let startTime = moment()
+function* calculateProgress() {
+  let startTime = moment();
 
   while (true) {
     // If the files durations have not been cached yet then set it to 0 for now
-    const elaspedTime = cachedFilesDurations ? yield call(getElapsedTime) : 0
-    const totalElaspedTime = elaspedTime + moment().diff(startTime)
-    debug(`Time total - ${totalElaspedTime.toFixed()}, Since current card: ${moment().diff(startTime)}`)
-    yield put(PlaybackActions.playbackSetElapsedTime(totalElaspedTime))
-    yield call(delay, 500)
+    const elaspedTime = cachedFilesDurations ? yield call(getElapsedTime) : 0;
+    const totalElaspedTime = elaspedTime + moment().diff(startTime);
+    debug(
+      `Time total - ${totalElaspedTime.toFixed()}, Since current card: ${moment().diff(
+        startTime
+      )}`
+    );
+    yield put(PlaybackActions.playbackSetElapsedTime(totalElaspedTime));
+    yield call(delay, 500);
   }
 }

@@ -1,78 +1,90 @@
 // @flow
 
-import React from 'react'
-import { View, Text, Button } from 'react-native'
-import { connect } from 'react-redux'
-import Swiper from 'react-native-swiper-animated'
-import { Card } from 'react-native-elements'
+import React from "react";
+import { View, Text, Button } from "react-native";
+import { connect } from "react-redux";
+import Swiper from "react-native-swiper-animated";
+import { Card } from "react-native-elements";
 
-import LessonActions from '../Redux/LessonRedux'
-import AnkiFooter from './AnkiFooter'
-import AnkiCard from '../Components/AnkiCard'
-import { Lesson } from '../Realm/realm'
-import RoundedButton from '../Components/RoundedButton'
-import NavigationActions from '../Navigation/NavigationActions'
-import LessonTitle from './LessonTitle'
+import LessonActions from "../Redux/LessonRedux";
+import AnkiFooter from "./AnkiFooter";
+import AnkiCard from "../Components/AnkiCard";
+import RoundedButton from "../Components/RoundedButton";
+import NavigationActions from "../Navigation/NavigationActions";
+import LessonTitle from "./LessonTitle";
 
 // Styles
-import styles from './Styles/AnkiScreenStyle'
+import styles from "./Styles/AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state
+    const { params = {} } = navigation.state;
 
     return {
       headerTitle: <LessonTitle />,
       headerRight: (
-        <Button onPress={() => params.navigateToWords()} title='All Words' />
+        <Button onPress={() => params.navigateToWords()} title="All Words" />
       )
-    }
-  }
+    };
+  };
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.currentCardId !== this.props.currentCardId) {
       // Next card
       if (this.props.currentCardId) {
         if (nextProps.currentCardId) {
-          this.swiper.jumpToIndex(this.props.cardIds.indexOf(nextProps.currentCardId), true)
+          this.swiper.jumpToIndex(
+            this.props.cardIds.indexOf(nextProps.currentCardId),
+            true
+          );
         }
       }
     }
   }
 
-  componentDidMount () {
-    this.props.navigation.setParams({ navigateToWords: this.props.navigateToWords })
+  componentDidMount() {
+    this.props.navigation.setParams({
+      navigateToWords: this.props.navigateToWords
+    });
   }
 
-  currentCardIndex () {
-    return this.props.cardIds.indexOf(this.props.currentCardId)
+  currentCardIndex() {
+    return this.props.cardIds.indexOf(this.props.currentCardId);
   }
 
-  renderNoCards () {
+  renderNoCards() {
     return (
-      <Card wrapperStyle={{flex: 1}} containerStyle={{flex: 1}}
-        title='LESSON DONE'>
+      <Card
+        wrapperStyle={{ flex: 1 }}
+        containerStyle={{ flex: 1 }}
+        title="LESSON DONE"
+      >
         <View style={styles.noMoreCardsContainer}>
-          <Text style={styles.noMoreCards}>Well done there are no more cards, come back later!</Text>
+          <Text style={styles.noMoreCards}>
+            Well done there are no more cards, come back later!
+          </Text>
         </View>
-        <RoundedButton styles={styles.finishButton} onPress={this.props.navigateToLessons}>
+        <RoundedButton
+          styles={styles.finishButton}
+          onPress={this.props.navigateToLessons}
+        >
           Finish
         </RoundedButton>
       </Card>
-    )
+    );
   }
 
-  swiper = null
+  swiper = null;
 
-  render () {
+  render() {
     if (!this.props.currentCardId) {
-      return this.renderNoCards()
+      return this.renderNoCards();
     }
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Swiper
-          ref={(swiper) => {
-            this.swiper = swiper
+          ref={swiper => {
+            this.swiper = swiper;
           }}
           style={styles.wrapper}
           showPagination={false}
@@ -86,28 +98,34 @@ class AnkiScreen extends React.Component {
         </Swiper>
         <AnkiFooter />
       </View>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => {
-  const lesson = Lesson.getFromId(state.lesson.currentLessonId, true)
+const mapStateToProps = state => {
+  const lesson = Lesson.getFromId(state.lesson.currentLessonId, true);
   return {
     lesson: state.lesson,
     currentCardId: state.lesson.currentCardId,
     cardIds: lesson.cards.map(c => c.id)
-  }
-}
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
     loadNextCard: () => dispatch(LessonActions.loadNextCard()),
     startLesson: () => dispatch(LessonActions.lessonStart()),
-    lessonUpdateCompleted: (isCompleted) => dispatch(LessonActions.lessonUpdateCompleted(isCompleted)),
-    navigateToLessons: () => dispatch(NavigationActions.reset('LessonsListScreen')),
-    navigateToWords: () => dispatch(NavigationActions.navigate('WordsListScreen'))
-  }
-}
+    lessonUpdateCompleted: isCompleted =>
+      dispatch(LessonActions.lessonUpdateCompleted(isCompleted)),
+    navigateToLessons: () =>
+      dispatch(NavigationActions.reset("LessonsListScreen")),
+    navigateToWords: () =>
+      dispatch(NavigationActions.navigate("WordsListScreen"))
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnkiScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnkiScreen);

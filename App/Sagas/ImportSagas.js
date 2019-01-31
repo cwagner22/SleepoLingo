@@ -3,16 +3,6 @@ import XLSX from "xlsx";
 import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
 
-import {
-  Card,
-  LessonGroup,
-  Lesson,
-  reset,
-  write,
-  Sentence,
-  Word
-} from "../Realm/realm";
-
 const getSentence = string => string.split("\n")[0];
 const getFullSentence = string => string.split("\n")[1];
 

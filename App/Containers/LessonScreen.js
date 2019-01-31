@@ -1,30 +1,29 @@
 // @flow
 
-import React from 'react'
-import { View, ScrollView, Text, Platform } from 'react-native'
-import { connect } from 'react-redux'
-import { Card } from 'react-native-elements'
-import ActionButton from 'react-native-action-button'
-import Modal from 'react-native-modalbox'
-import MIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import React from "react";
+import { View, ScrollView, Text, Platform } from "react-native";
+import { connect } from "react-redux";
+import { Card } from "react-native-elements";
+import ActionButton from "react-native-action-button";
+import Modal from "react-native-modalbox";
+import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { Lesson } from '../Realm/realm'
-import LessonActions from '../Redux/LessonRedux'
-import RoundedButton from '../Components/RoundedButton'
-import PlayerScreen from './PlayerScreen'
-import LessonTitle from './LessonTitle'
+import LessonActions from "../Redux/LessonRedux";
+import RoundedButton from "../Components/RoundedButton";
+import PlayerScreen from "./PlayerScreen";
+import LessonTitle from "./LessonTitle";
 
 // Styles
-import styles from './Styles/LessonScreenStyles'
-import { Colors } from '../Themes/'
+import styles from "./Styles/LessonScreenStyles";
+import { Colors } from "../Themes/";
 
 class LessonScreen extends React.Component {
   state = {
     modalVisible: false
-  }
+  };
 
-  static navigationOptions = ({navigation, screenProps}) => {
-    const {params = {}} = navigation.state
+  static navigationOptions = ({ navigation, screenProps }) => {
+    const { params = {} } = navigation.state;
 
     return {
       // Use a custom component to display the lesson name. Setting it in
@@ -32,41 +31,52 @@ class LessonScreen extends React.Component {
       headerTitle: <LessonTitle />,
       // Hide header when modal visible
       header: params.modalVisible ? null : undefined,
-      gesturesEnabled: !params.modalVisible && Platform.OS === 'ios',
-      headerBackTitle: 'Back'
-    }
-  }
+      gesturesEnabled: !params.modalVisible && Platform.OS === "ios",
+      headerBackTitle: "Back"
+    };
+  };
 
-  componentWillMount () {
-    const {lesson} = this.props
+  componentWillMount() {
+    const { lesson } = this.props;
     // this.props.navigation.setOptions({
     //   // title: lesson.name,
     //   // gesturesEnabled: Platform.OS === 'ios',
     //   headerBackTitle: 'Back'
     // })
 
-    this.props.downloadLesson(lesson.cards)
+    this.props.downloadLesson(lesson.cards);
   }
 
-  componentWillReceiveProps (newProps) {
-    if (this.state.modalVisible && newProps.playerRunning !== this.props.playerRunning && !newProps.playerRunning) {
+  componentWillReceiveProps(newProps) {
+    if (
+      this.state.modalVisible &&
+      newProps.playerRunning !== this.props.playerRunning &&
+      !newProps.playerRunning
+    ) {
       // Audio finished, force the player to close since it's still open
-      this.refs.nightPlayerModal.close()
+      this.refs.nightPlayerModal.close();
     }
   }
 
-  renderCard () {
+  renderCard() {
     if (!this.state.modalVisible) {
-      const {lesson} = this.props
+      const { lesson } = this.props;
 
       return (
-        <View style={{flex: 1}}>
-          <Card title='Lesson Notes' containerStyle={{flex: 1}} wrapperStyle={{flex: 1}}>
+        <View style={{ flex: 1 }}>
+          <Card
+            title="Lesson Notes"
+            containerStyle={{ flex: 1 }}
+            wrapperStyle={{ flex: 1 }}
+          >
             <ScrollView>
               <Text style={styles.componentLabel}>{lesson.note}</Text>
             </ScrollView>
             <View>
-              <RoundedButton onPress={() => this.startDay()} styles={styles.button}>
+              <RoundedButton
+                onPress={() => this.startDay()}
+                styles={styles.button}
+              >
                 START STUDY
               </RoundedButton>
             </View>
@@ -86,25 +96,25 @@ class LessonScreen extends React.Component {
             buttonColor={Colors.easternBlue}
             onPress={() => this.startNight()}
             offsetY={85}
-            icon={<MIcon name='hotel' color='white' size={24} />}
+            icon={<MIcon name="hotel" color="white" size={24} />}
             elevation={5}
             zIndex={5}
           />
         </View>
-      )
+      );
     }
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
-        { this.renderCard() }
+        {this.renderCard()}
 
         <Modal
           style={styles.mainContainer}
-          ref={'nightPlayerModal'}
+          ref={"nightPlayerModal"}
           swipeToClose
-          entry='top'
+          entry="top"
           onClosed={() => this.onPlayerClose()}
           backdropOpacity={0.95}
           // swipeArea={Dimensions.get('window').height*0.65}
@@ -112,50 +122,53 @@ class LessonScreen extends React.Component {
           <PlayerScreen />
         </Modal>
       </View>
-    )
+    );
   }
 
-  startDay () {
-    this.props.startAnki()
+  startDay() {
+    this.props.startAnki();
     // this.props.navigation.navigate('AnkiScreen', {title: this.props.lesson.name})
   }
 
-  onPlayerClose () {
+  onPlayerClose() {
     // this.props.navigation.setOptions({
     //   header: undefined, // Default header
     //   gesturesEnabled: Platform.OS === 'ios'
     // })
     this.props.navigation.setParams({
       modalVisible: false
-    })
-    this.setState({modalVisible: false})
+    });
+    this.setState({ modalVisible: false });
   }
 
-  startNight () {
+  startNight() {
     // this.props.navigation.setOptions({
     //   header: null,
     //   gesturesEnabled: false
     // })
     this.props.navigation.setParams({
       modalVisible: true
-    })
-    this.setState({modalVisible: true})
-    this.refs.nightPlayerModal.open()
+    });
+    this.setState({ modalVisible: true });
+    this.refs.nightPlayerModal.open();
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
     playerRunning: state.playback.playerRunning
-  }
-}
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    downloadLesson: (words) => dispatch(LessonActions.downloadLesson(words)),
+    downloadLesson: words => dispatch(LessonActions.downloadLesson(words)),
     startAnki: () => dispatch(LessonActions.lessonStartAnki())
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(LessonScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LessonScreen);

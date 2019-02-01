@@ -1,48 +1,53 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import { autoRehydrate } from 'redux-persist'
-import Config from '../Config/DebugConfig'
-import createSagaMiddleware from 'redux-saga'
-import RehydrationServices from '../Services/RehydrationServices'
-import ReduxPersist from '../Config/ReduxPersist'
+import { createStore, applyMiddleware, compose } from "redux";
+import Rehydration from "../Services/Rehydration";
+import ReduxPersist from "../Config/ReduxPersist";
+import Config from "../Config/DebugConfig";
+import createSagaMiddleware from "redux-saga";
+import { createReactNavigationReduxMiddleware } from "react-navigation-redux-helpers";
 
 // creates the store
 export default (rootReducer, rootSaga) => {
   /* ------------- Redux Configuration ------------- */
 
-  const middleware = []
-  const enhancers = []
+  const middleware = [];
+  const enhancers = [];
+
+  /* ------------- Navigation Middleware ------------ */
+  const navigationMiddleware = createReactNavigationReduxMiddleware(
+    "root",
+    state => state.nav
+  );
+  middleware.push(navigationMiddleware);
 
   /* ------------- Saga Middleware ------------- */
 
-  const sagaMonitor = Config.useReactotron ? console.tron.createSagaMonitor() : null
-  const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
-  middleware.push(sagaMiddleware)
+  const sagaMonitor = Config.useReactotron
+    ? console.tron.createSagaMonitor()
+    : null;
+  const sagaMiddleware = createSagaMiddleware({ sagaMonitor });
+  middleware.push(sagaMiddleware);
 
   /* ------------- Assemble Middleware ------------- */
 
-  enhancers.push(applyMiddleware(...middleware))
-
-  /* ------------- AutoRehydrate Enhancer ------------- */
-
-  // add the autoRehydrate enhancer
-  if (ReduxPersist.active) {
-    enhancers.push(autoRehydrate())
-  }
+  enhancers.push(applyMiddleware(...middleware));
 
   // if Reactotron is enabled (default for __DEV__), we'll create the store through Reactotron
-  const createAppropriateStore = Config.useReactotron ? console.tron.createStore : createStore
-  // redux DevTools https://github.com/zalmoxisus/redux-devtools-extension#usage
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-  // create Store
-  const store = createAppropriateStore(rootReducer, composeEnhancers(...enhancers))
+  const createAppropriateStore = Config.useReactotron
+    ? console.tron.createStore
+    : createStore;
+  const store = createAppropriateStore(rootReducer, compose(...enhancers));
 
   // configure persistStore and check reducer version number
   if (ReduxPersist.active) {
-    RehydrationServices.updateReducers(store)
+    Rehydration.updateReducers(store);
   }
 
   // kick off root saga
-  sagaMiddleware.run(rootSaga)
+  let sagasManager = sagaMiddleware.run(rootSaga);
 
-  return store
-}
+  return {
+    store,
+    sagasManager,
+    sagaMiddleware
+  };
+};

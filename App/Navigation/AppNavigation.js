@@ -11,7 +11,7 @@ import LaunchScreen from "../Containers/LaunchScreen";
 import LessonsListScreen from "../Containers/LessonsListScreen";
 // import LessonScreen from "../Containers/LessonScreen";
 // import AnkiScreen from "../Containers/AnkiScreen";
-import ImportScreen from "../Containers/ImportScreen";
+import ImportScreen from "../Containers/ImportScreen/ImportScreen";
 // import WordsListScreen from "../Containers/WordsListScreen";
 // import DrawerButton from "../Components/DrawerButton";
 // import SettingsScreen from "../Containers/SettingsScreen";

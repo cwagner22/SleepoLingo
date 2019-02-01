@@ -23,35 +23,34 @@ class RootContainer extends Component {
     // if (!ReduxPersist.active) {
     //   this.props.startup();
     // }
-
-    BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+    // BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
   }
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
-  }
+  // componentWillUnmount() {
+  //   BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+  // }
 
-  hasNavigated = nav => {
-    if (nav.index > 0) return true;
+  // hasNavigated = nav => {
+  //   if (nav.index > 0) return true;
 
-    if (nav.routes) {
-      for (var i = 0; i < nav.routes.length; i++) {
-        if (this.hasNavigated(nav.routes[i])) return true;
-      }
-    }
+  //   if (nav.routes) {
+  //     for (var i = 0; i < nav.routes.length; i++) {
+  //       if (this.hasNavigated(nav.routes[i])) return true;
+  //     }
+  //   }
 
-    return false;
-  };
+  //   return false;
+  // };
 
-  onBackPress = () => {
-    const { dispatch, nav } = this.props;
-    if (!this.hasNavigated(nav)) {
-      // Close app
-      return false;
-    }
-    dispatch(NavigationActions.back());
-    return true;
-  };
+  // onBackPress = () => {
+  //   const { dispatch, nav } = this.props;
+  //   if (!this.hasNavigated(nav)) {
+  //     // Close app
+  //     return false;
+  //   }
+  //   dispatch(NavigationActions.back());
+  //   return true;
+  // };
 
   render() {
     return (
@@ -64,7 +63,7 @@ class RootContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  nav: state.nav
+  // nav: state.nav
   // settings: {currentLessonId: state.lesson.currentLessonId}
 });
 

@@ -9,9 +9,12 @@ import Sound from "react-native-sound";
 // import RNFS from 'react-native-fs'
 
 // Realm.copyBundledRealmFiles()
+import { PersistGate } from "redux-persist/integration/react";
 
 import RootContainer from "./RootContainer";
-import store from "../redux/store";
+// import { store, persistor } from "../Redux";
+import createStore from "../Redux";
+const store = createStore();
 
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { Database } from "@nozbe/watermelondb";
@@ -74,11 +77,13 @@ class App extends Component {
 
   render() {
     return (
-      <DatabaseProvider database={database}>
-        <Provider store={store}>
-          <RootContainer />
-        </Provider>
-      </DatabaseProvider>
+      // <DatabaseProvider database={database}>
+      <Provider store={store}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
+        <RootContainer />
+        {/* </PersistGate> */}
+      </Provider>
+      // </DatabaseProvider>
     );
   }
 }

@@ -124,27 +124,24 @@ function parseDictionary(worksheet) {
 }
 
 function parseGroups(workbook) {
-  write(() => {
-    reset();
-    console.log(workbook);
-    for (var i = 0; i < workbook.SheetNames.length; i++) {
-      const name = workbook.SheetNames[i];
-      let worksheet = workbook.Sheets[name];
-      let worksheetJSON = XLSX.utils.sheet_to_json(worksheet);
-      console.log(worksheetJSON);
+  console.log(workbook);
+  for (var i = 0; i < workbook.SheetNames.length; i++) {
+    const name = workbook.SheetNames[i];
+    let worksheet = workbook.Sheets[name];
+    let worksheetJSON = XLSX.utils.sheet_to_json(worksheet);
+    console.log(worksheetJSON);
 
-      if (name === "Dictionary") {
-        parseDictionary(worksheetJSON);
-      } else {
-        const lessons = parseLessons(worksheetJSON);
-        if (lessons.length) {
-          LessonGroup.create(name, lessons);
-        }
+    if (name === "Dictionary") {
+      parseDictionary(worksheetJSON);
+    } else {
+      const lessons = parseLessons(worksheetJSON);
+      if (lessons.length) {
+        LessonGroup.create(name, lessons);
       }
     }
+  }
 
-    checkWords();
-  });
+  checkWords();
 }
 
 export function* importStart() {
@@ -155,9 +152,9 @@ export function* importStart() {
   );
   const workbook = yield call(XLSX.read, data);
 
-  yield call(parseGroups, workbook);
-
   yield call(db.unsafeResetDatabase);
+
+  yield call(parseGroups, workbook);
 
   const dbPath = Secrets.REALM_PATH + "/default.realm";
   // Overwrite original db

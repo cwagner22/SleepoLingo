@@ -11,7 +11,7 @@ import Sound from "react-native-sound";
 // Realm.copyBundledRealmFiles()
 
 import RootContainer from "./RootContainer";
-import createStore from "../Redux";
+import store from "../redux/store";
 
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { Database } from "@nozbe/watermelondb";
@@ -22,9 +22,6 @@ import Sentence from "../Models/Sentence";
 import Card from "../Models/Card";
 import Lesson from "../Models/Lesson";
 import LessonGroup from "../Models/LessonGroup";
-
-// create our store
-const store = createStore();
 
 // set up the database
 const adapter = new SQLiteAdapter({

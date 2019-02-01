@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import RNFS from "react-native-fs";
 // import { Sentry } from 'react-native-sentry'
 
-import LessonActions from "../Redux/LessonRedux";
+// import LessonActions from "../Redux/LessonRedux";
+import { addTodo } from "../redux/actions";
 import LessonButton from "../Components/LessonButton";
 import DrawerButton from "../Components/DrawerButton";
 
@@ -156,7 +157,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
+    // loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
     // navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
   };
 };

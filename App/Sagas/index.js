@@ -1,23 +1,23 @@
-import { takeLatest, all } from 'redux-saga/effects'
-import API from '../Services/Api'
-import FixtureAPI from '../Services/FixtureApi'
-import DebugConfig from '../Config/DebugConfig'
+import { takeLatest, all } from "redux-saga/effects";
+import API from "../Services/Api";
+import FixtureAPI from "../Services/FixtureApi";
+import DebugConfig from "../Config/DebugConfig";
 
 /* ------------- Types ------------- */
 
-import { StartupTypes } from '../Redux/StartupRedux'
-import { GithubTypes } from '../Redux/GithubRedux'
-import { LoginTypes } from '../Redux/LoginRedux'
-import { LessonTypes } from '../Redux/LessonRedux'
-import { PlaybackTypes } from '../Redux/PlaybackRedux'
-import { ImportTypes } from '../Redux/ImportRedux'
+import { StartupTypes } from "../Redux/StartupRedux";
+import { GithubTypes } from "../Redux/GithubRedux";
+import { LoginTypes } from "../Redux/LoginRedux";
+import { LessonTypes } from "../Redux/LessonRedux";
+import { PlaybackTypes } from "../Redux/PlaybackRedux";
+import { ImportTypes } from "../Redux/ImportRedux";
 
 /* ------------- Sagas ------------- */
 
-import { startup } from './StartupSagas'
-import { login } from './LoginSagas'
-import { getUserAvatar } from './GithubSagas'
-import { downloadLesson, loadLesson, startAnki } from './LessonSagas'
+import { startup } from "./StartupSagas";
+import { login } from "./LoginSagas";
+import { getUserAvatar } from "./GithubSagas";
+import { downloadLesson, loadLesson, startAnki } from "./LessonSagas";
 import {
   playSaga,
   start,
@@ -29,18 +29,18 @@ import {
   playerVolChange,
   playerSpeedChange,
   playbackLoopMaxChange
-} from './PlaybackSagas'
-import { importStart } from './ImportSagas'
+} from "./PlaybackSagas";
+import { startImport } from "./ImportSagas";
 
 /* ------------- API ------------- */
 
 // The API we use is only used from Sagas, so we create it here and pass along
 // to the sagas which need it.
-const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
+const api = DebugConfig.useFixtures ? FixtureAPI : API.create();
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function * root () {
+export default function* root() {
   yield all([
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
@@ -61,9 +61,9 @@ export default function * root () {
     takeLatest(PlaybackTypes.PLAYBACK_SPEED_CHANGE, playerSpeedChange),
     takeLatest(PlaybackTypes.PLAYBACK_LOOP_MAX_CHANGE, playbackLoopMaxChange),
 
-    takeLatest(ImportTypes.IMPORT_START, importStart),
+    takeLatest(ImportTypes.START_IMPORT, startImport),
 
     // some sagas receive extra parameters in addition to an action
     takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
-  ])
+  ]);
 }

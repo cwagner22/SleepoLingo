@@ -5,6 +5,7 @@ import { View, Text, Button } from "react-native";
 import { connect } from "react-redux";
 // import ImportActions from "../../redux/actions";
 import ImportActions from "../../Redux/ImportRedux";
+import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 
 // import { startImport } from "../../redux/actions";
 import RoundedButton from "../../Components/RoundedButton";
@@ -18,9 +19,7 @@ class ImportScreen extends React.Component {
   }
 
   handleStartImport() {
-    console.log(ImportActions);
-    console.log(this.props.startImport);
-    this.props.startImport();
+    this.props.startImport(this.props.database);
   }
 
   render() {
@@ -42,11 +41,31 @@ class ImportScreen extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    startImport: () => dispatch(ImportActions.startImport())
+    startImport: database => dispatch(ImportActions.startImport(database))
   };
 };
 
 export default connect(
   null,
   mapDispatchToProps
-)(ImportScreen);
+)(withDatabase(ImportScreen));
+
+// const enhance = withDatabase(
+//   withObservables([], ({ database }) => ({
+//     blogs: database.collections
+//       .get("blogs")
+//       .query()
+//       .observe()
+//   }))(BlogList)
+// );
+
+// const enhance = withDatabase(withObservables([], ({ database }) => ({
+//   blogs: database.collections.get('blogs').query().observe(),
+// }))(BlogList))
+
+// const enhance = withObservables(['post'], ({ post }) => ({
+//   post: post.observe(),
+//   comments: post.comments.observe()
+// }))
+
+// export default withDatabase(ImportScreen);

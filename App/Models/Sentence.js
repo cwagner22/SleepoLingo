@@ -1,5 +1,5 @@
 import { Model } from "@nozbe/watermelondb";
-import { field } from "@nozbe/watermelondb/decorators";
+import { field, relation } from "@nozbe/watermelondb/decorators";
 
 export default class Sentence extends Model {
   static table = "sentences";
@@ -7,4 +7,9 @@ export default class Sentence extends Model {
   @field("original") original;
   @field("translation") translation;
   @field("transliteration") transliteration;
+
+  static associations = {
+    cards: { type: "belongs_to", key: "card_id" }
+  };
+  @relation("cards", "card_id") card;
 }

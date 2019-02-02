@@ -77,13 +77,13 @@ class App extends Component {
 
   render() {
     return (
-      // <DatabaseProvider database={database}>
-      <Provider store={store}>
-        {/* <PersistGate loading={null} persistor={persistor}> */}
-        <RootContainer />
-        {/* </PersistGate> */}
-      </Provider>
-      // </DatabaseProvider>
+      <DatabaseProvider database={database}>
+        <Provider store={store}>
+          {/* <PersistGate loading={null} persistor={persistor}> */}
+          <RootContainer />
+          {/* </PersistGate> */}
+        </Provider>
+      </DatabaseProvider>
     );
   }
 }

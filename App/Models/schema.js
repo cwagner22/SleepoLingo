@@ -4,7 +4,7 @@ export const mySchema = appSchema({
   version: 1,
   tables: [
     tableSchema({
-      name: "words",
+      name: "dictionary",
       columns: [
         { name: "original", type: "string" },
         { name: "translation", type: "string" },
@@ -16,7 +16,8 @@ export const mySchema = appSchema({
       columns: [
         { name: "original", type: "string" },
         { name: "translation", type: "string" },
-        { name: "transliteration", type: "string" }
+        { name: "transliteration", type: "string" },
+        { name: "card_id", type: "string", isIndexed: true }
       ]
     }),
     tableSchema({
@@ -25,7 +26,8 @@ export const mySchema = appSchema({
         { name: "sentence_id", type: "string" },
         { name: "fullSentence_id", type: "string", isOptional: true },
         { name: "note", type: "string", isOptional: true },
-        { name: "show_date", type: "string", isOptional: true }
+        { name: "show_date", type: "string", isOptional: true },
+        { name: "lesson_id", type: "string", isIndexed: true }
       ]
     }),
     tableSchema({
@@ -33,7 +35,7 @@ export const mySchema = appSchema({
       columns: [
         { name: "name", type: "string" },
         { name: "note", type: "string", isOptional: true },
-        { name: "lesson_group_id", type: "string" }
+        { name: "lesson_group_id", type: "string", isIndexed: true }
       ]
     }),
     tableSchema({

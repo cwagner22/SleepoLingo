@@ -1,12 +1,13 @@
-import { call } from "redux-saga/effects";
+import { call, take } from "redux-saga/effects";
 import XLSX from "xlsx";
 import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
+import Card from "../Models/Card";
 
 const getSentence = string => string.split("\n")[0];
 const getFullSentence = string => string.split("\n")[1];
 
-function parseCards(worksheet) {
+async function parseCards(worksheet, lesson, database) {
   console.log("Parsing cards, worksheet length: ", worksheet.length);
   let cards = [];
   for (var i = 0; i < worksheet.length; i++) {
@@ -28,14 +29,36 @@ function parseCards(worksheet) {
     };
 
     console.log(sentence);
-    const card = Card.create(
-      Number(row.Id),
-      sentence,
-      fullSentence,
-      i,
-      row.Note
-    );
-    cards.push(card);
+    // const card = Card.create(
+    //   Number(row.Id),
+    //   sentence,
+    //   fullSentence,
+    //   i,
+    //   row.Note
+    // );
+    // const card = Card.create(
+    //   sentence,
+    //   fullSentence,
+    //   i,
+    //   row.Note
+    // );
+
+    // const newCard = await database.action(async action => {
+    // const cardsCollection = database.collections.get("cards");
+    // const sentencesCollection = database.collections.get("sentences");
+    // if (
+    //   fullSentence.original &&
+    //   fullSentence.translation &&
+    //   fullSentence.transliteration
+    // ) {
+    //   card.fullSentence = fullSentence;
+    // }
+    // const newCard = yield call(cardsCollection.create, card => {
+
+
+    await Card.create(database, newSentence, fullSentence, i, row.Note)
+    // })
+    cards.push(newCard);
   }
 
   worksheet.splice(0, i);
@@ -43,7 +66,7 @@ function parseCards(worksheet) {
   return cards;
 }
 
-function parseLesson(worksheet) {
+async function parseLesson(worksheet, lessonGroup, database) {
   if (!worksheet.length) return;
   console.log("Parsing lesson, worksheet length: ", worksheet.length);
   const lessonNameFull = worksheet[0].Original;
@@ -63,16 +86,26 @@ function parseLesson(worksheet) {
   }
 
   worksheet.splice(0, note ? 2 : 1);
-  const cards = parseCards(worksheet);
+
+  const newLesson = await database.collections.get("lessons").create(l => {
+    l.name = name;
+    l.note = note;
+    l.lessonGroup.set(lessonGroup)
+  });
+
+  const cards = await parseCards(worksheet, newLesson, database);
   if (!cards.length) return;
-  return Lesson.create(Number(id), name, note, cards);
+
+
+  return newLesson;
+  // return Lesson.create(Number(id), name, note, cards);
 }
 
-function parseLessons(worksheet) {
+function* parseLessons(worksheet, lessonGroup, database) {
   let lessons = [];
   let canContinue = true;
   while (canContinue) {
-    const lesson = parseLesson(worksheet);
+    const lesson = yield call(parseLesson, worksheet, lessonGroup, database);
     if (lesson) {
       lessons.push(lesson);
       canContinue = worksheet.length > 2;
@@ -111,7 +144,7 @@ function checkWords(card) {
   console.log("Words missing from dictionary:", wordsMissing);
 }
 
-function parseDictionary(worksheet) {
+function* parseDictionary(worksheet, database) {
   console.log("Parsing Dictionary, worksheet length: ", worksheet.length);
   for (var i = 0; i < worksheet.length; i++) {
     var row = worksheet[i];
@@ -123,7 +156,9 @@ function parseDictionary(worksheet) {
   }
 }
 
-function parseGroups(workbook) {
+async function* parseGroups(workbook, database) {
+  await database.unsafeResetDatabase()
+
   console.log(workbook);
   for (var i = 0; i < workbook.SheetNames.length; i++) {
     const name = workbook.SheetNames[i];
@@ -132,37 +167,44 @@ function parseGroups(workbook) {
     console.log(worksheetJSON);
 
     if (name === "Dictionary") {
-      parseDictionary(worksheetJSON);
+      call(parseDictionary, worksheetJSON, database);
     } else {
-      const lessons = parseLessons(worksheetJSON);
-      if (lessons.length) {
-        LessonGroup.create(name, lessons);
-      }
+      const newLessonGroup = await database.collections.get("lessonGroups").create(lessonGroup => {
+        lessonGroup.name = name;
+      });
+      const lessons = yield call(parseLessons, newLessonGroup, worksheetJSON, database);
+      // if (lessons.length) {
+      //   // LessonGroup.create(name, lessons);
+     
+      // }
     }
   }
 
   checkWords();
 }
 
-export function* importStart() {
+export function* startImport({ database }) {
   const data = yield call(
     RNFS.readFile,
     Secrets.REALM_PATH + "/lessons.xlsx",
     "base64"
   );
   const workbook = yield call(XLSX.read, data);
+  // yield call(database.unsafeResetDatabase);
 
-  yield call(db.unsafeResetDatabase);
+  call(parseGroups, workbook, database);
 
-  yield call(parseGroups, workbook);
-
-  const dbPath = Secrets.REALM_PATH + "/default.realm";
-  // Overwrite original db
-  try {
-    yield call(RNFS.unlink, dbPath);
-  } catch (e) {
-    // file doesn't exist
-  }
-  yield call(RNFS.copyFile, RNFS.MainBundlePath + "/default.realm", dbPath);
+  // const dbPath = Secrets.REALM_PATH + "/default.realm";
+  // // Overwrite original db
+  // try {
+  //   yield call(RNFS.unlink, dbPath);
+  // } catch (e) {
+  //   // file doesn't exist
+  // }
+  // yield call(RNFS.copyFile, RNFS.MainBundlePath + "/default.realm", dbPath);
   console.log("Done");
 }
+
+// export default {
+//   startImport
+// };

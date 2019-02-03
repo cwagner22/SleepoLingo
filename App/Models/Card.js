@@ -14,10 +14,10 @@ export default class Card extends Model {
   };
   @relation("lessons", "lesson_id") lesson;
 
-  static async create(database, sentence, fullSentence, index, note, lesson) {
+  static prepareCreate(database, sentence, fullSentence, index, note, lesson) {
     const sentencesCollection = database.collections.get("sentences");
 
-    const newSentence = await sentencesCollection.create(s => {
+    const newSentence = sentencesCollection.prepareCreate(s => {
       s.original = sentence.original;
       s.translation = sentence.translation;
       s.transliteration = sentence.transliteration;
@@ -29,14 +29,14 @@ export default class Card extends Model {
       fullSentence.translation &&
       fullSentence.transliteration
     ) {
-      newFullSentence = await sentencesCollection.create(s => {
+      newFullSentence = sentencesCollection.prepareCreate(s => {
         s.original = fullSentence.original;
         s.translation = fullSentence.translation;
         s.transliteration = fullSentence.transliteration;
       });
     }
 
-    return await database.collections.get("cards").create(card => {
+    return database.collections.get("cards").prepareCreate(card => {
       card.sentence.set(newSentence);
       if (newFullSentence) card.fullSentence.set(newFullSentence);
       card.index = index;

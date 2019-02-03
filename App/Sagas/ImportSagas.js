@@ -4,119 +4,6 @@ import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
 import Card from "../Models/Card";
 
-const getSentence = string => string.split("\n")[0];
-const getFullSentence = string => string.split("\n")[1];
-
-async function parseCards(worksheet, lesson, database) {
-  console.log("Parsing cards, worksheet length: ", worksheet.length);
-  let cards = [];
-  for (var i = 0; i < worksheet.length; i++) {
-    var row = worksheet[i];
-    if (!row.Original || !row.Translation || !row.Transliteration) {
-      break;
-    }
-
-    const sentence = {
-      original: getSentence(row.Original),
-      translation: getSentence(row.Translation),
-      transliteration: getSentence(row.Transliteration)
-    };
-
-    const fullSentence = {
-      original: getFullSentence(row.Original),
-      translation: getFullSentence(row.Translation),
-      transliteration: getFullSentence(row.Transliteration)
-    };
-
-    console.log(sentence);
-    // const card = Card.create(
-    //   Number(row.Id),
-    //   sentence,
-    //   fullSentence,
-    //   i,
-    //   row.Note
-    // );
-    // const card = Card.create(
-    //   sentence,
-    //   fullSentence,
-    //   i,
-    //   row.Note
-    // );
-
-    // const newCard = await database.action(async action => {
-    // const cardsCollection = database.collections.get("cards");
-    // const sentencesCollection = database.collections.get("sentences");
-    // if (
-    //   fullSentence.original &&
-    //   fullSentence.translation &&
-    //   fullSentence.transliteration
-    // ) {
-    //   card.fullSentence = fullSentence;
-    // }
-    // const newCard = yield call(cardsCollection.create, card => {
-
-
-    await Card.create(database, newSentence, fullSentence, i, row.Note)
-    // })
-    cards.push(newCard);
-  }
-
-  worksheet.splice(0, i);
-  console.log(cards.length + " cards found");
-  return cards;
-}
-
-async function parseLesson(worksheet, lessonGroup, database) {
-  if (!worksheet.length) return;
-  console.log("Parsing lesson, worksheet length: ", worksheet.length);
-  const lessonNameFull = worksheet[0].Original;
-  const res = lessonNameFull.match(/Lesson (\d+): (.+)/);
-  const id = res[1];
-  const name = res[2];
-  if (!id || !name) return;
-
-  let note;
-  if (
-    worksheet[1].Original &&
-    !worksheet[1].Translation &&
-    !worksheet[1].Transliteration
-  ) {
-    // Note is optional
-    note = worksheet[1].Original;
-  }
-
-  worksheet.splice(0, note ? 2 : 1);
-
-  const newLesson = await database.collections.get("lessons").create(l => {
-    l.name = name;
-    l.note = note;
-    l.lessonGroup.set(lessonGroup)
-  });
-
-  const cards = await parseCards(worksheet, newLesson, database);
-  if (!cards.length) return;
-
-
-  return newLesson;
-  // return Lesson.create(Number(id), name, note, cards);
-}
-
-function* parseLessons(worksheet, lessonGroup, database) {
-  let lessons = [];
-  let canContinue = true;
-  while (canContinue) {
-    const lesson = yield call(parseLesson, worksheet, lessonGroup, database);
-    if (lesson) {
-      lessons.push(lesson);
-      canContinue = worksheet.length > 2;
-    } else {
-      canContinue = false;
-    }
-  }
-
-  return lessons;
-}
-
 function checkWords(card) {
   let wordsMissing = [];
   const sentences = Sentence.get();
@@ -156,10 +43,116 @@ function* parseDictionary(worksheet, database) {
   }
 }
 
-async function* parseGroups(workbook, database) {
-  await database.unsafeResetDatabase()
+const getSentence = string => string.split("\n")[0];
+const getFullSentence = string => string.split("\n")[1];
+
+function parseCards(worksheet, lesson, database) {
+  console.log("Parsing cards, worksheet length: ", worksheet.length);
+  let cards = [];
+  for (var i = 0; i < worksheet.length; i++) {
+    var row = worksheet[i];
+    if (!row.Original || !row.Translation || !row.Transliteration) {
+      break;
+    }
+
+    const sentence = {
+      original: getSentence(row.Original),
+      translation: getSentence(row.Translation),
+      transliteration: getSentence(row.Transliteration)
+    };
+
+    const fullSentence = {
+      original: getFullSentence(row.Original),
+      translation: getFullSentence(row.Translation),
+      transliteration: getFullSentence(row.Transliteration)
+    };
+
+    // console.log(sentence);
+
+    const newCard = Card.prepareCreate(
+      database,
+      sentence,
+      fullSentence,
+      i,
+      row.Note,
+      lesson
+    );
+    cards.push(newCard);
+  }
+
+  worksheet.splice(0, i);
+  console.log(cards.length + " cards found");
+  return cards;
+}
+
+function parseLesson(worksheet, lessonGroup, database) {
+  if (!worksheet.length) return;
+  console.log("Parsing lesson, worksheet length: ", worksheet.length);
+  const lessonNameFull = worksheet[0].Original;
+  const res = lessonNameFull.match(/Lesson (\d+): (.+)/);
+  const id = res[1];
+  const name = res[2];
+  if (!id || !name) return;
+
+  console.log(`Lesson: ${name}`);
+
+  let note;
+  if (
+    worksheet[1].Original &&
+    !worksheet[1].Translation &&
+    !worksheet[1].Transliteration
+  ) {
+    // Note is optional
+    note = worksheet[1].Original;
+  }
+
+  worksheet.splice(0, note ? 2 : 1);
+
+  const newLesson = database.collections.get("lessons").prepareCreate(l => {
+    l.name = name;
+    l.note = note;
+    l.lessonGroup.set(lessonGroup);
+  });
+
+  const cards = parseCards(worksheet, newLesson, database);
+  // if (!cards.length) return;
+
+  return {
+    lesson: newLesson,
+    cards
+  };
+  // return Lesson.create(Number(id), name, note, cards);
+}
+
+function parseLessons(worksheet, lessonGroup, database) {
+  let lessons = [],
+    cards = [];
+  let canContinue = true;
+  while (canContinue) {
+    // const a = parseLesson(worksheet, lessonGroup, database);
+    // console.log(a);
+    const { lesson, cards: _cards } =
+      parseLesson(worksheet, lessonGroup, database) || {};
+    if (lesson && _cards.length) {
+      lessons = lessons.concat(lesson);
+      cards = cards.concat(_cards);
+      canContinue = worksheet.length > 2;
+    } else {
+      canContinue = false;
+    }
+  }
+
+  return { lessons, cards };
+}
+
+async function parseGroups(workbook, database) {
+  await database.unsafeResetDatabase();
 
   console.log(workbook);
+  let lessonGroups = [],
+    lessons = [],
+    cards = [];
+
   for (var i = 0; i < workbook.SheetNames.length; i++) {
     const name = workbook.SheetNames[i];
     let worksheet = workbook.Sheets[name];
@@ -167,20 +160,34 @@ async function* parseGroups(workbook, database) {
     console.log(worksheetJSON);
 
     if (name === "Dictionary") {
-      call(parseDictionary, worksheetJSON, database);
+      // call(parseDictionary, worksheetJSON, database);
     } else {
-      const newLessonGroup = await database.collections.get("lessonGroups").create(lessonGroup => {
-        lessonGroup.name = name;
-      });
-      const lessons = yield call(parseLessons, newLessonGroup, worksheetJSON, database);
+      const newLessonGroup = database.collections
+        .get("lesson_groups")
+        .prepareCreate(lessonGroup => {
+          lessonGroup.name = name;
+        });
+
+      lessonGroups.push(newLessonGroup);
+
+      const { lessons: _lessons, cards: _cards } = parseLessons(
+        worksheetJSON,
+        newLessonGroup,
+        database
+      );
+      lessons = lessons.concat(_lessons);
+      cards = cards.concat(_cards);
       // if (lessons.length) {
       //   // LessonGroup.create(name, lessons);
-     
       // }
     }
   }
 
-  checkWords();
+  const allRecords = [...lessonGroups, ...lessons, ...cards];
+  console.log(allRecords);
+  await database.batch(...allRecords);
+
+  // checkWords();
 }
 
 export function* startImport({ database }) {
@@ -192,7 +199,8 @@ export function* startImport({ database }) {
   const workbook = yield call(XLSX.read, data);
   // yield call(database.unsafeResetDatabase);
 
-  call(parseGroups, workbook, database);
+  yield call(parseGroups, workbook, database);
+  // await parseGroups(workbook, database)
 
   // const dbPath = Secrets.REALM_PATH + "/default.realm";
   // // Overwrite original db

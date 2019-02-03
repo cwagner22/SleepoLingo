@@ -1,10 +1,12 @@
 // @flow
 
-import React from "react";
-import { View, Text } from "react-native";
+import React, { Component } from "react";
+import { SectionList, View, Text } from "react-native";
 import { connect } from "react-redux";
 import RNFS from "react-native-fs";
 // import { Sentry } from 'react-native-sentry'
+import withObservables from "@nozbe/with-observables";
+import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 
 import LessonActions from "../Redux/LessonRedux";
 // import { addTodo } from "../redux/actions";
@@ -14,7 +16,12 @@ import DrawerButton from "../Components/DrawerButton";
 // Styles
 import styles from "./Styles/LessonsListScreenStyle";
 
-class LessonsListScreen extends React.Component {
+// const RawPostItem = ({ lessons, onPress }) => <Text>lessons</Text>;
+
+// const PostItem = withObservables(["lessons"], ({ lessons }) => ({
+//   lessons: lessons.observe()
+// }))(RawPostItem);
+class LessonsListScreen extends Component {
   state = {};
 
   static navigationOptions = ({ navigation }) => {
@@ -29,10 +36,6 @@ class LessonsListScreen extends React.Component {
       drawerLockMode: "unlocked"
     };
   };
-
-  componentWillMount() {
-    this.setupDataSource();
-  }
 
   setupDataSource(props) {
     const rowHasChanged = (r1, r2) => r1 !== r2;
@@ -114,7 +117,8 @@ class LessonsListScreen extends React.Component {
     }, 0);
   }
 
-  renderRow(lesson, sectionID) {
+  renderItem({ item, index, section }) {
+    return null;
     const isCompleted = !!this.props.completedLessons[lesson.id];
     return (
       <LessonButton
@@ -127,18 +131,35 @@ class LessonsListScreen extends React.Component {
   }
 
   render() {
-    if (!this.state.dataSource) return null;
-
+    const lessons = this.props.database.collections
+      .get("lessons")
+      .query()
+      .fetchCount();
+    console.log(lessons);
+    setTimeout(() => {
+      console.log(lessons);
+    }, 1000);
+    // const sections =
     return (
       <View style={styles.container}>
         <Text style={styles.pickLesson}>Pick a lesson</Text>
-        <ListView
+        <SectionList
+          renderItem={this.renderItem.bind(this)}
+          renderSectionHeader={this.renderHeader}
+          sections={[
+            { title: "Title1", data: ["item1", "item2"] },
+            { title: "Title2", data: ["item3", "item4"] },
+            { title: "Title3", data: ["item5", "item6"] }
+          ]}
+          keyExtractor={(item, index) => item + index}
+        />
+        {/* <ListView
           renderSectionHeader={this.renderHeader}
           contentContainerStyle={styles.listContent}
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
           enableEmptySections
-        />
+        /> */}
         <Text style={styles.footer}>
           Use the contact section to leave your suggestions. More languages will
           be added in the future. 😉
@@ -162,7 +183,63 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LessonsListScreen);
+// const enhance = withDatabase(
+//   withObservables([], ({ database }) => ({
+//     blogs: database.collections
+//       .get("lessons")
+//       .query()
+//       .observe()
+//     // commentCount: post.comments.observeCount()
+//   }))
+// );
+const enhance = withObservables(["lessons"], ({ lessons }) => ({
+  lessons: lessons.observe()
+  // commentCount: post.comments.observeCount()
+}));
+
+// const enhance = withObservables(["lessons", "cards", "card"], (a) => {
+//   console.log(a)
+//   // lessons: lessons.observe()
+//   // commentCount: post.comments.observeCount()
+// });
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(enhance(LessonsListScreen));
+// export default enhance(LessonsListScreen);
+// export default LessonsListScreen;
+
+export default withDatabase(LessonsListScreen);
+
+// export default withDatabase(
+//   withObservables([], ({ database }) => ({
+//     lessons: database.collections
+//       .get("lessons")
+//       .query()
+//       .observe()
+//   }))(LessonsListScreen)
+// );
+
+// class LessonsListScreen extends Component {
+//   addComment = async () => {
+//     const comment = await prompt('Write a comment')
+//     await this.props.post.addComment(comment)
+//   }
+
+//   render() {
+//     const { post, comments } = this.props
+//     return (
+//       <View>
+//         <Text>ok</Text>
+//       </View>
+//     )
+//   }
+// }
+
+// const enhancee = withObservables(['post'], ({ post }) => ({
+//   post: post.observe(),
+//   comments: post.comments.observe(),
+// }))
+
+// export default enhancee(LessonsListScreen)

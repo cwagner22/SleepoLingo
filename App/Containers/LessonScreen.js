@@ -60,7 +60,7 @@ class LessonScreen extends React.Component {
 
   renderCard() {
     if (!this.state.modalVisible) {
-      const { lesson } = this.props;
+      const { lesson } = this.props.navigation.getParam("lesson");
 
       return (
         <View style={{ flex: 1 }}>

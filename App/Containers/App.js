@@ -8,13 +8,15 @@ import { Platform } from "react-native";
 import Sound from "react-native-sound";
 // import RNFS from 'react-native-fs'
 
+import Navigation from "../Navigation/AppNavigation";
+
 // Realm.copyBundledRealmFiles()
 import { PersistGate } from "redux-persist/integration/react";
 
-import RootContainer from "./RootContainer";
+// import RootContainer from "./RootContainer";
 // import { store, persistor } from "../Redux";
-import createStore from "../Redux";
-const store = createStore();
+// import createStore from "../Redux";
+// const store = createStore();
 
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { Database } from "@nozbe/watermelondb";
@@ -37,15 +39,6 @@ const database = new Database({
   modelClasses: [Sentence, Card, Lesson, LessonGroup]
 });
 
-/**
- * Provides an entry point into our application.  Both index.ios.js and index.android.js
- * call this component first.
- *
- * We create our Redux store here, put it into a provider and then bring in our
- * RootContainer.
- *
- * We separate like this to play nice with React Native's hot reloading.
- */
 class App extends Component {
   componentWillMount() {
     if (Platform.OS === "android") {
@@ -78,11 +71,11 @@ class App extends Component {
   render() {
     return (
       <DatabaseProvider database={database}>
-        <Provider store={store}>
-          {/* <PersistGate loading={null} persistor={persistor}> */}
-          <RootContainer />
-          {/* </PersistGate> */}
-        </Provider>
+        {/* <Provider store={store}> */}
+        {/* <PersistGate loading={null} persistor={persistor}> */}
+        <Navigation />
+        {/* </PersistGate> */}
+        {/* </Provider> */}
       </DatabaseProvider>
     );
   }

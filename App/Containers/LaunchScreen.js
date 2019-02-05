@@ -11,7 +11,7 @@ import { Images } from "../Themes";
 // Styles
 import styles from "./Styles/LaunchScreenStyles";
 
-class LaunchScreen extends React.Component {
+export default class LaunchScreen extends React.Component {
   openLessonsList = () => {
     this.props.navigateToLessons();
   };
@@ -43,7 +43,11 @@ class LaunchScreen extends React.Component {
             </Text>
           </View>
 
-          <RoundedButton onPress={this.openLessonsList}>Lessons</RoundedButton>
+          <RoundedButton
+            onPress={() => this.props.navigation.navigate("LessonsList")}
+          >
+            Lessons
+          </RoundedButton>
 
           <RoundedButton onPress={this.openImport}>Import</RoundedButton>
 
@@ -54,13 +58,13 @@ class LaunchScreen extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    navigateToLessons: () => dispatch(NavigationActions.navigate("LessonsList"))
-  };
-};
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     navigateToLessons: () => dispatch(NavigationActions.navigate("LessonsList"))
+//   };
+// };
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(LaunchScreen);
+// export default connect(
+//   null,
+//   mapDispatchToProps
+// )(LaunchScreen);

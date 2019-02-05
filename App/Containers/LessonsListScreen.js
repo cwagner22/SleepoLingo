@@ -16,7 +16,7 @@ import DrawerButton from "../Components/DrawerButton";
 // Styles
 import styles from "./Styles/LessonsListScreenStyle";
 
-const RawLessonItem = ({ lesson, cards }) => {
+const RawLessonItem = ({ lesson, cards, onPress }) => {
   const nbCardsLeft = () => {
     return cards.reduce((total, card) => {
       if (card.isReady(false)) {
@@ -31,12 +31,36 @@ const RawLessonItem = ({ lesson, cards }) => {
       <LessonButton
         text={lesson.name}
         nbLeft={nbCardsLeft()}
-        onPress={() => this.goToLesson(lesson)}
+        onPress={onPress}
         isCompleted={lesson.isCompleted}
       />
     </View>
   );
 };
+
+// const mapStateToProps = state => {
+//   return {
+//     showDates: state.lesson.showDates,
+//     completedLessons: state.lesson.completedLessons
+//   };
+// };
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
+//     // navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
+//   };
+// };
+
+// const enhance = withObservables([], ({ lesson }) => ({
+//   lesson: lesson.observe(),
+//   cards: lesson.cards.observe()
+// }))(RawLessonItem);
+
+// const LessonItem = connect(
+//   null,
+//   mapDispatchToProps
+// )(enhance(LessonsListScreen));
 
 const LessonItem = withObservables([], ({ lesson }) => ({
   lesson: lesson.observe(),
@@ -146,7 +170,7 @@ class LessonsListScreen extends Component {
   }
 
   render() {
-    const { lessonGroups, lessons } = this.props;
+    const { navigation, lessons } = this.props;
 
     // SOLUTION 1a
     // console.log(lessonGroups);
@@ -190,14 +214,17 @@ class LessonsListScreen extends Component {
       <View style={styles.container}>
         <Text style={styles.pickLesson}>Pick a lesson</Text>
         <SectionList
-          renderItem={this.renderItem.bind(this)}
-          renderSectionHeader={this.renderHeader}
-          sections={[
-            { title: "Title1", data: ["item1", "item2"] },
-            { title: "Title2", data: ["item3", "item4"] },
-            { title: "Title3", data: ["item5", "item6"] }
-          ]}
-          keyExtractor={(item, index) => item + index}
+          renderItem={({ item: lesson, index, section }) => (
+            <LessonItem
+              lesson={lesson}
+              onPress={() => navigation.navigate("LessonScreen", { lesson })}
+            />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <SectionHeader lessonGroupId={title} />
+          )}
+          sections={sections}
+          keyExtractor={item => item.id}
         />
         {/* <ListView
           renderSectionHeader={this.renderHeader}
@@ -215,49 +242,7 @@ class LessonsListScreen extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    showDates: state.lesson.showDates,
-    completedLessons: state.lesson.completedLessons
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
-    // navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
-  };
-};
-
-// const enhance = withDatabase(
-//   withObservables([], ({ database }) => ({
-//     blogs: database.collections
-//       .get("lessons")
-//       .query()
-//       .observe()
-//     // commentCount: post.comments.observeCount()
-//   }))
-// );
-const enhance = withObservables(["lessons"], ({ lessons }) => ({
-  lessons: lessons.observe()
-  // commentCount: post.comments.observeCount()
-}));
-
-// const enhance = withObservables(["lessons", "cards", "card"], (a) => {
-//   console.log(a)
-//   // lessons: lessons.observe()
-//   // commentCount: post.comments.observeCount()
-// });
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(enhance(LessonsListScreen));
-// export default enhance(LessonsListScreen);
-// export default LessonsListScreen;
-
-export default withDatabase(LessonsListScreen);
-
+// SOLUTION 1b (JOIN, not working)
 // export default withDatabase(
 //   withObservables([], ({ database }) => ({
 //     lessons: database.collections
@@ -273,19 +258,11 @@ export default withDatabase(LessonsListScreen);
 //     await this.props.post.addComment(comment)
 //   }
 
-//   render() {
-//     const { post, comments } = this.props
-//     return (
-//       <View>
-//         <Text>ok</Text>
-//       </View>
-//     )
-//   }
-// }
-
-// const enhancee = withObservables(['post'], ({ post }) => ({
-//   post: post.observe(),
-//   comments: post.comments.observe(),
-// }))
-
-// export default enhancee(LessonsListScreen)
+export default withDatabase(
+  withObservables([], ({ database }) => ({
+    lessons: database.collections
+      .get("lessons")
+      .query()
+      .observe()
+  }))(LessonsListScreen)
+);

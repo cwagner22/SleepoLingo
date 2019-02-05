@@ -8,12 +8,10 @@ export default class Lesson extends Model {
   @field("name") name;
 
   static associations = {
-    posts: { type: "belongs_to", key: "lesson_group_id" }
-  };
-  @relation("lesson_groups", "lesson_group_id") lessonGroup;
-
-  static associations = {
+    posts: { type: "belongs_to", key: "lesson_group_id" },
     cards: { type: "has_many", foreignKey: "lesson_id" }
   };
+
+  @relation("lesson_groups", "lesson_group_id") lessonGroup;
   @children("cards") cards;
 }

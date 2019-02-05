@@ -7,12 +7,21 @@ export default class Card extends Model {
   @relation("sentences", "sentence_id") sentence;
   @relation("sentences", "fullSentence_id") fullSentence;
   @field("note") note;
-  @date("show_date") showDate;
+  @date("last_shown_at") lastShownAt;
 
   static associations = {
     lessons: { type: "belongs_to", key: "lesson_id" }
   };
   @relation("lessons", "lesson_id") lesson;
+
+  isReady(allowAlmost = false) {
+    var dateNow = new Date();
+    if (allowAlmost) {
+      dateNow = addMinutes(dateNow, 1);
+    }
+
+    return !this.lastShownAt || isBefore(dateNow, dateCompare);
+  }
 
   static prepareCreate(database, sentence, fullSentence, index, note, lesson) {
     const sentencesCollection = database.collections.get("sentences");

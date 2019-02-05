@@ -16,7 +16,44 @@ import DrawerButton from "../Components/DrawerButton";
 // Styles
 import styles from "./Styles/LessonsListScreenStyle";
 
-// const RawPostItem = ({ lessons, onPress }) => <Text>lessons</Text>;
+const RawLessonItem = ({ lesson, cards }) => {
+  const nbCardsLeft = () => {
+    return cards.reduce((total, card) => {
+      if (card.isReady(false)) {
+        total++;
+      }
+      return total;
+    }, 0);
+  };
+
+  return (
+    <View>
+      <LessonButton
+        text={lesson.name}
+        nbLeft={nbCardsLeft()}
+        onPress={() => this.goToLesson(lesson)}
+        isCompleted={lesson.isCompleted}
+      />
+    </View>
+  );
+};
+
+const LessonItem = withObservables([], ({ lesson }) => ({
+  lesson: lesson.observe(),
+  cards: lesson.cards.observe()
+}))(RawLessonItem);
+
+const RawSectionHeader = ({ lessonGroup }) => (
+  <Text style={styles.header}>{lessonGroup.name}</Text>
+);
+
+const SectionHeader = withDatabase(
+  withObservables([], ({ database, lessonGroupId }) => ({
+    lessonGroup: database.collections
+      .get("lesson_groups")
+      .findAndObserve(lessonGroupId)
+  }))(RawSectionHeader)
+);
 
 // const PostItem = withObservables(["lessons"], ({ lessons }) => ({
 //   lessons: lessons.observe()
@@ -108,38 +145,47 @@ class LessonsListScreen extends Component {
     );
   }
 
-  nbCardsLeft(lesson) {
-    return lesson.cards.reduce((total, card) => {
-      if (card.isReady(this.props.showDates, false)) {
-        total++;
-      }
-      return total;
-    }, 0);
-  }
-
-  renderItem({ item, index, section }) {
-    return null;
-    const isCompleted = !!this.props.completedLessons[lesson.id];
-    return (
-      <LessonButton
-        text={lesson.name}
-        nbLeft={this.nbCardsLeft(lesson)}
-        onPress={() => this.goToLesson(lesson)}
-        isCompleted={isCompleted}
-      />
-    );
-  }
-
   render() {
-    const lessons = this.props.database.collections
-      .get("lessons")
-      .query()
-      .fetchCount();
-    console.log(lessons);
-    setTimeout(() => {
-      console.log(lessons);
-    }, 1000);
-    // const sections =
+    const { lessonGroups, lessons } = this.props;
+
+    // SOLUTION 1a
+    // console.log(lessonGroups);
+    // let sections = [];
+    // for (var i = 0; i < lessonGroups.length - 1; i++) {
+    //   const lessonGroup = lessonGroups[i];
+    //   let section = {
+    //     title: lessonGroup.name,
+    //     data: []
+    //     // data: lessonGroup.lessons (Query Object error)
+    //   };
+    //   sections.push(section);
+
+    //   lessonGroup.lessons.query().then(a => {
+    //     console.log(a);
+    //     section.data = a;
+    //     // SectionList not updating
+    //     // Nested state is bad : https://stackoverflow.com/questions/43040721/how-to-update-nested-state-properties-in-react
+    //   });
+    // }
+
+    // SOLUTION 2
+    // Group lessons by group id as title
+    const sections = lessons.reduce((sections, lesson) => {
+      let section = sections.find(s => s.title === lesson.lessonGroup.id);
+      if (!section) {
+        section = {
+          title: lesson.lessonGroup.id,
+          data: []
+        };
+        sections.push(section);
+      }
+
+      section.data.push(lesson);
+      return sections;
+    }, []);
+
+    console.log(sections);
+
     return (
       <View style={styles.container}>
         <Text style={styles.pickLesson}>Pick a lesson</Text>

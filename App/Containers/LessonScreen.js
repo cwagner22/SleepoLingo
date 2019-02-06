@@ -76,21 +76,11 @@ class LessonScreen extends React.Component {
             </View>
           </Card>
 
-          {/*        <Fab
-            // active={this.state.active}
-            // direction='up'
-            containerStyle={{ bottom: 80, right: 30 }}
-            style={{ backgroundColor: Colors.easternBlue }}
-            position='bottomRight'
-            onPress={() => this.startNight()}>
-            <MIcon name='hotel' color='white' size={24} />
-          </Fab> */}
-
           <ActionButton
             buttonColor={Colors.easternBlue}
             onPress={() => this.startNight()}
             offsetY={85}
-            icon={<MIcon name="hotel" color="white" size={24} />}
+            renderIcon={() => <MIcon name="hotel" color="white" size={24} />}
             elevation={5}
             zIndex={5}
           />

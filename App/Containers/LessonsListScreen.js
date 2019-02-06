@@ -38,30 +38,6 @@ const RawLessonItem = ({ lesson, cards, onPress }) => {
   );
 };
 
-// const mapStateToProps = state => {
-//   return {
-//     showDates: state.lesson.showDates,
-//     completedLessons: state.lesson.completedLessons
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
-//     // navigateToLesson: (lessonId) => dispatch(navigateToLesson(lessonId))
-//   };
-// };
-
-// const enhance = withObservables([], ({ lesson }) => ({
-//   lesson: lesson.observe(),
-//   cards: lesson.cards.observe()
-// }))(RawLessonItem);
-
-// const LessonItem = connect(
-//   null,
-//   mapDispatchToProps
-// )(enhance(LessonsListScreen));
-
 const LessonItem = withObservables([], ({ lesson }) => ({
   lesson: lesson.observe(),
   cards: lesson.cards.observe()
@@ -79,9 +55,6 @@ const SectionHeader = withDatabase(
   }))(RawSectionHeader)
 );
 
-// const PostItem = withObservables(["lessons"], ({ lessons }) => ({
-//   lessons: lessons.observe()
-// }))(RawPostItem);
 class LessonsListScreen extends Component {
   state = {};
 
@@ -226,13 +199,6 @@ class LessonsListScreen extends Component {
           sections={sections}
           keyExtractor={item => item.id}
         />
-        {/* <ListView
-          renderSectionHeader={this.renderHeader}
-          contentContainerStyle={styles.listContent}
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-          enableEmptySections
-        /> */}
         <Text style={styles.footer}>
           Use the contact section to leave your suggestions. More languages will
           be added in the future. 😉
@@ -251,12 +217,6 @@ class LessonsListScreen extends Component {
 //       .observe()
 //   }))(LessonsListScreen)
 // );
-
-// class LessonsListScreen extends Component {
-//   addComment = async () => {
-//     const comment = await prompt('Write a comment')
-//     await this.props.post.addComment(comment)
-//   }
 
 export default withDatabase(
   withObservables([], ({ database }) => ({

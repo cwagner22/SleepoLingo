@@ -1,6 +1,6 @@
 // @flow
 
-import { Metrics, Colors, Fonts } from '../../Themes/'
+import { Metrics, Colors, Fonts } from "../../Themes/";
 
 export default {
   button: {
@@ -8,31 +8,24 @@ export default {
     borderRadius: 5,
     marginHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
-    backgroundColor: Colors.cheeryPink,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    flex: 1
+    backgroundColor: Colors.cheeryPink
   },
   buttonText: {
-    color: Colors.snow,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: Fonts.size.medium,
-    marginVertical: Metrics.baseMargin,
-    flex: 1
+    fontWeight: "bold",
+    fontSize: Fonts.size.medium
   },
   rightContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderLeftWidth: 1,
     borderColor: Colors.snow,
-    // height: 44,
     width: 50,
-    height: '100%'
+    height: "100%",
+    position: "absolute",
+    right: 0
   },
   nbLeft: {
     fontSize: 23,
     color: Colors.snow
   }
-}
+};

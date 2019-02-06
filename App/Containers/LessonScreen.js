@@ -7,6 +7,7 @@ import { Card } from "react-native-elements";
 import ActionButton from "react-native-action-button";
 import Modal from "react-native-modalbox";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import withObservables from "@nozbe/with-observables";
 
 import LessonActions from "../Redux/LessonRedux";
 import RoundedButton from "../Components/RoundedButton";
@@ -36,32 +37,25 @@ class LessonScreen extends React.Component {
     };
   };
 
-  componentWillMount() {
-    const { lesson } = this.props;
-    // this.props.navigation.setOptions({
-    //   // title: lesson.name,
-    //   // gesturesEnabled: Platform.OS === 'ios',
-    //   headerBackTitle: 'Back'
-    // })
-
-    this.props.downloadLesson(lesson.cards);
+  constructor(props) {
+    super(props);
+    props.downloadLesson(props.lesson.cards);
   }
 
-  componentWillReceiveProps(newProps) {
-    if (
-      this.state.modalVisible &&
-      newProps.playerRunning !== this.props.playerRunning &&
-      !newProps.playerRunning
-    ) {
-      // Audio finished, force the player to close since it's still open
-      this.refs.nightPlayerModal.close();
-    }
-  }
+  // componentWillReceiveProps(newProps) {
+  //   if (
+  //     this.state.modalVisible &&
+  //     newProps.playerRunning !== this.props.playerRunning &&
+  //     !newProps.playerRunning
+  //   ) {
+  //     // Audio finished, force the player to close since it's still open
+  //     this.refs.nightPlayerModal.close();
+  //   }
+  // }
 
   renderCard() {
+    const { lesson } = this.props;
     if (!this.state.modalVisible) {
-      const { lesson } = this.props.navigation.getParam("lesson");
-
       return (
         <View style={{ flex: 1 }}>
           <Card
@@ -156,7 +150,7 @@ class LessonScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
+    // lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
     playerRunning: state.playback.playerRunning
   };
 };
@@ -168,7 +162,16 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const enhance = withObservables([], ({ navigation }) => {
+  const l = navigation.getParam("lesson");
+
+  return {
+    lesson: l.observe(),
+    cards: l.cards.observe()
+  };
+});
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LessonScreen);
+)(enhance(LessonScreen));

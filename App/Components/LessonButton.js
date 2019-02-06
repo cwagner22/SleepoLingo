@@ -3,7 +3,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { View, Text } from "react-native";
-import { Button, Icon } from "native-base";
+import { Button, Icon } from "react-native-elements";
 
 import styles from "./Styles/LessonButtonStyle";
 import { Colors } from "../Themes/";
@@ -26,19 +26,26 @@ export default class LessonButton extends React.Component {
   }
 
   renderNbLeft() {
-    if (!this.props.isCompleted) {
-      return <Text style={styles.nbLeft}>{this.props.nbLeft}</Text>;
+    let content;
+    if (this.props.isCompleted) {
+      content = <Icon name="done" color="white" />;
     } else {
-      return <Icon name="done" color="white" />;
+      content = <Text style={styles.nbLeft}>{this.props.nbLeft}</Text>;
     }
+
+    return <View style={styles.rightContainer}>{content}</View>;
   }
 
   render() {
     return (
-      <Button style={styles.button} onPress={this.props.onPress} block>
-        <Text style={styles.buttonText}>{this.props.text}</Text>
-        <View style={styles.rightContainer}>{this.renderNbLeft()}</View>
-      </Button>
+      <Button
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonText}
+        onPress={this.props.onPress}
+        title={this.props.text}
+        icon={this.renderNbLeft()}
+        iconRight={true}
+      />
     );
   }
 }

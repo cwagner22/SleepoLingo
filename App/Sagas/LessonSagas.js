@@ -7,12 +7,15 @@ import RNFetchBlob from "rn-fetch-blob";
 
 import API from "../Services/TranslateApi";
 import LessonActions from "../Redux/LessonRedux";
-import {
+import NavigationActions, {
   navigateToAnki,
   navigateToLesson
 } from "../Navigation/NavigationActions";
+import NavigationService from "../Services/NavigationService";
 import Player from "../Services/Player";
+import DBInstance from "../Models/DBInstance";
 
+const db = DBInstance.getCurrentDB();
 const api = API.create();
 
 const getCurrentLessonId = state => state.lesson.currentLessonId;
@@ -148,57 +151,104 @@ function* processLessonAlert(res, lessonId) {
   }
 }
 
-export function* loadLesson({ lessonId }) {
-  const currentLessonId = yield select(getCurrentLessonId);
-  const completed = yield select(isCompleted, lessonId);
-  const currentLessonCompleted = yield select(isCompleted, currentLessonId);
+export function* loadLesson({ lesson }) {
+  yield put(LessonActions.setCurrentLesson(lesson.id));
+  // NavigationActions.navigate({ routeName: "LessonScreen" });
+  NavigationService.navigate("LessonScreen", { lesson });
+  // const currentLessonId = yield select(getCurrentLessonId);
+  // const completed = yield select(isCompleted, lessonId);
+  // const currentLessonCompleted = yield select(isCompleted, currentLessonId);
 
-  if (completed) {
-    const cancel = bindCallbackToPromise();
-    const confirm = bindCallbackToPromise();
+  // if (completed) {
+  //   const cancel = bindCallbackToPromise();
+  //   const confirm = bindCallbackToPromise();
 
-    Alert.alert("Lesson Completed", "You have already completed this lesson.", [
-      { text: "Start again", onPress: confirm.cb },
-      { text: "Cancel", onPress: cancel.cb }
-    ]);
+  //   Alert.alert("Lesson Completed", "You have already completed this lesson.", [
+  //     { text: "Start again", onPress: confirm.cb },
+  //     { text: "Cancel", onPress: cancel.cb }
+  //   ]);
 
-    // The race will wait for either the cancel or confirm callback to be invoked - which skirts
-    // around the problem of trying to "put" from within a callback: don't put an event, instead
-    // rely strictly on the resolution of a promise
-    const res = yield race({
-      cancel: call(cancel.promise),
-      confirm: call(confirm.promise)
+  //   // The race will wait for either the cancel or confirm callback to be invoked - which skirts
+  //   // around the problem of trying to "put" from within a callback: don't put an event, instead
+  //   // rely strictly on the resolution of a promise
+  //   const res = yield race({
+  //     cancel: call(cancel.promise),
+  //     confirm: call(confirm.promise)
+  //   });
+
+  //   yield call(processLessonAlert, res, lessonId);
+  // } else if (!currentLessonCompleted && lessonId !== currentLessonId) {
+  //   const cancel = bindCallbackToPromise();
+  //   const confirm = bindCallbackToPromise();
+
+  //   Alert.alert("New Lesson", "You have another lesson in progress.", [
+  //     { text: "Start new lesson", onPress: confirm.cb },
+  //     { text: "Cancel", onPress: cancel.cb }
+  //   ]);
+
+  //   // The race will wait for either the cancel or confirm callback to be invoked - which skirts
+  //   // around the problem of trying to "put" from within a callback: don't put an event, instead
+  //   // rely strictly on the resolution of a promise
+  //   const res = yield race({
+  //     cancel: call(cancel.promise),
+  //     confirm: call(confirm.promise)
+  //   });
+
+  //   yield call(processLessonAlert, res, lessonId);
+  // } else {
+  //   yield put(LessonActions.setCurrentLesson(lessonId));
+  //   yield put(navigateToLesson());
+  // }
+}
+
+function sortCards(cards, allowAlmost = false) {
+  var sortedCardsReady = cards
+    .sort(c => c.index)
+    .filter(card => {
+      // Exclude future cards
+      return card.isReady(allowAlmost);
     });
 
-    yield call(processLessonAlert, res, lessonId);
-  } else if (!currentLessonCompleted && lessonId !== currentLessonId) {
-    const cancel = bindCallbackToPromise();
-    const confirm = bindCallbackToPromise();
-
-    Alert.alert("New Lesson", "You have another lesson in progress.", [
-      { text: "Start new lesson", onPress: confirm.cb },
-      { text: "Cancel", onPress: cancel.cb }
-    ]);
-
-    // The race will wait for either the cancel or confirm callback to be invoked - which skirts
-    // around the problem of trying to "put" from within a callback: don't put an event, instead
-    // rely strictly on the resolution of a promise
-    const res = yield race({
-      cancel: call(cancel.promise),
-      confirm: call(confirm.promise)
-    });
-
-    yield call(processLessonAlert, res, lessonId);
+  if (!sortedCardsReady.length && !allowAlmost) {
+    return sortCards(cards, true);
   } else {
-    yield put(LessonActions.setCurrentLesson(lessonId));
-    yield put(navigateToLesson());
+    return sortedCardsReady;
   }
+}
+
+function* getCurrentLesson() {
+  const currentLessonId = yield select(getCurrentLessonId);
+
+  return yield db.collections.get("lessons").find(currentLessonId);
+}
+
+async function loadNextCard(currentLesson) {
+  // const currentLesson = await db.collections
+  //   .get("lessons")
+  //   .find(currentLessonId);
+
+  const cards = await currentLesson.cards.fetch();
+  const sortedCards = sortCards(cards, false);
+  return sortedCards.length ? sortedCards[0] : null;
 }
 
 // Moved the dispatched actions from componentWillMount since the reducers were loaded too late. (mapStateToProps,
 // componentWillReceiveProps and render already called)
 export function* startAnki() {
-  yield put(LessonActions.lessonStart());
-  yield put(LessonActions.loadNextCard());
-  yield put(navigateToAnki());
+  yield put(LessonActions.startLesson());
+
+  currentLesson = yield call(getCurrentLesson);
+
+  const nextCard = yield call(loadNextCard, currentLesson);
+
+  yield put(LessonActions.setCurrentCard(nextCard.id));
+  // const currentLesson = Lesson.getFromId(state.currentLessonId, true);
+  // const sortedCards = sortCards(currentLesson.cards, false);
+  // console.log(sortedCards);
+  // yield put(LessonActions.loadNextCard());
+  // yield put(navigateToAnki());
+  NavigationService.navigate("AnkiScreen", {
+    card: nextCard,
+    lesson: currentLesson
+  });
 }

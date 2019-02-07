@@ -8,7 +8,10 @@ import { Platform } from "react-native";
 import Sound from "react-native-sound";
 // import RNFS from 'react-native-fs'
 
-import Navigation from "../Navigation/AppNavigation";
+import { createAppContainer } from "react-navigation";
+import TopLevelNavigator from "../Navigation/AppNavigation";
+const AppContainer = createAppContainer(TopLevelNavigator);
+import NavigationService from "../Services/NavigationService";
 
 // Realm.copyBundledRealmFiles()
 import { PersistGate } from "redux-persist/integration/react";
@@ -28,17 +31,19 @@ import Sentence from "../Models/Sentence";
 import Card from "../Models/Card";
 import Lesson from "../Models/Lesson";
 import LessonGroup from "../Models/LessonGroup";
+import DBInstance from "../Models/DBInstance";
+const database = DBInstance.getCurrentDB();
 
 // set up the database
-const adapter = new SQLiteAdapter({
-  dbName: "SleepoLingo",
-  schema: mySchema
-});
+// const adapter = new SQLiteAdapter({
+//   dbName: "SleepoLingo",
+//   schema: mySchema
+// });
 
-const database = new Database({
-  adapter,
-  modelClasses: [Sentence, Card, Lesson, LessonGroup]
-});
+// const database = new Database({
+//   adapter,
+//   modelClasses: [Sentence, Card, Lesson, LessonGroup]
+// });
 
 class App extends Component {
   componentWillMount() {
@@ -74,7 +79,11 @@ class App extends Component {
       <DatabaseProvider database={database}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Navigation />
+            <AppContainer
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
           </PersistGate>
         </Provider>
       </DatabaseProvider>

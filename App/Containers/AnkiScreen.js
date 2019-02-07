@@ -13,6 +13,8 @@ import RoundedButton from "../Components/RoundedButton";
 import NavigationActions from "../Navigation/NavigationActions";
 import LessonTitle from "./LessonTitle";
 
+import withObservables from "@nozbe/with-observables";
+
 // Styles
 import styles from "./Styles/AnkiScreenStyle";
 
@@ -28,19 +30,19 @@ class AnkiScreen extends React.Component {
     };
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.currentCardId !== this.props.currentCardId) {
-      // Next card
-      if (this.props.currentCardId) {
-        if (nextProps.currentCardId) {
-          this.swiper.jumpToIndex(
-            this.props.cardIds.indexOf(nextProps.currentCardId),
-            true
-          );
-        }
-      }
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.currentCardId !== this.props.currentCardId) {
+  //     // Next card
+  //     if (this.props.currentCardId) {
+  //       if (nextProps.currentCardId) {
+  //         this.swiper.jumpToIndex(
+  //           this.props.cardIds.indexOf(nextProps.currentCardId),
+  //           true
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
   componentDidMount() {
     this.props.navigation.setParams({
@@ -49,7 +51,8 @@ class AnkiScreen extends React.Component {
   }
 
   currentCardIndex() {
-    return this.props.cardIds.indexOf(this.props.currentCardId);
+    return this.props.card.index;
+    // return this.props.cardIds.indexOf(this.props.currentCardId);
   }
 
   renderNoCards() {
@@ -92,8 +95,8 @@ class AnkiScreen extends React.Component {
           index={this.currentCardIndex()}
           backPressToBack={false}
         >
-          {this.props.cardIds.map(cardId => (
-            <AnkiCard cardId={cardId} key={cardId} />
+          {this.props.cards.map(card => (
+            <AnkiCard card={card} key={card.id} />
           ))}
         </Swiper>
         <AnkiFooter />
@@ -103,11 +106,12 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const lesson = Lesson.getFromId(state.lesson.currentLessonId, true);
+  // const lesson = Lesson.getFromId(state.lesson.currentLessonId, true);
   return {
-    lesson: state.lesson,
-    currentCardId: state.lesson.currentCardId,
-    cardIds: lesson.cards.map(c => c.id)
+    // lesson: state.lesson,
+    // cards: state.lesson.cards,
+    currentCardId: state.lesson.currentCardId
+    // cardIds: lesson.cards.map(c => c.id)
   };
 };
 
@@ -125,7 +129,18 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const enhance = withObservables([], ({ navigation }) => {
+  const card = navigation.getParam("card");
+  const lesson = navigation.getParam("lesson");
+
+  return {
+    card: card.observe(),
+    lesson: lesson.observe(),
+    cards: lesson.cards.observe()
+  };
+});
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AnkiScreen);
+)(enhance(AnkiScreen));

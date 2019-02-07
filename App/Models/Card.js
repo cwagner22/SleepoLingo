@@ -23,34 +23,34 @@ export default class Card extends Model {
     return !this.lastShownAt || isBefore(dateNow, dateCompare);
   }
 
-  static prepareCreate(database, sentence, fullSentence, index, note, lesson) {
-    const sentencesCollection = database.collections.get("sentences");
+  // static prepareCreate(database, sentence, fullSentence, index, note, lesson) {
+  //   const sentencesCollection = database.collections.get("sentences");
 
-    const newSentence = sentencesCollection.prepareCreate(s => {
-      s.original = sentence.original;
-      s.translation = sentence.translation;
-      s.transliteration = sentence.transliteration;
-    });
+  //   const newSentence = sentencesCollection.prepareCreate(s => {
+  //     s.original = sentence.original;
+  //     s.translation = sentence.translation;
+  //     s.transliteration = sentence.transliteration;
+  //   });
 
-    let newFullSentence;
-    if (
-      fullSentence.original &&
-      fullSentence.translation &&
-      fullSentence.transliteration
-    ) {
-      newFullSentence = sentencesCollection.prepareCreate(s => {
-        s.original = fullSentence.original;
-        s.translation = fullSentence.translation;
-        s.transliteration = fullSentence.transliteration;
-      });
-    }
+  //   let newFullSentence;
+  //   if (
+  //     fullSentence.original &&
+  //     fullSentence.translation &&
+  //     fullSentence.transliteration
+  //   ) {
+  //     newFullSentence = sentencesCollection.prepareCreate(s => {
+  //       s.original = fullSentence.original;
+  //       s.translation = fullSentence.translation;
+  //       s.transliteration = fullSentence.transliteration;
+  //     });
+  //   }
 
-    return database.collections.get("cards").prepareCreate(card => {
-      card.sentence.set(newSentence);
-      if (newFullSentence) card.fullSentence.set(newFullSentence);
-      card.index = index;
-      card.note = note;
-      card.lesson.set(lesson);
-    });
-  }
+  //   return database.collections.get("cards").prepareCreate(card => {
+  //     card.sentence.set(newSentence);
+  //     if (newFullSentence) card.fullSentence.set(newFullSentence);
+  //     card.index = index;
+  //     card.note = note;
+  //     card.lesson.set(lesson);
+  //   });
+  // }
 }

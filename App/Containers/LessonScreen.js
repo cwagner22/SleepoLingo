@@ -111,6 +111,13 @@ class LessonScreen extends React.Component {
 
   startDay() {
     this.props.startAnki();
+    // sort cards by index and filter non ready
+    // load/set currentcard?
+    // init lesson var
+    // init var (next card): showFront/showAnswer
+    // navigate to anki screen
+    // this.props.navigation.navigate("AnkiScreen");
+
     // this.props.navigation.navigate('AnkiScreen', {title: this.props.lesson.name})
   }
 
@@ -148,16 +155,17 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     downloadLesson: words => dispatch(LessonActions.downloadLesson(words)),
-    startAnki: () => dispatch(LessonActions.lessonStartAnki())
+    startAnki: () => dispatch(LessonActions.startAnki())
   };
 };
 
 const enhance = withObservables([], ({ navigation }) => {
-  const l = navigation.getParam("lesson");
+  // console.log(lesson);
+  const lesson = navigation.getParam("lesson");
 
   return {
-    lesson: l.observe(),
-    cards: l.cards.observe()
+    lesson: lesson.observe(),
+    cards: lesson.cards.observe()
   };
 });
 

@@ -32,11 +32,19 @@ export default (rootReducer, rootSaga) => {
 
   enhancers.push(applyMiddleware(...middleware));
 
-  // if Reactotron is enabled (default for __DEV__), we'll create the store through Reactotron
+  // if Reactotron is enabled, we'll create the store through Reactotron
   const createAppropriateStore = Config.useReactotron
     ? console.tron.createStore
     : createStore;
-  const store = createAppropriateStore(rootReducer, compose(...enhancers));
+
+  // Redux DevTools support
+  const composeEnhancer =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+  const store = createAppropriateStore(
+    rootReducer,
+    composeEnhancer(...enhancers)
+  );
 
   // configure persistStore and check reducer version number
   // if (ReduxPersist.active) {

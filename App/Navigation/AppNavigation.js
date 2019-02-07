@@ -10,7 +10,7 @@ import LaunchScreen from "../Containers/LaunchScreen";
 // import LoginScreen from "../Containers/LoginScreen";
 import LessonsListScreen from "../Containers/LessonsListScreen";
 import LessonScreen from "../Containers/LessonScreen";
-// import AnkiScreen from "../Containers/AnkiScreen";
+import AnkiScreen from "../Containers/AnkiScreen";
 import ImportScreen from "../Containers/ImportScreen/ImportScreen";
 // import WordsListScreen from "../Containers/WordsListScreen";
 // import DrawerButton from "../Components/DrawerButton";
@@ -33,10 +33,10 @@ const MainCardNavigator = createStackNavigator(
     },
     LessonScreen: {
       screen: LessonScreen
+    },
+    AnkiScreen: {
+      screen: AnkiScreen
     }
-    // AnkiScreen: {
-    //   screen: AnkiScreen
-    // },
     // WordsListScreen: {
     //   screen: WordsListScreen,
     //   navigationOptions: ({ navigation }) => ({

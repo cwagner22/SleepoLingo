@@ -18,7 +18,7 @@ export default class AnkiCard extends React.Component {
   };
 
   componentWillMount() {
-    this.setState({ card: Card.getFromId(this.props.cardId, true) });
+    // this.setState({ card: Card.getFromId(this.props.cardId, true) });
   }
 
   state = {
@@ -30,7 +30,8 @@ export default class AnkiCard extends React.Component {
   }
 
   render() {
-    if (!this.state.card) {
+    const { card } = this.props;
+    if (!card) {
       return null;
     }
 
@@ -50,11 +51,8 @@ export default class AnkiCard extends React.Component {
             wrapperStyle={{ flex: 1 }}
           >
             <CardOriginal
-              text={this.state.card.sentence.original}
-              fullText={
-                this.state.card.fullSentence &&
-                this.state.card.fullSentence.original
-              }
+              text={card.sentence.original}
+              fullText={card.fullSentence && card.fullSentence.original}
               onPress={() => this.flip()}
             />
           </CardElem>
@@ -63,10 +61,10 @@ export default class AnkiCard extends React.Component {
             wrapperStyle={{ flex: 1 }}
           >
             <CardTranslation
-              cardId={this.state.card.id}
-              sentence={this.state.card.sentence}
-              fullSentence={this.state.card.fullSentence}
-              note={this.state.card.note}
+              cardId={card.id}
+              sentence={card.sentence}
+              fullSentence={card.fullSentence}
+              note={card.note}
               onPress={() => this.flip()}
             />
           </CardElem>

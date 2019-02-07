@@ -2,11 +2,13 @@ import { createReducer, createActions } from "reduxsauce";
 import Immutable from "seamless-immutable";
 import moment from "moment";
 import _ from "lodash";
+import { NavigationActions } from "react-navigation";
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  lessonStart: null,
+  startAnki: null,
+  startLesson: null,
   ankiHard: null,
   ankiOk: null,
   ankiEasy: null,
@@ -16,12 +18,11 @@ const { Types, Creators } = createActions({
   loadNextCard: null,
   nextCardLoaded: ["card"],
   downloadLesson: ["currentCards"],
-  loadLesson: ["lessonId"],
+  loadLesson: ["lesson"],
   setCurrentLesson: ["lessonId"],
   setCurrentCard: ["currentCardId"],
   resetDates: null,
-  lessonUpdateCompleted: ["isCompleted"],
-  lessonStartAnki: null
+  lessonUpdateCompleted: ["isCompleted"]
 });
 
 export const LessonTypes = Types;
@@ -48,6 +49,12 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
+export const setCurrentLesson = (state, { lessonId }) => {
+  return state.merge({
+    currentLessonId: lessonId
+  });
+};
+
 export const startLesson = state => {
   return state.merge({
     showAnswer: false,
@@ -59,17 +66,12 @@ export const startLesson = state => {
   });
 };
 
-export const setCurrentLesson = (state, { lessonId }) => {
-  return state.merge({
-    currentLessonId: lessonId
-  });
-};
-
 export const showAnswer = state => {
   return state.merge({ showAnswer: true });
 };
 
 export const showFront = state => {
+  9;
   return state.merge({ showFront: true });
 };
 
@@ -89,37 +91,37 @@ export const resetDates = state => {
   });
 };
 
-function sortCards(state, cards, allowAlmost = false) {
-  // var sortedCardsReady = _.sortBy(cards, [(c) => state.showDates[c.id], 'index'])
-  var sortedCardsReady = _.sortBy(cards, [
-    c => c.isReady(state.showDates, allowAlmost),
-    "index"
-  ]).filter(card => {
-    // Exclude future cards
-    return card.isReady(state.showDates, allowAlmost);
-  });
+function sortCards(cards, allowAlmost = false) {
+  var sortedCardsReady = cards
+    .sort(c => c.index)
+    .filter(card => {
+      // Exclude future cards
+      return card.isReady(allowAlmost);
+    });
 
   if (!sortedCardsReady.length && !allowAlmost) {
-    return sortCards(state, cards, true);
+    return sortCards(cards, true);
   } else {
     return sortedCardsReady;
   }
 }
 
 export const loadNextCard = state => {
-  const currentLesson = Lesson.getFromId(state.currentLessonId, true);
-  const sortedCards = sortCards(state, currentLesson.cards, false);
-  const currentCardId = sortedCards.length ? sortedCards[0].id : null;
+  // const currentLesson = Lesson.getFromId(state.currentLessonId, true);
+  // const sortedCards = sortCards(currentLesson.cards, false);
+  // console.log(sortedCards);
+  // const currentCardId = sortedCards.length ? sortedCards[0].id : null;
 
-  let newState = state;
-  if (!currentCardId) {
-    newState = lessonUpdateCompleted(state, { isCompleted: true });
-  }
+  // let newState = state;
+  // if (!currentCardId) {
+  //   newState = lessonUpdateCompleted(state, { isCompleted: true });
+  // }
 
-  return newState.merge({
+  return state.merge({
     showAnswer: false,
     showFront: true,
-    currentCardId
+    // currentCardId,
+    currentCard: null
   });
 };
 
@@ -146,7 +148,7 @@ export const ankiEasy = state => {
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.LESSON_START]: startLesson,
+  [Types.START_LESSON]: startLesson,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,

@@ -12,7 +12,6 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.rnfs.RNFSPackage;
 import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -56,7 +55,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNI18nPackage(),
             new RNFSPackage(),
             new ReactNativeDialogsPackage(),
-            new RNDeviceInfo(),
             new ReactNativeConfigPackage(),
             new BackgroundTimerPackage(),
             new RNDeviceInfo(),

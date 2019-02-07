@@ -38,7 +38,7 @@ export default function* root() {
   yield all([
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
-    takeLatest(LessonTypes.LESSON_START_ANKI, startAnki),
+    takeLatest(LessonTypes.START_ANKI, startAnki),
 
     takeLatest(PlaybackTypes.PLAYBACK_START, playSaga),
     takeLatest(PlaybackTypes.PLAYER_START, start),

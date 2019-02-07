@@ -71,31 +71,31 @@ class LessonsListScreen extends Component {
     };
   };
 
-  setupDataSource(props) {
-    const rowHasChanged = (r1, r2) => r1 !== r2;
-    const sectionHeaderHasChanged = (s1, s2) => s1 !== s2;
+  // setupDataSource(props) {
+  //   const rowHasChanged = (r1, r2) => r1 !== r2;
+  //   const sectionHeaderHasChanged = (s1, s2) => s1 !== s2;
 
-    const ds = new ListView.DataSource({
-      rowHasChanged,
-      sectionHeaderHasChanged
-    });
+  //   const ds = new ListView.DataSource({
+  //     rowHasChanged,
+  //     sectionHeaderHasChanged
+  //   });
 
-    let data = {};
-    const groups = LessonGroup.get();
+  //   let data = {};
+  //   const groups = LessonGroup.get();
 
-    // for (const group of groups) { // not working on android
-    //   data[group.name] = group.lessons
-    // }
-    for (var i = 0; i < groups.length; i++) {
-      const group = groups[i];
-      data[group.name] = group.lessons;
-    }
+  //   // for (const group of groups) { // not working on android
+  //   //   data[group.name] = group.lessons
+  //   // }
+  //   for (var i = 0; i < groups.length; i++) {
+  //     const group = groups[i];
+  //     data[group.name] = group.lessons;
+  //   }
 
-    // Datasource is always in state
-    this.setState({
-      dataSource: ds.cloneWithRowsAndSections(data)
-    });
-  }
+  //   // Datasource is always in state
+  //   this.setState({
+  //     dataSource: ds.cloneWithRowsAndSections(data)
+  //   });
+  // }
 
   constructor(props) {
     super(props);
@@ -143,7 +143,7 @@ class LessonsListScreen extends Component {
   }
 
   render() {
-    const { navigation, lessons } = this.props;
+    const { loadLesson, lessons } = this.props;
 
     // SOLUTION 1a
     // console.log(lessonGroups);
@@ -188,10 +188,7 @@ class LessonsListScreen extends Component {
         <Text style={styles.pickLesson}>Pick a lesson</Text>
         <SectionList
           renderItem={({ item: lesson, index, section }) => (
-            <LessonItem
-              lesson={lesson}
-              onPress={() => navigation.navigate("LessonScreen", { lesson })}
-            />
+            <LessonItem lesson={lesson} onPress={() => loadLesson(lesson)} />
           )}
           renderSectionHeader={({ section: { title } }) => (
             <SectionHeader lessonGroupId={title} />
@@ -218,11 +215,28 @@ class LessonsListScreen extends Component {
 //   }))(LessonsListScreen)
 // );
 
-export default withDatabase(
-  withObservables([], ({ database }) => ({
-    lessons: database.collections
-      .get("lessons")
-      .query()
-      .observe()
-  }))(LessonsListScreen)
-);
+const mapStateToProps = state => {
+  return {
+    // lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
+    // playerRunning: state.playback.playerRunning
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
+    // startAnki: () => dispatch(LessonActions.startAnki())
+  };
+};
+
+const enhance = withObservables([], ({ database }) => ({
+  lessons: database.collections
+    .get("lessons")
+    .query()
+    .observe()
+}));
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withDatabase(enhance(LessonsListScreen)));

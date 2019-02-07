@@ -16,7 +16,8 @@ import { PersistGate } from "redux-persist/integration/react";
 // import RootContainer from "./RootContainer";
 // import { store, persistor } from "../Redux";
 import createStore from "../Redux";
-const store = createStore();
+const { store, persistor } = createStore();
+// const store = createStore();
 
 import DatabaseProvider from "@nozbe/watermelondb/DatabaseProvider";
 import { Database } from "@nozbe/watermelondb";
@@ -72,9 +73,9 @@ class App extends Component {
     return (
       <DatabaseProvider database={database}>
         <Provider store={store}>
-          {/* <PersistGate loading={null} persistor={persistor}> */}
-          <Navigation />
-          {/* </PersistGate> */}
+          <PersistGate loading={null} persistor={persistor}>
+            <Navigation />
+          </PersistGate>
         </Provider>
       </DatabaseProvider>
     );

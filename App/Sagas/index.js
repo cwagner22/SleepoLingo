@@ -5,18 +5,12 @@ import DebugConfig from "../Config/DebugConfig";
 
 /* ------------- Types ------------- */
 
-import { StartupTypes } from "../Redux/StartupRedux";
-import { GithubTypes } from "../Redux/GithubRedux";
-import { LoginTypes } from "../Redux/LoginRedux";
 import { LessonTypes } from "../Redux/LessonRedux";
 import { PlaybackTypes } from "../Redux/PlaybackRedux";
 import { ImportTypes } from "../Redux/ImportRedux";
 
 /* ------------- Sagas ------------- */
 
-import { startup } from "./StartupSagas";
-import { login } from "./LoginSagas";
-import { getUserAvatar } from "./GithubSagas";
 import { downloadLesson, loadLesson, startAnki } from "./LessonSagas";
 import {
   playSaga,
@@ -36,16 +30,12 @@ import { startImport } from "./ImportSagas";
 
 // The API we use is only used from Sagas, so we create it here and pass along
 // to the sagas which need it.
-const api = DebugConfig.useFixtures ? FixtureAPI : API.create();
+// const api = DebugConfig.useFixtures ? FixtureAPI : API.create();
 
 /* ------------- Connect Types To Sagas ------------- */
 
 export default function* root() {
   yield all([
-    // some sagas only receive an action
-    takeLatest(StartupTypes.STARTUP, startup),
-    takeLatest(LoginTypes.LOGIN_REQUEST, login),
-
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
     takeLatest(LessonTypes.LESSON_START_ANKI, startAnki),
@@ -61,9 +51,6 @@ export default function* root() {
     takeLatest(PlaybackTypes.PLAYBACK_SPEED_CHANGE, playerSpeedChange),
     takeLatest(PlaybackTypes.PLAYBACK_LOOP_MAX_CHANGE, playbackLoopMaxChange),
 
-    takeLatest(ImportTypes.START_IMPORT, startImport),
-
-    // some sagas receive extra parameters in addition to an action
-    takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
+    takeLatest(ImportTypes.START_IMPORT, startImport)
   ]);
 }

@@ -1,14 +1,14 @@
-import { createReducer, createActions } from 'reduxsauce'
-import Immutable from 'seamless-immutable'
+import { createReducer, createActions } from "reduxsauce";
+import Immutable from "seamless-immutable";
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  playbackVolChange: ['volume'],
+  playbackVolChange: ["volume"],
   playbackSpeedChange: null,
-  playbackSetPaused: ['isPaused'],
+  playbackSetPaused: ["isPaused"],
   playbackInit: null,
-  playbackStart: ['sentence', 'language', 'volume', 'speed'],
+  playbackStart: ["sentence", "language", "volume", "speed"],
   playbackSuccess: null,
   playbackError: null,
   playerStop: null,
@@ -18,16 +18,16 @@ const { Types, Creators } = createActions({
   playerNext: null,
   playerPrev: null,
   playerReady: null,
-  setPlayingState: ['playingState'],
-  setLessonLoopCounter: ['lessonLoopCounter'],
-  playbackSetDuration: ['duration'],
-  playbackSetElapsedTime: ['elapsedTime'],
-  playbackLoopMaxChange: ['lessonLoopMax'],
-  playbackSetControlOS: ['controlOS']
-})
+  setPlayingState: ["playingState"],
+  setLessonLoopCounter: ["lessonLoopCounter"],
+  playbackSetDuration: ["duration"],
+  playbackSetElapsedTime: ["elapsedTime"],
+  playbackLoopMaxChange: ["lessonLoopMax"],
+  playbackSetControlOS: ["controlOS"]
+});
 
-export const PlaybackTypes = Types
-export default Creators
+export const PlaybackTypes = Types;
+export default Creators;
 
 /* ------------- Initial State ------------- */
 
@@ -42,81 +42,81 @@ export const INITIAL_STATE = Immutable({
   elapsedTime: null,
   duration: null,
   controlOS: false
-})
+});
 
 /* ------------- Reducers ------------- */
 
-export const playerStart = (state, { volume }: Object) => {
+export const playerStart = (state, { volume }) => {
   return state.merge({
     lessonLoopCounter: 0,
     playingState: null,
     elapsedTime: 0,
     duration: 0,
     playerRunning: true
-  })
-}
+  });
+};
 
-export const playerStop = (state, { volume }: Object) => {
+export const playerStop = (state, { volume }) => {
   return state.merge({
     playerRunning: false
-  })
-}
+  });
+};
 
-export const changeVolume = (state, { volume }: Object) => {
-  return state.merge({ volume })
-}
+export const changeVolume = (state, { volume }) => {
+  return state.merge({ volume });
+};
 
-export const changeSpeed = (state) => {
-  let speed = state.speed + 0.25
-  speed = speed <= 2 ? speed : 0.5
-  return state.merge({ speed })
-}
+export const changeSpeed = state => {
+  let speed = state.speed + 0.25;
+  speed = speed <= 2 ? speed : 0.5;
+  return state.merge({ speed });
+};
 
-export const setResults = (state, { results }: Object) => {
-  return state.merge({ results })
-}
+export const setResults = (state, { results }) => {
+  return state.merge({ results });
+};
 
-export const setPaused = (state, { isPaused }: Object) => {
-  return state.merge({ isPaused })
-}
+export const setPaused = (state, { isPaused }) => {
+  return state.merge({ isPaused });
+};
 
-export const success = (state) => {
-  return state.merge({ playing: false })
-}
+export const success = state => {
+  return state.merge({ playing: false });
+};
 
-export const error = (state) => {
-  return state.merge({ playing: false, error: true })
-}
+export const error = state => {
+  return state.merge({ playing: false, error: true });
+};
 
 export const start = (state, { language }) => {
   return state.merge({
     playing: true
-  })
-}
+  });
+};
 
 export const setPlayingState = (state, { playingState }) => {
-  return state.merge({ playingState })
-}
+  return state.merge({ playingState });
+};
 
 export const setLessonLoopCounter = (state, { lessonLoopCounter }) => {
-  return state.merge({ lessonLoopCounter })
-}
+  return state.merge({ lessonLoopCounter });
+};
 
 export const setDuration = (state, { duration }) => {
-  return state.merge({ duration })
-}
+  return state.merge({ duration });
+};
 
 export const setElapsedTime = (state, { elapsedTime }) => {
-  return state.merge({ elapsedTime })
-}
+  return state.merge({ elapsedTime });
+};
 
 export const playbackLoopMaxChange = (state, { lessonLoopMax }) => {
-  return state.merge({ lessonLoopMax })
-}
+  return state.merge({ lessonLoopMax });
+};
 
 export const setControlOS = (state, { controlOS }) => {
-  return state.merge({ controlOS })
-}
+  return state.merge({ controlOS });
+};
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -134,5 +134,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLAYBACK_SET_ELAPSED_TIME]: setElapsedTime,
   [Types.PLAYBACK_SET_DURATION]: setDuration,
   [Types.PLAYBACK_LOOP_MAX_CHANGE]: playbackLoopMaxChange,
-  [Types.PLAYBACK_SET_CONTROL_O_S]: setControlOS
-})
+  [Types.PLAYBACK_SET_CONTROL_OS]: setControlOS
+});

@@ -51,6 +51,8 @@ class AnkiScreen extends React.Component {
   }
 
   currentCardIndex() {
+    console.log(this.props.card.index);
+
     return this.props.card.index;
     // return this.props.cardIds.indexOf(this.props.currentCardId);
   }
@@ -96,7 +98,7 @@ class AnkiScreen extends React.Component {
           backPressToBack={false}
         >
           {this.props.cards.map(card => (
-            <AnkiCard card={card} key={card.id} />
+            <AnkiCard card={card} key={card.id} sentence={card.sentence} />
           ))}
         </Swiper>
         <AnkiFooter />

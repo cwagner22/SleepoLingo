@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { View } from "react-native";
 import { Card as CardElem } from "react-native-elements";
 import FlipCard from "react-native-flip-card";
+import withObservables from "@nozbe/with-observables";
 
 import CardOriginal from "./CardOriginal";
 import CardTranslation from "../Containers/CardTranslation";
@@ -12,10 +13,11 @@ import CardTranslation from "../Containers/CardTranslation";
 // Styles
 import styles from "./Styles/AnkiCardStyle";
 
-export default class AnkiCard extends React.Component {
-  static propTypes = {
-    cardId: PropTypes.number
-  };
+class RawAnkiCard extends React.Component {
+  // static propTypes = {
+  //   card: PropTypes.object,
+  //   sentence: PropTypes.object
+  // };
 
   componentWillMount() {
     // this.setState({ card: Card.getFromId(this.props.cardId, true) });
@@ -30,7 +32,9 @@ export default class AnkiCard extends React.Component {
   }
 
   render() {
-    const { card } = this.props;
+    const { card, sentence } = this.props;
+    console.log(sentence);
+
     if (!card) {
       return null;
     }
@@ -73,3 +77,9 @@ export default class AnkiCard extends React.Component {
     );
   }
 }
+
+const enhance = withObservables(["sentence"], ({ sentence }) => ({
+  sentence: sentence.observe()
+}));
+
+export default enhance(RawAnkiCard);

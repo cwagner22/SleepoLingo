@@ -21,6 +21,7 @@ export default {
         adapter,
         modelClasses: [Sentence, Card, Lesson, LessonGroup]
       });
+      global.db = database;
     }
 
     return database;

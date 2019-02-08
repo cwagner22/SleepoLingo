@@ -26,6 +26,7 @@ export const mySchema = appSchema({
         { name: "sentence_id", type: "string" },
         { name: "fullSentence_id", type: "string", isOptional: true },
         { name: "note", type: "string", isOptional: true },
+        { name: "index", type: "number" },
         { name: "last_shown_at", type: "number", isOptional: true },
         { name: "lesson_id", type: "string", isIndexed: true }
       ]

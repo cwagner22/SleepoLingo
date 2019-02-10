@@ -2,65 +2,72 @@ import { call, take } from "redux-saga/effects";
 import XLSX from "xlsx";
 import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
+import { Q } from "@nozbe/watermelondb";
 import Card from "../Models/Card";
+import Sentence from "../Models/Sentence";
+import Dictionary from "../Models/Dictionary";
 
-function checkWords(card) {
+async function checkWords(card) {
   let wordsMissing = [];
-  const sentences = Sentence.get();
+  const sentences = await global.db.collections
+    .get("sentences")
+    .query()
+    .fetch();
+
   for (const s of sentences) {
     // Check that every words are included in the dictionary
     const words = s.translation.split(" ");
     for (const word of words) {
-      if (!Word.getWord(word) && !Word.getWordFromTranslation(word)) {
-        const index = wordsMissing.indexOf(word);
-        if (index !== -1) {
-          // let data = wordsMissing[index]
-          // data.sentences.push(s)
-        } else {
-          wordsMissing.push(word);
-          // wordsMissing.push({
-          //   word,
-          //   sentences: [s]
-          // })
-        }
+      const res = await global.db.collections
+        .get("dictionary")
+        .query(Q.where("original", word))
+        .fetchCount();
+
+      if (!res && !wordsMissing.includes(word)) {
+        wordsMissing.push(word);
       }
     }
   }
 
-  // console.log('Words missing from dictionary:', _.toArray(wordsMissing))
   console.log("Words missing from dictionary:", wordsMissing);
 }
 
-function* parseDictionary(worksheet, database) {
+const createWord = (original, translation, transliteration) =>
+  global.db.collections.get("dictionary").prepareCreate(w => {
+    w.original = original;
+    w.translation = translation;
+    w.transliteration = transliteration;
+  });
+
+function parseDictionary(worksheet, database) {
   console.log("Parsing Dictionary, worksheet length: ", worksheet.length);
-  for (var i = 0; i < worksheet.length; i++) {
-    var row = worksheet[i];
-    if (!row.Original || !row.Translation || !row.Transliteration) {
-      break;
+  return worksheet.reduce((res, row) => {
+    if (row.Original && row.Translation && row.Transliteration) {
+      res.push(createWord(row.Original, row.Translation, row.Transliteration));
     }
 
-    Word.create(row.Original, row.Transliteration, row.Translation);
-  }
+    return res;
+  }, []);
 }
 
 const getSentence = string => string.split("\n")[0];
 const getFullSentence = string => string.split("\n")[1];
 
-const createCard = (lesson, index, note) =>
+const createCard = (lesson, index, note, sentence, fullSentence) =>
   global.db.collections.get("cards").prepareCreate(card => {
-    // card.sentence.set(newSentence);
-    // if (newFullSentence) card.fullSentence.set(newFullSentence);
+    card.sentence.set(sentence);
+    if (fullSentence) card.fullSentence.set(fullSentence);
     card.index = index;
     card.note = note;
     card.lesson.set(lesson);
   });
 
-const createSentence = (newCard, original, translation, transliteration) =>
+const createSentence = (original, translation, transliteration) =>
   global.db.collections.get("sentences").prepareCreate(s => {
     s.original = original;
     s.translation = translation;
     s.transliteration = transliteration;
-    s.card.set(newCard);
+    // s.card.set(newCard);
   });
 
 function parseCards(worksheet, lesson) {
@@ -73,28 +80,38 @@ function parseCards(worksheet, lesson) {
       break;
     }
 
-    const newCard = createCard(lesson, i, row.Note);
-
-    sentences.push(
-      createSentence(
-        newCard,
-        getSentence(row.Original),
-        getSentence(row.Translation),
-        getSentence(row.Transliteration)
-      )
+    const newSentence = createSentence(
+      getSentence(row.Original),
+      getSentence(row.Translation),
+      getSentence(row.Transliteration)
     );
+
+    // newCard.sentence.set(newSentence);
+
+    // newCard.prepareUpdate(card => {
+    //   card.sentence.set(newSentence);
+    // });
+    // cards.push(c);
 
     const newFullSentence = getFullSentence(row.Original)
       ? createSentence(
-          newCard,
           getFullSentence(row.Original),
           getFullSentence(row.Translation),
           getFullSentence(row.Transliteration)
         )
       : null;
 
+    sentences.push(newSentence);
     // recordsNormalized.cards.push(newCard);
     newFullSentence && sentences.push(newFullSentence);
+
+    const newCard = createCard(
+      lesson,
+      i,
+      row.Note,
+      newSentence,
+      newFullSentence
+    );
     cards.push(newCard);
   }
 
@@ -178,16 +195,17 @@ async function parseGroups(workbook, database) {
   let lessonGroups = [],
     lessons = [],
     cards = [],
-    sentences = [];
+    sentences = [],
+    dictionary = [];
 
   for (var i = 0; i < workbook.SheetNames.length; i++) {
     const name = workbook.SheetNames[i];
     let worksheet = workbook.Sheets[name];
     let worksheetJSON = XLSX.utils.sheet_to_json(worksheet);
-    console.log(worksheetJSON);
 
     if (name === "Dictionary") {
       // call(parseDictionary, worksheetJSON, database);
+      dictionary = dictionary.concat(parseDictionary(worksheetJSON, database));
     } else {
       const newLessonGroup = database.collections
         .get("lesson_groups")
@@ -211,16 +229,17 @@ async function parseGroups(workbook, database) {
     }
   }
 
-  // console.log(cards);
-
-  // const sentences = cards.map(c => c.sentence);
-  // console.log(sentences);
-
-  const allRecords = [...lessonGroups, ...lessons, ...cards, ...sentences];
+  const allRecords = [
+    ...lessonGroups,
+    ...lessons,
+    ...cards,
+    ...sentences,
+    ...dictionary
+  ];
   console.log(allRecords);
   await database.batch(...allRecords);
 
-  // checkWords();
+  await checkWords();
 }
 
 export function* startImport({ database }) {

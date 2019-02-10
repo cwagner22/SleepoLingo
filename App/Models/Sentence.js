@@ -8,8 +8,13 @@ export default class Sentence extends Model {
   @field("translation") translation;
   @field("transliteration") transliteration;
 
-  static associations = {
-    cards: { type: "belongs_to", key: "card_id" }
-  };
-  @relation("cards", "card_id") card;
+  // Watermelon deosn't support one-to-one relationships
+  // https://github.com/Nozbe/WatermelonDB/issues/242
+  // static associations = {
+  //   cards: { type: "belongs_to", key: "card_id" }
+  // };
+  // @relation("cards", "card_id") card;
+  // @lazy card = this.collections
+  //   .get("cards")
+  //   .query(Q.where("sentence_id", this.id));
 }

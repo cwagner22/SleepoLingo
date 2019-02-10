@@ -18,22 +18,21 @@ class RawAnkiCard extends React.Component {
   //   card: PropTypes.object,
   //   sentence: PropTypes.object
   // };
-
-  componentWillMount() {
-    // this.setState({ card: Card.getFromId(this.props.cardId, true) });
+  constructor(props) {
+    super(props);
+    this.state = {
+      flip: false
+    };
   }
 
-  state = {
-    flip: false
-  };
-
   flip() {
-    this.setState({ flip: !this.state.flip });
+    this.setState(state => ({
+      flip: !state.flip
+    }));
   }
 
   render() {
-    const { card, sentence } = this.props;
-    console.log(sentence);
+    const { card, sentence, fullSentence } = this.props;
 
     if (!card) {
       return null;
@@ -55,8 +54,8 @@ class RawAnkiCard extends React.Component {
             wrapperStyle={{ flex: 1 }}
           >
             <CardOriginal
-              text={card.sentence.original}
-              fullText={card.fullSentence && card.fullSentence.original}
+              text={sentence.original}
+              fullText={fullSentence && fullSentence.original}
               onPress={() => this.flip()}
             />
           </CardElem>
@@ -66,8 +65,8 @@ class RawAnkiCard extends React.Component {
           >
             <CardTranslation
               cardId={card.id}
-              sentence={card.sentence}
-              fullSentence={card.fullSentence}
+              sentence={sentence}
+              fullSentence={fullSentence}
               note={card.note}
               onPress={() => this.flip()}
             />

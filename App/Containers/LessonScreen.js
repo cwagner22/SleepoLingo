@@ -55,6 +55,7 @@ class LessonScreen extends React.Component {
 
   renderCard() {
     const { lesson } = this.props;
+
     if (!this.state.modalVisible) {
       return (
         <View style={{ flex: 1 }}>

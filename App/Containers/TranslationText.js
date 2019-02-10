@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { Colors } from "../Themes/index";
 import PlaybackActions from "../Redux/PlaybackRedux";
 import Explanation from "../Components/Explanation";
+import Dictionary from "../Models/Dictionary";
 
 import styles from "./Styles/TranslationTextStyle";
 
@@ -41,6 +42,7 @@ class TranslationText extends React.Component {
     for (const wordStr of words) {
       // todo: look for custom explanation?
       let word = Word.getWord(wordStr) || Word.getWordFromTranslation(wordStr);
+
       if (word) {
         explanation.push(word);
       } else {

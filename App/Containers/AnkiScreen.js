@@ -82,6 +82,8 @@ class AnkiScreen extends React.Component {
   swiper = null;
 
   render() {
+    console.log("ff", this.props.card);
+
     if (!this.props.currentCardId) {
       return this.renderNoCards();
     }

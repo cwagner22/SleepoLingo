@@ -6,6 +6,7 @@ import Sentence from "../Models/Sentence";
 import Card from "../Models/Card";
 import Lesson from "./Lesson";
 import LessonGroup from "./LessonGroup";
+import Dictionary from "./Dictionary";
 
 let database;
 
@@ -19,7 +20,7 @@ export default {
 
       database = new Database({
         adapter,
-        modelClasses: [Sentence, Card, Lesson, LessonGroup]
+        modelClasses: [Sentence, Card, Lesson, LessonGroup, Dictionary]
       });
       global.db = database;
     }

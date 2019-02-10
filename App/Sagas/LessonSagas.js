@@ -202,6 +202,8 @@ export function* loadLesson({ lesson }) {
 }
 
 function sortCards(cards, allowAlmost = false) {
+  console.log(cards);
+
   var sortedCardsReady = cards
     .sort(c => c.index)
     .filter(card => {

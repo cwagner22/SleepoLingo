@@ -6,7 +6,7 @@ export const mySchema = appSchema({
     tableSchema({
       name: "dictionary",
       columns: [
-        { name: "original", type: "string" },
+        { name: "original", type: "string", isIndexed: true },
         { name: "translation", type: "string" },
         { name: "transliteration", type: "string" }
       ]
@@ -16,16 +16,16 @@ export const mySchema = appSchema({
       columns: [
         { name: "original", type: "string" },
         { name: "translation", type: "string" },
-        { name: "transliteration", type: "string" },
-        { name: "card_id", type: "string", isIndexed: true }
+        { name: "transliteration", type: "string" }
+        // { name: "card_id", type: "string", isIndexed: true }
       ]
     }),
     tableSchema({
       name: "cards",
       columns: [
         { name: "sentence_id", type: "string" },
-        { name: "fullSentence_id", type: "string", isOptional: true },
-        { name: "note", type: "string", isOptional: true },
+        { name: "full_sentence_id", type: "string", isOptional: true },
+        { name: "note", type: "string" },
         { name: "index", type: "number" },
         { name: "last_shown_at", type: "number", isOptional: true },
         { name: "lesson_id", type: "string", isIndexed: true }
@@ -35,7 +35,7 @@ export const mySchema = appSchema({
       name: "lessons",
       columns: [
         { name: "name", type: "string" },
-        { name: "note", type: "string", isOptional: true },
+        { name: "note", type: "string" },
         { name: "is_completed", type: "boolean" },
         { name: "lesson_group_id", type: "string", isIndexed: true }
       ]

@@ -210,8 +210,6 @@ function sortCards(cards, allowAlmost = false) {
       return card.isReady(allowAlmost);
     });
 
-  console.log("TCL: sortCards -> sortedCardsReady", sortedCardsReady);
-
   if (!sortedCardsReady.length && !allowAlmost) {
     return sortCards(cards, true);
   } else {

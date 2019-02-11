@@ -14,6 +14,7 @@ import NavigationActions from "../Navigation/NavigationActions";
 import LessonTitle from "./LessonTitle";
 
 import withObservables from "@nozbe/with-observables";
+import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 
 // Styles
 import styles from "./Styles/AnkiScreenStyle";
@@ -30,31 +31,23 @@ class AnkiScreen extends React.Component {
     };
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.currentCardId !== this.props.currentCardId) {
-  //     // Next card
-  //     if (this.props.currentCardId) {
-  //       if (nextProps.currentCardId) {
-  //         this.swiper.jumpToIndex(
-  //           this.props.cardIds.indexOf(nextProps.currentCardId),
-  //           true
-  //         );
-  //       }
-  //     }
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    const { card } = this.props;
 
-  componentDidMount() {
-    this.props.navigation.setParams({
-      navigateToWords: this.props.navigateToWords
-    });
+    if (prevProps.card.id !== card.id) {
+      // Next card
+      this.swiper.jumpToIndex(card.index, true);
+    }
   }
 
-  currentCardIndex() {
-    console.log(this.props.card.index);
+  // componentDidMount() {
+  //   this.props.navigation.setParams({
+  //     navigateToWords: this.props.navigateToWords
+  //   });
+  // }
 
+  currentCardIndex() {
     return this.props.card.index;
-    // return this.props.cardIds.indexOf(this.props.currentCardId);
   }
 
   renderNoCards() {
@@ -126,18 +119,20 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const enhance = withObservables([], ({ navigation }) => {
-  const card = navigation.getParam("card");
-  const lesson = navigation.getParam("lesson"); // todo: load from db instead?
+const enhance = withObservables(
+  ["currentCardId"],
+  ({ database, navigation, currentCardId }) => {
+    const lesson = navigation.getParam("lesson"); // todo: load from db instead?
 
-  return {
-    card: card.observe(),
-    lesson: lesson.observe(),
-    cards: lesson.cards.observe()
-  };
-});
+    return {
+      card: database.collections.get("cards").findAndObserve(currentCardId),
+      lesson: lesson.observe(),
+      cards: lesson.cards.observe()
+    };
+  }
+);
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(enhance(AnkiScreen));
+)(withDatabase(enhance(AnkiScreen)));

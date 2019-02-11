@@ -77,8 +77,9 @@ class RawAnkiCard extends React.Component {
   }
 }
 
-const enhance = withObservables(["sentence"], ({ sentence }) => ({
-  sentence: sentence.observe()
+const enhance = withObservables(["sentence"], ({ sentence, card }) => ({
+  sentence: sentence.observe(),
+  fullSentence: card.fullSentence.observe()
 }));
 
 export default enhance(RawAnkiCard);

@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { connect } from "react-redux";
+import withObservables from "@nozbe/with-observables";
+import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
+import { Q } from "@nozbe/watermelondb";
 
 import { Colors } from "../Themes/index";
 import PlaybackActions from "../Redux/PlaybackRedux";
@@ -38,15 +41,16 @@ class TranslationText extends React.Component {
     if (!this.props.showExplanation) return null;
 
     let explanation = [];
-    const words = this.props.translation.split(" ");
-    for (const wordStr of words) {
-      // todo: look for custom explanation?
-      let word = Word.getWord(wordStr) || Word.getWordFromTranslation(wordStr);
+    const sentenceWordsStr = this.props.translation.split(" ");
 
-      if (word) {
-        explanation.push(word);
+    for (const wordStr of sentenceWordsStr) {
+      // todo: look for custom explanation?
+      const wordDict = this.props.words.find(w => w.original === wordStr);
+
+      if (wordDict) {
+        explanation.push(wordDict);
       } else {
-        console.log(`${word} not found`);
+        console.log(`${wordStr} not found`);
       }
     }
 
@@ -118,7 +122,23 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const enhance = withObservables(
+  [],
+  ({ database, translation, showExplanation }) => {
+    if (!showExplanation) {
+      return;
+    }
+
+    return {
+      words: database.collections
+        .get("dictionary")
+        .query(Q.where("original", Q.oneOf(translation.split(" "))))
+        .observe()
+    };
+  }
+);
+
 export default connect(
   null,
   mapDispatchToProps
-)(TranslationText);
+)(withDatabase(enhance(TranslationText)));

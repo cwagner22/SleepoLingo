@@ -2,32 +2,28 @@ import { call, take } from "redux-saga/effects";
 import XLSX from "xlsx";
 import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
-import { Q } from "@nozbe/watermelondb";
-import Card from "../Models/Card";
-import Sentence from "../Models/Sentence";
-import Dictionary from "../Models/Dictionary";
 
-async function checkWords(card) {
-  let wordsMissing = [];
+async function checkWords() {
   const sentences = await global.db.collections
     .get("sentences")
     .query()
     .fetch();
+  const words = await global.db.collections
+    .get("dictionary")
+    .query()
+    .fetch();
 
-  for (const s of sentences) {
-    // Check that every words are included in the dictionary
-    const words = s.translation.split(" ");
-    for (const word of words) {
-      const res = await global.db.collections
-        .get("dictionary")
-        .query(Q.where("original", word))
-        .fetchCount();
-
-      if (!res && !wordsMissing.includes(word)) {
-        wordsMissing.push(word);
+  const wordsMissing = sentences.reduce((res, sentence) => {
+    // Check that every words of the sentence are included in the dictionary
+    const sentenceWords = sentence.translation.split(" ");
+    for (const word of sentenceWords) {
+      const found = words.some(w => w.original === word);
+      if (!found && !res.includes(word)) {
+        res.push(word);
       }
     }
-  }
+    return res;
+  }, []);
 
   console.log("Words missing from dictionary:", wordsMissing);
 }

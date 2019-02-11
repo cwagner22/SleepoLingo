@@ -49,10 +49,11 @@ function parseDictionary(worksheet, database) {
 const getSentence = string => string.split("\n")[0];
 const getFullSentence = string => string.split("\n")[1];
 
-const createCard = (lesson, index, note, sentence, fullSentence) =>
+const createCard = (lesson, id, index, note, sentence, fullSentence) =>
   global.db.collections.get("cards").prepareCreate(card => {
     card.sentence.set(sentence);
     if (fullSentence) card.fullSentence.set(fullSentence);
+    card._raw.id = id;
     card.index = index;
     card.note = note;
     card.lesson.set(lesson);
@@ -103,6 +104,7 @@ function parseCards(worksheet, lesson) {
 
     const newCard = createCard(
       lesson,
+      row.Id,
       i,
       row.Note,
       newSentence,

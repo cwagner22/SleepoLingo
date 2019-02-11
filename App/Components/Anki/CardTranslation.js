@@ -5,13 +5,13 @@ import PropTypes from "prop-types";
 import { View, Image, Text, TouchableWithoutFeedback } from "react-native";
 import { connect } from "react-redux";
 
-import LessonActions from "../Redux/LessonRedux";
-import PlaybackActions from "../Redux/PlaybackRedux";
+import LessonActions from "../../Redux/LessonRedux";
+import PlaybackActions from "../../Redux/PlaybackRedux";
 import TranslationText from "./TranslationText";
-import images from "../Lessons/images/images";
+import images from "../../Lessons/images/images";
 
 // Styles
-import styles from "./Styles/CardTranslationStyles";
+import styles from "../Styles/CardTranslationStyles";
 
 class CardTranslation extends React.Component {
   static propTypes = {

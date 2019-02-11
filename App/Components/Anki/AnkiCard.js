@@ -8,10 +8,10 @@ import FlipCard from "react-native-flip-card";
 import withObservables from "@nozbe/with-observables";
 
 import CardOriginal from "./CardOriginal";
-import CardTranslation from "../Containers/CardTranslation";
+import CardTranslation from "./CardTranslation";
 
 // Styles
-import styles from "./Styles/AnkiCardStyle";
+import styles from "../Styles/AnkiCardStyle";
 
 class RawAnkiCard extends React.Component {
   // static propTypes = {

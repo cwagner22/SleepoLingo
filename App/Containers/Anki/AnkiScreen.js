@@ -6,18 +6,18 @@ import { connect } from "react-redux";
 import Swiper from "react-native-swiper-animated";
 import { Card } from "react-native-elements";
 
-import LessonActions from "../Redux/LessonRedux";
+import LessonActions from "../../Redux/LessonRedux";
 import AnkiFooter from "./AnkiFooter";
-import AnkiCard from "../Components/AnkiCard";
-import RoundedButton from "../Components/RoundedButton";
-import NavigationActions from "../Navigation/NavigationActions";
-import LessonTitle from "./LessonTitle";
+import AnkiCard from "../../Components/Anki/AnkiCard";
+import RoundedButton from "../../Components/RoundedButton";
+import NavigationActions from "../../Navigation/NavigationActions";
+import LessonTitle from "../LessonTitle";
 
 import withObservables from "@nozbe/with-observables";
 import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 
 // Styles
-import styles from "./Styles/AnkiScreenStyle";
+import styles from "./AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {

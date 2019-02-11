@@ -1,12 +1,12 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
-import { ApplicationStyles, Colors } from '../../Themes/'
+import { StyleSheet } from "react-native";
+import { ApplicationStyles, Colors } from "../../Themes";
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   ankiFooter: {
-    flexDirection: 'row'
+    flexDirection: "row"
   },
   ankiHard: {
     flex: 1,
@@ -20,4 +20,4 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.cheeryPink
   }
-})
+});

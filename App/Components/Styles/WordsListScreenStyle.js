@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native'
-import { colors, normalize } from 'react-native-elements'
-import { ApplicationStyles, Metrics, Colors } from '../../Themes/'
+import { StyleSheet } from "react-native";
+import { colors, normalize } from "react-native-elements";
+import { ApplicationStyles, Metrics, Colors } from "../../Themes";
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -10,7 +10,7 @@ export default StyleSheet.create({
     padding: 10
   },
   headerText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Colors.snow,
     marginVertical: Metrics.smallMargin
   },
@@ -26,23 +26,23 @@ export default StyleSheet.create({
     color: colors.grey3,
     fontSize: normalize(12),
     marginTop: 1,
-    fontWeight: 'bold'
-  //   ...Platform.select({
-  //     ios: {
-  //       fontWeight: '600',
-  //     },
-  //     android: {
-  //       ...fonts.android.bold,
-  //     },
-  //   }),
+    fontWeight: "bold"
+    //   ...Platform.select({
+    //     ios: {
+    //       fontWeight: '600',
+    //     },
+    //     android: {
+    //       ...fonts.android.bold,
+    //     },
+    //   }),
   },
   collapsibleContainer: {
     marginLeft: 10,
-    alignSelf: 'flex-start'
+    alignSelf: "flex-start"
   },
   title: {
     fontSize: normalize(14),
     color: colors.grey1,
     marginLeft: 10
   }
-})
+});

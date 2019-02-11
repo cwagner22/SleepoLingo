@@ -18,6 +18,7 @@ import styles from "./Styles/LessonsListScreenStyle";
 
 const RawLessonItem = ({ lesson, cards, onPress }) => {
   const nbCardsLeft = () => {
+    // todo: only for current lesson?
     return cards.reduce((total, card) => {
       if (card.isReady(false)) {
         total++;

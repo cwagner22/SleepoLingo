@@ -4,11 +4,11 @@ import React from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
 
-import LessonActions from "../Redux/LessonRedux";
-import AnkiButton from "../Components/AnkiButton";
+import LessonActions from "../../Redux/LessonRedux";
+import AnkiButton from "../../Components/Anki/AnkiButton";
 
 // Styles
-import styles from "./Styles/AnkiFooterStyle";
+import styles from "./AnkiFooterStyle";
 
 class AnkiFooter extends React.Component {
   hard() {

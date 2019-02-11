@@ -15,12 +15,12 @@ import withObservables from "@nozbe/with-observables";
 import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 import { Q } from "@nozbe/watermelondb";
 
-import { Colors } from "../Themes/index";
-import PlaybackActions from "../Redux/PlaybackRedux";
-import Explanation from "../Components/Explanation";
-import Dictionary from "../Models/Dictionary";
+import { Colors } from "../../Themes/index";
+import PlaybackActions from "../../Redux/PlaybackRedux";
+import Explanation from "../Explanation";
+import Dictionary from "../../Models/Dictionary";
 
-import styles from "./Styles/TranslationTextStyle";
+import styles from "../Styles/TranslationTextStyle";
 
 class TranslationText extends React.Component {
   static propTypes = {

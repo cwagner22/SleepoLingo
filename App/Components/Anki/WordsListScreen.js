@@ -5,10 +5,10 @@ import { connect } from "react-redux";
 import Collapsible from "react-native-collapsible";
 import _ from "lodash";
 
-import PlaybackActions from "../Redux/PlaybackRedux";
+import PlaybackActions from "../../Redux/PlaybackRedux";
 
-import styles from "./Styles/WordsListScreenStyle";
-import { Colors } from "../Themes/index";
+import styles from "../Styles/WordsListScreenStyle";
+import { Colors } from "../../Themes/index";
 
 class WordsListScreen extends React.Component {
   state = {

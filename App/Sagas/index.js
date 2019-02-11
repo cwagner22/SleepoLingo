@@ -11,7 +11,13 @@ import { ImportTypes } from "../Redux/ImportRedux";
 
 /* ------------- Sagas ------------- */
 
-import { downloadLesson, loadLesson, startAnki } from "./LessonSagas";
+import {
+  downloadLesson,
+  loadLesson,
+  startAnki,
+  loadNextCard,
+  ankiHard
+} from "./LessonSagas";
 import {
   playSaga,
   start,
@@ -39,6 +45,8 @@ export default function* root() {
     takeLatest(LessonTypes.DOWNLOAD_LESSON, downloadLesson),
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
     takeLatest(LessonTypes.START_ANKI, startAnki),
+    takeLatest(LessonTypes.LOAD_NEXT_CARD, loadNextCard),
+    takeLatest(LessonTypes.ANKI_HARD, ankiHard),
 
     takeLatest(PlaybackTypes.PLAYBACK_START, playSaga),
     takeLatest(PlaybackTypes.PLAYER_START, start),

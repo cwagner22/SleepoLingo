@@ -1,7 +1,5 @@
 import { Model } from "@nozbe/watermelondb";
 import { field, relation, children } from "@nozbe/watermelondb/decorators";
-import addMinutes from "date-fns/add_minutes";
-import isBefore from "date-fns/is_before";
 
 export default class Lesson extends Model {
   static table = "lessons";

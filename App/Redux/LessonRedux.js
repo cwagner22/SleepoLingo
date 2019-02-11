@@ -91,20 +91,20 @@ export const resetDates = state => {
   });
 };
 
-function sortCards(cards, allowAlmost = false) {
-  var sortedCardsReady = cards
-    .sort(c => c.index)
-    .filter(card => {
-      // Exclude future cards
-      return card.isReady(allowAlmost);
-    });
+// function sortCards(cards, allowAlmost = false) {
+//   var sortedCardsReady = cards
+//     .sort(c => c.index)
+//     .filter(card => {
+//       // Exclude future cards
+//       return card.isReady(allowAlmost);
+//     });
 
-  if (!sortedCardsReady.length && !allowAlmost) {
-    return sortCards(cards, true);
-  } else {
-    return sortedCardsReady;
-  }
-}
+//   if (!sortedCardsReady.length && !allowAlmost) {
+//     return sortCards(cards, true);
+//   } else {
+//     return sortedCardsReady;
+//   }
+// }
 
 export const loadNextCard = state => {
   // const currentLesson = Lesson.getFromId(state.currentLessonId, true);
@@ -119,9 +119,9 @@ export const loadNextCard = state => {
 
   return state.merge({
     showAnswer: false,
-    showFront: true,
+    showFront: true
     // currentCardId,
-    currentCard: null
+    // currentCard: null
   });
 };
 
@@ -159,7 +159,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   // [Types.SET_DATE]: setDate
   [Types.LOAD_NEXT_CARD]: loadNextCard,
   // [Types.LOAD_NEXT_CARDS]: loadNextCards,
-  [Types.ANKI_HARD]: ankiHard,
+  // [Types.ANKI_HARD]: ankiHard,
   [Types.ANKI_OK]: ankiOk,
   [Types.ANKI_EASY]: ankiEasy,
   [Types.LESSON_UPDATE_COMPLETED]: lessonUpdateCompleted

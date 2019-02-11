@@ -27,7 +27,7 @@ export const mySchema = appSchema({
         { name: "full_sentence_id", type: "string", isOptional: true },
         { name: "note", type: "string" },
         { name: "index", type: "number" },
-        { name: "last_shown_at", type: "number", isOptional: true },
+        { name: "show_at", type: "number", isOptional: true },
         { name: "lesson_id", type: "string", isIndexed: true }
       ]
     }),

@@ -82,8 +82,6 @@ class AnkiScreen extends React.Component {
   swiper = null;
 
   render() {
-    console.log("ff", this.props.card);
-
     if (!this.props.currentCardId) {
       return this.renderNoCards();
     }
@@ -121,11 +119,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
-    loadNextCard: () => dispatch(LessonActions.loadNextCard()),
-    startLesson: () => dispatch(LessonActions.lessonStart()),
-    lessonUpdateCompleted: isCompleted =>
-      dispatch(LessonActions.lessonUpdateCompleted(isCompleted)),
     navigateToLessons: () =>
       dispatch(NavigationActions.reset("LessonsListScreen")),
     navigateToWords: () =>
@@ -135,7 +128,7 @@ const mapDispatchToProps = dispatch => {
 
 const enhance = withObservables([], ({ navigation }) => {
   const card = navigation.getParam("card");
-  const lesson = navigation.getParam("lesson");
+  const lesson = navigation.getParam("lesson"); // todo: load from db instead?
 
   return {
     card: card.observe(),

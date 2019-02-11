@@ -7,13 +7,15 @@ import {
   lazy,
   children
 } from "@nozbe/watermelondb/decorators";
+import addMinutes from "date-fns/add_minutes";
+import isBefore from "date-fns/is_before";
 
 export default class Card extends Model {
   static table = "cards";
 
   @field("note") note;
   @field("index") index;
-  @date("last_shown_at") lastShownAt;
+  @date("show_at") showAt;
 
   static associations = {
     lessons: { type: "belongs_to", key: "lesson_id" }
@@ -30,8 +32,14 @@ export default class Card extends Model {
     if (allowAlmost) {
       dateNow = addMinutes(dateNow, 1);
     }
+    return !this.showAt || isBefore(this.showAt, dateNow);
+  }
 
-    return !this.lastShownAt || isBefore(dateNow, dateCompare);
+  async ankiHard() {
+    const date = addMinutes(new Date(), 1);
+    return await this.update(card => {
+      card.showAt = date;
+    });
   }
 
   // static prepareCreate(database, sentence, fullSentence, index, note, lesson) {

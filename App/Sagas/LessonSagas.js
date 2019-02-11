@@ -19,6 +19,7 @@ const db = DBInstance.getCurrentDB();
 const api = API.create();
 
 const getCurrentLessonId = state => state.lesson.currentLessonId;
+const getCurrentCardId = state => state.lesson.currentCardId;
 const isCompleted = (state, lessonId) =>
   !!state.lesson.completedLessons[lessonId];
 
@@ -202,14 +203,14 @@ export function* loadLesson({ lesson }) {
 }
 
 function sortCards(cards, allowAlmost = false) {
-  console.log(cards);
-
   var sortedCardsReady = cards
-    .sort(c => c.index)
+    .sort((a, b) => a.index - b.index)
     .filter(card => {
       // Exclude future cards
       return card.isReady(allowAlmost);
     });
+
+  console.log("TCL: sortCards -> sortedCardsReady", sortedCardsReady);
 
   if (!sortedCardsReady.length && !allowAlmost) {
     return sortCards(cards, true);
@@ -220,18 +221,22 @@ function sortCards(cards, allowAlmost = false) {
 
 function* getCurrentLesson() {
   const currentLessonId = yield select(getCurrentLessonId);
-
   return yield db.collections.get("lessons").find(currentLessonId);
 }
 
-async function loadNextCard(currentLesson) {
-  // const currentLesson = await db.collections
-  //   .get("lessons")
-  //   .find(currentLessonId);
+function* getCurrentCard() {
+  const currentCardId = yield select(getCurrentCardId);
+  return yield db.collections.get("cards").find(currentCardId);
+}
 
-  const cards = await currentLesson.cards.fetch();
+export function* loadNextCard() {
+  currentLesson = yield call(getCurrentLesson);
+
+  const cards = yield currentLesson.cards.fetch();
   const sortedCards = sortCards(cards, false);
-  return sortedCards.length ? sortedCards[0] : null;
+  const nextCard = sortedCards.length ? sortedCards[0] : null;
+  yield put(LessonActions.setCurrentCard(nextCard.id));
+  return nextCard;
 }
 
 // Moved the dispatched actions from componentWillMount since the reducers were loaded too late. (mapStateToProps,
@@ -239,18 +244,17 @@ async function loadNextCard(currentLesson) {
 export function* startAnki() {
   yield put(LessonActions.startLesson());
 
-  currentLesson = yield call(getCurrentLesson);
-
-  const nextCard = yield call(loadNextCard, currentLesson);
-
-  yield put(LessonActions.setCurrentCard(nextCard.id));
-  // const currentLesson = Lesson.getFromId(state.currentLessonId, true);
-  // const sortedCards = sortCards(currentLesson.cards, false);
-  // console.log(sortedCards);
-  // yield put(LessonActions.loadNextCard());
-  // yield put(navigateToAnki());
+  const nextCard = yield call(loadNextCard);
+  const lesson = yield call(getCurrentLesson);
   NavigationService.navigate("AnkiScreen", {
     card: nextCard,
-    lesson: currentLesson
+    lesson
   });
+}
+
+export function* ankiHard() {
+  const currentCard = yield call(getCurrentCard);
+  yield currentCard.ankiHard();
+
+  yield put(LessonActions.loadNextCard());
 }

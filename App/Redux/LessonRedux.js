@@ -9,9 +9,7 @@ import { NavigationActions } from "react-navigation";
 const { Types, Creators } = createActions({
   startAnki: null,
   startLesson: null,
-  ankiHard: null,
-  ankiOk: null,
-  ankiEasy: null,
+  ankiDifficulty: null,
   lessonShowAnswer: null,
   lessonShowFront: null,
   lessonShowBack: null,
@@ -133,18 +131,6 @@ const lessonUpdateCompleted = (state, { isCompleted }) => {
   return state.setIn(["completedLessons", state.currentLessonId], isCompleted);
 };
 
-export const ankiHard = state => {
-  return updateCardDate(state, moment().add(1, "m"));
-};
-
-export const ankiOk = state => {
-  return updateCardDate(state, moment().add(10, "m"));
-};
-
-export const ankiEasy = state => {
-  return updateCardDate(state, moment().add(2, "d"));
-};
-
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -152,15 +138,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,
-  // [Types.NEXT_CARD_LOADED]: nextCardLoaded,
   [Types.SET_CURRENT_LESSON]: setCurrentLesson,
   [Types.SET_CURRENT_CARD]: setCurrentCard,
   [Types.RESET_DATES]: resetDates,
-  // [Types.SET_DATE]: setDate
   [Types.LOAD_NEXT_CARD]: loadNextCard,
-  // [Types.LOAD_NEXT_CARDS]: loadNextCards,
-  // [Types.ANKI_HARD]: ankiHard,
-  [Types.ANKI_OK]: ankiOk,
-  [Types.ANKI_EASY]: ankiEasy,
   [Types.LESSON_UPDATE_COMPLETED]: lessonUpdateCompleted
 });

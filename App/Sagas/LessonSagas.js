@@ -250,9 +250,9 @@ export function* startAnki() {
   });
 }
 
-export function* ankiHard() {
+export function* ankiDifficulty(difficulty) {
   const currentCard = yield call(getCurrentCard);
-  yield currentCard.ankiHard();
+  yield currentCard.ankiDifficulty(difficulty);
 
   yield put(LessonActions.loadNextCard());
 }

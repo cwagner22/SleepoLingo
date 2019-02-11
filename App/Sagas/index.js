@@ -16,7 +16,7 @@ import {
   loadLesson,
   startAnki,
   loadNextCard,
-  ankiHard
+  ankiDifficulty
 } from "./LessonSagas";
 import {
   playSaga,
@@ -46,7 +46,7 @@ export default function* root() {
     takeLatest(LessonTypes.LOAD_LESSON, loadLesson),
     takeLatest(LessonTypes.START_ANKI, startAnki),
     takeLatest(LessonTypes.LOAD_NEXT_CARD, loadNextCard),
-    takeLatest(LessonTypes.ANKI_HARD, ankiHard),
+    takeLatest(LessonTypes.ANKI_DIFFICULTY, ankiDifficulty),
 
     takeLatest(PlaybackTypes.PLAYBACK_START, playSaga),
     takeLatest(PlaybackTypes.PLAYER_START, start),

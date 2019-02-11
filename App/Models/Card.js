@@ -8,6 +8,7 @@ import {
   children
 } from "@nozbe/watermelondb/decorators";
 import addMinutes from "date-fns/add_minutes";
+import addDays from "date-fns/add_days";
 import isBefore from "date-fns/is_before";
 
 export default class Card extends Model {
@@ -35,8 +36,19 @@ export default class Card extends Model {
     return !this.showAt || isBefore(this.showAt, dateNow);
   }
 
-  async ankiHard() {
-    const date = addMinutes(new Date(), 1);
+  async ankiDifficulty(difficulty) {
+    let date = new Date();
+    switch (difficulty) {
+      case "hard":
+        date = addMinutes(date, 1);
+        break;
+      case "ok":
+        date = addMinutes(date, 10);
+        break;
+      case "easy":
+      default:
+        date = addDays(date, 2);
+    }
     return await this.update(card => {
       card.showAt = date;
     });

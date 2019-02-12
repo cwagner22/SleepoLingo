@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import Swiper from "react-native-swiper-animated";
 import { Card } from "react-native-elements";
@@ -20,17 +20,6 @@ import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 import styles from "./AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state;
-
-    return {
-      headerTitle: <LessonTitle />,
-      headerRight: (
-        <Button onPress={() => params.navigateToWords()} title="All Words" />
-      )
-    };
-  };
-
   componentDidUpdate(prevProps) {
     const { card } = this.props;
 
@@ -122,7 +111,9 @@ const mapDispatchToProps = dispatch => {
 const enhance = withObservables(
   ["currentCardId"],
   ({ database, navigation, currentCardId }) => {
-    const lesson = navigation.getParam("lesson"); // todo: load from db instead?
+    // todo: load from db instead?
+    // Although that could make it harder to retrieve lesson name from navigation options
+    const lesson = navigation.getParam("lesson");
 
     return {
       card: database.collections.get("cards").findAndObserve(currentCardId),

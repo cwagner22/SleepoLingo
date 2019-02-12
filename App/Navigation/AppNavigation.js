@@ -1,14 +1,13 @@
 import React from "react";
+import { Button } from "react-native";
 import {
   createStackNavigator,
   createDrawerNavigator,
   createAppContainer,
   HeaderBackButton
 } from "react-navigation";
-import { Icon } from "react-native-elements";
 
-import LaunchScreen from "../Containers/LaunchScreen";
-// import LoginScreen from "../Containers/LoginScreen";
+// import LaunchScreen from "../Containers/LaunchScreen";
 import LessonsListScreen from "../Containers/LessonsListScreen";
 import LessonScreen from "../Containers/LessonScreen";
 import AnkiScreen from "../Containers/Anki/AnkiScreen";
@@ -17,26 +16,43 @@ import ImportScreen from "../Containers/ImportScreen/ImportScreen";
 import DrawerButton from "../Components/DrawerButton";
 import SettingsScreen from "../Containers/SettingsScreen";
 import ContactScreen from "../Containers/ContactScreen";
-// import PlayerSettingsScreen from "../Containers/PlayerSettingsScreen";
+import PlayerSettingsScreen from "../Containers/PlayerSettingsScreen";
 
 import styles from "./Styles/NavigationStyles";
 import { Colors } from "../Themes/";
 
 // To be able to use modals with cards we have to wrap the cards stack inside a modal stack
 // https://github.com/react-community/react-navigation/issues/707#issuecomment-299859578
-const MainCardNavigator = createStackNavigator(
+const MainCardStack = createStackNavigator(
   {
     LessonsListScreen: {
-      screen: LessonsListScreen
-      // navigationOptions: ({navigation}) => ({
-      //   // header: null
-      // })
+      screen: LessonsListScreen,
+      navigationOptions: ({ navigation }) => ({
+        title: "SleepoLingo",
+        headerTitleStyle: styles.bigHeaderTitle,
+        titleStyle: styles.bigHeader,
+        headerLeft: <DrawerButton navigation={navigation} />,
+        headerBackTitle: "Lessons",
+        drawerLockMode: "unlocked"
+      })
     },
     LessonScreen: {
-      screen: LessonScreen
+      screen: LessonScreen,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.getParam("lesson").name,
+        // Hide header when modal visible
+        header: navigation.getParam("modalVisible") ? null : undefined,
+        headerBackTitle: "Back"
+      })
     },
     AnkiScreen: {
-      screen: AnkiScreen
+      screen: AnkiScreen,
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.getParam("lesson").name,
+        headerRight: (
+          <Button onPress={() => params.navigateToWords()} title="All Words" />
+        )
+      })
     }
     // WordsListScreen: {
     //   screen: WordsListScreen,
@@ -47,35 +63,20 @@ const MainCardNavigator = createStackNavigator(
     // }
   },
   {
-    headerMode: "none",
+    // headerMode: "none"
     navigationOptions: ({ navigation }) => ({
-      // Keep drawer locked by default, unlock it in the LessonsListScreen
-      drawerLockMode: "locked-closed",
-      // We have to manually add the headerLeft back...
-      headerLeft: (
-        <HeaderBackButton
-          title="Back"
-          onPress={() => navigation.dispatch({ type: "Navigation/BACK" })}
-        />
-      )
+      drawerLockMode: "locked-closed"
     })
   }
 );
 
 // Modals + Main StackNavigator
-const MainModalNavigator = createStackNavigator(
+const MainModalStack = createStackNavigator(
   {
     LessonsListScreen: {
-      screen: LessonsListScreen,
-      // navigationOptions: ({navigation}) => ({
-      //   drawerLockMode: 'unlocked'
-      // })
+      screen: MainCardStack,
       navigationOptions: ({ navigation }) => ({
-        title: "SleepoLingo",
-        headerTitleStyle: styles.bigHeaderTitle,
-        titleStyle: styles.bigHeader,
-        headerLeft: <DrawerButton navigation={navigation} />
-        // drawerLockMode: "unlocked"
+        header: null
       })
     }
     // PlayerSettingsScreen: {
@@ -92,16 +93,21 @@ const MainModalNavigator = createStackNavigator(
     // // }
   },
   {
-    // mode: "modal"
+    mode: "modal",
+    // Keep drawer locked by default, unlock it in the LessonsListScreen
+    navigationOptions: ({ navigation }) => ({
+      drawerLockMode: "locked-closed"
+    })
   }
 );
 
 const Drawer = createDrawerNavigator(
   {
     LessonsList: {
-      screen: MainModalNavigator,
+      screen: MainModalStack,
       navigationOptions: ({ navigation }) => ({
-        drawerLabel: "Lessons"
+        drawerLabel: "Lessons",
+        drawerLockMode: "unlocked"
       })
     },
     Settings: {
@@ -138,28 +144,26 @@ const Drawer = createDrawerNavigator(
 
 // const forceDevScreen = "ImportScreen";
 const forceDevScreen = "LessonsList";
-
-// Manifest of possible screens
-const PrimaryNav = createStackNavigator(
-  {
-    // LaunchScreen: { screen: LaunchScreen },
-    LessonsList: {
-      screen: Drawer
-    },
-    ImportScreen: {
-      screen: ImportScreen
-    }
-  },
-  {
-    // Default config for all screens
-    headerMode: "none",
-    initialRouteName: __DEV__ ? forceDevScreen : "LessonsList"
-    // navigationOptions: {
-    //   header: {
-    //     style: styles.header
-    //   }
-    // }
-  }
-);
+// const PrimaryNav = createStackNavigator(
+//   {
+//     // LaunchScreen: { screen: LaunchScreen },
+//     LessonsList: {
+//       screen: Drawer
+//     },
+//     ImportScreen: {
+//       screen: ImportScreen
+//     }
+//   },
+//   {
+//     // Default config for all screens
+//     headerMode: "none",
+//     initialRouteName: __DEV__ ? forceDevScreen : "LessonsList"
+//     // navigationOptions: {
+//     //   header: {
+//     //     style: styles.header
+//     //   }
+//     // }
+//   }
+// );
 
 export default createAppContainer(Drawer);

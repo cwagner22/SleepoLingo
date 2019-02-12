@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { View, ScrollView, Text, Platform } from "react-native";
+import { View, ScrollView, Text } from "react-native";
 import { connect } from "react-redux";
 import { Card } from "react-native-elements";
 import ActionButton from "react-native-action-button";
@@ -21,20 +21,6 @@ import { Colors } from "../Themes/";
 class LessonScreen extends React.Component {
   state = {
     modalVisible: false
-  };
-
-  static navigationOptions = ({ navigation, screenProps }) => {
-    const { params = {} } = navigation.state;
-
-    return {
-      // Use a custom component to display the lesson name. Setting it in
-      // componentWillMount with setOptions/setParams causes some delay, maybe because of redux
-      headerTitle: <LessonTitle />,
-      // Hide header when modal visible
-      header: params.modalVisible ? null : undefined,
-      gesturesEnabled: !params.modalVisible && Platform.OS === "ios",
-      headerBackTitle: "Back"
-    };
   };
 
   constructor(props) {

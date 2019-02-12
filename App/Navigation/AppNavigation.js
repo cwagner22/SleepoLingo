@@ -5,6 +5,7 @@ import {
   createAppContainer,
   HeaderBackButton
 } from "react-navigation";
+import { Icon } from "react-native-elements";
 
 import LaunchScreen from "../Containers/LaunchScreen";
 // import LoginScreen from "../Containers/LoginScreen";
@@ -14,11 +15,11 @@ import AnkiScreen from "../Containers/Anki/AnkiScreen";
 import ImportScreen from "../Containers/ImportScreen/ImportScreen";
 // import WordsListScreen from "../Containers/WordsListScreen";
 // import DrawerButton from "../Components/DrawerButton";
-// import SettingsScreen from "../Containers/SettingsScreen";
-// import ContactScreen from "../Containers/ContactScreen";
+import SettingsScreen from "../Containers/SettingsScreen";
+import ContactScreen from "../Containers/ContactScreen";
 // import PlayerSettingsScreen from "../Containers/PlayerSettingsScreen";
 
-// import styles from './Styles/NavigationStyles'
+import styles from "./Styles/NavigationStyles";
 import { Colors } from "../Themes/";
 
 // To be able to use modals with cards we have to wrap the cards stack inside a modal stack
@@ -65,10 +66,17 @@ const MainCardNavigator = createStackNavigator(
 const MainModalNavigator = createStackNavigator(
   {
     LessonsListScreen: {
-      screen: MainCardNavigator
+      screen: LessonsListScreen,
       // navigationOptions: ({navigation}) => ({
       //   drawerLockMode: 'unlocked'
       // })
+      navigationOptions: ({ navigation }) => ({
+        title: "SleepoLingo",
+        headerTitleStyle: styles.bigHeaderTitle,
+        titleStyle: styles.bigHeader,
+        headerLeft: <Icon name="menu" iconStyle={styles.drawerButton} />
+        // drawerLockMode: "unlocked"
+      })
     }
     // PlayerSettingsScreen: {
     //   screen: PlayerSettingsScreen,
@@ -84,8 +92,7 @@ const MainModalNavigator = createStackNavigator(
     // // }
   },
   {
-    mode: "modal"
-    // headerMode: 'none'
+    // mode: "modal"
   }
 );
 
@@ -94,32 +101,35 @@ const MainModalNavigator = createStackNavigator(
 const Drawer = createDrawerNavigator(
   {
     LessonsList: {
-      screen: MainModalNavigator
+      screen: MainModalNavigator,
+      navigationOptions: ({ navigation }) => ({
+        drawerLabel: "Lessons"
+      })
+    },
+    Settings: {
+      screen: createStackNavigator({
+        SettingsScreen: {
+          screen: SettingsScreen
+          // navigationOptions: ({ navigation }) => ({
+          //   drawerLabel: "Settings",
+          //   title: "Settings",
+          //   headerLeft: <DrawerButton navigation={navigation} />
+          // })
+        }
+      })
+    },
+    Contact: {
+      screen: createStackNavigator({
+        ContactScreen: {
+          screen: ContactScreen
+          // navigationOptions: ({ navigation }) => ({
+          //   drawerLabel: "Contact",
+          //   title: "Contact",
+          //   headerLeft: <DrawerButton navigation={navigation} />
+          // })
+        }
+      })
     }
-    // Settings: {
-    //   screen: StackNavigator({
-    //     SettingsScreen: {
-    //       screen: SettingsScreen,
-    //       navigationOptions: ({ navigation }) => ({
-    //         drawerLabel: "Settings",
-    //         title: "Settings",
-    //         headerLeft: <DrawerButton navigation={navigation} />
-    //       })
-    //     }
-    //   })
-    // },
-    // Contact: {
-    //   screen: StackNavigator({
-    //     ContactScreen: {
-    //       screen: ContactScreen,
-    //       navigationOptions: ({ navigation }) => ({
-    //         drawerLabel: "Contact",
-    //         title: "Contact",
-    //         headerLeft: <DrawerButton navigation={navigation} />
-    //       })
-    //     }
-    //   })
-    // }
   },
   {
     contentOptions: {
@@ -128,23 +138,19 @@ const Drawer = createDrawerNavigator(
   }
 );
 
-const forceDevScreen = "LaunchScreen";
-// const forceDevScreen = 'LessonsList'
+// const forceDevScreen = "ImportScreen";
+const forceDevScreen = "LessonsList";
 
 // Manifest of possible screens
 const PrimaryNav = createStackNavigator(
   {
-    LaunchScreen: { screen: LaunchScreen },
+    // LaunchScreen: { screen: LaunchScreen },
     LessonsList: {
       screen: Drawer
     },
     ImportScreen: {
       screen: ImportScreen
     }
-    // LoginScreen: {
-    //   screen: LoginScreen,
-    //   navigationOptions: { title: "Login" }
-    // }
   },
   {
     // Default config for all screens
@@ -158,9 +164,4 @@ const PrimaryNav = createStackNavigator(
   }
 );
 
-export default createAppContainer(PrimaryNav);
-
-// export const reducer = (state, action) => {
-//   const newState = PrimaryNav.router.getStateForAction(action, state);
-//   return newState || state;
-// };
+export default createAppContainer(Drawer);

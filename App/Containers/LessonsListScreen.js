@@ -59,45 +59,6 @@ const SectionHeader = withDatabase(
 class LessonsListScreen extends Component {
   state = {};
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: <Text style={styles.bigHeader}>SleepoLingo</Text>,
-      headerLeft: <DrawerButton navigation={navigation} />,
-      drawerLabel: "Lessons",
-      // 'Lessons' may be better but is too long and causes overlapping. Since we are using a
-      // custom component with headerTitle in the next screens the widths calculations are not made (only for string)
-      // See: react-navigation/src/views/Header.js
-      headerBackTitle: "Back",
-      drawerLockMode: "unlocked"
-    };
-  };
-
-  // setupDataSource(props) {
-  //   const rowHasChanged = (r1, r2) => r1 !== r2;
-  //   const sectionHeaderHasChanged = (s1, s2) => s1 !== s2;
-
-  //   const ds = new ListView.DataSource({
-  //     rowHasChanged,
-  //     sectionHeaderHasChanged
-  //   });
-
-  //   let data = {};
-  //   const groups = LessonGroup.get();
-
-  //   // for (const group of groups) { // not working on android
-  //   //   data[group.name] = group.lessons
-  //   // }
-  //   for (var i = 0; i < groups.length; i++) {
-  //     const group = groups[i];
-  //     data[group.name] = group.lessons;
-  //   }
-
-  //   // Datasource is always in state
-  //   this.setState({
-  //     dataSource: ds.cloneWithRowsAndSections(data)
-  //   });
-  // }
-
   constructor(props) {
     super(props);
 

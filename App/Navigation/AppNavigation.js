@@ -14,7 +14,7 @@ import LessonScreen from "../Containers/LessonScreen";
 import AnkiScreen from "../Containers/Anki/AnkiScreen";
 import ImportScreen from "../Containers/ImportScreen/ImportScreen";
 // import WordsListScreen from "../Containers/WordsListScreen";
-// import DrawerButton from "../Components/DrawerButton";
+import DrawerButton from "../Components/DrawerButton";
 import SettingsScreen from "../Containers/SettingsScreen";
 import ContactScreen from "../Containers/ContactScreen";
 // import PlayerSettingsScreen from "../Containers/PlayerSettingsScreen";
@@ -74,7 +74,7 @@ const MainModalNavigator = createStackNavigator(
         title: "SleepoLingo",
         headerTitleStyle: styles.bigHeaderTitle,
         titleStyle: styles.bigHeader,
-        headerLeft: <Icon name="menu" iconStyle={styles.drawerButton} />
+        headerLeft: <DrawerButton navigation={navigation} />
         // drawerLockMode: "unlocked"
       })
     }
@@ -96,8 +96,6 @@ const MainModalNavigator = createStackNavigator(
   }
 );
 
-// Wrapping DrawerNavigator with a StackNavigator having a header causes some display issues
-// See: https://github.com/react-community/react-navigation/issues/131#issuecomment-309236263
 const Drawer = createDrawerNavigator(
   {
     LessonsList: {

@@ -1,7 +1,7 @@
-import { Metrics } from '../../Themes'
+import { Metrics } from "../../Themes";
 
 export default {
-  iconStyle: {
+  drawerButton: {
     marginHorizontal: Metrics.baseMargin
   }
-}
+};

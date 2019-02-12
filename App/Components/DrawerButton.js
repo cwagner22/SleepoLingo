@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { TouchableOpacity } from 'react-native'
-import { Icon } from 'react-native-elements'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { TouchableOpacity } from "react-native";
+import { Icon } from "react-native-elements";
 
-import styles from './Styles/DrawerButtonStyles'
+import styles from "./Styles/DrawerButtonStyles";
 // import ExamplesRegistry from '../Services/ExamplesRegistry'
 
 // Note that this file (App/Components/DrawerButton) needs to be
@@ -22,16 +22,15 @@ import styles from './Styles/DrawerButtonStyles'
 class DrawerButton extends Component {
   static propTypes = {
     navigation: PropTypes.object.isRequired
-  }
+  };
 
-  render () {
+  render() {
     return (
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('DrawerOpen')}>
-        <Icon name='menu' style={styles.iconStyle}
-        />
+      <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+        <Icon name="menu" iconStyle={styles.drawerButton} />
       </TouchableOpacity>
-    )
+    );
   }
 }
 
-export default DrawerButton
+export default DrawerButton;

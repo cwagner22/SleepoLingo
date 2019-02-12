@@ -10,8 +10,5 @@ export default StyleSheet.create({
     // Fix truncated font title
     padding: 5,
     marginTop: -5
-  },
-  drawerButton: { 
-    marginHorizontal: Metrics.baseMargin
   }
 });

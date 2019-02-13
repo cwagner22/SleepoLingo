@@ -11,7 +11,7 @@ import withObservables from "@nozbe/with-observables";
 
 import LessonActions from "../Redux/LessonRedux";
 import RoundedButton from "../Components/RoundedButton";
-import PlayerScreen from "./PlayerScreen";
+import PlayerScreen from "./Player/PlayerScreen";
 import LessonTitle from "./LessonTitle";
 
 // Styles
@@ -25,7 +25,7 @@ class LessonScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    props.downloadLesson(props.lesson.cards);
+    props.downloadLesson(props.cards);
   }
 
   // componentWillReceiveProps(newProps) {
@@ -40,7 +40,7 @@ class LessonScreen extends React.Component {
   // }
 
   renderCard() {
-    const { lesson } = this.props;
+    const { lesson, startAnki } = this.props;
 
     if (!this.state.modalVisible) {
       return (
@@ -54,10 +54,7 @@ class LessonScreen extends React.Component {
               <Text style={styles.componentLabel}>{lesson.note}</Text>
             </ScrollView>
             <View>
-              <RoundedButton
-                onPress={() => this.startDay()}
-                styles={styles.button}
-              >
+              <RoundedButton onPress={() => startAnki()} styles={styles.button}>
                 START STUDY
               </RoundedButton>
             </View>
@@ -94,18 +91,6 @@ class LessonScreen extends React.Component {
         </Modal>
       </View>
     );
-  }
-
-  startDay() {
-    this.props.startAnki();
-    // sort cards by index and filter non ready
-    // load/set currentcard?
-    // init lesson var
-    // init var (next card): showFront/showAnswer
-    // navigate to anki screen
-    // this.props.navigation.navigate("AnkiScreen");
-
-    // this.props.navigation.navigate('AnkiScreen', {title: this.props.lesson.name})
   }
 
   onPlayerClose() {

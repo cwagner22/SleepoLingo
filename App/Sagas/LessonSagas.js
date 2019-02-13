@@ -1,9 +1,11 @@
-import { call, select, put, race } from "redux-saga/effects";
+import { call, select, put, race, all } from "redux-saga/effects";
 import RNFS from "react-native-fs";
 import { Alert } from "react-native";
 import Promise from "bluebird";
 import Toast from "react-native-simple-toast";
 import RNFetchBlob from "rn-fetch-blob";
+import Debug from "debug";
+import { Q } from "@nozbe/watermelondb";
 
 import API from "../Services/TranslateApi";
 import LessonActions from "../Redux/LessonRedux";
@@ -15,17 +17,49 @@ import NavigationService from "../Services/NavigationService";
 import Player from "../Services/Player";
 import DBInstance from "../Models/DBInstance";
 
+export const THAI = "th-TH";
+export const ENGLISH = "en-US";
 const db = DBInstance.getCurrentDB();
 const api = API.create();
+Debug.enable("app:LessonSagas");
+const debug = Debug("app:LessonSagas");
 
-const getCurrentLessonId = state => state.lesson.currentLessonId;
-const getCurrentCardId = state => state.lesson.currentCardId;
 const isCompleted = (state, lessonId) =>
   !!state.lesson.completedLessons[lessonId];
 
-const downloadItem = item => {
-  const path = Player.getFilePath(item.sentence, item.language);
-  const url = api.ttsURL(item.sentence, item.language);
+const getCurrentLessonId = state => state.lesson.currentLessonId;
+export function* getCurrentLesson() {
+  const currentLessonId = yield select(getCurrentLessonId);
+  return yield db.collections.get("lessons").find(currentLessonId);
+}
+
+function* getCurrentCardsQuery() {
+  const currentLessonId = yield select(getCurrentLessonId);
+  return db.collections.get("cards").query(Q.where("lesson_id", currentLessonId));  
+}
+
+export function* getCurrentSentences() {
+  const query = yield call(getCurrentCardsQuery)
+  const cards = yield query.fetch();
+  return getCardsSentences(cards);
+}
+
+export function* getCurrentCardsCount() {
+  const query = yield call(getCurrentCardsQuery)
+  return yield query.fetchCount();
+}
+
+const getCardsSentences = cards => cards.map(c => c.getSentence());
+
+const getCurrentCardId = state => state.lesson.currentCardId;
+export function* getCurrentCard() {
+  const currentCardId = yield select(getCurrentCardId);
+  return yield db.collections.get("cards").find(currentCardId);
+}
+
+const downloadSentence = (sentence, language) => {
+  const path = Player.getFilePath(sentence, language);
+  const url = api.ttsURL(sentence, language);
 
   // saga progress: https://stackoverflow.com/questions/41616861/calling-yield-inside-react-redux-saga-callback
   return RNFetchBlob.config({
@@ -34,91 +68,70 @@ const downloadItem = item => {
   })
     .fetch("GET", url)
     .then(res => {
-      console.log("The file saved to ", res.path());
+      debug("The file saved to ", res.path());
     });
 };
 
-const downloadAll = items => {
-  return Promise.map(items, downloadItem, {
+const downloadAllSentences = (sentences, language) => {
+  return Promise.map(sentences, s => downloadSentence(s, language), {
     concurrency: 5
   });
 };
 
-export function* getItemsNotCached(items, language) {
+export function* filterSentencesNotCached(sentences, language) {
   const path = Player.getLanguagePath(language);
-  console.log("Audio cache", path);
+  debug("Audio cache", path);
   yield call(RNFS.mkdir, path, { NSURLIsExcludedFromBackupKey: true });
 
   const files = yield call(RNFS.readDir, path);
-  const itemsNotCached = items
-    .filter(item => item.language === language)
-    .filter(item => {
-      const filePath = Player.getFilePath(item.sentence, language);
-      for (let file of files) {
-        if (file.path === filePath) {
-          return false;
-        }
+  return sentences.filter(s => {
+    const filePath = Player.getFilePath(s, language);
+    for (let file of files) {
+      if (file.path === filePath) {
+        return false;
       }
+    }
 
-      return true;
-    });
-
-  return itemsNotCached;
+    return true;
+  });
 }
 
-export function* downloadLesson(action) {
-  const { currentCards } = action;
+export function* downloadLesson({ currentCards }) {
+  let sentencesOriginal = [],
+    sentencesTranslation = [];
+  for (const c of currentCards) {
+    sentencesOriginal.push(c.sentenceOriginal);
+    sentencesTranslation.push(c.sentenceTranslation);
 
-  var items = [];
-  for (var i = 0; i < currentCards.length; i++) {
-    const c = currentCards[i];
-    items = items.concat([
-      {
-        sentence: c.sentence.original,
-        language: "en-US"
-      },
-      {
-        sentence: c.sentence.translation,
-        language: "th-TH"
-      }
-    ]);
-
-    if (c.fullSentence) {
-      items = items.concat([
-        {
-          sentence: c.fullSentence.original,
-          language: "en-US"
-        },
-        {
-          sentence: c.fullSentence.translation,
-          language: "th-TH"
-        }
-      ]);
+    if (c.fullSentenceOriginal) {
+      sentencesOriginal.push(c.fullSentenceOriginal);
+      sentencesTranslation.push(c.fullSentenceTranslation);
     }
   }
-  items = items.concat([
-    {
-      sentence: "Repeat",
-      language: "en-US"
-    },
-    {
-      sentence: "Good night",
-      language: "en-US"
-    }
-  ]);
+  sentencesOriginal = sentencesOriginal.concat(["Repeat", "Good night"]);
 
-  let itemsToDownload = yield call(getItemsNotCached, items, "en-US");
-  const itemsToDownloadTrans = yield call(getItemsNotCached, items, "th-TH");
-  itemsToDownload = itemsToDownload.concat(itemsToDownloadTrans);
+  sentencesOriginal = yield call(
+    filterSentencesNotCached,
+    sentencesOriginal,
+    ENGLISH
+  );
+  sentencesTranslation = yield call(
+    filterSentencesNotCached,
+    sentencesTranslation,
+    THAI
+  );
 
-  if (itemsToDownload.length) {
+  if (sentencesOriginal.length || sentencesTranslation.length) {
     try {
       Toast.show("Downloading lesson for offline use");
-      yield call(downloadAll, itemsToDownload);
+      yield all([
+        call(downloadAllSentences, sentencesOriginal, ENGLISH),
+        call(downloadAllSentences, sentencesTranslation, THAI)
+      ]);
       Toast.show("Download completed");
     } catch (error) {
-      console.error("Download error", error);
-      Toast.show("Download error" + error);
+      debug("Download error", error);
+      Toast.show("Download error: " + error.message);
     }
   }
 }

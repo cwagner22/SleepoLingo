@@ -15,6 +15,7 @@ const { Types, Creators } = createActions({
   playerPause: null,
   playerResume: null,
   playerStart: null,
+  startNight: null,
   playerNext: null,
   playerPrev: null,
   playerReady: null,

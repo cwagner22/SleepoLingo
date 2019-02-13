@@ -2,7 +2,6 @@ import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
 import { mySchema } from "../Models/schema";
-import Sentence from "../Models/Sentence";
 import Card from "../Models/Card";
 import Lesson from "./Lesson";
 import LessonGroup from "./LessonGroup";
@@ -20,7 +19,7 @@ export default {
 
       database = new Database({
         adapter,
-        modelClasses: [Sentence, Card, Lesson, LessonGroup, Dictionary]
+        modelClasses: [Card, Lesson, LessonGroup, Dictionary]
       });
       global.db = database;
     }

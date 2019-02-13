@@ -21,6 +21,7 @@ import {
 import {
   playSaga,
   start,
+  startNight,
   playerNext,
   playerPrev,
   playerStop,
@@ -50,6 +51,7 @@ export default function* root() {
 
     takeLatest(PlaybackTypes.PLAYBACK_START, playSaga),
     takeLatest(PlaybackTypes.PLAYER_START, start),
+    takeLatest(PlaybackTypes.START_NIGHT, startNight),
     takeLatest(PlaybackTypes.PLAYER_NEXT, playerNext),
     takeLatest(PlaybackTypes.PLAYER_PREV, playerPrev),
     takeLatest(PlaybackTypes.PLAYER_STOP, playerStop),

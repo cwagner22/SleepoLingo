@@ -17,6 +17,7 @@ import DrawerButton from "../Components/DrawerButton";
 import SettingsScreen from "../Containers/SettingsScreen";
 import ContactScreen from "../Containers/ContactScreen";
 import PlayerSettingsScreen from "../Containers/PlayerSettingsScreen";
+import PlayerScreen from "../Containers/Player/PlayerScreen";
 
 import styles from "./Styles/NavigationStyles";
 import { Colors } from "../Themes/";
@@ -78,19 +79,19 @@ const MainModalStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         header: null
       })
+    },
+    PlayerSettingsScreen: {
+      screen: PlayerSettingsScreen,
+      navigationOptions: ({ navigation }) => ({
+        drawerLockMode: "locked-closed"
+      })
+    },
+    PlayerScreen: {
+      screen: PlayerScreen,
+      navigationOptions: () => ({
+        header: null
+      })
     }
-    // PlayerSettingsScreen: {
-    //   screen: PlayerSettingsScreen,
-    //   navigationOptions: ({ navigation }) => ({
-    //     drawerLockMode: "locked-closed"
-    //   })
-    // }
-    // // PlayerScreen: {
-    // //   screen: PlayerScreen,
-    // //   navigationOptions: () => ({
-    // //     header: null
-    // //   })
-    // // }
   },
   {
     mode: "modal",
@@ -133,6 +134,9 @@ const Drawer = createDrawerNavigator(
           // })
         }
       })
+    },
+    ImportScreen: {
+      screen: ImportScreen
     }
   },
   {
@@ -141,29 +145,5 @@ const Drawer = createDrawerNavigator(
     }
   }
 );
-
-// const forceDevScreen = "ImportScreen";
-const forceDevScreen = "LessonsList";
-// const PrimaryNav = createStackNavigator(
-//   {
-//     // LaunchScreen: { screen: LaunchScreen },
-//     LessonsList: {
-//       screen: Drawer
-//     },
-//     ImportScreen: {
-//       screen: ImportScreen
-//     }
-//   },
-//   {
-//     // Default config for all screens
-//     headerMode: "none",
-//     initialRouteName: __DEV__ ? forceDevScreen : "LessonsList"
-//     // navigationOptions: {
-//     //   header: {
-//     //     style: styles.header
-//     //   }
-//     // }
-//   }
-// );
 
 export default createAppContainer(Drawer);

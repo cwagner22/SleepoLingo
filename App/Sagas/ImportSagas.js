@@ -4,8 +4,8 @@ import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
 
 async function checkWords() {
-  const sentences = await global.db.collections
-    .get("sentences")
+  const cards = await global.db.collections
+    .get("cards")
     .query()
     .fetch();
   const words = await global.db.collections
@@ -13,9 +13,9 @@ async function checkWords() {
     .query()
     .fetch();
 
-  const wordsMissing = sentences.reduce((res, sentence) => {
+  const wordsMissing = cards.reduce((res, card) => {
     // Check that every words of the sentence are included in the dictionary
-    const sentenceWords = sentence.translation.split(" ");
+    const sentenceWords = card.getSentence().translation.split(" ");
     for (const word of sentenceWords) {
       const found = words.some(w => w.original === word);
       if (!found && !res.includes(word)) {
@@ -49,77 +49,58 @@ function parseDictionary(worksheet, database) {
 const getSentence = string => string.split("\n")[0];
 const getFullSentence = string => string.split("\n")[1];
 
-const createCard = (lesson, id, index, note, sentence, fullSentence) =>
+const createCard = (
+  lesson,
+  id,
+  index,
+  note,
+  sentenceOriginal,
+  sentenceTranslation,
+  sentenceTransliteration,
+  fullSentenceOriginal,
+  fullSentenceTranslation,
+  fullSentenceTransliteration
+) =>
   global.db.collections.get("cards").prepareCreate(card => {
-    card.sentence.set(sentence);
-    if (fullSentence) card.fullSentence.set(fullSentence);
     card._raw.id = id;
     card.index = index;
     card.note = note;
     card.lesson.set(lesson);
-  });
-
-const createSentence = (original, translation, transliteration) =>
-  global.db.collections.get("sentences").prepareCreate(s => {
-    s.original = original;
-    s.translation = translation;
-    s.transliteration = transliteration;
-    // s.card.set(newCard);
+    card.sentenceOriginal = sentenceOriginal;
+    card.sentenceTranslation = sentenceTranslation;
+    card.sentenceTransliteration = sentenceTransliteration;
+    card.fullSentenceOriginal = fullSentenceOriginal;
+    card.fullSentenceTranslation = fullSentenceTranslation;
+    card.fullSentenceTransliteration = fullSentenceTransliteration;
   });
 
 function parseCards(worksheet, lesson) {
   console.log("Parsing cards, worksheet length: ", worksheet.length);
-  let cards = [],
-    sentences = [];
+  let cards = [];
   for (var i = 0; i < worksheet.length; i++) {
     var row = worksheet[i];
     if (!row.Original || !row.Translation || !row.Transliteration) {
       break;
     }
 
-    const newSentence = createSentence(
-      getSentence(row.Original),
-      getSentence(row.Translation),
-      getSentence(row.Transliteration)
-    );
-
-    // newCard.sentence.set(newSentence);
-
-    // newCard.prepareUpdate(card => {
-    //   card.sentence.set(newSentence);
-    // });
-    // cards.push(c);
-
-    const newFullSentence = getFullSentence(row.Original)
-      ? createSentence(
-          getFullSentence(row.Original),
-          getFullSentence(row.Translation),
-          getFullSentence(row.Transliteration)
-        )
-      : null;
-
-    sentences.push(newSentence);
-    // recordsNormalized.cards.push(newCard);
-    newFullSentence && sentences.push(newFullSentence);
-
     const newCard = createCard(
       lesson,
       row.Id,
       i,
       row.Note,
-      newSentence,
-      newFullSentence
+      getSentence(row.Original),
+      getSentence(row.Translation),
+      getSentence(row.Transliteration),
+      getFullSentence(row.Original),
+      getFullSentence(row.Translation),
+      getFullSentence(row.Transliteration)
     );
     cards.push(newCard);
   }
 
   worksheet.splice(0, i);
   console.log(cards.length + " cards found");
-  // return cards;
-  return {
-    cards,
-    sentences
-  };
+  return cards;
 }
 
 function parseLesson(worksheet, lessonGroup, database) {
@@ -152,7 +133,7 @@ function parseLesson(worksheet, lessonGroup, database) {
   });
   // recordsNormalized.lessons.push(lesson);
 
-  const { cards, sentences } = parseCards(worksheet, lesson, database);
+  const cards = parseCards(worksheet, lesson, database);
   // if (!cards.length) return;
 
   // return {
@@ -160,30 +141,28 @@ function parseLesson(worksheet, lessonGroup, database) {
   //   cards
   // };
   // return Lesson.create(Number(id), name, note, cards);
-  return { lesson, cards, sentences };
+  return { lesson, cards };
 }
 
 function parseLessons(worksheet, lessonGroup, database) {
   let lessons = [],
-    cards = [],
-    sentences = [];
+    cards = [];
   let canContinue = true;
   while (canContinue) {
     // const a = parseLesson(worksheet, lessonGroup, database);
     // console.log(a);
-    const { lesson, cards: _cards, sentences: _sentences } =
+    const { lesson, cards: _cards } =
       parseLesson(worksheet, lessonGroup, database) || {};
     if (lesson && _cards.length) {
       lessons = lessons.concat(lesson);
       cards = cards.concat(_cards);
-      sentences = sentences.concat(_sentences);
       canContinue = worksheet.length > 2;
     } else {
       canContinue = false;
     }
   }
 
-  return { lessons, cards, sentences };
+  return { lessons, cards };
 }
 
 async function parseGroups(workbook, database) {
@@ -193,7 +172,6 @@ async function parseGroups(workbook, database) {
   let lessonGroups = [],
     lessons = [],
     cards = [],
-    sentences = [],
     dictionary = [];
 
   for (var i = 0; i < workbook.SheetNames.length; i++) {
@@ -213,27 +191,20 @@ async function parseGroups(workbook, database) {
 
       lessonGroups.push(newLessonGroup);
 
-      const {
-        lessons: _lessons,
-        cards: _cards,
-        sentences: _sentences
-      } = parseLessons(worksheetJSON, newLessonGroup, database);
+      const { lessons: _lessons, cards: _cards } = parseLessons(
+        worksheetJSON,
+        newLessonGroup,
+        database
+      );
       lessons = lessons.concat(_lessons);
       cards = cards.concat(_cards);
-      sentences = sentences.concat(_sentences);
       // if (lessons.length) {
       //   // LessonGroup.create(name, lessons);
       // }
     }
   }
 
-  const allRecords = [
-    ...lessonGroups,
-    ...lessons,
-    ...cards,
-    ...sentences,
-    ...dictionary
-  ];
+  const allRecords = [...lessonGroups, ...lessons, ...cards, ...dictionary];
   console.log(allRecords);
   await database.batch(...allRecords);
 

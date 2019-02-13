@@ -8,19 +8,18 @@ import LinearGradient from "react-native-linear-gradient";
 
 import PlaybackControls from "./PlayerControls";
 import PlayerProgress from "./PlayerProgress";
-import LessonActions from "../Redux/LessonRedux";
-import VolumeSlider from "../Components/VolumeSlider";
-import PlaybackActions from "../Redux/PlaybackRedux";
-import { isFocusMode } from "../Sagas/PlaybackSagas";
+import LessonActions from "../../Redux/LessonRedux";
+import VolumeSlider from "../../Components/VolumeSlider";
+import PlaybackActions from "../../Redux/PlaybackRedux";
+import { isFocusMode } from "../../Sagas/PlaybackSagas";
 
 // Styles
-import styles from "./Styles/PlayerScreenStyle";
+import styles from "../Styles/PlayerScreenStyle";
 
 class PlayerScreen extends React.Component {
   componentWillMount() {
     StatusBar.setBarStyle("light-content");
-    this.props.startLesson();
-    this.props.playerStart();
+    this.props.startNight();
   }
 
   componentWillUnmount() {
@@ -87,13 +86,13 @@ class PlayerScreen extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId, true);
+  // const currentLesson = Lesson.getFromId(state.lesson.currentLessonId, true);
   return {
     isPaused: state.playback.isPaused,
-    currentCards: currentLesson.cards,
-    currentCard:
-      state.lesson.currentCardId &&
-      Card.getFromId(state.lesson.currentCardId, true),
+    // currentCards: currentLesson.cards,
+    // currentCard:
+    //   state.lesson.currentCardId &&
+    //   Card.getFromId(state.lesson.currentCardId, true),
     playingState: state.playback.playingState,
     volume: state.playback.volume
   };
@@ -101,9 +100,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    startLesson: () => dispatch(LessonActions.lessonStart()),
+    startLesson: () => dispatch(LessonActions.startLesson()),
     changeVol: volume => dispatch(PlaybackActions.playbackVolChange(volume)),
     changeSpeed: speed => dispatch(PlaybackActions.playbackSpeedChange(speed)),
+    startNight: () => dispatch(PlaybackActions.startNight()),
     playerStart: () => dispatch(PlaybackActions.playerStart()),
     playerStop: () => dispatch(PlaybackActions.playerStop())
   };

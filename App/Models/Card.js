@@ -14,6 +14,12 @@ import isBefore from "date-fns/is_before";
 export default class Card extends Model {
   static table = "cards";
 
+  @field("sentence_original") sentenceOriginal;
+  @field("sentence_translation") sentenceTranslation;
+  @field("sentence_transliteration") sentenceTransliteration;
+  @field("full_sentence_original") fullSentenceOriginal;
+  @field("full_sentence_translation") fullSentenceTranslation;
+  @field("full_sentence_transliteration") fullSentenceTransliteration;
   @field("note") note;
   @field("index") index;
   @date("show_at") showAt;
@@ -25,18 +31,10 @@ export default class Card extends Model {
     // sentences: { type: "belongs_to", key: "full_sentence_id" }
   };
   @relation("lessons", "lesson_id") lesson;
-  @relation("sentences", "sentence_id") sentence;
-  @relation("sentences", "full_sentence_id") fullSentence;
+  // @relation("sentences", "sentence_id") sentence;
+  // @relation("sentences", "full_sentence_id") fullSentence;
 
-  isReady(allowAlmost = false) {
-    var dateNow = new Date();
-    if (allowAlmost) {
-      dateNow = addMinutes(dateNow, 1);
-    }
-    return !this.showAt || isBefore(this.showAt, dateNow);
-  }
-
-  async ankiDifficulty(difficulty) {
+  @action async ankiDifficulty(difficulty) {
     let date = new Date();
     switch (difficulty) {
       case "hard":
@@ -53,6 +51,26 @@ export default class Card extends Model {
       card.showAt = date;
     });
   }
+
+  isReady(allowAlmost = false) {
+    var dateNow = new Date();
+    if (allowAlmost) {
+      dateNow = addMinutes(dateNow, 1);
+    }
+    return !this.showAt || isBefore(this.showAt, dateNow);
+  }
+
+  getSentence = () => ({
+    original: this.fullSentenceOriginal
+      ? this.fullSentenceOriginal
+      : this.sentenceOriginal,
+    translation: this.fullSentenceOriginal
+      ? this.fullSentenceTranslation
+      : this.sentenceTranslation,
+    transliteration: this.fullSentenceOriginal
+      ? this.fullSentenceTransliteration
+      : this.sentenceTransliteration
+  });
 
   // static prepareCreate(database, sentence, fullSentence, index, note, lesson) {
   //   const sentencesCollection = database.collections.get("sentences");

@@ -5,11 +5,11 @@ import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import ProgressBar from "react-native-progress/Bar";
 
-import Time from "../Services/Time";
+import Time from "../../Services/Time";
 
 // Styles
-import styles from "./Styles/PlayerProgressStyle";
-import { Colors, Metrics } from "../Themes/";
+import styles from "../Styles/PlayerProgressStyle";
+import { Colors, Metrics } from "../../Themes";
 
 class PlayerProgress extends React.Component {
   durationStr(ms) {
@@ -26,18 +26,18 @@ class PlayerProgress extends React.Component {
 
   render() {
     const {
-      currentCards,
+      cardsCount,
       currentCardIndex,
       lessonLoopCounter,
       elapsedTime,
       duration,
       lessonLoopMax
     } = this.props;
-    const nbLeft = currentCards.length - currentCardIndex;
+    const nbLeft = cardsCount - currentCardIndex;
 
-    const nbPlayedPreviousLoop = lessonLoopCounter * currentCards.length;
+    const nbPlayedPreviousLoop = lessonLoopCounter * cardsCount;
     const nbPlayed = nbPlayedPreviousLoop + currentCardIndex;
-    const progress = nbPlayed / (currentCards.length * lessonLoopMax);
+    const progress = nbPlayed / (cardsCount * lessonLoopMax);
 
     return (
       <View>
@@ -70,13 +70,9 @@ class PlayerProgress extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const currentLesson = Lesson.getFromId(state.lesson.currentLessonId, true);
-
   return {
-    currentCards: currentLesson.cards,
-    currentCardIndex: currentLesson.cards.findIndex(
-      c => c.id === state.lesson.currentCardId
-    ),
+    cardsCount: 1,
+    currentCardIndex: 0,
     lessonLoopCounter: state.playback.lessonLoopCounter,
     duration: state.playback.duration,
     elapsedTime: state.playback.elapsedTime,

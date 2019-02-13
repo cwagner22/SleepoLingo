@@ -32,7 +32,7 @@ class RawAnkiCard extends React.Component {
   }
 
   render() {
-    const { card, sentence, fullSentence } = this.props;
+    const { card } = this.props;
 
     if (!card) {
       return null;
@@ -54,8 +54,8 @@ class RawAnkiCard extends React.Component {
             wrapperStyle={{ flex: 1 }}
           >
             <CardOriginal
-              text={sentence.original}
-              fullText={fullSentence && fullSentence.original}
+              text={card.sentenceOriginal}
+              fullText={card.fullSentenceOriginal}
               onPress={() => this.flip()}
             />
           </CardElem>
@@ -65,8 +65,10 @@ class RawAnkiCard extends React.Component {
           >
             <CardTranslation
               cardId={card.id}
-              sentence={sentence}
-              fullSentence={fullSentence}
+              translation={card.sentenceTranslation}
+              transliteration={card.sentenceTransliteration}
+              fullTranslation={card.fullSentenceTranslation}
+              fullTransliteration={card.fullSentenceTransliteration}
               note={card.note}
               onPress={() => this.flip()}
             />
@@ -77,9 +79,8 @@ class RawAnkiCard extends React.Component {
   }
 }
 
-const enhance = withObservables(["sentence"], ({ sentence, card }) => ({
-  sentence: sentence.observe(),
-  fullSentence: card.fullSentence.observe()
+const enhance = withObservables(["card"], ({ card }) => ({
+  card: card.observe()
 }));
 
 export default enhance(RawAnkiCard);

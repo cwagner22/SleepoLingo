@@ -80,7 +80,7 @@ class AnkiScreen extends React.Component {
           backPressToBack={false}
         >
           {this.props.cards.map(card => (
-            <AnkiCard card={card} key={card.id} sentence={card.sentence} />
+            <AnkiCard card={card} key={card.id} />
           ))}
         </Swiper>
         <AnkiFooter />

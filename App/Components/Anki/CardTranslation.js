@@ -16,8 +16,10 @@ import styles from "../Styles/CardTranslationStyles";
 class CardTranslation extends React.Component {
   static propTypes = {
     cardId: PropTypes.string,
-    sentence: PropTypes.object,
-    fullSentence: PropTypes.object,
+    translation: PropTypes.string,
+    transliteration: PropTypes.string,
+    fullTranslation: PropTypes.string,
+    fullTransliteration: PropTypes.string,
     note: PropTypes.string,
     onPress: PropTypes.func
   };
@@ -27,14 +29,14 @@ class CardTranslation extends React.Component {
   }
 
   renderTranslation() {
-    const { sentence, fullSentence } = this.props;
+    const { transliteration, translation, fullTranslation } = this.props;
 
     return (
       <View style={styles.translationContainer}>
         <TranslationText
-          translation={sentence.translation}
-          transliteration={sentence.transliteration}
-          showExplanation={!fullSentence}
+          translation={translation}
+          transliteration={transliteration}
+          showExplanation={!fullTranslation}
         />
         {this.renderFullTranslation()}
       </View>
@@ -42,12 +44,12 @@ class CardTranslation extends React.Component {
   }
 
   renderFullTranslation() {
-    const { fullSentence } = this.props;
-    if (this.props.fullSentence) {
+    const { fullTranslation, fullTransliteration } = this.props;
+    if (fullTranslation) {
       return (
         <TranslationText
-          translation={fullSentence.translation}
-          transliteration={fullSentence.transliteration}
+          translation={fullTranslation}
+          transliteration={fullTransliteration}
           showExplanation
         />
       );

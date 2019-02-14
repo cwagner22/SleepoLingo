@@ -16,7 +16,7 @@ import WordsListScreen from "../Containers/Anki/WordsListScreen";
 import DrawerButton from "../Components/DrawerButton";
 import SettingsScreen from "../Containers/SettingsScreen";
 import ContactScreen from "../Containers/ContactScreen";
-import PlayerSettingsScreen from "../Containers/PlayerSettingsScreen";
+import PlayerSettingsScreen from "../Containers/Player/PlayerSettingsScreen";
 import PlayerScreen from "../Containers/Player/PlayerScreen";
 
 import styles from "./Styles/NavigationStyles";

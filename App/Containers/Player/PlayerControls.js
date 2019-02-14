@@ -5,6 +5,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import BackgroundTimer from "react-native-background-timer";
 import { Icon } from "react-native-elements";
+import { withNavigation } from "react-navigation";
 
 import PlaybackActions from "../../Redux/PlaybackRedux";
 import LessonActions from "../../Redux/LessonRedux";
@@ -49,6 +50,7 @@ class PlayerControls extends React.Component {
   }
 
   renderPlaybackButtons() {
+    const { navigation } = this.props;
     return (
       <View style={styles.btns}>
         <TouchableOpacity
@@ -66,7 +68,7 @@ class PlayerControls extends React.Component {
           <Icon iconStyle={styles.buttonIcon} name="skip-next" size={35} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={this.props.goToSettings}
+          onPress={() => navigation.navigate("PlayerSettingsScreen")}
           style={styles.settingsButton}
         >
           <Icon size={20} name="settings" color="white" />
@@ -104,13 +106,11 @@ const mapDispatchToProps = dispatch => {
     playerPrev: () => dispatch(PlaybackActions.playerPrev()),
     playerPause: () => dispatch(PlaybackActions.playerPause()),
     playerResume: () => dispatch(PlaybackActions.playerResume()),
-    changeSpeed: () => dispatch(PlaybackActions.playbackSpeedChange()),
-    goToSettings: lessonId =>
-      dispatch(NavigationActions.navigate("PlayerSettingsScreen"))
+    changeSpeed: () => dispatch(PlaybackActions.playbackSpeedChange())
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PlayerControls);
+)(withNavigation(PlayerControls));

@@ -6,12 +6,9 @@ import { connect } from "react-redux";
 import Swiper from "react-native-swiper-animated";
 import { Card } from "react-native-elements";
 
-import LessonActions from "../../Redux/LessonRedux";
 import AnkiFooter from "./AnkiFooter";
 import AnkiCard from "../../Components/Anki/AnkiCard";
 import RoundedButton from "../../Components/RoundedButton";
-import NavigationActions from "../../Navigation/NavigationActions";
-import LessonTitle from "../LessonTitle";
 
 import withObservables from "@nozbe/with-observables";
 import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
@@ -89,21 +86,8 @@ class AnkiScreen extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // const lesson = Lesson.getFromId(state.lesson.currentLessonId, true);
   return {
-    // lesson: state.lesson,
-    // cards: state.lesson.cards,
     currentCardId: state.lesson.currentCardId
-    // cardIds: lesson.cards.map(c => c.id)
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    navigateToLessons: () =>
-      dispatch(NavigationActions.reset("LessonsListScreen")),
-    navigateToWords: () =>
-      dispatch(NavigationActions.navigate("WordsListScreen"))
   };
 };
 
@@ -124,5 +108,5 @@ const enhance = withObservables(
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(withDatabase(enhance(AnkiScreen)));

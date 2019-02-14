@@ -79,7 +79,7 @@ class PlayerScreen extends React.Component {
           onChange={volume => this.props.changeVol(volume)}
         />
         <PlayerProgress />
-        <PlaybackControls openSettings={() => this.refs.settingsModal.open()} />
+        <PlaybackControls />
       </LinearGradient>
     );
   }

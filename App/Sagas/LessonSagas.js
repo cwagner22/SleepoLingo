@@ -35,17 +35,19 @@ export function* getCurrentLesson() {
 
 function* getCurrentCardsQuery() {
   const currentLessonId = yield select(getCurrentLessonId);
-  return db.collections.get("cards").query(Q.where("lesson_id", currentLessonId));  
+  return db.collections
+    .get("cards")
+    .query(Q.where("lesson_id", currentLessonId));
 }
 
 export function* getCurrentSentences() {
-  const query = yield call(getCurrentCardsQuery)
+  const query = yield call(getCurrentCardsQuery);
   const cards = yield query.fetch();
   return getCardsSentences(cards);
 }
 
 export function* getCurrentCardsCount() {
-  const query = yield call(getCurrentCardsQuery)
+  const query = yield call(getCurrentCardsQuery);
   return yield query.fetchCount();
 }
 

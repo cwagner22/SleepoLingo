@@ -132,7 +132,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const enhance = withObservables([], ({ navigation }) => {
-  // console.log(lesson);
   const lesson = navigation.getParam("lesson");
 
   return {

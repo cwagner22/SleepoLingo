@@ -12,7 +12,7 @@ import LessonsListScreen from "../Containers/LessonsListScreen";
 import LessonScreen from "../Containers/LessonScreen";
 import AnkiScreen from "../Containers/Anki/AnkiScreen";
 import ImportScreen from "../Containers/ImportScreen/ImportScreen";
-// import WordsListScreen from "../Containers/WordsListScreen";
+import WordsListScreen from "../Containers/Anki/WordsListScreen";
 import DrawerButton from "../Components/DrawerButton";
 import SettingsScreen from "../Containers/SettingsScreen";
 import ContactScreen from "../Containers/ContactScreen";
@@ -51,17 +51,24 @@ const MainCardStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         title: navigation.getParam("lesson").name,
         headerRight: (
-          <Button onPress={() => params.navigateToWords()} title="All Words" />
+          <Button
+            onPress={() =>
+              navigation.navigate("WordsListScreen", {
+                cards: navigation.getParam("cards")
+              })
+            }
+            title="All Words"
+          />
         )
       })
+    },
+    WordsListScreen: {
+      screen: WordsListScreen,
+      navigationOptions: ({ navigation }) => ({
+        title: "Words"
+        // headerBackTitle: 'Back'
+      })
     }
-    // WordsListScreen: {
-    //   screen: WordsListScreen,
-    //   navigationOptions: ({ navigation }) => ({
-    //     title: "Words"
-    //     // headerBackTitle: 'Back'
-    //   })
-    // }
   },
   {
     // headerMode: "none"

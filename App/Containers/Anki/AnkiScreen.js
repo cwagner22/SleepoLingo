@@ -20,6 +20,11 @@ import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 import styles from "./AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
+  componentWillMount() {
+    const { navigation, cards } = this.props;
+    navigation.setParams({ cards });
+  }
+
   componentDidUpdate(prevProps) {
     const { card } = this.props;
 
@@ -28,12 +33,6 @@ class AnkiScreen extends React.Component {
       this.swiper.jumpToIndex(card.index, true);
     }
   }
-
-  // componentDidMount() {
-  //   this.props.navigation.setParams({
-  //     navigateToWords: this.props.navigateToWords
-  //   });
-  // }
 
   currentCardIndex() {
     return this.props.card.index;

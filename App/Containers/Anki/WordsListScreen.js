@@ -1,13 +1,12 @@
 import React from "react";
 import { View, Text, TouchableHighlight, ScrollView } from "react-native";
-import { List, ListItem } from "react-native-elements";
+import { ListItem } from "react-native-elements";
 import { connect } from "react-redux";
 import Collapsible from "react-native-collapsible";
-import _ from "lodash";
 
 import PlaybackActions from "../../Redux/PlaybackRedux";
 
-import styles from "../Styles/WordsListScreenStyle";
+import styles from "./WordsListScreenStyle";
 import { Colors } from "../../Themes/index";
 
 class WordsListScreen extends React.Component {
@@ -26,7 +25,7 @@ class WordsListScreen extends React.Component {
   }
 
   renderItem(card) {
-    const sentence = card.fullSentence ? card.fullSentence : card.sentence;
+    const sentence = card.getSentence();
     const isCollapsed = this.state.activeSection !== card.id;
     const rightIcon = {
       name: isCollapsed ? "expand-more" : "expand-less"
@@ -64,28 +63,11 @@ class WordsListScreen extends React.Component {
     );
   }
 
-  renderList() {
-    const cards = _.toArray(this.props.currentLesson.cards);
-
-    return cards.map(card => {
-      return this.renderItem(card);
-    });
-  }
-
   render() {
-    return (
-      <ScrollView>
-        <List>{this.renderList()}</List>
-      </ScrollView>
-    );
+    const cards = this.props.navigation.getParam("cards");
+    return <ScrollView>{cards.map(card => this.renderItem(card))}</ScrollView>;
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    currentLesson: Lesson.getFromId(state.lesson.currentLessonId, true)
-  };
-};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -95,6 +77,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(WordsListScreen);

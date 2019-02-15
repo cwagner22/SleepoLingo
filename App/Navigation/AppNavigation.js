@@ -41,8 +41,6 @@ const MainCardStack = createStackNavigator(
       screen: LessonScreen,
       navigationOptions: ({ navigation }) => ({
         title: navigation.getParam("lesson").name,
-        // Hide header when modal visible
-        header: navigation.getParam("modalVisible") ? null : undefined,
         headerBackTitle: "Back"
       })
     },
@@ -72,9 +70,13 @@ const MainCardStack = createStackNavigator(
   },
   {
     // headerMode: "none"
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: {
+      headerBackTitleStyle: {
+        color: Colors.cheeryPink
+      },
+      headerTintColor: Colors.cheeryPink,
       drawerLockMode: "locked-closed"
-    })
+    }
   }
 );
 
@@ -103,9 +105,9 @@ const MainModalStack = createStackNavigator(
   {
     mode: "modal",
     // Keep drawer locked by default, unlock it in the LessonsListScreen
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: {
       drawerLockMode: "locked-closed"
-    })
+    }
   }
 );
 

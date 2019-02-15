@@ -5,6 +5,9 @@ import { View, Text, StatusBar } from "react-native";
 import { connect } from "react-redux";
 import { Icon } from "react-native-elements";
 import LinearGradient from "react-native-linear-gradient";
+import withObservables from "@nozbe/with-observables";
+import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
+import { of as of$ } from "rxjs";
 
 import PlaybackControls from "./PlayerControls";
 import PlayerProgress from "./PlayerProgress";
@@ -28,19 +31,16 @@ class PlayerScreen extends React.Component {
   }
 
   renderWord() {
-    if (this.props.currentCard) {
-      const sentence =
-        this.props.currentCard.fullSentence || this.props.currentCard.sentence;
-      const sentenceStr =
-        this.props.playingState === "ORIGINAL"
-          ? sentence.original
-          : sentence.translation;
-      return (
-        <View style={styles.sentenceContainer}>
-          <Text style={styles.sentence}>{sentenceStr}</Text>
-        </View>
-      );
-    }
+    const sentence = this.props.card.getSentence();
+    const sentenceStr =
+      this.props.playingState === "ORIGINAL"
+        ? sentence.original
+        : sentence.translation;
+    return (
+      <View style={styles.sentenceContainer}>
+        <Text style={styles.sentence}>{sentenceStr}</Text>
+      </View>
+    );
   }
 
   renderInfoText() {
@@ -62,6 +62,8 @@ class PlayerScreen extends React.Component {
   }
 
   render() {
+    const { card, cardsCount } = this.props;
+    if (!card) return null;
     // const bgStyle = {
     // backgroundColor: isFocusMode() ? '#0e1a29' : '#0c0f1c'
     // }
@@ -78,7 +80,7 @@ class PlayerScreen extends React.Component {
           volume={this.props.volume}
           onChange={volume => this.props.changeVol(volume)}
         />
-        <PlayerProgress />
+        <PlayerProgress card={card} cardsCount={cardsCount} />
         <PlaybackControls />
       </LinearGradient>
     );
@@ -94,7 +96,8 @@ const mapStateToProps = state => {
     //   state.lesson.currentCardId &&
     //   Card.getFromId(state.lesson.currentCardId, true),
     playingState: state.playback.playingState,
-    volume: state.playback.volume
+    volume: state.playback.volume,
+    currentCardId: state.lesson.currentCardId
   };
 };
 
@@ -109,7 +112,16 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const enhance = withObservables(
+  ["currentCardId"],
+  ({ database, currentCardId }) => ({
+    card: currentCardId
+      ? database.collections.get("cards").findAndObserve(currentCardId)
+      : of$(null)
+  })
+);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PlayerScreen);
+)(withDatabase(enhance(PlayerScreen)));

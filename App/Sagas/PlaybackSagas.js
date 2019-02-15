@@ -15,7 +15,6 @@ import Sound from "react-native-sound";
 import Promise from "bluebird";
 import moment from "moment";
 import Debug from "debug";
-import _ from "lodash";
 
 import Player from "../Services/Player";
 import loadSound from "../Services/Sound";

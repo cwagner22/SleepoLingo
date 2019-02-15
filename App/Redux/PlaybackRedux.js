@@ -42,7 +42,8 @@ export const INITIAL_STATE = Immutable({
   lessonLoopMax: 4,
   elapsedTime: null,
   duration: null,
-  controlOS: false
+  controlOS: false,
+  cardsCount: null
 });
 
 /* ------------- Reducers ------------- */

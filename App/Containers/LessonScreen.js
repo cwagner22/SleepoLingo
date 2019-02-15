@@ -19,10 +19,6 @@ import styles from "./Styles/LessonScreenStyles";
 import { Colors } from "../Themes/";
 
 class LessonScreen extends React.Component {
-  state = {
-    modalVisible: false
-  };
-
   constructor(props) {
     super(props);
     props.downloadLesson(props.cards);
@@ -42,38 +38,37 @@ class LessonScreen extends React.Component {
   renderCard() {
     const { lesson, startAnki } = this.props;
 
-    if (!this.state.modalVisible) {
-      return (
-        <View style={{ flex: 1 }}>
-          <Card
-            title="Lesson Notes"
-            containerStyle={{ flex: 1 }}
-            wrapperStyle={{ flex: 1 }}
-          >
-            <ScrollView>
-              <Text style={styles.componentLabel}>{lesson.note}</Text>
-            </ScrollView>
-            <View>
-              <RoundedButton onPress={() => startAnki()} styles={styles.button}>
-                START STUDY
-              </RoundedButton>
-            </View>
-          </Card>
+    return (
+      <View style={{ flex: 1 }}>
+        <Card
+          title="Lesson Notes"
+          containerStyle={{ flex: 1 }}
+          wrapperStyle={{ flex: 1 }}
+        >
+          <ScrollView>
+            <Text style={styles.componentLabel}>{lesson.note}</Text>
+          </ScrollView>
+          <View>
+            <RoundedButton onPress={() => startAnki()} styles={styles.button}>
+              START STUDY
+            </RoundedButton>
+          </View>
+        </Card>
 
-          <ActionButton
-            buttonColor={Colors.easternBlue}
-            onPress={() => this.startNight()}
-            offsetY={85}
-            renderIcon={() => <MIcon name="hotel" color="white" size={24} />}
-            elevation={5}
-            zIndex={5}
-          />
-        </View>
-      );
-    }
+        <ActionButton
+          buttonColor={Colors.easternBlue}
+          onPress={() => this.startNight()}
+          offsetY={85}
+          renderIcon={() => <MIcon name="hotel" color="white" size={24} />}
+          elevation={5}
+          zIndex={5}
+        />
+      </View>
+    );
   }
 
   render() {
+    const { cards } = this.props;
     return (
       <View style={styles.mainContainer}>
         {this.renderCard()}
@@ -83,36 +78,17 @@ class LessonScreen extends React.Component {
           ref={"nightPlayerModal"}
           swipeToClose
           entry="top"
-          onClosed={() => this.onPlayerClose()}
           backdropOpacity={0.95}
+          coverScreen={true}
           // swipeArea={Dimensions.get('window').height*0.65}
         >
-          <PlayerScreen />
+          <PlayerScreen cardsCount={cards.length} />
         </Modal>
       </View>
     );
   }
 
-  onPlayerClose() {
-    // this.props.navigation.setOptions({
-    //   header: undefined, // Default header
-    //   gesturesEnabled: Platform.OS === 'ios'
-    // })
-    this.props.navigation.setParams({
-      modalVisible: false
-    });
-    this.setState({ modalVisible: false });
-  }
-
   startNight() {
-    // this.props.navigation.setOptions({
-    //   header: null,
-    //   gesturesEnabled: false
-    // })
-    this.props.navigation.setParams({
-      modalVisible: true
-    });
-    this.setState({ modalVisible: true });
     this.refs.nightPlayerModal.open();
   }
 }

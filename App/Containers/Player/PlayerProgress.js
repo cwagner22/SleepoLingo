@@ -27,16 +27,16 @@ class PlayerProgress extends React.Component {
   render() {
     const {
       cardsCount,
-      currentCardIndex,
+      card,
       lessonLoopCounter,
       elapsedTime,
       duration,
       lessonLoopMax
     } = this.props;
-    const nbLeft = cardsCount - currentCardIndex;
+    const nbLeft = cardsCount - card.index;
 
     const nbPlayedPreviousLoop = lessonLoopCounter * cardsCount;
-    const nbPlayed = nbPlayedPreviousLoop + currentCardIndex;
+    const nbPlayed = nbPlayedPreviousLoop + card.index;
     const progress = nbPlayed / (cardsCount * lessonLoopMax);
 
     return (
@@ -71,8 +71,7 @@ class PlayerProgress extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    cardsCount: 1,
-    currentCardIndex: 0,
+    // cardsCount: state.playback.cardsCount,
     lessonLoopCounter: state.playback.lessonLoopCounter,
     duration: state.playback.duration,
     elapsedTime: state.playback.elapsedTime,

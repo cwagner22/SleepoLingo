@@ -3,8 +3,7 @@ import { Button } from "react-native";
 import {
   createStackNavigator,
   createDrawerNavigator,
-  createAppContainer,
-  HeaderBackButton
+  createAppContainer
 } from "react-navigation";
 
 // import LaunchScreen from "../Containers/LaunchScreen";
@@ -22,71 +21,54 @@ import PlayerScreen from "../Containers/Player/PlayerScreen";
 import styles from "./Styles/NavigationStyles";
 import { Colors } from "../Themes/";
 
-// To be able to use modals with cards we have to wrap the cards stack inside a modal stack
-// https://github.com/react-community/react-navigation/issues/707#issuecomment-299859578
-const MainCardStack = createStackNavigator(
+const headerColors = {
+  titleStyle: {
+    color: Colors.cheeryPink
+  },
+  headerTintColor: Colors.cheeryPink
+};
+
+const LessonsStack = createStackNavigator(
   {
-    LessonsListScreen: {
+    LessonsList: {
       screen: LessonsListScreen,
       navigationOptions: ({ navigation }) => ({
         title: "SleepoLingo",
         headerTitleStyle: styles.bigHeaderTitle,
         titleStyle: styles.bigHeader,
         headerLeft: <DrawerButton navigation={navigation} />,
-        headerBackTitle: "Lessons",
-        drawerLockMode: "unlocked"
+        headerBackTitle: "Lessons"
       })
     },
-    LessonScreen: {
+    Lesson: {
       screen: LessonScreen,
       navigationOptions: ({ navigation }) => ({
         title: navigation.getParam("lesson").name,
         headerBackTitle: "Back"
       })
     },
-    AnkiScreen: {
+    Anki: {
       screen: AnkiScreen,
       navigationOptions: ({ navigation }) => ({
         title: navigation.getParam("lesson").name,
         headerRight: (
           <Button
             onPress={() =>
-              navigation.navigate("WordsListScreen", {
+              navigation.navigate("WordsList", {
                 cards: navigation.getParam("cards")
               })
             }
             title="All Words"
+            color={Colors.cheeryPink}
           />
         )
       })
     },
-    WordsListScreen: {
+    WordsList: {
       screen: WordsListScreen,
       navigationOptions: ({ navigation }) => ({
         title: "Words"
         // headerBackTitle: 'Back'
-      })
-    }
-  },
-  {
-    // headerMode: "none"
-    defaultNavigationOptions: {
-      headerBackTitleStyle: {
-        color: Colors.cheeryPink
-      },
-      headerTintColor: Colors.cheeryPink,
-      drawerLockMode: "locked-closed"
-    }
-  }
-);
-
-// Modals + Main StackNavigator
-const MainModalStack = createStackNavigator(
-  {
-    LessonsListScreen: {
-      screen: MainCardStack,
-      navigationOptions: ({ navigation }) => ({
-        header: null
       })
     },
     PlayerSettingsScreen: {
@@ -103,47 +85,65 @@ const MainModalStack = createStackNavigator(
     }
   },
   {
-    mode: "modal",
-    // Keep drawer locked by default, unlock it in the LessonsListScreen
     defaultNavigationOptions: {
-      drawerLockMode: "locked-closed"
+      ...headerColors
     }
   }
 );
 
-const Drawer = createDrawerNavigator(
+// https://reactnavigation.org/docs/en/navigation-options-resolution.html#a-drawer-has-a-stack-inside-of-it-and-you-want-to-lock-the-drawer-on-certain-screens
+LessonsStack.navigationOptions = ({ navigation }) => {
+  let drawerLockMode = "unlocked";
+  if (navigation.state.index > 0) {
+    drawerLockMode = "locked-closed";
+  }
+
+  return {
+    drawerLockMode
+  };
+};
+
+const DrawerNavigator = createDrawerNavigator(
   {
-    LessonsList: {
-      screen: MainModalStack,
-      navigationOptions: ({ navigation }) => ({
-        drawerLabel: "Lessons",
-        drawerLockMode: "unlocked"
-      })
-    },
-    Settings: {
-      screen: createStackNavigator({
-        SettingsScreen: {
-          screen: SettingsScreen
-          // navigationOptions: ({ navigation }) => ({
-          //   drawerLabel: "Settings",
-          //   title: "Settings",
-          //   headerLeft: <DrawerButton navigation={navigation} />
-          // })
+    Lessons: LessonsStack,
+    SettingsStack: createStackNavigator(
+      {
+        Settings: {
+          screen: SettingsScreen,
+          navigationOptions: ({ navigation }) => ({
+            headerLeft: <DrawerButton navigation={navigation} />
+          })
         }
-      })
-    },
-    Contact: {
-      screen: createStackNavigator({
-        ContactScreen: {
-          screen: ContactScreen
-          // navigationOptions: ({ navigation }) => ({
-          //   drawerLabel: "Contact",
-          //   title: "Contact",
-          //   headerLeft: <DrawerButton navigation={navigation} />
-          // })
+      },
+      {
+        defaultNavigationOptions: {
+          title: "Settings",
+          ...headerColors
+        },
+        navigationOptions: () => ({
+          drawerLabel: "Settings"
+        })
+      }
+    ),
+    ContactStack: createStackNavigator(
+      {
+        Settings: {
+          screen: ContactScreen,
+          navigationOptions: ({ navigation }) => ({
+            headerLeft: <DrawerButton navigation={navigation} />
+          })
         }
-      })
-    },
+      },
+      {
+        defaultNavigationOptions: {
+          title: "Contact",
+          ...headerColors
+        },
+        navigationOptions: () => ({
+          drawerLabel: "Contact"
+        })
+      }
+    ),
     ImportScreen: {
       screen: ImportScreen
     }
@@ -155,4 +155,4 @@ const Drawer = createDrawerNavigator(
   }
 );
 
-export default createAppContainer(Drawer);
+export default createAppContainer(DrawerNavigator);

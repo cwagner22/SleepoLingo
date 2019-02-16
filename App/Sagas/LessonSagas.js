@@ -170,7 +170,7 @@ function* processLessonAlert(res, lessonId) {
 export function* loadLesson({ lesson }) {
   yield put(LessonActions.setCurrentLesson(lesson.id));
   // NavigationActions.navigate({ routeName: "LessonScreen" });
-  NavigationService.navigate("LessonScreen", { lesson });
+  NavigationService.navigate("Lesson", { lesson });
   // const currentLessonId = yield select(getCurrentLessonId);
   // const completed = yield select(isCompleted, lessonId);
   // const currentLessonCompleted = yield select(isCompleted, currentLessonId);
@@ -259,7 +259,7 @@ export function* startAnki() {
 
   const nextCard = yield call(loadNextCard);
   const lesson = yield call(getCurrentLesson);
-  NavigationService.navigate("AnkiScreen", {
+  NavigationService.navigate("Anki", {
     card: nextCard,
     lesson
   });

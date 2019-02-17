@@ -144,9 +144,27 @@ const DrawerNavigator = createDrawerNavigator(
         })
       }
     ),
-    ImportScreen: {
-      screen: ImportScreen
-    }
+    ...(__DEV__ && {
+      ImportStack: createStackNavigator(
+        {
+          Import: {
+            screen: ImportScreen,
+            navigationOptions: ({ navigation }) => ({
+              headerLeft: <DrawerButton navigation={navigation} />
+            })
+          }
+        },
+        {
+          defaultNavigationOptions: {
+            title: "Import",
+            ...headerColors
+          },
+          navigationOptions: () => ({
+            drawerLabel: "Import"
+          })
+        }
+      )
+    })
   },
   {
     contentOptions: {

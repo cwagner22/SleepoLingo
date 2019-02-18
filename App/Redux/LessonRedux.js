@@ -1,8 +1,5 @@
 import { createReducer, createActions } from "reduxsauce";
 import Immutable from "seamless-immutable";
-import moment from "moment";
-import _ from "lodash";
-import { NavigationActions } from "react-navigation";
 
 /* ------------- Types and Action Creators ------------- */
 

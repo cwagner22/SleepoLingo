@@ -44,18 +44,6 @@ const LessonItem = withObservables([], ({ lesson }) => ({
   cards: lesson.cards.observe()
 }))(RawLessonItem);
 
-const RawSectionHeader = ({ lessonGroup }) => (
-  <Text style={styles.header}>{lessonGroup.name}</Text>
-);
-
-const SectionHeader = withDatabase(
-  withObservables([], ({ database, lessonGroupId }) => ({
-    lessonGroup: database.collections
-      .get("lesson_groups")
-      .findAndObserve(lessonGroupId)
-  }))(RawSectionHeader)
-);
-
 class LessonsListScreen extends Component {
   state = {};
 
@@ -87,13 +75,7 @@ class LessonsListScreen extends Component {
   }
 
   goToLesson(lesson) {
-    // Sentry.captureMessage('test2');
-    // Sentry.captureException(new Error('Oops!'), {
-    //   logger: 'my.module'
-    // });
-    // throw new Error('yest error')
     this.props.loadLesson(lesson.id);
-    // this.props.navigateToLesson(lesson.id)
   }
 
   renderHeader(data, sectionID) {
@@ -105,35 +87,17 @@ class LessonsListScreen extends Component {
   }
 
   render() {
-    const { loadLesson, lessons } = this.props;
+    const { loadLesson, lessons, lessonGroups } = this.props;
 
-    // SOLUTION 1a
-    // console.log(lessonGroups);
-    // let sections = [];
-    // for (var i = 0; i < lessonGroups.length - 1; i++) {
-    //   const lessonGroup = lessonGroups[i];
-    //   let section = {
-    //     title: lessonGroup.name,
-    //     data: []
-    //     // data: lessonGroup.lessons (Query Object error)
-    //   };
-    //   sections.push(section);
-
-    //   lessonGroup.lessons.query().then(a => {
-    //     console.log(a);
-    //     section.data = a;
-    //     // SectionList not updating
-    //     // Nested state is bad : https://stackoverflow.com/questions/43040721/how-to-update-nested-state-properties-in-react
-    //   });
-    // }
-
-    // SOLUTION 2
-    // Group lessons by group id as title
+    // Group lessons by group name as title
     const sections = lessons.reduce((sections, lesson) => {
-      let section = sections.find(s => s.title === lesson.lessonGroup.id);
+      const lessonGroupName = lessonGroups.find(
+        g => g.id === lesson.lessonGroup.id
+      ).name;
+      let section = sections.find(s => s.title === lessonGroupName);
       if (!section) {
         section = {
-          title: lesson.lessonGroup.id,
+          title: lessonGroupName,
           data: []
         };
         sections.push(section);
@@ -143,8 +107,6 @@ class LessonsListScreen extends Component {
       return sections;
     }, []);
 
-    console.log(sections);
-
     return (
       <View style={styles.container}>
         <Text style={styles.pickLesson}>Pick a lesson</Text>
@@ -153,7 +115,7 @@ class LessonsListScreen extends Component {
             <LessonItem lesson={lesson} onPress={() => loadLesson(lesson)} />
           )}
           renderSectionHeader={({ section: { title } }) => (
-            <SectionHeader lessonGroupId={title} />
+            <Text style={styles.header}>{title}</Text>
           )}
           sections={sections}
           keyExtractor={item => item.id}
@@ -166,16 +128,6 @@ class LessonsListScreen extends Component {
     );
   }
 }
-
-// SOLUTION 1b (JOIN, not working)
-// export default withDatabase(
-//   withObservables([], ({ database }) => ({
-//     lessons: database.collections
-//       .get("lessons")
-//       .query()
-//       .observe()
-//   }))(LessonsListScreen)
-// );
 
 const mapStateToProps = state => {
   return {
@@ -194,6 +146,10 @@ const mapDispatchToProps = dispatch => {
 const enhance = withObservables([], ({ database }) => ({
   lessons: database.collections
     .get("lessons")
+    .query()
+    .observe(),
+  lessonGroups: database.collections
+    .get("lesson_groups")
     .query()
     .observe()
 }));

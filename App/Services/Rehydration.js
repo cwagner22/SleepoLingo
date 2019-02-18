@@ -4,6 +4,8 @@
 // import StartupActions from '../Redux/StartupRedux'
 // import DebugConfig from '../Config/DebugConfig'
 
+// https://shift.infinite.red/shipping-persistant-reducers-7341691232b1
+
 // const updateReducers = (store: Object) => {
 //   const reducerVersion = ReduxPersist.reducerVersion
 //   const startup = () => store.dispatch(StartupActions.startup())

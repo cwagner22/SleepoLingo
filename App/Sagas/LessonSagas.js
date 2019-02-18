@@ -15,11 +15,10 @@ import NavigationActions, {
 } from "../Navigation/NavigationActions";
 import NavigationService from "../Services/NavigationService";
 import Player from "../Services/Player";
-import DBInstance from "../Models/DBInstance";
+import database from "../Models/database";
 
 export const THAI = "th-TH";
 export const ENGLISH = "en-US";
-const db = DBInstance.getCurrentDB();
 const api = API.create();
 Debug.enable("app:LessonSagas");
 const debug = Debug("app:LessonSagas");
@@ -30,12 +29,12 @@ const isCompleted = (state, lessonId) =>
 const getCurrentLessonId = state => state.lesson.currentLessonId;
 export function* getCurrentLesson() {
   const currentLessonId = yield select(getCurrentLessonId);
-  return yield db.collections.get("lessons").find(currentLessonId);
+  return yield database.collections.get("lessons").find(currentLessonId);
 }
 
 function* getCurrentCardsQuery() {
   const currentLessonId = yield select(getCurrentLessonId);
-  return db.collections
+  return database.collections
     .get("cards")
     .query(Q.where("lesson_id", currentLessonId));
 }
@@ -56,7 +55,7 @@ const getCardsSentences = cards => cards.map(c => c.getSentence());
 const getCurrentCardId = state => state.lesson.currentCardId;
 export function* getCurrentCard() {
   const currentCardId = yield select(getCurrentCardId);
-  return yield db.collections.get("cards").find(currentCardId);
+  return yield database.collections.get("cards").find(currentCardId);
 }
 
 const downloadSentence = (sentence, language) => {
@@ -234,12 +233,12 @@ function sortCards(cards, allowAlmost = false) {
 
 function* getCurrentLesson() {
   const currentLessonId = yield select(getCurrentLessonId);
-  return yield db.collections.get("lessons").find(currentLessonId);
+  return yield database.collections.get("lessons").find(currentLessonId);
 }
 
 function* getCurrentCard() {
   const currentCardId = yield select(getCurrentCardId);
-  return yield db.collections.get("cards").find(currentCardId);
+  return yield database.collections.get("cards").find(currentCardId);
 }
 
 export function* loadNextCard() {

@@ -31,19 +31,7 @@ import Sentence from "../Models/Sentence";
 import Card from "../Models/Card";
 import Lesson from "../Models/Lesson";
 import LessonGroup from "../Models/LessonGroup";
-import DBInstance from "../Models/DBInstance";
-const database = DBInstance.getCurrentDB();
-
-// set up the database
-// const adapter = new SQLiteAdapter({
-//   dbName: "SleepoLingo",
-//   schema: mySchema
-// });
-
-// const database = new Database({
-//   adapter,
-//   modelClasses: [Sentence, Card, Lesson, LessonGroup]
-// });
+import database from "../Models/database";
 
 class App extends Component {
   componentWillMount() {

@@ -12,7 +12,6 @@ import {
 } from "redux-saga/effects";
 import BackgroundTimer from "react-native-background-timer";
 import Sound from "react-native-sound";
-import Promise from "bluebird";
 import moment from "moment";
 import Debug from "debug";
 

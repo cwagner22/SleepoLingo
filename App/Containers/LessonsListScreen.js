@@ -4,14 +4,11 @@ import React, { Component } from "react";
 import { SectionList, View, Text } from "react-native";
 import { connect } from "react-redux";
 import RNFS from "react-native-fs";
-// import { Sentry } from 'react-native-sentry'
 import withObservables from "@nozbe/with-observables";
 import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 
 import LessonActions from "../Redux/LessonRedux";
-// import { addTodo } from "../redux/actions";
 import LessonButton from "../Components/LessonButton";
-import DrawerButton from "../Components/DrawerButton";
 
 // Styles
 import styles from "./Styles/LessonsListScreenStyle";
@@ -74,10 +71,6 @@ class LessonsListScreen extends Component {
     RNFS.mkdir(cachePath, { NSURLIsExcludedFromBackupKey: true });
   }
 
-  goToLesson(lesson) {
-    this.props.loadLesson(lesson.id);
-  }
-
   renderHeader(data, sectionID) {
     return (
       <View>
@@ -89,7 +82,7 @@ class LessonsListScreen extends Component {
   render() {
     const { loadLesson, lessons, lessonGroups } = this.props;
 
-    // Group lessons by group name as title
+    // lessons by group name as title
     const sections = lessons.reduce((sections, lesson) => {
       const lessonGroupName = lessonGroups.find(
         g => g.id === lesson.lessonGroup.id

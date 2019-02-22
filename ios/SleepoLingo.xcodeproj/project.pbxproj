@@ -72,6 +72,7 @@
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		685D530C2D8941FFB2B34473 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 857D291A60534C90AA41D52F /* libRNFetchBlob.a */; };
+		9B7545345F0848B28C1F681C /* lessons.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = 2648BB3C1AC049C9B1AC3A67 /* lessons.xlsx */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -537,6 +538,7 @@
 		F89E2468872B4DE3BE1BA12E /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		C792CE4B993A46748B310321 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		857D291A60534C90AA41D52F /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		2648BB3C1AC049C9B1AC3A67 /* lessons.xlsx */ = {isa = PBXFileReference; name = "lessons.xlsx"; path = "../App/lessons.xlsx"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -957,6 +959,7 @@
 				E086D4EE250646E79EAC0201 /* FontAwesome5_Brands.ttf */,
 				F89E2468872B4DE3BE1BA12E /* FontAwesome5_Regular.ttf */,
 				C5DE9451E8FF44B7B68DC085 /* FontAwesome5_Solid.ttf */,
+				2648BB3C1AC049C9B1AC3A67 /* lessons.xlsx */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1595,6 +1598,7 @@
 				B04EB2B995324D1DBA9A5E8E /* FontAwesome5_Brands.ttf in Resources */,
 				CF1E064623D949218D7C00D6 /* FontAwesome5_Regular.ttf in Resources */,
 				EA4BA1B8112D4887ACCED25E /* FontAwesome5_Solid.ttf in Resources */,
+				9B7545345F0848B28C1F681C /* lessons.xlsx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

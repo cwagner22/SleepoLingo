@@ -8,7 +8,12 @@ if (Config.useReactotron) {
   // https://github.com/infinitered/reactotron for more options!
   Reactotron.configure({ name: "SleepoLingo" })
     .useReactNative()
-    .use(reduxPlugin({ onRestore: Immutable }))
+    .use(
+      reduxPlugin({
+        onRestore: Immutable,
+        except: ["LOAD_LESSON", "DOWNLOAD_LESSON"]
+      })
+    )
     .use(sagaPlugin())
     .connect();
 

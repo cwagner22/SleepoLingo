@@ -1,14 +1,19 @@
-import { call, take } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import XLSX from "xlsx";
 import RNFS from "react-native-fs";
 import Secrets from "react-native-config";
+import ImportActions from "../Redux/ImportRedux";
+import database from "../Models/database";
+import Debug from "debug";
+Debug.enable("app:ImportSagas");
+const debug = Debug("app:ImportSagas");
 
 async function checkWords() {
-  const cards = await global.db.collections
+  const cards = await database.collections
     .get("cards")
     .query()
     .fetch();
-  const words = await global.db.collections
+  const words = await database.collections
     .get("dictionary")
     .query()
     .fetch();
@@ -25,18 +30,18 @@ async function checkWords() {
     return res;
   }, []);
 
-  console.log("Words missing from dictionary:", wordsMissing);
+  debug("Words missing from dictionary:", wordsMissing);
 }
 
 const createWord = (original, translation, transliteration) =>
-  global.db.collections.get("dictionary").prepareCreate(w => {
+  database.collections.get("dictionary").prepareCreate(w => {
     w.original = original;
     w.translation = translation;
     w.transliteration = transliteration;
   });
 
 function parseDictionary(worksheet, database) {
-  console.log("Parsing Dictionary, worksheet length: ", worksheet.length);
+  debug("Parsing Dictionary, worksheet length: ", worksheet.length);
   return worksheet.reduce((res, row) => {
     if (row.Original && row.Translation && row.Transliteration) {
       res.push(createWord(row.Original, row.Translation, row.Transliteration));
@@ -61,7 +66,7 @@ const createCard = (
   fullSentenceTranslation,
   fullSentenceTransliteration
 ) =>
-  global.db.collections.get("cards").prepareCreate(card => {
+  database.collections.get("cards").prepareCreate(card => {
     card._raw.id = id;
     card.index = index;
     card.note = note;
@@ -75,7 +80,7 @@ const createCard = (
   });
 
 function parseCards(worksheet, lesson) {
-  console.log("Parsing cards, worksheet length: ", worksheet.length);
+  debug("Parsing cards, worksheet length: ", worksheet.length);
   let cards = [];
   for (var i = 0; i < worksheet.length; i++) {
     var row = worksheet[i];
@@ -99,20 +104,20 @@ function parseCards(worksheet, lesson) {
   }
 
   worksheet.splice(0, i);
-  console.log(cards.length + " cards found");
+  debug(cards.length + " cards found");
   return cards;
 }
 
 function parseLesson(worksheet, lessonGroup, database) {
   if (!worksheet.length) return;
-  console.log("Parsing lesson, worksheet length: ", worksheet.length);
+  debug("Parsing lesson, worksheet length: ", worksheet.length);
   const lessonNameFull = worksheet[0].Original;
   const res = lessonNameFull.match(/Lesson (\d+): (.+)/);
   const id = res[1];
   const name = res[2];
   if (!id || !name) return;
 
-  console.log(`Lesson: ${name}`);
+  debug(`Lesson: ${name}`);
 
   let note;
   if (
@@ -150,7 +155,7 @@ function parseLessons(worksheet, lessonGroup, database) {
   let canContinue = true;
   while (canContinue) {
     // const a = parseLesson(worksheet, lessonGroup, database);
-    // console.log(a);
+    // debug(a);
     const { lesson, cards: _cards } =
       parseLesson(worksheet, lessonGroup, database) || {};
     if (lesson && _cards.length) {
@@ -168,7 +173,7 @@ function parseLessons(worksheet, lessonGroup, database) {
 async function parseGroups(workbook, database) {
   await database.unsafeResetDatabase();
 
-  console.log(workbook);
+  debug(workbook);
   let lessonGroups = [],
     lessons = [],
     cards = [],
@@ -205,33 +210,31 @@ async function parseGroups(workbook, database) {
   }
 
   const allRecords = [...lessonGroups, ...lessons, ...cards, ...dictionary];
-  console.log(allRecords);
+  debug(allRecords);
   await database.batch(...allRecords);
 
   await checkWords();
 }
 
-export function* startImport({ database }) {
-  const data = yield call(
-    RNFS.readFile,
-    Secrets.REALM_PATH + "/lessons.xlsx",
-    "base64"
-  );
+const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";
+
+export function* startImport() {
+  debug(`Loading ${RNFS.MainBundlePath}/lessons.xlsx`);
+  const data = yield call(RNFS.readFile, lessonsPath, "base64");
   const workbook = yield call(XLSX.read, data);
-  // yield call(database.unsafeResetDatabase);
 
   yield call(parseGroups, workbook, database);
-  // await parseGroups(workbook, database)
+  debug("Done");
+}
 
-  // const dbPath = Secrets.REALM_PATH + "/default.realm";
-  // // Overwrite original db
-  // try {
-  //   yield call(RNFS.unlink, dbPath);
-  // } catch (e) {
-  //   // file doesn't exist
-  // }
-  // yield call(RNFS.copyFile, RNFS.MainBundlePath + "/default.realm", dbPath);
-  console.log("Done");
+export function* importLessons() {
+  const hash = yield RNFS.hash(lessonsPath, "md5");
+  const lastHash = yield select(state => state.import.lessonHash);
+  debug(hash, lastHash);
+  if (hash !== lastHash) {
+    // yield call(startImport);
+    // yield put(ImportActions.setLessonsHash(hash));
+  }
 }
 
 // export default {

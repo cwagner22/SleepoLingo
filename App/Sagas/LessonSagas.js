@@ -1,7 +1,7 @@
 import { call, select, put, race, all } from "redux-saga/effects";
 import RNFS from "react-native-fs";
 import { Alert } from "react-native";
-import Promise from "bluebird";
+import pLimit from "p-limit";
 import Toast from "react-native-simple-toast";
 import RNFetchBlob from "rn-fetch-blob";
 import Debug from "debug";
@@ -22,6 +22,8 @@ export const ENGLISH = "en-US";
 const api = API.create();
 Debug.enable("app:LessonSagas");
 const debug = Debug("app:LessonSagas");
+
+const limit = pLimit(5);
 
 const isCompleted = (state, lessonId) =>
   !!state.lesson.completedLessons[lessonId];
@@ -73,12 +75,6 @@ const downloadSentence = (sentence, language) => {
     });
 };
 
-const downloadAllSentences = (sentences, language) => {
-  return Promise.map(sentences, s => downloadSentence(s, language), {
-    concurrency: 5
-  });
-};
-
 export function* filterSentencesNotCached(sentences, language) {
   const path = Player.getLanguagePath(language);
   debug("Audio cache", path);
@@ -96,6 +92,9 @@ export function* filterSentencesNotCached(sentences, language) {
     return true;
   });
 }
+
+const downloadAllSentences = (sentences, language) =>
+  Promise.map(sentences, s => limit(() => downloadSentence(s, language)));
 
 export function* downloadLesson({ currentCards }) {
   let sentencesOriginal = [],
@@ -167,8 +166,12 @@ function* processLessonAlert(res, lessonId) {
 }
 
 export function* loadLesson({ lesson }) {
+  console.log(lesson);
+
   yield put(LessonActions.setCurrentLesson(lesson.id));
+  // const lesson = yield database.collections.get("lessons").find(lessonId);
   // NavigationActions.navigate({ routeName: "LessonScreen" });
+
   NavigationService.navigate("Lesson", { lesson });
   // const currentLessonId = yield select(getCurrentLessonId);
   // const completed = yield select(isCompleted, lessonId);

@@ -7,7 +7,8 @@ import ReduxPersist from "../Config/ReduxPersist";
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
   lesson: require("./LessonRedux").reducer,
-  playback: require("./PlaybackRedux").reducer
+  playback: require("./PlaybackRedux").reducer,
+  import: require("./ImportRedux").reducer
 });
 
 export default () => {

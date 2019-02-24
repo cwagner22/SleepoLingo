@@ -1,7 +1,6 @@
 import { call, put, select } from "redux-saga/effects";
 import XLSX from "xlsx";
 import RNFS from "react-native-fs";
-import Secrets from "react-native-config";
 import ImportActions from "../Redux/ImportRedux";
 import database from "../Models/database";
 import Debug from "debug";
@@ -67,7 +66,7 @@ const createCard = (
   fullSentenceTransliteration
 ) =>
   database.collections.get("cards").prepareCreate(card => {
-    card._raw.id = id;
+    card._raw.id = id.toString();
     card.index = index;
     card.note = note;
     card.lesson.set(lesson);
@@ -136,16 +135,8 @@ function parseLesson(worksheet, lessonGroup) {
     l.note = note;
     l.lessonGroup.set(lessonGroup);
   });
-  // recordsNormalized.lessons.push(lesson);
 
   const cards = parseCards(worksheet, lesson);
-  // if (!cards.length) return;
-
-  // return {
-  //   lesson: newLesson,
-  //   cards
-  // };
-  // return Lesson.create(Number(id), name, note, cards);
   return { lesson, cards };
 }
 
@@ -154,8 +145,6 @@ function parseLessons(worksheet, lessonGroup) {
     cards = [];
   let canContinue = true;
   while (canContinue) {
-    // const a = parseLesson(worksheet, lessonGroup, database);
-    // debug(a);
     const { lesson, cards: _cards } = parseLesson(worksheet, lessonGroup) || {};
     if (lesson && _cards.length) {
       lessons = lessons.concat(lesson);
@@ -197,9 +186,6 @@ function parseGroups(workbook) {
       );
       lessons = lessons.concat(_lessons);
       cards = cards.concat(_cards);
-      // if (lessons.length) {
-      //   // LessonGroup.create(name, lessons);
-      // }
     }
   }
 
@@ -235,16 +221,12 @@ export function* importLessonsIfNeeded() {
   const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
   const lastHash = yield select(state => state.import.lessonsHash);
 
-  // if (lessonsHash !== lastHash) {
-  // yield call(startImport, lessonsHash);
-  // }
+  if (lessonsHash !== lastHash) {
+    yield call(startImport, lessonsHash);
+  }
 }
 
 export function* forceImport() {
   const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
   yield call(startImport, lessonsHash);
 }
-
-// export default {
-//   startImport
-// };

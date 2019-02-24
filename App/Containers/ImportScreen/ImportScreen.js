@@ -22,11 +22,9 @@ class ImportScreen extends React.Component {
   render() {
     return (
       <View style={styles.full}>
-        <Text>Importing...</Text>
         <RoundedButton onPress={this.handleStartImport}>
           Start Import
         </RoundedButton>
-        <Text>Importing...</Text>
       </View>
     );
   }

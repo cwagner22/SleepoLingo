@@ -6,6 +6,7 @@ import Toast from "react-native-simple-toast";
 import RNFetchBlob from "rn-fetch-blob";
 import Debug from "debug";
 import { Q } from "@nozbe/watermelondb";
+import { alert } from "redux-saga-rn-alert";
 
 import API from "../Services/TranslateApi";
 import LessonActions from "../Redux/LessonRedux";
@@ -58,6 +59,19 @@ const getCurrentCardId = state => state.lesson.currentCardId;
 export function* getCurrentCard() {
   const currentCardId = yield select(getCurrentCardId);
   return yield database.collections.get("cards").find(currentCardId);
+}
+
+function* anotherLessonInProgress(lessonId) {
+  let res = false;
+  const currentLessonId = yield select(getCurrentLessonId);
+  if (lessonId !== currentLessonId) {
+    const currentLesson = yield database.collections
+      .get("lessons")
+      .find(currentLessonId);
+
+    res = !currentLesson.isCompleted;
+  }
+  return res;
 }
 
 const downloadSentence = (sentence, language) => {
@@ -165,58 +179,71 @@ function* processLessonAlert(res, lessonId) {
   }
 }
 
+function* goToLesson(lesson) {
+  yield put(LessonActions.setCurrentLesson(lesson.id));
+  NavigationService.navigate("Lesson", { lesson });
+}
+
 export function* loadLesson({ lesson }) {
   console.log(lesson);
-
-  yield put(LessonActions.setCurrentLesson(lesson.id));
   // const lesson = yield database.collections.get("lessons").find(lessonId);
-  // NavigationActions.navigate({ routeName: "LessonScreen" });
 
-  NavigationService.navigate("Lesson", { lesson });
-  // const currentLessonId = yield select(getCurrentLessonId);
-  // const completed = yield select(isCompleted, lessonId);
-  // const currentLessonCompleted = yield select(isCompleted, currentLessonId);
+  if (lesson.isCompleted) {
+    const cancel = bindCallbackToPromise();
+    const confirm = bindCallbackToPromise();
 
-  // if (completed) {
-  //   const cancel = bindCallbackToPromise();
-  //   const confirm = bindCallbackToPromise();
+    Alert.alert("Lesson Completed", "You have already completed this lesson.", [
+      { text: "Start again", onPress: confirm.cb },
+      { text: "Cancel", onPress: cancel.cb }
+    ]);
 
-  //   Alert.alert("Lesson Completed", "You have already completed this lesson.", [
-  //     { text: "Start again", onPress: confirm.cb },
-  //     { text: "Cancel", onPress: cancel.cb }
-  //   ]);
+    // The race will wait for either the cancel or confirm callback to be invoked - which skirts
+    // around the problem of trying to "put" from within a callback: don't put an event, instead
+    // rely strictly on the resolution of a promise
+    const res = yield race({
+      cancel: call(cancel.promise),
+      confirm: call(confirm.promise)
+    });
 
-  //   // The race will wait for either the cancel or confirm callback to be invoked - which skirts
-  //   // around the problem of trying to "put" from within a callback: don't put an event, instead
-  //   // rely strictly on the resolution of a promise
-  //   const res = yield race({
-  //     cancel: call(cancel.promise),
-  //     confirm: call(confirm.promise)
-  //   });
+    yield call(processLessonAlert, res, lessonId);
+  } else {
+    // const _anotherLessonInProgress = yield anotherLessonInProgress(lesson.id);
+    let done = false;
+    const currentLessonId = yield select(getCurrentLessonId);
+    if (lesson.id !== currentLessonId && currentLessonId) {
+      const currentLesson = yield database.collections
+        .get("lessons")
+        .find(currentLessonId);
 
-  //   yield call(processLessonAlert, res, lessonId);
-  // } else if (!currentLessonCompleted && lessonId !== currentLessonId) {
-  //   const cancel = bindCallbackToPromise();
-  //   const confirm = bindCallbackToPromise();
+      if (!currentLesson.isCompleted) {
+        // yield put(LessonActions.anotherLessonInProgress(lesson.id));
 
-  //   Alert.alert("New Lesson", "You have another lesson in progress.", [
-  //     { text: "Start new lesson", onPress: confirm.cb },
-  //     { text: "Cancel", onPress: cancel.cb }
-  //   ]);
+        const buttons = [
+          {
+            text: "Start new lesson",
+            call: { method: goToLesson, args: currentLesson }
+          },
+          {
+            text: "Cancel",
+            style: "cancel"
+          }
+        ];
 
-  //   // The race will wait for either the cancel or confirm callback to be invoked - which skirts
-  //   // around the problem of trying to "put" from within a callback: don't put an event, instead
-  //   // rely strictly on the resolution of a promise
-  //   const res = yield race({
-  //     cancel: call(cancel.promise),
-  //     confirm: call(confirm.promise)
-  //   });
+        yield call(
+          alert,
+          "New Lesson",
+          "You have another lesson in progress.",
+          buttons
+        );
 
-  //   yield call(processLessonAlert, res, lessonId);
-  // } else {
-  //   yield put(LessonActions.setCurrentLesson(lessonId));
-  //   yield put(navigateToLesson());
-  // }
+        done = true;
+      }
+    }
+
+    if (!done) {
+      yield goToLesson(lesson);
+    }
+  }
 }
 
 function sortCards(cards, allowAlmost = false) {

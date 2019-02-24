@@ -1,7 +1,5 @@
-import { takeLatest, all } from "redux-saga/effects";
-import API from "../Services/Api";
-import FixtureAPI from "../Services/FixtureApi";
-import DebugConfig from "../Config/DebugConfig";
+import { takeLatest, all, spawn } from "redux-saga/effects";
+import { watchAlertChannel } from "redux-saga-rn-alert";
 
 /* ------------- Types ------------- */
 
@@ -62,6 +60,8 @@ export default function* root() {
     takeLatest(PlaybackTypes.PLAYBACK_LOOP_MAX_CHANGE, playbackLoopMaxChange),
 
     takeLatest(ImportTypes.FORCE_IMPORT_LESSONS, forceImport),
-    takeLatest(ImportTypes.IMPORT_LESSONS_IF_NEEDED, importLessonsIfNeeded)
+    takeLatest(ImportTypes.IMPORT_LESSONS_IF_NEEDED, importLessonsIfNeeded),
+
+    spawn(watchAlertChannel)
   ]);
 }

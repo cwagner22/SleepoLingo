@@ -4,8 +4,8 @@ import Immutable from "seamless-immutable";
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  startImport: null,
-  importLessons: null,
+  forceImportLessons: null,
+  importLessonsIfNeeded: null,
   setLessonsHash: ["lessonsHash"]
 });
 
@@ -21,7 +21,6 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 export const setLessonsHash = (state, { lessonsHash }) => {
-  console.log(state);
   return state.merge({
     lessonsHash
   });

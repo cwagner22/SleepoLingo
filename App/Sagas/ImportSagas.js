@@ -108,7 +108,7 @@ function parseCards(worksheet, lesson) {
   return cards;
 }
 
-function parseLesson(worksheet, lessonGroup, database) {
+function parseLesson(worksheet, lessonGroup) {
   if (!worksheet.length) return;
   debug("Parsing lesson, worksheet length: ", worksheet.length);
   const lessonNameFull = worksheet[0].Original;
@@ -138,7 +138,7 @@ function parseLesson(worksheet, lessonGroup, database) {
   });
   // recordsNormalized.lessons.push(lesson);
 
-  const cards = parseCards(worksheet, lesson, database);
+  const cards = parseCards(worksheet, lesson);
   // if (!cards.length) return;
 
   // return {
@@ -149,15 +149,14 @@ function parseLesson(worksheet, lessonGroup, database) {
   return { lesson, cards };
 }
 
-function parseLessons(worksheet, lessonGroup, database) {
+function parseLessons(worksheet, lessonGroup) {
   let lessons = [],
     cards = [];
   let canContinue = true;
   while (canContinue) {
     // const a = parseLesson(worksheet, lessonGroup, database);
     // debug(a);
-    const { lesson, cards: _cards } =
-      parseLesson(worksheet, lessonGroup, database) || {};
+    const { lesson, cards: _cards } = parseLesson(worksheet, lessonGroup) || {};
     if (lesson && _cards.length) {
       lessons = lessons.concat(lesson);
       cards = cards.concat(_cards);
@@ -170,10 +169,7 @@ function parseLessons(worksheet, lessonGroup, database) {
   return { lessons, cards };
 }
 
-async function parseGroups(workbook, database) {
-  await database.unsafeResetDatabase();
-
-  debug(workbook);
+function parseGroups(workbook) {
   let lessonGroups = [],
     lessons = [],
     cards = [],
@@ -185,8 +181,7 @@ async function parseGroups(workbook, database) {
     let worksheetJSON = XLSX.utils.sheet_to_json(worksheet);
 
     if (name === "Dictionary") {
-      // call(parseDictionary, worksheetJSON, database);
-      dictionary = dictionary.concat(parseDictionary(worksheetJSON, database));
+      dictionary = dictionary.concat(parseDictionary(worksheetJSON));
     } else {
       const newLessonGroup = database.collections
         .get("lesson_groups")
@@ -198,8 +193,7 @@ async function parseGroups(workbook, database) {
 
       const { lessons: _lessons, cards: _cards } = parseLessons(
         worksheetJSON,
-        newLessonGroup,
-        database
+        newLessonGroup
       );
       lessons = lessons.concat(_lessons);
       cards = cards.concat(_cards);
@@ -209,32 +203,46 @@ async function parseGroups(workbook, database) {
     }
   }
 
+  return { lessonGroups, lessons, cards, dictionary };
+}
+
+function* importLessons(workbook) {
+  yield database.unsafeResetDatabase();
+
+  debug(workbook);
+  const { lessonGroups, lessons, cards, dictionary } = parseGroups(workbook);
+
   const allRecords = [...lessonGroups, ...lessons, ...cards, ...dictionary];
   debug(allRecords);
-  await database.batch(...allRecords);
+  yield database.batch(...allRecords);
 
-  await checkWords();
+  yield checkWords();
 }
 
 const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";
 
-export function* startImport() {
-  debug(`Loading ${RNFS.MainBundlePath}/lessons.xlsx`);
+function* startImport(lessonsHash) {
+  debug(`Loading ${lessonsPath}`);
   const data = yield call(RNFS.readFile, lessonsPath, "base64");
   const workbook = yield call(XLSX.read, data);
 
-  yield call(parseGroups, workbook, database);
+  yield call(importLessons, workbook);
+  yield put(ImportActions.setLessonsHash(lessonsHash));
   debug("Done");
 }
 
-export function* importLessons() {
-  const hash = yield RNFS.hash(lessonsPath, "md5");
-  const lastHash = yield select(state => state.import.lessonHash);
-  debug(hash, lastHash);
-  if (hash !== lastHash) {
-    // yield call(startImport);
-    // yield put(ImportActions.setLessonsHash(hash));
-  }
+export function* importLessonsIfNeeded() {
+  const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
+  const lastHash = yield select(state => state.import.lessonsHash);
+
+  // if (lessonsHash !== lastHash) {
+  // yield call(startImport, lessonsHash);
+  // }
+}
+
+export function* forceImport() {
+  const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
+  yield call(startImport, lessonsHash);
 }
 
 // export default {

@@ -31,7 +31,7 @@ import {
   playerSpeedChange,
   playbackLoopMaxChange
 } from "./PlaybackSagas";
-import { startImport, importLessons } from "./ImportSagas";
+import { forceImport, importLessonsIfNeeded } from "./ImportSagas";
 
 /* ------------- API ------------- */
 
@@ -61,7 +61,7 @@ export default function* root() {
     takeLatest(PlaybackTypes.PLAYBACK_SPEED_CHANGE, playerSpeedChange),
     takeLatest(PlaybackTypes.PLAYBACK_LOOP_MAX_CHANGE, playbackLoopMaxChange),
 
-    takeLatest(ImportTypes.START_IMPORT, startImport),
-    takeLatest(ImportTypes.IMPORT_LESSONS, importLessons)
+    takeLatest(ImportTypes.FORCE_IMPORT_LESSONS, forceImport),
+    takeLatest(ImportTypes.IMPORT_LESSONS_IF_NEEDED, importLessonsIfNeeded)
   ]);
 }

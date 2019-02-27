@@ -19,6 +19,8 @@ export default (rootReducer, rootSaga) => {
   //   state => state.nav
   // );
   // middleware.push(navigationMiddleware);
+  /* ------------- Analytics Middleware ------------- */
+  // middleware.push(ScreenTracking);
 
   /* ------------- Saga Middleware ------------- */
 

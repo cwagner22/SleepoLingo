@@ -8,7 +8,7 @@ import LessonGroup from "./LessonGroup";
 import Dictionary from "./Dictionary";
 
 const adapter = new SQLiteAdapter({
-  dbName: "SleepoLingo",
+  // dbName: "SleepoLingo",
   schema: mySchema
 });
 

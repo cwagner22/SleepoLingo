@@ -37,7 +37,7 @@ const RawLessonItem = ({ lesson, cards, onPress }) => {
 };
 
 const LessonItem = withObservables([], ({ lesson }) => ({
-  lesson: lesson.observe(),
+  // lesson: lesson.observe(),
   cards: lesson.cards.observe()
 }))(RawLessonItem);
 

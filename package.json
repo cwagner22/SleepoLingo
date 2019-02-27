@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "DEBUG=* node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
     "clean:android": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
@@ -101,9 +101,9 @@
     "react-addons-test-utils": "^15.6.2",
     "react-native-debugger-open": "^0.3.11",
     "react-test-renderer": "~15.6.1",
-    "reactotron-react-native": "^2.1.7",
+    "reactotron-react-native": "^3.0.0-beta.2",
     "reactotron-redux": "^2.1.3",
-    "reactotron-redux-saga": "^4.0.1",
+    "reactotron-redux-saga": "^4.1.0",
     "snazzy": "^7.0.0",
     "standard": "10.0.3"
   },

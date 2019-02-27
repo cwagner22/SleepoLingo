@@ -12,7 +12,7 @@ const { Types, Creators } = createActions({
   lessonShowBack: null,
   loadNextCard: null,
   nextCardLoaded: ["card"],
-  downloadLesson: ["currentCards"],
+  downloadLesson: ["cards"],
   loadLesson: ["lesson"],
   setCurrentLesson: ["lessonId"],
   setCurrentCard: ["currentCardId"],

@@ -38,7 +38,7 @@ class RootContainer extends Component {
           ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef);
           }}
-          persistenceKey={navigationPersistenceKey}
+          // persistenceKey={navigationPersistenceKey}
         />
       </View>
     );

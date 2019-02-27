@@ -4,7 +4,7 @@ import { Alert } from "react-native";
 import pLimit from "p-limit";
 import Toast from "react-native-simple-toast";
 import RNFetchBlob from "rn-fetch-blob";
-import Debug from "debug";
+// import Debug from "debug";
 import { Q } from "@nozbe/watermelondb";
 import { alert } from "redux-saga-rn-alert";
 
@@ -21,7 +21,7 @@ import database from "../Models/database";
 export const THAI = "th-TH";
 export const ENGLISH = "en-US";
 const api = API.create();
-Debug.enable("app:LessonSagas");
+import Debug from "debug";
 const debug = Debug("app:LessonSagas");
 
 const limit = pLimit(5);
@@ -61,24 +61,10 @@ export function* getCurrentCard() {
   return yield database.collections.get("cards").find(currentCardId);
 }
 
-function* anotherLessonInProgress(lessonId) {
-  let res = false;
-  const currentLessonId = yield select(getCurrentLessonId);
-  if (lessonId !== currentLessonId) {
-    const currentLesson = yield database.collections
-      .get("lessons")
-      .find(currentLessonId);
-
-    res = !currentLesson.isCompleted;
-  }
-  return res;
-}
-
 const downloadSentence = (sentence, language) => {
   const path = Player.getFilePath(sentence, language);
   const url = api.ttsURL(sentence, language);
 
-  // saga progress: https://stackoverflow.com/questions/41616861/calling-yield-inside-react-redux-saga-callback
   return RNFetchBlob.config({
     fileCache: true,
     path
@@ -86,6 +72,7 @@ const downloadSentence = (sentence, language) => {
     .fetch("GET", url)
     .then(res => {
       debug("The file saved to ", res.path());
+      return res;
     });
 };
 
@@ -107,13 +94,10 @@ export function* filterSentencesNotCached(sentences, language) {
   });
 }
 
-const downloadAllSentences = (sentences, language) =>
-  Promise.map(sentences, s => limit(() => downloadSentence(s, language)));
-
-export function* downloadLesson({ currentCards }) {
+export function* downloadLesson({ cards }) {
   let sentencesOriginal = [],
     sentencesTranslation = [];
-  for (const c of currentCards) {
+  for (const c of cards) {
     sentencesOriginal.push(c.sentenceOriginal);
     sentencesTranslation.push(c.sentenceTranslation);
 
@@ -138,10 +122,18 @@ export function* downloadLesson({ currentCards }) {
   if (sentencesOriginal.length || sentencesTranslation.length) {
     try {
       Toast.show("Downloading lesson for offline use");
-      yield all([
-        call(downloadAllSentences, sentencesOriginal, ENGLISH),
-        call(downloadAllSentences, sentencesTranslation, THAI)
-      ]);
+
+      yield all(
+        sentencesOriginal.map(s =>
+          call(limit, () => downloadSentence(s, ENGLISH))
+        )
+      );
+      yield all(
+        sentencesTranslation.map(s =>
+          call(limit, () => downloadSentence(s, THAI))
+        )
+      );
+
       Toast.show("Download completed");
     } catch (error) {
       debug("Download error", error);
@@ -185,7 +177,6 @@ function* goToLesson(lesson) {
 }
 
 export function* loadLesson({ lesson }) {
-  console.log(lesson);
   // const lesson = yield database.collections.get("lessons").find(lessonId);
 
   if (lesson.isCompleted) {
@@ -207,7 +198,6 @@ export function* loadLesson({ lesson }) {
 
     yield call(processLessonAlert, res, lessonId);
   } else {
-    // const _anotherLessonInProgress = yield anotherLessonInProgress(lesson.id);
     let done = false;
     const currentLessonId = yield select(getCurrentLessonId);
     if (lesson.id !== currentLessonId && currentLessonId) {
@@ -216,8 +206,6 @@ export function* loadLesson({ lesson }) {
         .find(currentLessonId);
 
       if (!currentLesson.isCompleted) {
-        // yield put(LessonActions.anotherLessonInProgress(lesson.id));
-
         const buttons = [
           {
             text: "Start new lesson",

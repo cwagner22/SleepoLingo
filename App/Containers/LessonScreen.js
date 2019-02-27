@@ -102,7 +102,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    downloadLesson: words => dispatch(LessonActions.downloadLesson(words)),
+    downloadLesson: cards => dispatch(LessonActions.downloadLesson(cards)),
     startAnki: () => dispatch(LessonActions.startAnki())
   };
 };

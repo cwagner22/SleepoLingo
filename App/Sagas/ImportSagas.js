@@ -107,7 +107,7 @@ function parseCards(worksheet, lesson) {
   return cards;
 }
 
-function parseLesson(worksheet, lessonGroup) {
+function parseLesson(worksheet, lessonGroup, index) {
   if (!worksheet.length) return;
   debug("Parsing lesson, worksheet length: ", worksheet.length);
   const lessonNameFull = worksheet[0].Original;
@@ -131,6 +131,7 @@ function parseLesson(worksheet, lessonGroup) {
   worksheet.splice(0, note ? 2 : 1);
 
   const lesson = database.collections.get("lessons").prepareCreate(l => {
+    l._raw.id = index.toString();
     l.name = name;
     l.note = note;
     l.lessonGroup.set(lessonGroup);
@@ -144,8 +145,11 @@ function parseLessons(worksheet, lessonGroup) {
   let lessons = [],
     cards = [];
   let canContinue = true;
+  let index = 0;
   while (canContinue) {
-    const { lesson, cards: _cards } = parseLesson(worksheet, lessonGroup) || {};
+    const { lesson, cards: _cards } =
+      parseLesson(worksheet, lessonGroup, index) || {};
+    index++;
     if (lesson && _cards.length) {
       lessons = lessons.concat(lesson);
       cards = cards.concat(_cards);

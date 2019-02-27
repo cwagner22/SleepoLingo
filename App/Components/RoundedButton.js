@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Text } from "react-native";
-import { Button } from "native-base";
+import { Button } from "react-native-elements";
 
 import styles from "./Styles/RoundedButtonStyles";
 import ExamplesRegistry from "../Services/ExamplesRegistry";
@@ -35,9 +35,12 @@ export default class RoundedButton extends React.Component {
 
   render() {
     return (
-      <Button style={styles.button} onPress={this.props.onPress} block>
-        <Text style={styles.buttonText}>{this.getText()}</Text>
-      </Button>
+      <Button
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonText}
+        onPress={this.props.onPress}
+        title={this.getText()}
+      />
     );
   }
 }

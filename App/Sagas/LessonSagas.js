@@ -94,6 +94,15 @@ export function* filterSentencesNotCached(sentences, language) {
   });
 }
 
+const createCacheFolderIfNeeded = () => {
+  var cachePath = RNFS.DocumentDirectoryPath + "/cache";
+  return RNFS.exists(cachePath).then(exists => {
+    if (!exists) {
+      return RNFS.mkdir(cachePath, { NSURLIsExcludedFromBackupKey: true });
+    }
+  });
+};
+
 export function* downloadLesson({ cards }) {
   let sentencesOriginal = [],
     sentencesTranslation = [];
@@ -122,6 +131,7 @@ export function* downloadLesson({ cards }) {
   if (sentencesOriginal.length || sentencesTranslation.length) {
     try {
       Toast.show("Downloading lesson for offline use");
+      // yield call(createCacheFolderIfNeeded);
 
       yield all(
         sentencesOriginal.map(s =>

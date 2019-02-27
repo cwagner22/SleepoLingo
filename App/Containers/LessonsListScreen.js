@@ -44,33 +44,6 @@ const LessonItem = withObservables([], ({ lesson }) => ({
 class LessonsListScreen extends Component {
   state = {};
 
-  constructor(props) {
-    super(props);
-
-    var cachePath = RNFS.DocumentDirectoryPath + "/cache";
-
-    // if (__DEV__) {
-    //   // Empty cache
-    //   RNFS.exists(cachePath).then((exists) => {
-    //     var pomise = exists ? RNFS.unlink(cachePath) : Promise.resolve()
-    //     pomise.then(this.createCache)
-    //   })
-    // } else {
-    //   this.createCache()
-    // }
-
-    RNFS.exists(cachePath).then(exists => {
-      if (!exists) {
-        this.createCache();
-      }
-    });
-  }
-
-  createCache() {
-    var cachePath = RNFS.DocumentDirectoryPath + "/cache";
-    RNFS.mkdir(cachePath, { NSURLIsExcludedFromBackupKey: true });
-  }
-
   renderHeader(data, sectionID) {
     return (
       <View>

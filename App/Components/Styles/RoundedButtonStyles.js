@@ -7,14 +7,10 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
-    backgroundColor: Colors.cheeryPink,
-    justifyContent: "center"
+    backgroundColor: Colors.cheeryPink
   },
   buttonText: {
-    color: Colors.snow,
-    textAlign: "center",
     fontWeight: "bold",
-    fontSize: Fonts.size.medium,
-    marginVertical: Metrics.baseMargin
+    fontSize: Fonts.size.medium
   }
 });

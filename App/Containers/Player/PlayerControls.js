@@ -21,8 +21,7 @@ class PlayerControls extends React.Component {
 
   scheduleTimer() {
     BackgroundTimer.setTimeout(() => {
-      // Force component to stop right now. Pop() will be called once the app is active.
-      this.componentWillUnmount();
+      // this.componentWillUnmount();
       this.props.navigation.back();
     }, 60 * 60 * 1000);
   }
@@ -100,7 +99,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(
         PlaybackActions.playbackStart(sentence, language, volume, speed)
       ),
-    loadPlayingState: () => dispatch(LessonActions.loadPlayingState()),
     playerStart: () => dispatch(PlaybackActions.playerStart()),
     playerNext: () => dispatch(PlaybackActions.playerNext()),
     playerPrev: () => dispatch(PlaybackActions.playerPrev()),

@@ -24,7 +24,8 @@ const { Types, Creators } = createActions({
   playbackSetDuration: ["duration"],
   playbackSetElapsedTime: ["elapsedTime"],
   playbackLoopMaxChange: ["lessonLoopMax"],
-  playbackSetControlOS: ["controlOS"]
+  playbackSetControlOS: ["controlOS"],
+  playbackSetCardsCount: ["cardsCount"]
 });
 
 export const PlaybackTypes = Types;
@@ -120,6 +121,10 @@ export const setControlOS = (state, { controlOS }) => {
   return state.merge({ controlOS });
 };
 
+export const setCardsCount = (state, { cardsCount }) => {
+  return state.merge({ cardsCount });
+};
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -136,5 +141,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLAYBACK_SET_ELAPSED_TIME]: setElapsedTime,
   [Types.PLAYBACK_SET_DURATION]: setDuration,
   [Types.PLAYBACK_LOOP_MAX_CHANGE]: playbackLoopMaxChange,
-  [Types.PLAYBACK_SET_CONTROL_OS]: setControlOS
+  [Types.PLAYBACK_SET_CONTROL_OS]: setControlOS,
+  [Types.PLAYBACK_SET_CARDS_COUNT]: setCardsCount
 });

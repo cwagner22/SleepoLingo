@@ -200,7 +200,7 @@ export function* loadCard(next: true) {
   currentCardId = currentCards[currentIndex].id;
 }
 
-export function* loadPlayingState(action) {
+function* loadPlayingState(action) {
   if (!playerShouldContinue()) {
     yield put(PlaybackActions.playerStop());
   }
@@ -295,6 +295,7 @@ function* playerLoopProcess() {
 
 export function* start() {
   const playbackState = yield select(getPlaybackState);
+  const nbCards = yield call(getCurrentCardsCount);
   lessonLoopMax = playbackState.lessonLoopMax;
   // playing = true
   lessonLoopCounter = 0;
@@ -475,8 +476,7 @@ function getTimeoutsDurationTotal(index, nbCards, full: boolean) {
 }
 
 function* getElapsedTime() {
-  const nbCards = yield call(getCurrentCardsCount);
-
+  const playbackState = yield select(getPlaybackState);
   const filesDuration = yield call(
     durationOfFilesTotal,
     currentIndex,
@@ -531,5 +531,7 @@ function* calculateProgress() {
 export function* startNight() {
   yield put(LessonActions.startLesson());
   yield put(LessonActions.loadNextCard());
+  const nbCards = yield call(getCurrentCardsCount);
+  yield put(PlaybackActions.playbackSetCardsCount(nbCards));
   yield put(PlaybackActions.playerStart());
 }

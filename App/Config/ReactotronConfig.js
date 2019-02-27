@@ -10,7 +10,8 @@ if (Config.useReactotron) {
     .useReactNative()
     .use(
       reduxPlugin({
-        onRestore: Immutable
+        onRestore: Immutable,
+        except: ["LOAD_LESSON", "DOWNLOAD_LESSON"]
       })
     )
     .use(sagaPlugin())

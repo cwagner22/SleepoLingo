@@ -12,18 +12,6 @@ import styles from "../Styles/PlayerProgressStyle";
 import { Colors, Metrics } from "../../Themes";
 
 class PlayerProgress extends React.Component {
-  durationStr(ms) {
-    var hours = Math.floor(ms / 1000 / 3600);
-    var mins = Math.round(ms / 1000 / 60 - hours * 60);
-    var str = "";
-    if (hours) {
-      str += hours + "h ";
-    }
-
-    str += mins + "mins";
-    return str;
-  }
-
   render() {
     const {
       cardsCount,
@@ -46,10 +34,9 @@ class PlayerProgress extends React.Component {
             {Time.formattedTime(elapsedTime)}
           </Text>
           <View style={styles.textContainer}>
-            <Text
-              style={styles.text}
-            >{`${nbLeft} cards remaining (${lessonLoopCounter +
-              1}/${lessonLoopMax})`}</Text>
+            <Text style={styles.text}>
+              {nbLeft} cards remaining ({lessonLoopCounter + 1}/{lessonLoopMax})
+            </Text>
           </View>
           <Text style={styles.timeLeft}>
             {Time.formattedTime(duration - elapsedTime)}

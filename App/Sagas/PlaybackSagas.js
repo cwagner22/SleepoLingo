@@ -477,15 +477,16 @@ function getTimeoutsDurationTotal(index, nbCards, full: boolean) {
 
 function* getElapsedTime() {
   const playbackState = yield select(getPlaybackState);
+  const cardsCount = playbackState.cardsCount;
   const filesDuration = yield call(
     durationOfFilesTotal,
     currentIndex,
-    nbCards,
+    cardsCount,
     false
   );
   const timeoutsDuration = getTimeoutsDurationTotal(
     currentIndex,
-    nbCards,
+    cardsCount,
     false
   );
 

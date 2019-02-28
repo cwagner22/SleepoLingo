@@ -5,6 +5,7 @@ import ReduxPersist from "../Config/ReduxPersist";
 import Config from "../Config/DebugConfig";
 import createSagaMiddleware from "redux-saga";
 // import { createReactNavigationReduxMiddleware } from "react-navigation-redux-helpers";
+import Reactotron from "reactotron-react-native";
 
 // creates the store
 export default (rootReducer, rootSaga) => {
@@ -19,14 +20,16 @@ export default (rootReducer, rootSaga) => {
   //   state => state.nav
   // );
   // middleware.push(navigationMiddleware);
+
   /* ------------- Analytics Middleware ------------- */
   // middleware.push(ScreenTracking);
 
   /* ------------- Saga Middleware ------------- */
 
-  const sagaMonitor = Config.useReactotron
-    ? console.tron.createSagaMonitor()
-    : null;
+  // const sagaMonitor = Config.useReactotron
+  //   ? Reactotron.createSagaMonitor()
+  //   : null;
+  const sagaMonitor = null;
   const sagaMiddleware = createSagaMiddleware({ sagaMonitor });
   middleware.push(sagaMiddleware);
 
@@ -34,19 +37,15 @@ export default (rootReducer, rootSaga) => {
 
   enhancers.push(applyMiddleware(...middleware));
 
-  // if Reactotron is enabled, we'll create the store through Reactotron
-  const createAppropriateStore = Config.useReactotron
-    ? console.tron.createStore
-    : createStore;
+  // if (Config.useReactotron) {
+  //   enhancers.push(Reactotron.createEnhancer());
+  // }
 
   // Redux DevTools support
   const composeEnhancer =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-  const store = createAppropriateStore(
-    rootReducer,
-    composeEnhancer(...enhancers)
-  );
+  const store = createStore(rootReducer, composeEnhancer(...enhancers));
 
   // configure persistStore and check reducer version number
   // if (ReduxPersist.active) {

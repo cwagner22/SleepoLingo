@@ -4,17 +4,19 @@ import Reactotron from "reactotron-react-native";
 import { reactotronRedux as reduxPlugin } from "reactotron-redux";
 import sagaPlugin from "reactotron-redux-saga";
 
+console.disableYellowBox = true;
+
 if (Config.useReactotron) {
   // https://github.com/infinitered/reactotron for more options!
   Reactotron.configure({ name: "SleepoLingo" })
     .useReactNative()
-    .use(
-      reduxPlugin({
-        onRestore: Immutable,
-        except: ["LOAD_LESSON", "DOWNLOAD_LESSON"]
-      })
-    )
-    .use(sagaPlugin())
+    // .use(
+    //   reduxPlugin({
+    //     onRestore: Immutable,
+    //     except: ["LOAD_LESSON", "DOWNLOAD_LESSON"]
+    //   })
+    // )
+    // .use(sagaPlugin())
     .connect();
 
   // Let's clear Reactotron on every time we load the app

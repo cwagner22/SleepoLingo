@@ -17,7 +17,8 @@ const { Types, Creators } = createActions({
   setCurrentLesson: ["lessonId"],
   setCurrentCard: ["currentCardId"],
   resetDates: null,
-  lessonUpdateCompleted: ["isCompleted"]
+  lessonUpdateCompleted: ["isCompleted"],
+  setLessonProgress: ["lessonId"]
 });
 
 export const LessonTypes = Types;

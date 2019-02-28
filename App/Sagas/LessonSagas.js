@@ -4,7 +4,6 @@ import { Alert } from "react-native";
 import pLimit from "p-limit";
 import Toast from "react-native-simple-toast";
 import RNFetchBlob from "rn-fetch-blob";
-// import Debug from "debug";
 import { Q } from "@nozbe/watermelondb";
 import { alert } from "redux-saga-rn-alert";
 
@@ -30,9 +29,22 @@ const isCompleted = (state, lessonId) =>
   !!state.lesson.completedLessons[lessonId];
 
 const getCurrentLessonId = state => state.lesson.currentLessonId;
+// export function* getCurrentLesson() {
+//   const currentLessonId = yield select(getCurrentLessonId);
+//   return yield database.collections.get("lessons").find(currentLessonId);
+// }
+
+function* getCurrentCard() {
+  const currentCardId = yield select(getCurrentCardId);
+  return yield database.collections.get("cards").find(currentCardId);
+}
+
 export function* getCurrentLesson() {
-  const currentLessonId = yield select(getCurrentLessonId);
-  return yield database.collections.get("lessons").find(currentLessonId);
+  const res = yield database.collections
+    .get("lessons")
+    .query(Q.where("is_in_progress", true))
+    .fetch();
+  return res.length ? res[0] : null;
 }
 
 function* getCurrentCardsQuery() {
@@ -173,6 +185,7 @@ function* processLessonAlert(res, lessonId) {
 
 function* goToLesson(lesson) {
   yield put(LessonActions.setCurrentLesson(lesson.id));
+  yield call(setLessonProgress, lesson);
   NavigationService.navigate("Lesson", { lesson });
 }
 
@@ -199,13 +212,10 @@ export function* loadLesson({ lesson }) {
     yield call(processLessonAlert, res, lessonId);
   } else {
     let done = false;
-    const currentLessonId = yield select(getCurrentLessonId);
-    if (lesson.id !== currentLessonId && currentLessonId) {
-      const currentLesson = yield database.collections
-        .get("lessons")
-        .find(currentLessonId);
+    if (!lesson.isInProgress) {
+      const currentLesson = yield call(getCurrentLesson);
 
-      if (!currentLesson.isCompleted) {
+      if (currentLesson && !currentLesson.isCompleted) {
         const buttons = [
           {
             text: "Start new lesson",
@@ -249,16 +259,6 @@ function sortCards(cards, allowAlmost = false) {
   }
 }
 
-function* getCurrentLesson() {
-  const currentLessonId = yield select(getCurrentLessonId);
-  return yield database.collections.get("lessons").find(currentLessonId);
-}
-
-function* getCurrentCard() {
-  const currentCardId = yield select(getCurrentCardId);
-  return yield database.collections.get("cards").find(currentCardId);
-}
-
 export function* loadNextCard() {
   currentLesson = yield call(getCurrentLesson);
 
@@ -287,4 +287,26 @@ export function* ankiDifficulty(difficulty) {
   yield currentCard.ankiDifficulty(difficulty);
 
   yield put(LessonActions.loadNextCard());
+}
+
+export function* setLessonProgress(lesson) {
+  if (!lesson.isInProgress) {
+    let records = [];
+    records.push(
+      lesson.prepareUpdate(l => {
+        l.isInProgress = true;
+      })
+    );
+
+    const lastLesson = yield call(getCurrentLesson);
+    if (lastLesson) {
+      records.push(
+        lastLesson.prepareUpdate(l => {
+          l.isInProgress = false;
+        })
+      );
+    }
+
+    yield database.batch(...records);
+  }
 }

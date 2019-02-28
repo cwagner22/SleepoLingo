@@ -7,6 +7,7 @@ export default class Lesson extends Model {
   @field("note") note;
   @field("name") name;
   @field("is_completed") isCompleted;
+  @field("is_in_progress") isInProgress;
 
   static associations = {
     posts: { type: "belongs_to", key: "lesson_group_id" },

@@ -44,6 +44,7 @@ export const mySchema = appSchema({
         { name: "name", type: "string" },
         { name: "note", type: "string" },
         { name: "is_completed", type: "boolean" },
+        { name: "is_in_progress", type: "boolean" },
         { name: "lesson_group_id", type: "string", isIndexed: true }
       ]
     }),

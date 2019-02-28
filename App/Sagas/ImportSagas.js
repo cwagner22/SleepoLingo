@@ -194,7 +194,9 @@ function* importLessons(workbook) {
   debug(allRecords);
   yield database.batch(...allRecords);
 
-  yield checkWords();
+  if (__DEV__) {
+    yield checkWords();
+  }
 }
 
 const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";

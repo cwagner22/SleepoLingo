@@ -6,6 +6,9 @@ import sagaPlugin from "reactotron-redux-saga";
 
 console.disableYellowBox = true;
 
+// To show network call in devtools
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
 if (Config.useReactotron) {
   // https://github.com/infinitered/reactotron for more options!
   Reactotron.configure({ name: "SleepoLingo" })

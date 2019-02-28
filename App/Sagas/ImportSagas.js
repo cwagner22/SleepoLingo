@@ -53,30 +53,24 @@ function parseDictionary(worksheet, database) {
 const getSentence = string => string.split("\n")[0];
 const getFullSentence = string => string.split("\n")[1];
 
-const createCard = (
-  lesson,
-  id,
-  index,
-  note,
-  sentenceOriginal,
-  sentenceTranslation,
-  sentenceTransliteration,
-  fullSentenceOriginal,
-  fullSentenceTranslation,
-  fullSentenceTransliteration
-) =>
+const createCard = (properties, lesson, index, id) =>
   database.collections.get("cards").prepareCreate(card => {
+    Object.assign(card, properties, {
+      index
+    });
     card._raw.id = id.toString();
-    card.index = index;
-    card.note = note;
     card.lesson.set(lesson);
-    card.sentenceOriginal = sentenceOriginal;
-    card.sentenceTranslation = sentenceTranslation;
-    card.sentenceTransliteration = sentenceTransliteration;
-    card.fullSentenceOriginal = fullSentenceOriginal;
-    card.fullSentenceTranslation = fullSentenceTranslation;
-    card.fullSentenceTransliteration = fullSentenceTransliteration;
   });
+
+const getCardPropertiesFromRow = row => ({
+  note: row.Note,
+  sentenceOriginal: getSentence(row.Original),
+  sentenceTranslation: getSentence(row.Translation),
+  sentenceTransliteration: getSentence(row.Transliteration),
+  fullSentenceOriginal: getFullSentence(row.Original),
+  fullSentenceTranslation: getFullSentence(row.Translation),
+  fullSentenceTransliteration: getFullSentence(row.Transliteration)
+});
 
 function parseCards(worksheet, lesson) {
   debug("Parsing cards, worksheet length: ", worksheet.length);
@@ -88,16 +82,10 @@ function parseCards(worksheet, lesson) {
     }
 
     const newCard = createCard(
+      getCardPropertiesFromRow(row),
       lesson,
-      row.Id,
       i,
-      row.Note,
-      getSentence(row.Original),
-      getSentence(row.Translation),
-      getSentence(row.Transliteration),
-      getFullSentence(row.Original),
-      getFullSentence(row.Translation),
-      getFullSentence(row.Transliteration)
+      row.Id
     );
     cards.push(newCard);
   }

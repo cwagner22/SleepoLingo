@@ -1,5 +1,5 @@
 import { takeLatest, all, spawn } from "redux-saga/effects";
-import { watchAlertChannel } from "redux-saga-rn-alert";
+// import { watchAlertChannel } from "redux-saga-rn-alert";
 
 /* ------------- Types ------------- */
 
@@ -62,8 +62,8 @@ export default function* root() {
     takeLatest(PlaybackTypes.PLAYBACK_LOOP_MAX_CHANGE, playbackLoopMaxChange),
 
     takeLatest(ImportTypes.FORCE_IMPORT_LESSONS, forceImport),
-    takeLatest(ImportTypes.IMPORT_LESSONS_IF_NEEDED, importLessonsIfNeeded),
+    takeLatest(ImportTypes.IMPORT_LESSONS_IF_NEEDED, importLessonsIfNeeded)
 
-    spawn(watchAlertChannel)
+    // spawn(watchAlertChannel)
   ]);
 }

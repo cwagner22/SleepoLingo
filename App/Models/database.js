@@ -7,7 +7,9 @@ import Lesson from "./Lesson";
 import LessonGroup from "./LessonGroup";
 import Dictionary from "./Dictionary";
 
-const adapter = new SQLiteAdapter({
+import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
+
+const adapter = new LokiJSAdapter({
   dbName: "SleepoLingo",
   schema: mySchema
 });

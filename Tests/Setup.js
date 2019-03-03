@@ -1,23 +1,61 @@
-jest
-.mock('react-native-device-info', () => {
-  return { isTablet: jest.fn(() => { return false }) }
-})
-.mock('react-native-i18n', () => {
-  const english = require('../App/I18n/languages/english.json')
-  const keys = require('ramda')
-  const replace = require('ramda')
-  const forEach = require('ramda')
+import { configure } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+// const path = require("path");
+import mockFs from "fs";
 
+configure({ adapter: new Adapter() });
+
+// Mock your external modules here if needed
+// jest
+// .mock('react-native-device-info', () => {
+//   return { isTablet: jest.fn(() => { return false }) }
+// })
+jest.mock("react-native-fs", () => {
   return {
-    t: (key, replacements) => {
-      let value = english[key]
-      if (!value) return key
-      if (!replacements) return value
-
-      forEach((r) => {
-        value = replace(`{{${r}}}`, replacements[r], value)
-      }, keys(replacements))
-      return value
-    }
-  }
-})
+    mkdir: jest.fn(),
+    moveFile: jest.fn(),
+    copyFile: jest.fn(),
+    pathForBundle: jest.fn(),
+    pathForGroup: jest.fn(),
+    getFSInfo: jest.fn(),
+    getAllExternalFilesDirs: jest.fn(),
+    unlink: jest.fn(),
+    exists: jest.fn(),
+    stopDownload: jest.fn(),
+    resumeDownload: jest.fn(),
+    isResumable: jest.fn(),
+    stopUpload: jest.fn(),
+    completeHandlerIOS: jest.fn(),
+    readDir: jest.fn(),
+    readDirAssets: jest.fn(),
+    existsAssets: jest.fn(),
+    readdir: jest.fn(),
+    setReadable: jest.fn(),
+    stat: jest.fn(),
+    readFile: jest.fn(filePath => {
+      return mockFs.readFileSync(filePath);
+    }),
+    read: jest.fn(),
+    readFileAssets: jest.fn(),
+    hash: jest.fn(() => {
+      return "aas";
+    }),
+    copyFileAssets: jest.fn(),
+    copyFileAssetsIOS: jest.fn(),
+    copyAssetsVideoIOS: jest.fn(),
+    writeFile: jest.fn(),
+    appendFile: jest.fn(),
+    write: jest.fn(),
+    downloadFile: jest.fn(),
+    uploadFiles: jest.fn(),
+    touch: jest.fn(),
+    MainBundlePath: jest.fn(),
+    CachesDirectoryPath: jest.fn(),
+    DocumentDirectoryPath: jest.fn(),
+    ExternalDirectoryPath: jest.fn(),
+    ExternalStorageDirectoryPath: jest.fn(),
+    TemporaryDirectoryPath: jest.fn(),
+    LibraryDirectoryPath: jest.fn(),
+    PicturesDirectoryPath: jest.fn()
+  };
+});

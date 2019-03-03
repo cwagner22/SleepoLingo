@@ -43,6 +43,12 @@ export const INITIAL_STATE = Immutable({
   translationLoopCounter: null
 });
 
+/* ------------- Selectors ------------- */
+
+export const LessonSelectors = {
+  // selectAvatar: state => state.lesson.avatar
+};
+
 /* ------------- Reducers ------------- */
 
 export const setCurrentLesson = (state, { lessonId }) => {

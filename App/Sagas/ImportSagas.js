@@ -4,6 +4,8 @@ import RNFS from "react-native-fs";
 import ImportActions from "../Redux/ImportRedux";
 import database from "../Models/database";
 import Debug from "debug";
+import { Q } from "@nozbe/watermelondb";
+
 Debug.enable("app:ImportSagas");
 const debug = Debug("app:ImportSagas");
 
@@ -184,14 +186,22 @@ function parseGroups(workbook) {
   return { lessonGroups, lessons, cards, dictionary };
 }
 
+function* backupUserData() {
+  const newLessonGroup = database.collections
+    .get("lessons")
+    .query(Q.where("is_verified", true));
+}
+
 function* importLessons(workbook) {
+  yield call(backupUserData);
   yield database.unsafeResetDatabase();
 
-  debug(workbook);
+  debug("workbook:", workbook);
   const { lessonGroups, lessons, cards, dictionary } = parseGroups(workbook);
 
   const allRecords = [...lessonGroups, ...lessons, ...cards, ...dictionary];
-  debug(allRecords);
+
+  debug("records:", allRecords);
   yield database.batch(...allRecords);
 
   if (__DEV__) {
@@ -199,11 +209,15 @@ function* importLessons(workbook) {
   }
 }
 
-const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";
+// const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";
+// On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+const lessonsPath = "lessons.xlsx";
 
 function* startImport(lessonsHash) {
+  console.log("lessonsPath:", lessonsPath);
   debug(`Loading ${lessonsPath}`);
   const data = yield call(RNFS.readFile, lessonsPath, "base64");
+  console.log("data:", data);
   const workbook = yield call(XLSX.read, data);
 
   yield call(importLessons, workbook);

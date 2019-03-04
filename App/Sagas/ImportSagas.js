@@ -189,7 +189,7 @@ function parseGroups(workbook) {
 function* backupUserData() {
   const newLessonGroup = database.collections
     .get("lessons")
-    .query(Q.where("is_verified", true));
+    .query(Q.where("is_completed", true));
 }
 
 function* importLessons(workbook) {

@@ -10,12 +10,17 @@ import fs from "fs";
 // import { reducer } from "../../App/Redux/ImportRedux";
 
 beforeAll(() => {
-  const a = fs.readFileSync("./App/lessons.xlsx");
-  console.log("a:", a);
+  // const a = fs.readFileSync("./App/lessons.xlsx");
+  // https://github.com/tschaub/mock-fs/issues/234
+  console.log("1:");
 
   mock({
-    "lessons.xlsx": "a"
+    "lessons.xlsx": fs.readFileSync("./App/lessons.xlsx")
   });
+});
+afterAll(() => {
+  mock.restore();
+  // console.log("content:", "a");
 });
 
 // import { reducers } from "../../App/Redux";
@@ -27,8 +32,8 @@ test("watches for the right action", () => {
   // const button = rootInstance.findByType("button");
   // button.props.onClick();
   // expect(button.props.children).toBe("PROCEED TO CHECKOUT");
-  var content = fs.readFileSync("lessons.xlsx");
-  console.log("content:", content);
+  // var content = fs.readFileSync("lessons.xlsx");
+  console.log("content:", "a");
 
   return (
     expectSaga(importLessonsIfNeeded)
@@ -44,9 +49,12 @@ test("watches for the right action", () => {
       // .withReducer(reducer)
       // Assert that the `put` will eventually happen.
       // .put({
-      //   type: "RECEIVE_USER",
-      //   payload: { id: 42, name: "Tucker" }
+      //   type: "SET_LESSONS_HASH",
+      //   payload: { lessonsHash: "aas" }
       // })
+      // Update lessons hash
+      .put(ImportActions.setLessonsHash("aas"))
+      //
 
       // Dispatch any actions that the saga will `take`.
       .dispatch(ImportActions.importLessonsIfNeeded())

@@ -187,22 +187,73 @@ function parseGroups(workbook) {
 }
 
 function* backupUserData() {
-  const newLessonGroup = database.collections
+  const oldLessons = yield database.collections
     .get("lessons")
-    .query(Q.where("is_completed", true));
+    .query()
+    .fetch();
+  return oldLessons;
+
+  let res = [];
+  const lessonsData = yield database.collections
+    .get("lessons")
+    .query(Q.where("is_completed", true))
+    .fetch();
+  // res.push(
+  //   ...lessonsData.map(l =>
+  //     l.prepareUpdate(l => {
+  //       l.isCompleted = true;
+  //     })
+  //   )
+  // );
+  if (lessonsData.length) {
+    res.push(
+      lessonsData[0].prepareUpdate(l => {
+        l.isCompleted = true;
+      })
+    );
+  }
+  console.log("res:", res);
+
+  // const cardsData = yield database.collections
+  //   .get("cards")
+  //   .query(Q.where("show_at", Q.notEq(null)))
+  //   .fetch();
+
+  // if (lessonsData.length) res.push(...lessonsData);
+  // if (cardsData.length) res.push(...cardsData);
+  return res;
+}
+
+function* restoreUserData(data) {
+  // let records = [];
+  // data.forEach(d => {
+  //   records.push();
+  // });
+  // if (data.length) yield database.batch(...data);
+  if (data.length) {
+    yield database.batch(
+      data.map(oldLesson => {
+        return oldLesson.prepareUpdate(l => {
+          l.isCompleted = l.isCompleted;
+        });
+      })
+    );
+  }
 }
 
 function* importLessons(workbook) {
-  yield call(backupUserData);
+  const userData = yield call(backupUserData);
   yield database.unsafeResetDatabase();
 
-  debug("workbook:", workbook);
+  // debug("workbook:", workbook);
   const { lessonGroups, lessons, cards, dictionary } = parseGroups(workbook);
 
   const allRecords = [...lessonGroups, ...lessons, ...cards, ...dictionary];
 
-  debug("records:", allRecords);
+  // debug("records:", allRecords);
   yield database.batch(...allRecords);
+
+  yield call(restoreUserData, userData);
 
   if (__DEV__) {
     yield checkWords();
@@ -211,7 +262,7 @@ function* importLessons(workbook) {
 
 // const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";
 // On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-const lessonsPath = "lessons.xlsx";
+const lessonsPath = "lessons.test.xlsx";
 
 function* startImport(lessonsHash) {
   console.log("lessonsPath:", lessonsPath);

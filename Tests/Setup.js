@@ -44,7 +44,9 @@ jest.mock("react-native-fs", () => {
     // read: jest.fn(),
     // readFileAssets: jest.fn(),
     hash: jest.fn(() => {
-      return "aas";
+      return Math.random()
+        .toString(36)
+        .substr(2, 5);
     })
     // copyFileAssets: jest.fn(),
     // copyFileAssetsIOS: jest.fn(),

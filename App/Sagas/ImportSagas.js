@@ -232,7 +232,7 @@ function* restoreUserData(data) {
   // if (data.length) yield database.batch(...data);
   if (data.length) {
     yield database.batch(
-      data.map(oldLesson => {
+      ...data.map(oldLesson => {
         return oldLesson.prepareUpdate(l => {
           l.isCompleted = l.isCompleted;
         });
@@ -268,7 +268,6 @@ function* startImport(lessonsHash) {
   console.log("lessonsPath:", lessonsPath);
   debug(`Loading ${lessonsPath}`);
   const data = yield call(RNFS.readFile, lessonsPath, "base64");
-  console.log("data:", data);
   const workbook = yield call(XLSX.read, data);
 
   yield call(importLessons, workbook);

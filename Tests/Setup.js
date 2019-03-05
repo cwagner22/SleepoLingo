@@ -16,6 +16,7 @@ configure({ adapter: new Adapter() });
 // mock({
 //   "lessons.xlsx": "a"
 // });
+
 jest.mock("react-native-fs", () => {
   return {
     // mkdir: jest.fn(),

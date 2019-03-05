@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "DEBUG=* node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
     "clean:android": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
@@ -83,11 +83,10 @@
     "xlsx": "^0.14.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "babel-eslint": "8.0.0",
-    "babel-jest": "^24.1.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react-native": "^4.0.1",
+    "babel-plugin-rewire": "^1.2.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.10.0",
     "husky": "^0.14.3",
@@ -98,7 +97,7 @@
     "jest": "^24.1.0",
     "lodash.clonedeep": "^4.5.0",
     "lokijs": "^1.5.6",
-    "metro-react-native-babel-preset": "^0.52.0",
+    "metro-react-native-babel-preset": "^0.53.0",
     "mock-fs": "^4.8.0",
     "mockery": "^2.1.0",
     "react-addons-test-utils": "^15.6.2",
@@ -110,7 +109,6 @@
     "reactotron-redux-saga": "^4.1.0",
     "redux-saga-test-plan": "^4.0.0-beta.2",
     "snazzy": "^7.0.0",
-    "source-map-support": "^0.5.10",
     "standard": "10.0.3"
   },
   "jest": {

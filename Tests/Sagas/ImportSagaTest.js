@@ -1,6 +1,10 @@
 import { select, put } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
-import { importLessonsIfNeeded } from "../../App/Sagas/ImportSagas";
+import {
+  importLessonsIfNeeded,
+  __test
+  // __RewireAPI__ as ImportSagasRequireAPI
+} from "../../App/Sagas/ImportSagas";
 import ImportActions, {
   reducer,
   ImportTypes
@@ -41,9 +45,6 @@ test("generates the database properly", async () => {
       // .withReducer(reducer)
 
       // Assert that lessons hash updated
-      // .call(restoreUserData)
-
-      // Assert that lessons hash updated
       .put.actionType(ImportTypes.SET_LESSONS_HASH)
 
       // Dispatch any actions that the saga will `take`.
@@ -61,17 +62,53 @@ test("generates the database properly", async () => {
   );
 });
 
+// const backupUserData = ImportSagasRequireAPI.__get__("backupUserData");
+
 test("saves and restores user data", async () => {
+  // Now that the database has been generated with seed data,
+  // simulate user data modifications
   const lesson = await database.collections
     .get("lessons")
     .query()
     .fetch();
-  // Set the first lesson as completed
+
   await database.action(async () => {
+    // Set the first lesson as completed
     await lesson[0].update(l => {
       l.isCompleted = true;
     });
   });
+
+  // jest.doMock("backupUserData", () => {
+  //   let data = backupUserData();
+  //   console.log("data:", data);
+  //   return data;
+  // });
+
+  // jest.mock("../../App/Sagas/ImportSagas", () => ({
+  //   ...jest.requireActual("../../App/Sagas/ImportSagas"),
+  //   backupUserData: () => {
+  //     // let data = backupUserData();
+  //     console.log("data:", data);
+  //     // return data;
+  //   }
+  // }));
+
+  // ImportSagasRequireAPI.__Rewire__("backupUserData", () => {
+  //   // let data = backupUserData();
+  //   // let data = ImportSagasRequireAPI.__get__("backupUserData")();
+  //   // console.log("data:", data);
+  //   // return data;
+  // });
+
+  // rewire$backupUserData(() => {
+  //   console.log(";aaa");
+
+  //   // let data = backupUserData();
+  //   // let data = ImportSagasRequireAPI.__get__("backupUserData")();
+  //   // console.log("data:", data);
+  //   // return data;
+  // });
 
   return expectSaga(importLessonsIfNeeded)
     .withReducer(
@@ -79,6 +116,8 @@ test("saves and restores user data", async () => {
         import: reducer
       })
     )
+    .call(__test.backupUserData)
+    .call.fn(__test.restoreUserData)
     .dispatch(ImportActions.importLessonsIfNeeded())
     .run()
     .then(async result => {
@@ -90,6 +129,37 @@ test("saves and restores user data", async () => {
       expect(lessons.length).toEqual(1);
     });
 });
+
+// test("handles deleted data", async () => {
+//   const cards = await database.collections
+//     .get("cards")
+//     .query()
+//     .fetch();
+
+//   await database.action(async () => {
+//     // Delete one card
+//     await cards[0].destroyPermanently();
+//   });
+
+//   await ImportSagasRequireAPI.__Rewire__.
+
+//   // return expectSaga(importLessonsIfNeeded)
+//   //   .withReducer(
+//   //     combineReducers({
+//   //       import: reducer
+//   //     })
+//   //   )
+//   //   .dispatch(ImportActions.importLessonsIfNeeded())
+//   //   .run()
+//   //   .then(async result => {
+//   //     // Check that the first lesson is completed
+//   //     const lessons = await database.collections
+//   //       .get("lessons")
+//   //       .query(Q.where("is_completed", true))
+//   //       .fetch();
+//   //     expect(lessons.length).toEqual(1);
+//   //   });
+// });
 
 // test('can be used with snapshot testing', () => {
 //   return expectSaga(saga, 42)

@@ -187,57 +187,25 @@ function parseGroups(workbook) {
 }
 
 function* backupUserData() {
-  const oldLessons = yield database.collections
-    .get("lessons")
-    .query()
-    .fetch();
-  return oldLessons;
-
   let res = [];
-  const lessonsData = yield database.collections
+  const modifiedLessons = yield database.collections
     .get("lessons")
     .query(Q.where("is_completed", true))
     .fetch();
-  // res.push(
-  //   ...lessonsData.map(l =>
-  //     l.prepareUpdate(l => {
-  //       l.isCompleted = true;
-  //     })
-  //   )
-  // );
-  if (lessonsData.length) {
-    res.push(
-      lessonsData[0].prepareUpdate(l => {
-        l.isCompleted = true;
-      })
-    );
-  }
-  console.log("res:", res);
 
-  // const cardsData = yield database.collections
-  //   .get("cards")
-  //   .query(Q.where("show_at", Q.notEq(null)))
-  //   .fetch();
+  const modifiedCards = yield database.collections
+    .get("cards")
+    .query(Q.where("show_at", Q.notEq(null)))
+    .fetch();
 
-  // if (lessonsData.length) res.push(...lessonsData);
-  // if (cardsData.length) res.push(...cardsData);
+  if (modifiedLessons.length) res.push(...modifiedLessons);
+  if (modifiedCards.length) res.push(...modifiedCards);
   return res;
 }
 
 function* restoreUserData(data) {
-  // let records = [];
-  // data.forEach(d => {
-  //   records.push();
-  // });
-  // if (data.length) yield database.batch(...data);
   if (data.length) {
-    yield database.batch(
-      ...data.map(oldLesson => {
-        return oldLesson.prepareUpdate(l => {
-          l.isCompleted = l.isCompleted;
-        });
-      })
-    );
+    yield database.batch(...data.map(d => d.prepareUpdate()));
   }
 }
 
@@ -287,4 +255,11 @@ export function* importLessonsIfNeeded() {
 export function* forceImport() {
   const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
   yield call(startImport, lessonsHash);
+}
+
+export let __test = {};
+
+if (__TEST__) {
+  __test.backupUserData = backupUserData;
+  __test.restoreUserData = restoreUserData;
 }

@@ -24,8 +24,7 @@
     "lint": "standard --verbose | snazzy",
     "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
     "fixcode": "standard --fix",
-    "postinstall": "rndebugger-open",
-    "revert-debug": "rndebugger-open --revert"
+    "postinstall": "patch-package rndebugger-open"
   },
   "dependencies": {
     "@nozbe/watermelondb": "^0.10.1",
@@ -101,6 +100,7 @@
     "metro-react-native-babel-preset": "^0.53.0",
     "mock-fs": "^4.8.0",
     "mockery": "^2.1.0",
+    "patch-package": "^6.0.5",
     "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.8.3",
     "react-native-debugger-open": "^0.3.11",
@@ -113,11 +113,6 @@
     "standard": "10.0.3"
   },
   "jest": {
-    "globals": {
-      "__TEST__": true,
-      "_get__": null,
-      "__get__": null
-    },
     "testMatch": [
       "**/Tests/**/*.js",
       "**/?(*.)(spec|test).js?(x)"

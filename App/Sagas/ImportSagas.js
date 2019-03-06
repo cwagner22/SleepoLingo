@@ -187,7 +187,6 @@ function parseGroups(workbook) {
 }
 
 function* backupUserData() {
-  let res = [];
   const modifiedLessons = yield database.collections
     .get("lessons")
     .query(Q.where("is_completed", true))
@@ -198,17 +197,34 @@ function* backupUserData() {
     .query(Q.where("show_at", Q.notEq(null)))
     .fetch();
 
-  if (modifiedLessons.length) res.push(...modifiedLessons);
-  if (modifiedCards.length) res.push(...modifiedCards);
-  return res;
+  return { modifiedLessons, modifiedCards };
 }
 
-export function* restoreUserData(data) {
-  console.log("okkkkkk");
+function* filterDeletedRecords(records, collectionName) {
+  if (records.length) {
+    const foundRecords = yield database.collections
+      .get(collectionName)
+      .query(Q.where("id", Q.oneOf(records.map(l => l.id))))
+      .fetch();
 
-  if (data.length) {
-    throw new Error();
-    yield database.batch(...data.map(d => d.prepareUpdate()));
+    if (foundRecords.length) {
+      return records.filter(l => foundRecords.some(_l => _l.id === l.id));
+    }
+  }
+
+  return records;
+}
+
+function* restoreUserData(data) {
+  const { modifiedLessons, modifiedCards } = data;
+
+  const records = [
+    ...(yield filterDeletedRecords(modifiedLessons, "lessons")),
+    ...(yield filterDeletedRecords(modifiedCards, "cards"))
+  ];
+
+  if (records.length) {
+    yield database.batch(...records.map(d => d.prepareUpdate()));
   }
 }
 
@@ -246,14 +262,6 @@ function* startImport(lessonsHash) {
   debug("Done");
 }
 
-// function importTest() {
-//   return restoreTest();
-// }
-
-// export function restoreTest() {
-//   return "this shoudnt happen";
-// }
-
 export function* importLessonsIfNeeded() {
   const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
   const lastHash = yield select(state => state.import.lessonsHash);
@@ -266,14 +274,4 @@ export function* importLessonsIfNeeded() {
 export function* forceImport() {
   const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
   yield call(startImport, lessonsHash);
-}
-
-export let __test = {};
-
-if (__TEST__) {
-  __test.backupUserData = backupUserData;
-  __test.restoreUserData = restoreUserData;
-  // exports.restoreUserData = restoreUserData;
-  // exports.importTest = importTest;
-  // exports.restoreTest = restoreTest;
 }

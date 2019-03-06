@@ -203,8 +203,11 @@ function* backupUserData() {
   return res;
 }
 
-function* restoreUserData(data) {
+export function* restoreUserData(data) {
+  console.log("okkkkkk");
+
   if (data.length) {
+    throw new Error();
     yield database.batch(...data.map(d => d.prepareUpdate()));
   }
 }
@@ -243,6 +246,14 @@ function* startImport(lessonsHash) {
   debug("Done");
 }
 
+// function importTest() {
+//   return restoreTest();
+// }
+
+// export function restoreTest() {
+//   return "this shoudnt happen";
+// }
+
 export function* importLessonsIfNeeded() {
   const lessonsHash = yield RNFS.hash(lessonsPath, "md5");
   const lastHash = yield select(state => state.import.lessonsHash);
@@ -262,4 +273,7 @@ export let __test = {};
 if (__TEST__) {
   __test.backupUserData = backupUserData;
   __test.restoreUserData = restoreUserData;
+  // exports.restoreUserData = restoreUserData;
+  // exports.importTest = importTest;
+  // exports.restoreTest = restoreTest;
 }

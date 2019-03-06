@@ -5,7 +5,7 @@ module.exports = {
       plugins: ["ignite-ignore-reactotron"]
     },
     test: {
-      plugins: []
+      plugins: ["rewire-exports"]
     }
   },
   plugins: [["@babel/plugin-proposal-decorators", { legacy: true }]]

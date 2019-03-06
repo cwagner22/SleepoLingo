@@ -1,9 +1,16 @@
+global._get__ = null;
+global.__get__ = null;
+
 import { select, put } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
 import {
   importLessonsIfNeeded,
-  __test
-  // __RewireAPI__ as ImportSagasRequireAPI
+  __test,
+  importTest,
+  restoreTest,
+  restoreUserData,
+  rewire$restoreUserData,
+  __RewireAPI__ as ImportSagasRequireAPI
 } from "../../App/Sagas/ImportSagas";
 import ImportActions, {
   reducer,
@@ -25,6 +32,8 @@ beforeAll(() => {
   mock({
     "lessons.test.xlsx": fs.readFileSync("./App/lessons.test.xlsx")
   });
+
+  // jest.mock("../../App/Sagas/ImportSagas");
 });
 afterAll(() => {
   mock.restore();
@@ -62,8 +71,43 @@ test("generates the database properly", async () => {
   );
 });
 
-// const backupUserData = ImportSagasRequireAPI.__get__("backupUserData");
+// jest.mock("../../App/Sagas/ImportSagas", () => ({
+//   // testt: {
+//   //   askAsync: jest.fn()
+//   // },
+//   testt: () => {
+//     console.log("aaaaaaa");
+//   }
+// }));
 
+// const spy = jest.spyOn(__test, "restoreUserData").mockImplementation(data => {
+//   console.log("data:", data);
+//   return data;
+// });
+
+// const backupUserData = ImportSagasRequireAPI.__get__("backupUserData");
+// jest.mock("../../App/Sagas/ImportSagas");
+// jest.mock("../../App/Sagas/ImportSagas", () => {
+//   return {
+//     ...jest.genMockFromModule("../../App/Sagas/ImportSagas"),
+//     ...jest.requireActual("../../App/Sagas/ImportSagas"),
+
+//     // testt: jest.fn(() => {
+//     //   console.log("aaaaaaa");
+//     // }),
+//     restoreTest: jest.fn(() => "mocked fruit")
+//   };
+// });
+
+// restoreTest = jest.fn(() => "mocked fruit");
+
+// test.only("omg", () => {
+//   console.log(restoreTest());
+
+//   const res = importTest();
+//   expect(res).toBe("mocked fruit");
+//   expect(restoreTest).toHaveBeenCalled();
+// });
 test("saves and restores user data", async () => {
   // Now that the database has been generated with seed data,
   // simulate user data modifications
@@ -79,10 +123,73 @@ test("saves and restores user data", async () => {
     });
   });
 
-  // jest.doMock("backupUserData", () => {
-  //   let data = backupUserData();
+  // jest.doMock("__test.restoreUserData", data => {
+  //   // let data = backupUserData();
   //   console.log("data:", data);
   //   return data;
+  // });
+  // __test.restoreUserData = jest.fn(data => {
+  //   console.log("data:", data);
+  //   return data;
+  // });
+
+  // Object.defineProperty(__test, {
+  //   restoreUserData: jest.fn()
+  // });
+  // console.log(__test.restoreUserData);
+
+  // const spy = jest.spyOn(__test, "restoreUserData").mockImplementation(data => {
+  //   console.log("data:", data);
+  //   return data;
+  // });
+
+  // const spy = jest.spyOn(ajax, 'request').mockImplementation(() => Promise.resolve({ success: true }))
+  // console.log(jest.requireActual("../../App/Sagas/ImportSagas"));
+
+  // jest.doMock("../../App/Sagas/ImportSagas", () => {
+  //   return {
+  //     ...jest.requireActual("../../App/Sagas/ImportSagas"),
+  //     restoreUserData0: data => {
+  //       // remove data from db
+
+  //       // let data = backupUserData();
+  //       console.log("data:", data);
+  //       // return data;
+  //     },
+  //     restoreUserData: function*(data) {
+  //       console.log("data:", data);
+
+  //       // jest.fn(() => new Error());
+  //     }
+  //   };
+  // });
+
+  // jest.doMock("../../App/Sagas/ImportSagas", () => ({
+  //   __esModule: true,
+  //   // default: () => "Blah",
+  //   // A: () => "Blah",
+  //   restoreUserData0: data => {
+  //     // remove data from db
+
+  //     // let data = backupUserData();
+  //     console.log("data:", data);
+  //     // return data;
+  //   },
+  //   restoreUserData: function*(data) {
+  //     console.log("data:", data);
+
+  //     // jest.fn(() => new Error());
+  //   }
+  // }));
+
+  // jest.doMock("../../App/Sagas/ImportSagas", function() {
+  //   return {
+  //     restoreUserData: function*(data) {
+  //       console.log("data:", data);
+
+  //       // jest.fn(() => new Error());
+  //     }
+  //   };
   // });
 
   // jest.mock("../../App/Sagas/ImportSagas", () => ({
@@ -93,13 +200,39 @@ test("saves and restores user data", async () => {
   //     // return data;
   //   }
   // }));
+  // let privateFunc = ImportSagasRequireAPI.__get__("restoreUserData");
+  // ImportSagasRequireAPI.__Rewire__("restoreUserData", function*(data) {
+  //   const cards = yield database.collections
+  //     .get("cards")
+  //     .query()
+  //     .fetch();
 
-  // ImportSagasRequireAPI.__Rewire__("backupUserData", () => {
-  //   // let data = backupUserData();
+  //   // yield database.action(async () => {
+  //   //   // Delete one card
+  //   //   await cards[0].destroyPermanently();
+  //   // });
+  //   privateFunc(data);
+  //   console.log("privateFunc:", privateFunc);
   //   // let data = ImportSagasRequireAPI.__get__("backupUserData")();
-  //   // console.log("data:", data);
-  //   // return data;
+  //   console.log("data:", data);
   // });
+  console.log(rewire$restoreUserData);
+  const bk = restoreUserData;
+  rewire$restoreUserData(function*(data) {
+    // const cards = yield database.collections
+    //   .get("cards")
+    //   .query()
+    //   .fetch();
+
+    // yield database.action(async () => {
+    //   // Delete one card
+    //   await cards[0].destroyPermanently();
+    // });
+    yield bk(data);
+    console.log("privateFunc:", bk);
+    // let data = ImportSagasRequireAPI.__get__("backupUserData")();
+    console.log("data:", data);
+  });
 
   // rewire$backupUserData(() => {
   //   console.log(";aaa");
@@ -110,24 +243,26 @@ test("saves and restores user data", async () => {
   //   // return data;
   // });
 
-  return expectSaga(importLessonsIfNeeded)
-    .withReducer(
-      combineReducers({
-        import: reducer
+  return (
+    expectSaga(importLessonsIfNeeded)
+      .withReducer(
+        combineReducers({
+          import: reducer
+        })
+      )
+      .call(__test.backupUserData)
+      // .call.fn(__test.restoreUserData)
+      .dispatch(ImportActions.importLessonsIfNeeded())
+      .run()
+      .then(async result => {
+        // Check that the first lesson is completed
+        const lessons = await database.collections
+          .get("lessons")
+          .query(Q.where("is_completed", true))
+          .fetch();
+        expect(lessons.length).toEqual(1);
       })
-    )
-    .call(__test.backupUserData)
-    .call.fn(__test.restoreUserData)
-    .dispatch(ImportActions.importLessonsIfNeeded())
-    .run()
-    .then(async result => {
-      // Check that the first lesson is completed
-      const lessons = await database.collections
-        .get("lessons")
-        .query(Q.where("is_completed", true))
-        .fetch();
-      expect(lessons.length).toEqual(1);
-    });
+  );
 });
 
 // test("handles deleted data", async () => {

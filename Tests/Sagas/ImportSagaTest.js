@@ -1,20 +1,13 @@
-global._get__ = null;
-global.__get__ = null;
-
-import { select, put } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
 import {
   importLessonsIfNeeded,
   __RewireAPI__ as ImportSagasRequireAPI
 } from "../../App/Sagas/ImportSagas";
-// const { restoreUserData } = __test;
 import ImportActions, {
   reducer,
   ImportTypes
 } from "../../App/Redux/ImportRedux";
-import ImportSagas from "../../App/Sagas/ImportSagas";
 import { combineReducers } from "redux";
-import { create } from "react-test-renderer";
 import mock from "mock-fs";
 import fs from "fs";
 // import { reducer } from "../../App/Redux/ImportRedux";
@@ -96,6 +89,12 @@ test("saves and restores user data", async () => {
   await database.batch(...records);
 
   // Stub internal function to delete records
+  // babel-plugin-jest-hoist has been manually patched to work with jest:
+  // https://github.com/facebook/jest/issues/8054
+  // https://github.com/speedskater/babel-plugin-rewire/issues/212
+  // https://github.com/speedskater/babel-plugin-rewire/issues/183
+  // We could use babel-plugin-rewire-exports instead and export the private functions conditionally into an object
+  // but it can't mock nested functions
   const restoreUserDataOrig = ImportSagasRequireAPI.__get__("restoreUserData");
   ImportSagasRequireAPI.__Rewire__("restoreUserData", function*(data) {
     yield database.action(async () => {
@@ -105,33 +104,31 @@ test("saves and restores user data", async () => {
     yield restoreUserDataOrig(data);
   });
 
-  return (
-    expectSaga(importLessonsIfNeeded)
-      .withReducer(
-        combineReducers({
-          import: reducer
-        })
-      )
-      .call(ImportSagasRequireAPI.__get__("backupUserData"))
-      // .call.fn(__test.restoreUserData)
-      .dispatch(ImportActions.importLessonsIfNeeded())
-      .run()
-      .then(async result => {
-        // Check that the first lesson is completed
-        const lessons = await database.collections
-          .get("lessons")
-          .query(Q.where("is_completed", true))
-          .fetch();
-        expect(lessons.length).toEqual(1);
-
-        const modifiedCards = await database.collections
-          .get("cards")
-          .query(Q.where("show_at", Q.notEq(null)))
-          .fetch();
-
-        expect(modifiedCards.length).toEqual(1);
+  return expectSaga(importLessonsIfNeeded)
+    .withReducer(
+      combineReducers({
+        import: reducer
       })
-  );
+    )
+    .call(ImportSagasRequireAPI.__get__("backupUserData"))
+    .call.fn(ImportSagasRequireAPI.__get__("restoreUserData"))
+    .dispatch(ImportActions.importLessonsIfNeeded())
+    .run()
+    .then(async result => {
+      // Check that the first lesson is completed
+      const lessons = await database.collections
+        .get("lessons")
+        .query(Q.where("is_completed", true))
+        .fetch();
+      expect(lessons.length).toEqual(1);
+
+      const modifiedCards = await database.collections
+        .get("cards")
+        .query(Q.where("show_at", Q.notEq(null)))
+        .fetch();
+
+      expect(modifiedCards.length).toEqual(1);
+    });
 });
 
 // test('can be used with snapshot testing', () => {

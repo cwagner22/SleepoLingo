@@ -1,5 +1,7 @@
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
+// import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
+// import database from "../App/Models/database";
 // import mock from "mock-fs";
 // import fs from "fs";
 //
@@ -16,6 +18,11 @@ configure({ adapter: new Adapter() });
 // mock({
 //   "lessons.xlsx": "a"
 // });
+
+// database.__Rewire__("watermelonAdapter", LokiJSAdapter);
+// database.__ResetDependency__("watermelonAdapter");
+
+jest.mock("../App/Models/database");
 
 jest.mock("react-native-fs", () => {
   return {

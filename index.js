@@ -1,3 +1,4 @@
+global.__TEST__ = false;
 import Debug from "debug";
 Debug.enable("*");
 import "./App/Config/ReactotronConfig";

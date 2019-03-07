@@ -7,14 +7,15 @@ import Lesson from "./Lesson";
 import LessonGroup from "./LessonGroup";
 import Dictionary from "./Dictionary";
 
-// let LokiJSAdapter
-// if (__TEST__) {
-//   LokiJSAdapter = require("@nozbe/watermelondb/adapters/lokijs");
-// }
+let LokiJSAdapter;
+if (global.__TESTT__) {
+  // LokiJSAdapter = require("@nozbe/watermelondb/adapters/lokijs");
+}
 
-import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
+// import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
 
-const watermelonAdapter = __TEST__ ? LokiJSAdapter : SQLiteAdapter;
+const watermelonAdapter = global.__TEST__ ? LokiJSAdapter : SQLiteAdapter;
+
 const adapter = new watermelonAdapter({
   dbName: "SleepoLingo",
   schema: mySchema

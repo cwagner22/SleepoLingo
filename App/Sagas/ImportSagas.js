@@ -102,13 +102,14 @@ function parseLesson(worksheet, lessonGroup, index) {
   debug("Parsing lesson, worksheet length: ", worksheet.length);
   const lessonNameFull = worksheet[0].Original;
   const res = lessonNameFull.match(/Lesson (\d+): (.+)/);
-  const id = res[1];
+  const lessonIndex = res[1];
   const name = res[2];
-  if (!id || !name) return;
+  if (!lessonIndex || !name) return;
 
   debug(`Lesson: ${name}`);
 
   let note;
+  const id = worksheet[0].Id
   if (
     worksheet[1].Original &&
     !worksheet[1].Translation &&
@@ -121,7 +122,8 @@ function parseLesson(worksheet, lessonGroup, index) {
   worksheet.splice(0, note ? 2 : 1);
 
   const lesson = database.collections.get("lessons").prepareCreate(l => {
-    l._raw.id = index.toString();
+    l._raw.id = id.toString();
+    l.index = index
     l.name = name;
     l.note = note;
     l.lessonGroup.set(lessonGroup);
@@ -248,7 +250,9 @@ function* importLessons(workbook) {
 }
 
 // todo: On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-const lessonsPath = !__TEST__ ? RNFS.MainBundlePath + "/lessons.xlsx" : "lessons.test.xlsx";
+const lessonsPath = !global.__TEST__
+  ? RNFS.MainBundlePath + "/lessons.xlsx"
+  : "lessons.test.xlsx";
 
 function* startImport(lessonsHash) {
   console.log("lessonsPath:", lessonsPath);

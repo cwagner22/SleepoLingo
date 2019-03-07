@@ -113,6 +113,9 @@
     "standard": "10.0.3"
   },
   "jest": {
+    "globals": {
+      "__TEST__": true
+    },
     "testMatch": [
       "**/Tests/**/*.js",
       "**/?(*.)(spec|test).js?(x)"

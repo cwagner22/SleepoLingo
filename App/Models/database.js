@@ -7,9 +7,15 @@ import Lesson from "./Lesson";
 import LessonGroup from "./LessonGroup";
 import Dictionary from "./Dictionary";
 
+// let LokiJSAdapter
+// if (__TEST__) {
+//   LokiJSAdapter = require("@nozbe/watermelondb/adapters/lokijs");
+// }
+
 import LokiJSAdapter from "@nozbe/watermelondb/adapters/lokijs";
 
-const adapter = new LokiJSAdapter({
+const watermelonAdapter = __TEST__ ? LokiJSAdapter : SQLiteAdapter;
+const adapter = new watermelonAdapter({
   dbName: "SleepoLingo",
   schema: mySchema
 });

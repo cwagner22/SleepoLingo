@@ -247,9 +247,8 @@ function* importLessons(workbook) {
   }
 }
 
-// const lessonsPath = RNFS.MainBundlePath + "/lessons.xlsx";
-// On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
-const lessonsPath = "lessons.test.xlsx";
+// todo: On Android, use "RNFS.DocumentDirectoryPath" (MainBundlePath is not defined)
+const lessonsPath = !__TEST__ ? RNFS.MainBundlePath + "/lessons.xlsx" : "lessons.test.xlsx";
 
 function* startImport(lessonsHash) {
   console.log("lessonsPath:", lessonsPath);

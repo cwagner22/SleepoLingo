@@ -30,8 +30,6 @@ build/
 local.properties
 *.iml
 
-.vscode
-
 # node.js
 #
 node_modules/

@@ -6,8 +6,10 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
+    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean --force",
     "clean:android": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
     "newclear": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build && rm -rf node_modules/ && npm cache clean && npm i",
+    "newclear": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build && rm -rf node_modules/ && npm cache clean --force && npm i",
     "test:watch": "jest --watch",
     "updateSnapshot": "jest --updateSnapshot",
     "coverage": "jest --coverage && open coverage/lcov-report/index.html || xdg-open coverage/lcov-report/index.html",
@@ -17,9 +19,9 @@
     "android:devices": "$ANDROID_HOME/platform-tools/adb devices",
     "android:logcat": "$ANDROID_HOME/platform-tools/adb logcat *:S ReactNative:V ReactNativeJS:V",
     "android:shake": "$ANDROID_HOME/platform-tools/adb devices | grep '\\t' | awk '{print $1}' | sed 's/\\s//g' | xargs -I {} $ANDROID_HOME/platform-tools/adb -s {} shell input keyevent 82",
+    "storybook": "storybook start -p 7007",
     "precommit": "npm run git-hook",
     "prepush": "npm run git-hook",
-    "git-hook000": "npm run lint -s && npm run test -s",
     "git-hook": "npm run lint -s",
     "lint": "standard --verbose | snazzy",
     "lintdiff": "git diff --name-only --cached --relative | grep '\\.js$' | xargs standard | snazzy",
@@ -91,6 +93,7 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.10.0",
     "husky": "^0.14.3",
+    "identity-obj-proxy": "^3.0.0",
     "ignite-animatable": "^1.0.0",
     "ignite-i18n": "^1.0.0",
     "ignite-standard": "^1.0.0",
@@ -118,15 +121,18 @@
       "__TEST__": true
     },
     "testMatch": [
-      "**/Tests/**/*.js",
+      "<rootDir>/Tests/**/*.js",
       "**/?(*.)(spec|test).js?(x)"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "Tests/Setup.js"
+      "<rootDir>/Tests/Setup.js"
     ],
+    "moduleNameMapper": {
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
+    },
     "setupFiles": [
-      "./Tests/Setup"
+      "<rootDir>/Tests/Setup"
     ],
     "preset": "react-native"
   },

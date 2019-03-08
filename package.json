@@ -85,6 +85,7 @@
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "babel-eslint": "8.0.0",
+    "babel-plugin-ignite-ignore-reactotron": "^0.3.0",
     "babel-plugin-rewire": "^1.2.0",
     "babel-plugin-rewire-exports": "^1.0.1",
     "enzyme": "^3.9.0",

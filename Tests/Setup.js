@@ -24,6 +24,11 @@ configure({ adapter: new Adapter() });
 
 jest.mock("../App/Models/database");
 
+jest.mock("react-native-background-timer", () => {});
+jest.mock("react-native-sound", () => {});
+jest.mock("rn-fetch-blob", () => {});
+jest.mock("react-native-simple-toast", () => {});
+
 jest.mock("react-native-fs", () => {
   return {
     // mkdir: jest.fn(),

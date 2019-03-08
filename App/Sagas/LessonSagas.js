@@ -29,22 +29,18 @@ const isCompleted = (state, lessonId) =>
   !!state.lesson.completedLessons[lessonId];
 
 const getCurrentLessonId = state => state.lesson.currentLessonId;
-// export function* getCurrentLesson() {
-//   const currentLessonId = yield select(getCurrentLessonId);
-//   return yield database.collections.get("lessons").find(currentLessonId);
-// }
-
-function* getCurrentCard() {
-  const currentCardId = yield select(getCurrentCardId);
-  return yield database.collections.get("cards").find(currentCardId);
-}
-
 export function* getCurrentLesson() {
   const res = yield database.collections
     .get("lessons")
     .query(Q.where("is_in_progress", true))
     .fetch();
   return res.length ? res[0] : null;
+}
+
+const getCurrentCardId = state => state.lesson.currentCardId;
+export function* getCurrentCard() {
+  const currentCardId = yield select(getCurrentCardId);
+  return yield database.collections.get("cards").find(currentCardId);
 }
 
 function* getCurrentCardsQuery() {
@@ -54,24 +50,18 @@ function* getCurrentCardsQuery() {
     .query(Q.where("lesson_id", currentLessonId));
 }
 
+export function* getCurrentCardsCount() {
+  const query = yield call(getCurrentCardsQuery);
+  return yield query.fetchCount();
+}
+
 export function* getCurrentSentences() {
   const query = yield call(getCurrentCardsQuery);
   const cards = yield query.fetch();
   return getCardsSentences(cards);
 }
 
-export function* getCurrentCardsCount() {
-  const query = yield call(getCurrentCardsQuery);
-  return yield query.fetchCount();
-}
-
 const getCardsSentences = cards => cards.map(c => c.getSentence());
-
-const getCurrentCardId = state => state.lesson.currentCardId;
-export function* getCurrentCard() {
-  const currentCardId = yield select(getCurrentCardId);
-  return yield database.collections.get("cards").find(currentCardId);
-}
 
 const downloadSentence = (sentence, language) => {
   const path = Player.getFilePath(sentence, language);

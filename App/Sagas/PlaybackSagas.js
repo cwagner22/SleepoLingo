@@ -28,8 +28,8 @@ import {
   getCurrentCardsCount
 } from "./LessonSagas";
 
-Debug.enable("app:player");
-const debug = Debug("app:player");
+const debug = Debug("app:PlaybackSaga");
+// Debug.enable("app:player");
 
 const TRANSLATION_LOOP_MAX = 3;
 // const ORIGINAL_TIMEOUT = 1000

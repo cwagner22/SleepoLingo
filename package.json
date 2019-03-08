@@ -5,10 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean --force",
     "clean:android": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
-    "newclear": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build && rm -rf node_modules/ && npm cache clean && npm i",
     "newclear": "rm -rf $TMPDIR/react-* && watchman watch-del-all && rm -rf ios/build && rm -rf node_modules/ && npm cache clean --force && npm i",
     "test:watch": "jest --watch",
     "updateSnapshot": "jest --updateSnapshot",
@@ -131,6 +129,9 @@
     "moduleNameMapper": {
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|redux-saga-rn-alert)"
+    ],
     "setupFiles": [
       "<rootDir>/Tests/Setup"
     ],

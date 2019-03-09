@@ -1,0 +1,6 @@
+framework module Pods_SleepoLingo {
+  umbrella header "Pods-SleepoLingo-umbrella.h"
+
+  export *
+  module * { export * }
+}

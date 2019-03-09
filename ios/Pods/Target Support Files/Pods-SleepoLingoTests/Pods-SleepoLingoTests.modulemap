@@ -1,0 +1,6 @@
+framework module Pods_SleepoLingoTests {
+  umbrella header "Pods-SleepoLingoTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

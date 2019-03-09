@@ -1,0 +1,34 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'SleepoLingo' do
+  pod 'AppCenter/Crashes', '~> 1.13.2'
+  pod 'AppCenter/Analytics', '~> 1.13.2'
+  pod 'AppCenterReactNativeShared', '~> 1.12.2'
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for SleepoLingo
+
+  
+
+  platform :ios, '9.0'
+  target 'SleepoLingoTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'SleepoLingo-tvOS' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for SleepoLingo-tvOS
+
+  target 'SleepoLingo-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end

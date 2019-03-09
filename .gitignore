@@ -58,8 +58,4 @@ buck-out/
 # Misc
 #
 .env
-*.xlsx
-*.management
-*.realm.lock
-*.realm
 *.snap

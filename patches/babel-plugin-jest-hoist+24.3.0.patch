@@ -1,12 +1,13 @@
 diff --git a/node_modules/babel-plugin-jest-hoist/build/index.js b/node_modules/babel-plugin-jest-hoist/build/index.js
-index f38181f..82d46dc 100644
+index f02c568..aa9e488 100644
 --- a/node_modules/babel-plugin-jest-hoist/build/index.js
 +++ b/node_modules/babel-plugin-jest-hoist/build/index.js
-@@ -124,6 +124,7 @@ FUNCTIONS.mock = args => {
+@@ -131,18 +131,19 @@ FUNCTIONS.mock = args => {
            invariant(
-             (scope.hasGlobal(name) && WHITELISTED_IDENTIFIERS[name]) ||
+             (scope.hasGlobal(name) && WHITELISTED_IDENTIFIERS.has(name)) ||
              /^mock/i.test(name) || // Allow istanbul's coverage variable to pass.
-+            /^_get__/i.test(name) ||
++              /^_get__/i.test(name) ||
                /^(?:__)?cov/.test(name),
-             'The module factory of `jest.mock()` is not allowed to ' +
-               'reference any out-of-scope variables.\n' +
+           );
+         }
+       }

@@ -61,4 +61,3 @@ Gemfile.lock
 # Misc
 #
 .env
-*.snap

@@ -1,0 +1,44 @@
+{
+  "device_frame_version": "latest",
+  "default": {
+    "keyword": {
+      "font0": "./fonts/MyFont-Rg.otf"
+    },
+    "title": {
+      "font0": "./fonts/MyFont-Th.otf",
+      "color": "#545454"
+    },
+    "background": "./background.jpg",
+    "padding": 50,
+    "show_complete_frame": false,
+    "stack_title": false,
+    "title_below_image": false,
+    "frame": "BLACK"
+  },
+  "data": [
+    {
+      "filter": "Launch",
+      "keyword": {
+        "color": "#d21559"
+      }
+    },
+    {
+      "filter": "Lesson",
+      "keyword": {
+        "color": "#feb909"
+      }
+    },
+    {
+      "filter": "AnkiOriginal",
+      "keyword": {
+        "color": "#aa4dbc"
+      }
+    },
+    {
+      "filter": "AnkiTranslation",
+      "keyword": {
+        "color": "#31bb48"
+      }
+    }
+  ]
+}

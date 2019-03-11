@@ -64,7 +64,7 @@ class AnkiScreen extends React.Component {
       return this.renderNoCards();
     }
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }} testID="AnkiSwipe">
         <Swiper
           ref={swiper => {
             this.swiper = swiper;

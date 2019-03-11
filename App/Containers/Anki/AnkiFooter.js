@@ -27,6 +27,7 @@ class AnkiFooter extends React.Component {
           text="Hard"
           subText="(1 min)"
           onPress={() => this.props.ankiDifficulty("hard")}
+          testID="AnkiButtonHard"
         />
         <AnkiButton
           styles={styles.ankiOk}

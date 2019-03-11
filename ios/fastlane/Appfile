@@ -1,5 +1,5 @@
-app_identifier("com.chriswt.SleepoLingoUITests") # The bundle identifier of your app
-# apple_id("[[APPLE_ID]]") # Your Apple email address
+app_identifier("com.chriswt.SleepoLingo") # The bundle identifier of your app
+apple_id ENV['APPLE_ID'] # Your Apple email address
 
 
 # For more information about the Appfile, see:

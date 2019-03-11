@@ -31,7 +31,20 @@ class SleepoLingoUITests: XCTestCase {
     func testExample() {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-      snapshot("0Launch")
+        let app = XCUIApplication()
+        app.otherElements["LessonItem_0"].waitForExistence(timeout: 30)
+        snapshot("0Launch")
+        app.otherElements["LessonItem_0"].tap()
+        snapshot("1Lesson")
+        app.otherElements["StartStudy"].tap()
+        snapshot("2AnkiOriginal")
+        app.otherElements["AnkiSwipe"].tap()
+        snapshot("3AnkiTranslation")
+        app.otherElements["AnkiButtonHard"].waitForExistence(timeout: 30)
+        app.otherElements["AnkiButtonHard"].tap()
+        snapshot("4AnkiOriginal")
+        app.otherElements["AnkiSwipe"].tap()
+        snapshot("5AnkiTranslation")
     }
 
 }

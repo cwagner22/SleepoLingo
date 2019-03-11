@@ -13,7 +13,7 @@ import LessonButton from "../Components/LessonButton";
 // Styles
 import styles from "./Styles/LessonsListScreenStyle";
 
-const RawLessonItem = ({ lesson, cards, onPress }) => {
+const RawLessonItem = ({ lesson, cards, onPress, testID }) => {
   const nbCardsLeft = () => {
     // todo: only for current lesson?
     return cards.reduce((total, card) => {
@@ -31,6 +31,7 @@ const RawLessonItem = ({ lesson, cards, onPress }) => {
         nbLeft={nbCardsLeft()}
         onPress={onPress}
         isCompleted={lesson.isCompleted}
+        testID={testID}
       />
     </View>
   );
@@ -78,7 +79,11 @@ class LessonsListScreen extends Component {
         <Text style={styles.pickLesson}>Pick a lesson</Text>
         <SectionList
           renderItem={({ item: lesson, index, section }) => (
-            <LessonItem lesson={lesson} onPress={() => loadLesson(lesson)} />
+            <LessonItem
+              lesson={lesson}
+              onPress={() => loadLesson(lesson)}
+              testID={`LessonItem_${index}`}
+            />
           )}
           renderSectionHeader={({ section: { title } }) => (
             <Text style={styles.header}>{title}</Text>

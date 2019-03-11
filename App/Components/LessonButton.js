@@ -13,7 +13,8 @@ export default class LessonButton extends React.Component {
     text: PropTypes.string,
     nbLeft: PropTypes.number,
     isCompleted: PropTypes.bool,
-    styles: PropTypes.func
+    styles: PropTypes.func,
+    testID: PropTypes.string
   };
 
   completedStyle() {
@@ -45,6 +46,7 @@ export default class LessonButton extends React.Component {
         title={this.props.text}
         icon={this.renderNbLeft()}
         iconRight={true}
+        testID={this.props.testID}
       />
     );
   }

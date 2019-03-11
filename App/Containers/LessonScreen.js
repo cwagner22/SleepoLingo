@@ -48,7 +48,7 @@ class LessonScreen extends React.Component {
           <ScrollView>
             <Text style={styles.componentLabel}>{lesson.note}</Text>
           </ScrollView>
-          <View>
+          <View testID="StartStudy">
             <RoundedButton onPress={() => startAnki()} styles={styles.button}>
               START STUDY
             </RoundedButton>

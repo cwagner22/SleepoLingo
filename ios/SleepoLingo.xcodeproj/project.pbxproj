@@ -28,7 +28,6 @@
 		14E59E39B00E4F85ACB03B79 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B34E6F4856A45E28684FDF5 /* libRNVectorIcons.a */; };
 		1CF9F8C552444DE2A1E1E075 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D2ABB2FD0154977A3D72573 /* libRNVectorIcons-tvOS.a */; };
 		1EA7131137EF44B0A9B71447 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 670D4C92518A4FB0B8830B3A /* Feather.ttf */; };
-		22E1212299A9F4592CCEC041 /* libPods-SleepoLingo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 677BD6340E690EAD5EB14A7C /* libPods-SleepoLingo-tvOS.a */; };
 		23A70307E4C748719A23EA89 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 458647FA3E774342BAAEEBCA /* Entypo.ttf */; };
 		254B163454D24FB0B27FE252 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B85F1778F20749E09A0F6C97 /* SimpleLineIcons.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -54,7 +53,6 @@
 		5943741A459D44A8A304FD10 /* libRNI18n-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D989E66543264B978E7A69AA /* libRNI18n-tvOS.a */; };
 		6C3EEEB3613D4E69868369C3 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAEE4D592544470781C72E03 /* FontAwesome.ttf */; };
 		75E6BE3464304515B64E122E /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A840E6C870747C69D58578E /* libBVLinearGradient.a */; };
-		7DEC71D636F574A6453B6424 /* libPods-SleepoLingo-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8210D7B8E28C2FA8F5B7FF57 /* libPods-SleepoLingo-tvOSTests.a */; };
 		7E014D77C8ED47B3A6AB7EBC /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FE95C27C0174214AD0D8437 /* Roboto.ttf */; };
 		7E7810F141834189A73EA6DC /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F0E4BD0A1A640F08D6F5D03 /* libAppCenterReactNativeCrashes.a */; };
 		7F3BD879E15A466D86A44B75 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 645F2D3F0024445AA80276FD /* libLRDRCTSimpleToast.a */; };
@@ -66,13 +64,13 @@
 		8D496B11F25B4990842D0954 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 028DFFB1018C496F89863FB8 /* Zocial.ttf */; };
 		8F9E8062238E4A28BADECFF9 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D949D9BDFE1B4A9493940C2E /* Octicons.ttf */; };
 		902848CC937946C6ADA64C5C /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A145B181FEAC41418B0AA068 /* libRNGestureHandler.a */; };
+		90DD27B92C0149397A4C31A7 /* libPods-SleepoLingo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53023028434CDABD9C58C290 /* libPods-SleepoLingo-tvOS.a */; };
 		94C6236040574602B616018C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BFC9ACC0120491695A0707C /* FontAwesome5_Brands.ttf */; };
 		96A9BF5A2C2D44AC956A2543 /* libReactNativeConfig-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB6D0C373D6943F9AD13DDC4 /* libReactNativeConfig-tvOS.a */; };
-		9A245AC3086A34E2AE190DF4 /* Pods_SleepoLingoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10420AC08CA86CD067562988 /* Pods_SleepoLingoTests.framework */; };
 		A7B676407F364CD094EECF61 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD76B131E06D4FA1961887E4 /* Foundation.ttf */; };
 		AC129ED548A843D9B9F7AE69 /* Alterlight-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0AA54BAC0FD49C29C3B75D6 /* Alterlight-Regular.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		B1405EA465BD0AE63C8E0EE7 /* Pods_SleepoLingo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE73C7C564F57757D95CCC3D /* Pods_SleepoLingo.framework */; };
+		B2797A098825B3BB859C1BA3 /* libPods-SleepoLingo-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EF41BA4136C2E96C7E8E6B1 /* libPods-SleepoLingo-tvOSTests.a */; };
 		B487E9064ADE4FEDBC1CC02F /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7499EEF3B39F45F1A3E76E90 /* AppCenter-Config.plist */; };
 		B9B98C85D8F142168D5F742C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 12B7361C7F414ACDA60B6C45 /* MaterialIcons.ttf */; };
 		C4CA1152B7874DCFB0CA1D6E /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 05D463661A3D49CAB9130D93 /* rubicon-icon-font.ttf */; };
@@ -327,6 +325,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		833495DD22363C4E000B16AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB34EA32EC9F412B897DE4CF /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
+			remoteInfo = "RNGestureHandler-tvOS";
+		};
 		83B039CF223502090040F7EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -532,8 +537,8 @@
 		05D463661A3D49CAB9130D93 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		08B9FCE62DE14E1A92AB5A36 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		0E229840289C4B2EBBF1BD26 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		0EF41BA4136C2E96C7E8E6B1 /* libPods-SleepoLingo-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SleepoLingo-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1007FF661A224DF18E603CA4 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
-		10420AC08CA86CD067562988 /* Pods_SleepoLingoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SleepoLingoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B7361C7F414ACDA60B6C45 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -562,13 +567,15 @@
 		418E9AE07D2040C098A35C73 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		4410045F78D14DB8A8D4B247 /* libRCTBEEPickerManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTBEEPickerManager.a; sourceTree = "<group>"; };
 		458647FA3E774342BAAEEBCA /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		47705A4624AABFFD51F0CB43 /* Pods-SleepoLingo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo/Pods-SleepoLingo.release.xcconfig"; sourceTree = "<group>"; };
 		4DF7357B3BCC4CEABD306054 /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
+		5091CD76479BAC696844AAA8 /* Pods-SleepoLingo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingo/Pods-SleepoLingo.debug.xcconfig"; sourceTree = "<group>"; };
+		53023028434CDABD9C58C290 /* libPods-SleepoLingo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SleepoLingo-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5ADAAD2850E0018EBB4B2F9E /* Pods-SleepoLingo-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOS.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOS/Pods-SleepoLingo-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6194FF931CFD49F3B16439EA /* RNI18n.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-i18n/ios/RNI18n.xcodeproj"; sourceTree = "<group>"; };
 		645F2D3F0024445AA80276FD /* libLRDRCTSimpleToast.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libLRDRCTSimpleToast.a; sourceTree = "<group>"; };
-		653ABDE417635970DA001E4D /* Pods-SleepoLingo-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOSTests/Pods-SleepoLingo-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		670D4C92518A4FB0B8830B3A /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
-		677BD6340E690EAD5EB14A7C /* libPods-SleepoLingo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SleepoLingo-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A840E6C870747C69D58578E /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		6B34E6F4856A45E28684FDF5 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		706630A8CAB440879CB63C41 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/native-base/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
@@ -576,7 +583,6 @@
 		788EA759108045049C64221D /* libRNSound.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSound.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		81A208C9CE3C44F58BFCE4F3 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
-		8210D7B8E28C2FA8F5B7FF57 /* libPods-SleepoLingo-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SleepoLingo-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		83B039A7223502080040F7EF /* SleepoLingo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SleepoLingo-Bridging-Header.h"; sourceTree = "<group>"; };
 		83B039A8223502080040F7EF /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
@@ -585,12 +591,9 @@
 		83B03B3F223502B60040F7EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		83B03B45223503C90040F7EF /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		84AEF77615E1499A86D41A24 /* AppCenterReactNativeCrashes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeCrashes.xcodeproj; path = "../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes.xcodeproj"; sourceTree = "<group>"; };
-		88900F96A97BED4E50F3E737 /* Pods-SleepoLingoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingoTests.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingoTests/Pods-SleepoLingoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8AB952D21E3C491AB15B9FF4 /* WatermelonDB.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = WatermelonDB.xcodeproj; path = "../node_modules/@nozbe/watermelondb/native/ios/WatermelonDB.xcodeproj"; sourceTree = "<group>"; };
 		8D2ABB2FD0154977A3D72573 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
 		8E38D5C4FBDF4B51B12C8A09 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
-		92AB0FBF94D4307B16FB833D /* Pods-SleepoLingo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingo/Pods-SleepoLingo.debug.xcconfig"; sourceTree = "<group>"; };
-		9333CA83095C2A59824BE4B8 /* Pods-SleepoLingo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo/Pods-SleepoLingo.release.xcconfig"; sourceTree = "<group>"; };
 		9D9126F414A74755B7616991 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		9DEB74A9611D434DB6BC8E17 /* libRNI18n.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNI18n.a; sourceTree = "<group>"; };
 		A0834D8E431448C498B7D188 /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
@@ -601,21 +604,21 @@
 		AD76B131E06D4FA1961887E4 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B33CCB713D034FF78FDFFD9E /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
-		B518379EEE85A105E4DF998C /* Pods-SleepoLingoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingoTests.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingoTests/Pods-SleepoLingoTests.release.xcconfig"; sourceTree = "<group>"; };
 		B85F1778F20749E09A0F6C97 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		BA2E32FB1607400DAA7B9F60 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
+		CCB9E3400E972EB1CBA6C00D /* Pods-SleepoLingo-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOS/Pods-SleepoLingo-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D0AA54BAC0FD49C29C3B75D6 /* Alterlight-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Alterlight-Regular.ttf"; path = "../App/Fonts/Alterlight-Regular.ttf"; sourceTree = "<group>"; };
-		D2FB26C002C2EC95AB346764 /* Pods-SleepoLingo-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOS.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOS/Pods-SleepoLingo-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		D4352AE351DF43A7A2B2C042 /* RNSound.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
+		D46BF6A7C93364DCC88CB87E /* Pods-SleepoLingoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingoTests.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingoTests/Pods-SleepoLingoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D4E6B15AF3874C70A6589859 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
 		D949D9BDFE1B4A9493940C2E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		D989E66543264B978E7A69AA /* libRNI18n-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNI18n-tvOS.a"; sourceTree = "<group>"; };
+		DA3BC7A535F8AA5818D906E7 /* Pods-SleepoLingoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingoTests.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingoTests/Pods-SleepoLingoTests.release.xcconfig"; sourceTree = "<group>"; };
 		DE28D899E6A94555A28845A6 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
-		DE73C7C564F57757D95CCC3D /* Pods_SleepoLingo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SleepoLingo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF9019933EA924E270E5B3C2 /* Pods-SleepoLingo-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOSTests/Pods-SleepoLingo-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E24B21705C7E73408ED49C24 /* Pods-SleepoLingo-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOSTests/Pods-SleepoLingo-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		F8AAC16FD691D46958390B34 /* Pods-SleepoLingo-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOS/Pods-SleepoLingo-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		EE9DD701D5552E498AA88C8C /* Pods-SleepoLingo-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOSTests/Pods-SleepoLingo-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		FAEE4D592544470781C72E03 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		FB6D0C373D6943F9AD13DDC4 /* libReactNativeConfig-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libReactNativeConfig-tvOS.a"; sourceTree = "<group>"; };
 		FC1DAA29158F422EA9E665EE /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -627,7 +630,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
-				9A245AC3086A34E2AE190DF4 /* Pods_SleepoLingoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,7 +652,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				FE2B0C335DDB4135BB4C4F49 /* libWatermelonDB.a in Frameworks */,
 				CE8AF1378DAB42E1A53C1C17 /* libAppCenterReactNative.a in Frameworks */,
-				B1405EA465BD0AE63C8E0EE7 /* Pods_SleepoLingo.framework in Frameworks */,
 				DD2D75CF35A0406C83A7E2C5 /* libAppCenterReactNativeAnalytics.a in Frameworks */,
 				7E7810F141834189A73EA6DC /* libAppCenterReactNativeCrashes.a in Frameworks */,
 				3FBBAC236D90493EB0605FEC /* libRNBackgroundTimer.a in Frameworks */,
@@ -680,10 +681,10 @@
 				2D02E4C61E0B4AEC006451C7 /* libRCTSettings-tvOS.a in Frameworks */,
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
-				22E1212299A9F4592CCEC041 /* libPods-SleepoLingo-tvOS.a in Frameworks */,
 				96A9BF5A2C2D44AC956A2543 /* libReactNativeConfig-tvOS.a in Frameworks */,
 				5943741A459D44A8A304FD10 /* libRNI18n-tvOS.a in Frameworks */,
 				1CF9F8C552444DE2A1E1E075 /* libRNVectorIcons-tvOS.a in Frameworks */,
+				90DD27B92C0149397A4C31A7 /* libPods-SleepoLingo-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,7 +693,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */,
-				7DEC71D636F574A6453B6424 /* libPods-SleepoLingo-tvOSTests.a in Frameworks */,
+				B2797A098825B3BB859C1BA3 /* libPods-SleepoLingo-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,10 +856,8 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				DE73C7C564F57757D95CCC3D /* Pods_SleepoLingo.framework */,
-				677BD6340E690EAD5EB14A7C /* libPods-SleepoLingo-tvOS.a */,
-				8210D7B8E28C2FA8F5B7FF57 /* libPods-SleepoLingo-tvOSTests.a */,
-				10420AC08CA86CD067562988 /* Pods_SleepoLingoTests.framework */,
+				53023028434CDABD9C58C290 /* libPods-SleepoLingo-tvOS.a */,
+				0EF41BA4136C2E96C7E8E6B1 /* libPods-SleepoLingo-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1038,6 +1037,7 @@
 			isa = PBXGroup;
 			children = (
 				83B03B26223502760040F7EF /* libRNGestureHandler.a */,
+				833495DE22363C4E000B16AB /* libRNGestureHandler-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1130,14 +1130,14 @@
 		B7F2BC34DB8C239E390C741E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				92AB0FBF94D4307B16FB833D /* Pods-SleepoLingo.debug.xcconfig */,
-				9333CA83095C2A59824BE4B8 /* Pods-SleepoLingo.release.xcconfig */,
-				F8AAC16FD691D46958390B34 /* Pods-SleepoLingo-tvOS.debug.xcconfig */,
-				D2FB26C002C2EC95AB346764 /* Pods-SleepoLingo-tvOS.release.xcconfig */,
-				DF9019933EA924E270E5B3C2 /* Pods-SleepoLingo-tvOSTests.debug.xcconfig */,
-				653ABDE417635970DA001E4D /* Pods-SleepoLingo-tvOSTests.release.xcconfig */,
-				88900F96A97BED4E50F3E737 /* Pods-SleepoLingoTests.debug.xcconfig */,
-				B518379EEE85A105E4DF998C /* Pods-SleepoLingoTests.release.xcconfig */,
+				5091CD76479BAC696844AAA8 /* Pods-SleepoLingo.debug.xcconfig */,
+				47705A4624AABFFD51F0CB43 /* Pods-SleepoLingo.release.xcconfig */,
+				CCB9E3400E972EB1CBA6C00D /* Pods-SleepoLingo-tvOS.debug.xcconfig */,
+				5ADAAD2850E0018EBB4B2F9E /* Pods-SleepoLingo-tvOS.release.xcconfig */,
+				E24B21705C7E73408ED49C24 /* Pods-SleepoLingo-tvOSTests.debug.xcconfig */,
+				EE9DD701D5552E498AA88C8C /* Pods-SleepoLingo-tvOSTests.release.xcconfig */,
+				D46BF6A7C93364DCC88CB87E /* Pods-SleepoLingoTests.debug.xcconfig */,
+				DA3BC7A535F8AA5818D906E7 /* Pods-SleepoLingoTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1149,7 +1149,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "SleepoLingoTests" */;
 			buildPhases = (
-				7AC06FBA7C0525490152BA99 /* [CP] Check Pods Manifest.lock */,
+				0088054DB21FF42A6C217771 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -1168,7 +1168,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SleepoLingo" */;
 			buildPhases = (
-				42B23EADC300084602ACDADE /* [CP] Check Pods Manifest.lock */,
+				AE167C176A9D7F0E1665E9DD /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1187,7 +1187,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "SleepoLingo-tvOS" */;
 			buildPhases = (
-				468CD5A8C0B6F13F456CFD63 /* [CP] Check Pods Manifest.lock */,
+				0E3A2AF8D2C9252224246B17 /* [CP] Check Pods Manifest.lock */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
 				2D02E4791E0B4A5D006451C7 /* Resources */,
@@ -1206,7 +1206,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "SleepoLingo-tvOSTests" */;
 			buildPhases = (
-				997FB4F6C7A57EB745E27C4E /* [CP] Check Pods Manifest.lock */,
+				9ECBB82B3A362CE3233EA6FA /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -1631,6 +1631,13 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		833495DE22363C4E000B16AB /* libRNGestureHandler-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNGestureHandler-tvOS.a";
+			remoteRef = 833495DD22363C4E000B16AB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		83B039D0223502090040F7EF /* libjsi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1878,79 +1885,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		42B23EADC300084602ACDADE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SleepoLingo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		468CD5A8C0B6F13F456CFD63 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SleepoLingo-tvOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7AC06FBA7C0525490152BA99 /* [CP] Check Pods Manifest.lock */ = {
+		0088054DB21FF42A6C217771 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1972,7 +1907,57 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		997FB4F6C7A57EB745E27C4E /* [CP] Check Pods Manifest.lock */ = {
+		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		0E3A2AF8D2C9252224246B17 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SleepoLingo-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		9ECBB82B3A362CE3233EA6FA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1988,6 +1973,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-SleepoLingo-tvOSTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AE167C176A9D7F0E1665E9DD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SleepoLingo-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2076,7 +2083,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 88900F96A97BED4E50F3E737 /* Pods-SleepoLingoTests.debug.xcconfig */;
+			baseConfigurationReference = D46BF6A7C93364DCC88CB87E /* Pods-SleepoLingoTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -2138,7 +2145,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B518379EEE85A105E4DF998C /* Pods-SleepoLingoTests.release.xcconfig */;
+			baseConfigurationReference = DA3BC7A535F8AA5818D906E7 /* Pods-SleepoLingoTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -2197,7 +2204,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 92AB0FBF94D4307B16FB833D /* Pods-SleepoLingo.debug.xcconfig */;
+			baseConfigurationReference = 5091CD76479BAC696844AAA8 /* Pods-SleepoLingo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2240,7 +2247,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9333CA83095C2A59824BE4B8 /* Pods-SleepoLingo.release.xcconfig */;
+			baseConfigurationReference = 47705A4624AABFFD51F0CB43 /* Pods-SleepoLingo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2281,7 +2288,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F8AAC16FD691D46958390B34 /* Pods-SleepoLingo-tvOS.debug.xcconfig */;
+			baseConfigurationReference = CCB9E3400E972EB1CBA6C00D /* Pods-SleepoLingo-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2347,7 +2354,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2FB26C002C2EC95AB346764 /* Pods-SleepoLingo-tvOS.release.xcconfig */;
+			baseConfigurationReference = 5ADAAD2850E0018EBB4B2F9E /* Pods-SleepoLingo-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -2413,7 +2420,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DF9019933EA924E270E5B3C2 /* Pods-SleepoLingo-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = E24B21705C7E73408ED49C24 /* Pods-SleepoLingo-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -2478,7 +2485,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 653ABDE417635970DA001E4D /* Pods-SleepoLingo-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = EE9DD701D5552E498AA88C8C /* Pods-SleepoLingo-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;

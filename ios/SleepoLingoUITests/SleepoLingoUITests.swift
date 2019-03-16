@@ -40,7 +40,6 @@ class SleepoLingoUITests: XCTestCase {
         snapshot("2AnkiOriginal")
         app.otherElements["AnkiSwipe"].tap()
         snapshot("3AnkiTranslation")
-        app.otherElements["AnkiButtonHard"].waitForExistence(timeout: 30)
         app.otherElements["AnkiButtonHard"].tap()
         snapshot("4AnkiOriginal")
         app.otherElements["AnkiSwipe"].tap()

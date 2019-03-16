@@ -1,7 +1,9 @@
-"Launch" = "BRAINSTORMING";
+"Launch0" = "LESSONS";
 
-"Lesson" = "ORGANIZING";
+"Lesson0" = "ORGANIZING";
 
-"AnkiOriginal" = "SHARING";
+"AnkiOriginal0" = "FLASHCARDS";
 
-"AnkiTranslation" = "STYLING";
+"AnkiTranslation" = "Funny Flashcards";
+
+"Sleep0" = "SLEEP";

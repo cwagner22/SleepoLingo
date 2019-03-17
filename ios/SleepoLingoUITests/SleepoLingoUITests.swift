@@ -36,14 +36,28 @@ class SleepoLingoUITests: XCTestCase {
         snapshot("0Launch")
         app.otherElements["LessonItem_0"].tap()
         snapshot("1Lesson")
+
+        // Start Night Player
+        app.otherElements["StartNight"].tap()
+        sleep(15)
+        snapshot("2Night")
+        app.otherElements["StopPlayer"].swipeUp()
+
+        // Start Anki Cards
+        app.otherElements["StartStudy"].waitForExistence(timeout: 30)
         app.otherElements["StartStudy"].tap()
-        snapshot("2AnkiOriginal")
+        snapshot("3AnkiOriginal")
+        // Show Answer
         app.otherElements["AnkiSwipe"].tap()
-        snapshot("3AnkiTranslation")
+        app.otherElements["AnkiButtonHard"].waitForExistence(timeout: 30)
+        snapshot("4AnkiTranslation")
+
+        // Next Card
         app.otherElements["AnkiButtonHard"].tap()
-        snapshot("4AnkiOriginal")
+        snapshot("5AnkiOriginal")
         app.otherElements["AnkiSwipe"].tap()
-        snapshot("5AnkiTranslation")
+        app.otherElements["AnkiButtonHard"].waitForExistence(timeout: 30)
+        snapshot("6AnkiTranslation")
     }
 
 }

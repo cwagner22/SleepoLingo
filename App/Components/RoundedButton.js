@@ -25,7 +25,8 @@ export default class RoundedButton extends React.Component {
     text: PropTypes.string,
     children: PropTypes.string,
     navigator: PropTypes.object,
-    styles: PropTypes.object
+    styles: PropTypes.object,
+    testID: PropTypes.string
   };
 
   getText() {
@@ -40,6 +41,7 @@ export default class RoundedButton extends React.Component {
         titleStyle={styles.buttonText}
         onPress={this.props.onPress}
         title={this.getText()}
+        testID={this.props.testID}
       />
     );
   }

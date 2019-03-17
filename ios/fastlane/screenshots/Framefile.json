@@ -10,24 +10,13 @@
       "color": "#ffffff"
     },
     "background": "./background3.png",
-    "padding": 50,
+    "padding": "55x20",
     "show_complete_frame": false,
     "stack_title": true,
     "title_below_image": false,
-    "frame": "BLACK"
+    "frame": "WHITE",
+    "interline_spacing": 50,
+    "font_scale_factor": 0.2
   },
-  "data": [
-    {
-      "filter": "Launch"
-    },
-    {
-      "filter": "Lesson"
-    },
-    {
-      "filter": "AnkiOriginal"
-    },
-    {
-      "filter": "AnkiTranslation"
-    }
-  ]
+  "data": []
 }

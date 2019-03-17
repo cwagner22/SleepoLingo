@@ -53,7 +53,7 @@ class PlayerScreen extends React.Component {
 
   renderStop() {
     return (
-      <View style={styles.stop}>
+      <View style={styles.stop} testID="StopPlayer">
         <Icon iconStyle={styles.stopIcon} name="keyboard-arrow-up" />
         <Text style={styles.stopText}>STOP</Text>
         {this.renderInfoText()}

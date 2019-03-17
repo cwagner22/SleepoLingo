@@ -48,11 +48,14 @@ class LessonScreen extends React.Component {
           <ScrollView>
             <Text style={styles.componentLabel}>{lesson.note}</Text>
           </ScrollView>
-          <View testID="StartStudy">
-            <RoundedButton onPress={() => startAnki()} styles={styles.button}>
-              START STUDY
-            </RoundedButton>
-          </View>
+
+          <RoundedButton
+            onPress={() => startAnki()}
+            styles={styles.button}
+            testID="StartStudy"
+          >
+            START STUDY
+          </RoundedButton>
         </Card>
 
         <ActionButton
@@ -62,6 +65,7 @@ class LessonScreen extends React.Component {
           renderIcon={() => <MIcon name="hotel" color="white" size={24} />}
           elevation={5}
           zIndex={5}
+          testID="StartNight"
         />
       </View>
     );

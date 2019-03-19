@@ -21,7 +21,6 @@
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
@@ -60,6 +59,7 @@
 		7F3BD879E15A466D86A44B75 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 645F2D3F0024445AA80276FD /* libLRDRCTSimpleToast.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		833495E622363D21000B16AB /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833495E522363D21000B16AB /* SnapshotHelper.swift */; };
+		836916142240C1AA00C09ACB /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836916132240C1AA00C09ACB /* Launch Screen.storyboard */; };
 		83B039A9223502080040F7EF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B039A8223502080040F7EF /* File.swift */; };
 		83B03B3E223502B60040F7EF /* SleepoLingoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B03B3D223502B60040F7EF /* SleepoLingoUITests.swift */; };
 		8BDE310ACC3A4E238AD0F1D8 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 706630A8CAB440879CB63C41 /* AntDesign.ttf */; };
@@ -544,7 +544,6 @@
 		13B07F961A680F5B00A75B9A /* SleepoLingo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SleepoLingo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SleepoLingo/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SleepoLingo/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SleepoLingo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SleepoLingo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SleepoLingo/main.m; sourceTree = "<group>"; };
@@ -585,6 +584,7 @@
 		81A208C9CE3C44F58BFCE4F3 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		833495E522363D21000B16AB /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
+		836916132240C1AA00C09ACB /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		83B039A7223502080040F7EF /* SleepoLingo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SleepoLingo-Bridging-Header.h"; sourceTree = "<group>"; };
 		83B039A8223502080040F7EF /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		83B03B3B223502B60040F7EF /* SleepoLingoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SleepoLingoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -796,8 +796,8 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				836916132240C1AA00C09ACB /* Launch Screen.storyboard */,
 			);
 			name = SleepoLingo;
 			sourceTree = "<group>";
@@ -1840,7 +1840,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				B487E9064ADE4FEDBC1CC02F /* AppCenter-Config.plist in Resources */,
 				AC129ED548A843D9B9F7AE69 /* Alterlight-Regular.ttf in Resources */,
 				8BDE310ACC3A4E238AD0F1D8 /* AntDesign.ttf in Resources */,
@@ -1861,6 +1860,7 @@
 				C4CA1152B7874DCFB0CA1D6E /* rubicon-icon-font.ttf in Resources */,
 				254B163454D24FB0B27FE252 /* SimpleLineIcons.ttf in Resources */,
 				8D496B11F25B4990842D0954 /* Zocial.ttf in Resources */,
+				836916142240C1AA00C09ACB /* Launch Screen.storyboard in Resources */,
 				4BB702D9970145CC9F658AA8 /* lessons.xlsx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2072,18 +2072,6 @@
 			targetProxy = 83B03B40223502B60040F7EF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = SleepoLingo;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {

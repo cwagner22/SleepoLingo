@@ -19,6 +19,7 @@ import { Colors } from "../../Themes/index";
 import PlaybackActions from "../../Redux/PlaybackRedux";
 import Explanation from "../Explanation";
 import Dictionary from "../../Models/Dictionary";
+import { of as of$ } from "rxjs";
 
 import styles from "../Styles/TranslationTextStyle";
 
@@ -125,15 +126,13 @@ const mapDispatchToProps = dispatch => {
 const enhance = withObservables(
   [],
   ({ database, translation, showExplanation }) => {
-    if (!showExplanation) {
-      return;
-    }
-
     return {
-      words: database.collections
-        .get("dictionary")
-        .query(Q.where("original", Q.oneOf(translation.split(" "))))
-        .observe()
+      words: showExplanation
+        ? database.collections
+            .get("dictionary")
+            .query(Q.where("original", Q.oneOf(translation.split(" "))))
+            .observe()
+        : of$(null)
     };
   }
 );

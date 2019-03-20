@@ -39,7 +39,7 @@ const RawLessonItem = ({ lesson, cards, onPress, testID }) => {
 
 const LessonItem = withObservables([], ({ lesson }) => ({
   // lesson: lesson.observe(),
-  cards: lesson.cards.observe()
+  cards: lesson.cards.observeWithColumns(["show_at"])
 }))(RawLessonItem);
 
 class LessonsListScreen extends Component {

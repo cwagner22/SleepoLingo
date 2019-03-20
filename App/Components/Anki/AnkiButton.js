@@ -10,7 +10,7 @@ export default class AnkiButton extends React.Component {
     text: PropTypes.string,
     subText: PropTypes.string,
     onPress: PropTypes.func,
-    styles: PropTypes.func,
+    styles: PropTypes.object,
     testID: PropTypes.string
   };
 

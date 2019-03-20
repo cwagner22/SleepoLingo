@@ -34,8 +34,8 @@ const LessonsStack = createStackNavigator(
       screen: LessonsListScreen,
       navigationOptions: ({ navigation }) => ({
         title: "SleepoLingo",
-        headerTitleStyle: styles.bigHeaderTitle,
-        titleStyle: styles.bigHeader,
+        headerTitleStyle: styles.headerTitle,
+        titleStyle: styles.header,
         headerLeft: <DrawerButton navigation={navigation} />,
         headerBackTitle: "Lessons"
       })

@@ -1,7 +1,7 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
-import { ApplicationStyles, Metrics, Colors } from '../../Themes/'
+import { StyleSheet } from "react-native";
+import { ApplicationStyles, Metrics, Colors } from "../../Themes/";
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -14,20 +14,11 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.fire,
     marginVertical: Metrics.smallMargin,
-    justifyContent: 'center'
-  },
-  bigHeader: {
-    fontWeight: 'bold',
-    fontFamily: 'Alterlight-Regular',
-    fontSize: 29,
-    color: Colors.cheeryPink,
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 5 // to show hidden part of the title
+    justifyContent: "center"
   },
   header: {
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
+    fontWeight: "bold",
+    alignSelf: "flex-start",
     // textAlign: 'center',
     marginVertical: Metrics.smallMargin,
     marginHorizontal: Metrics.section,
@@ -35,17 +26,17 @@ export default StyleSheet.create({
     backgroundColor: Colors.transparent
   },
   pickLesson: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingVertical: Metrics.baseMargin,
     paddingHorizontal: Metrics.section,
-    textAlign: 'center'
+    textAlign: "center"
   },
   listContent: {
     // marginTop: Metrics.baseMargin
   },
   footer: {
     color: Colors.charcoal,
-    textAlign: 'center',
+    textAlign: "center",
     padding: Metrics.baseMargin
   }
-})
+});

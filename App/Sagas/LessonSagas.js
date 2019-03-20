@@ -272,7 +272,7 @@ export function* startAnki() {
   });
 }
 
-export function* ankiDifficulty(difficulty) {
+export function* ankiDifficulty({ difficulty }) {
   const currentCard = yield call(getCurrentCard);
   yield currentCard.ankiDifficulty(difficulty);
 

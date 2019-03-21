@@ -15,8 +15,7 @@ import database from "../../App/Models/database";
 import { Q } from "@nozbe/watermelondb";
 
 beforeAll(() => {
-  // https://github.com/tschaub/mock-fs/issues/234
-  console.log();
+  console.log("https://github.com/tschaub/mock-fs/issues/234");
 
   mock({
     "lessons.test.xlsx": fs.readFileSync("./App/lessons.test.xlsx")
@@ -83,6 +82,7 @@ test("saves and restores user data", async () => {
       }),
       cards[1].prepareUpdate(c => {
         c.showAt = new Date();
+        c.sentenceOriginal = "outdated";
       })
     ]
   );
@@ -122,12 +122,15 @@ test("saves and restores user data", async () => {
         .fetch();
       expect(lessons.length).toEqual(1);
 
+      // Check that out of the 2 modified cards, 1 is deleted and the other is restored
       const modifiedCards = await database.collections
         .get("cards")
         .query(Q.where("show_at", Q.notEq(null)))
         .fetch();
-
       expect(modifiedCards.length).toEqual(1);
+
+      // Check that the updates are applied
+      expect(modifiedCards[0].sentenceOriginal).not.toEqual("outdated");
     });
 });
 

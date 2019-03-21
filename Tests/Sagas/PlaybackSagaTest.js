@@ -10,16 +10,9 @@ import LessonActions, {
 import root from "../../App/Sagas/index";
 import { combineReducers } from "redux";
 import database from "../../App/Models/database";
-import Card from "../../App/Models/Card";
-import Lesson from "../../App/Models/Lesson";
 
 test("plays", async () => {
-  // await new Promise(resolve => setTimeout(() => resolve(), 4000));
-  // const newCard = await postsCollection.create(post => {
-  //   post.title = "New post";
-  //   post.body = "Lorem ipsum...";
-  // });
-
+  // Create seed data
   const lesson = database.collections.get("lessons").prepareCreate(lesson => {
     lesson.name = "Lesson 1: Essentials";
     lesson.isInProgress = true;
@@ -43,17 +36,6 @@ test("plays", async () => {
   }
   await database.batch(lesson, ...cards);
 
-  // const lesson = await database.collections
-  //   .get("lessons")
-  //   .query()
-  //   .fetch()[0];
-  // console.log("lesson:", lesson);
-
-  // const lesson = await database.collections
-  // .get("lessons")
-  // .query(Q.where("is_in_progress", true))
-  // .fetch();
-
   return (
     expectSaga(root)
       .withReducer(
@@ -62,7 +44,6 @@ test("plays", async () => {
           lesson: lessonReducer
         })
       )
-      // .withReducer(reducer)
 
       // Dispatch any actions that the saga will `take`.
       .dispatch(LessonActions.loadLesson(lesson))

@@ -175,7 +175,7 @@ function* goToLesson(lesson) {
 export function* loadLesson({ lesson }) {
   if (lesson.isCompleted) {
     const buttons = [
-      { text: "Cancel", style: "cancel" },
+      { text: "Cancel", style: "cancel", call: () => {} },
       {
         text: "Start again",
         style: "default",
@@ -203,7 +203,8 @@ export function* loadLesson({ lesson }) {
           },
           {
             text: "Cancel",
-            style: "cancel"
+            style: "cancel",
+            call: () => {}
           }
         ];
 
@@ -298,7 +299,8 @@ export function* setLessonProgress(lesson) {
 }
 
 function* resetCardsDates(lesson) {
-  const records = lesson.cards.map(l =>
+  const cards = yield lesson.cards.fetch();
+  const records = cards.map(l =>
     l.prepareUpdate(l => {
       l.showAt = null;
     })

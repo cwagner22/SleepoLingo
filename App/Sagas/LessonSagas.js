@@ -26,15 +26,14 @@ const debug = Debug("app:LessonSagas");
 const limit = pLimit(5);
 
 // const getCurrentLessonId = state => state.lesson.currentLessonId;
-// export function* getCurrentLesson() {
-//   const res = yield database.collections
-//     .get("lessons")
-//     .query(Q.where("is_in_progress", true))
-//     .fetch();
-//   return res.length ? res[0] : null;
-// }
+export function* getLessonInProgress() {
+  const res = yield database.collections
+    .get("lessons")
+    .query(Q.where("is_in_progress", true))
+    .fetch();
+  return res.length ? res[0] : null;
+}
 
-// const getCurrentCardId = state => state.lesson.currentCardId;
 // export function* getCurrentCard() {
 //   const currentCardId = yield select(getCurrentCardId);
 //   return yield database.collections.get("cards").find(currentCardId);
@@ -45,6 +44,7 @@ export const getCurrentLesson = () => _currentLesson;
 export const setCurrentLesson = lesson => {
   _currentLesson = lesson;
 };
+// export const getCurrentLessonFromState = state => state.lesson.currentLessonId;
 
 let _currentCard;
 export const getCurrentCard = () => _currentCard;
@@ -168,6 +168,7 @@ function* restartLesson(lesson) {
 function* goToLesson(lesson) {
   yield call(setLessonProgress, lesson);
   setCurrentLesson(lesson);
+  // yield put(LessonActions.setCurrentLesson(lesson.id));
   NavigationService.navigate("Lesson", { lesson });
 }
 
@@ -191,8 +192,10 @@ export function* loadLesson({ lesson }) {
   } else {
     let done = false;
     if (!lesson.isInProgress) {
-      const currentLesson = getCurrentLesson();
-      if (currentLesson && !currentLesson.isCompleted) {
+      // Alert if there is another lesson in progress
+      // const currentLesson = yield select(getCurrentLessonFromState);
+      const lastLesson = yield call(getLessonInProgress);
+      if (lastLesson && !lastLesson.isCompleted) {
         const buttons = [
           {
             text: "Start new lesson",
@@ -226,6 +229,13 @@ export function* loadNextCard() {
   const nextCard = findCardReady(getCurrentCards());
   yield put(LessonActions.setCurrentCard(nextCard ? nextCard.id : null));
   setCurrentCard(nextCard);
+  if (!nextCard) {
+    // Set lesson as completed
+    yield getCurrentLesson().update(p => {
+      p.isCompleted = true;
+      p.isInProgress = false;
+    });
+  }
   return nextCard;
 }
 
@@ -273,10 +283,11 @@ export function* setLessonProgress(lesson) {
     );
 
     // Set last lesson as not in progress
-    const currentLesson = getCurrentLesson();
-    if (currentLesson) {
+    // const currentLesson = yield select(getCurrentLessonFromState);
+    const lastLesson = yield call(getLessonInProgress);
+    if (lastLesson) {
       records.push(
-        currentLesson.prepareUpdate(l => {
+        lastLesson.prepareUpdate(l => {
           l.isInProgress = false;
         })
       );

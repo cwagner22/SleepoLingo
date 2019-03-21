@@ -13,7 +13,7 @@ import LessonButton from "../Components/LessonButton";
 // Styles
 import styles from "./Styles/LessonsListScreenStyle";
 
-const RawLessonItem = ({ lesson, cards, onPress, testID }) => {
+const RawLessonItem = ({ lesson, cards, onPress, testID, isDisabled }) => {
   const nbCardsLeft = () => {
     // todo: only for current lesson?
     return cards.reduce((total, card) => {
@@ -31,6 +31,7 @@ const RawLessonItem = ({ lesson, cards, onPress, testID }) => {
         nbLeft={nbCardsLeft()}
         onPress={onPress}
         isCompleted={lesson.isCompleted}
+        isDisabled={isDisabled}
         testID={testID}
       />
     </View>
@@ -74,6 +75,8 @@ class LessonsListScreen extends Component {
       return sections;
     }, []);
 
+    const lessonInProgress = lessons.some(l => l.isInProgress);
+
     return (
       <View style={styles.container}>
         <Text style={styles.pickLesson}>Pick a lesson</Text>
@@ -83,6 +86,9 @@ class LessonsListScreen extends Component {
               lesson={lesson}
               onPress={() => loadLesson(lesson)}
               testID={`LessonItem_${index}`}
+              isDisabled={
+                lessonInProgress && !lesson.isInProgress && !lesson.isCompleted
+              }
             />
           )}
           renderSectionHeader={({ section: { title } }) => (
@@ -110,7 +116,7 @@ const enhance = withObservables([], ({ database }) => ({
   lessons: database.collections
     .get("lessons")
     .query()
-    .observe(),
+    .observeWithColumns("is_in_progress"),
   lessonGroups: database.collections
     .get("lesson_groups")
     .query()

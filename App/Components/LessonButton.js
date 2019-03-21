@@ -13,6 +13,7 @@ export default class LessonButton extends React.Component {
     text: PropTypes.string,
     nbLeft: PropTypes.number,
     isCompleted: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     styles: PropTypes.func,
     testID: PropTypes.string
   };
@@ -22,6 +23,15 @@ export default class LessonButton extends React.Component {
       return {
         opacity: 0.5,
         backgroundColor: Colors.pastelGreen
+      };
+    }
+  }
+
+  disabledStyle() {
+    if (this.props.isDisabled) {
+      return {
+        opacity: 0.5,
+        backgroundColor: Colors.darkGrey
       };
     }
   }
@@ -40,7 +50,11 @@ export default class LessonButton extends React.Component {
   render() {
     return (
       <Button
-        buttonStyle={styles.button}
+        buttonStyle={[
+          styles.button,
+          this.completedStyle(),
+          this.disabledStyle()
+        ]}
         titleStyle={styles.buttonText}
         onPress={this.props.onPress}
         title={this.props.text}

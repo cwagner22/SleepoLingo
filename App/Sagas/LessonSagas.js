@@ -224,7 +224,7 @@ export function* loadLesson({ lesson }) {
 export function* loadNextCard() {
   // const sortedCards = sortCards(cards, false);
   const nextCard = findCardReady(getCurrentCards());
-  yield put(LessonActions.setCurrentCard(nextCard.id));
+  yield put(LessonActions.setCurrentCard(nextCard ? nextCard.id : null));
   setCurrentCard(nextCard);
   return nextCard;
 }
@@ -240,7 +240,7 @@ function findCardReady(cards, allowAlmost = false) {
   if (!cardsReady.length && !allowAlmost) {
     return findCardReady(cards, true);
   } else {
-    return cardsReady[0];
+    return cardsReady.length ? cardsReady[0] : null;
   }
 }
 

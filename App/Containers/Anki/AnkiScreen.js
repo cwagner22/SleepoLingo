@@ -17,11 +17,6 @@ import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 import styles from "./AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
-  componentWillMount() {
-    const { navigation, cards } = this.props;
-    navigation.setParams({ cards });
-  }
-
   componentDidUpdate(prevProps) {
     const { currentCardId } = this.props;
 

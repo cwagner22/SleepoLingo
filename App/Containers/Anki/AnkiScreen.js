@@ -20,7 +20,7 @@ class AnkiScreen extends React.Component {
   componentDidUpdate(prevProps) {
     const { currentCardId } = this.props;
 
-    if (prevProps.currentCardId !== currentCardId) {
+    if (prevProps.currentCardId !== currentCardId && currentCardId) {
       // Next card
       this.swiper.jumpToIndex(this.currentCardIndex(), true);
     }
@@ -44,7 +44,7 @@ class AnkiScreen extends React.Component {
         </View>
         <RoundedButton
           styles={styles.finishButton}
-          onPress={this.props.navigateToLessons}
+          onPress={() => this.props.navigation.navigate("LessonsList")}
         >
           Finish
         </RoundedButton>
@@ -55,9 +55,9 @@ class AnkiScreen extends React.Component {
   swiper = null;
 
   render() {
-    const { cards } = this.props;
+    const { cards, currentCardId } = this.props;
 
-    if (!this.props.currentCardId) {
+    if (!currentCardId) {
       return this.renderNoCards();
     }
     return (
@@ -72,7 +72,7 @@ class AnkiScreen extends React.Component {
           index={this.currentCardIndex()}
           backPressToBack={false}
         >
-          {this.props.cards.map(card => (
+          {cards.map(card => (
             <AnkiCard card={card} key={card.id} />
           ))}
         </Swiper>

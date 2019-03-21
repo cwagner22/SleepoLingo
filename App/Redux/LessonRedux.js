@@ -6,7 +6,7 @@ import Immutable from "seamless-immutable";
 const { Types, Creators } = createActions({
   startAnki: null,
   startLesson: null,
-  ankiDifficulty: null,
+  ankiDifficulty: ["difficulty"],
   lessonShowAnswer: null,
   lessonShowFront: null,
   lessonShowBack: null,
@@ -16,8 +16,6 @@ const { Types, Creators } = createActions({
   loadLesson: ["lesson"],
   setCurrentLesson: ["lessonId"],
   setCurrentCard: ["currentCardId"],
-  resetDates: null,
-  lessonUpdateCompleted: ["isCompleted"],
   setLessonProgress: ["lessonId"]
 });
 
@@ -87,54 +85,6 @@ export const setCurrentCard = (state, { currentCardId }) => {
   });
 };
 
-export const resetDates = state => {
-  return state.merge({
-    showDates: {}
-  });
-};
-
-// function sortCards(cards, allowAlmost = false) {
-//   var sortedCardsReady = cards
-//     .sort(c => c.index)
-//     .filter(card => {
-//       // Exclude future cards
-//       return card.isReady(allowAlmost);
-//     });
-
-//   if (!sortedCardsReady.length && !allowAlmost) {
-//     return sortCards(cards, true);
-//   } else {
-//     return sortedCardsReady;
-//   }
-// }
-
-export const loadNextCard = state => {
-  // const currentLesson = Lesson.getFromId(state.currentLessonId, true);
-  // const sortedCards = sortCards(currentLesson.cards, false);
-  // console.log(sortedCards);
-  // const currentCardId = sortedCards.length ? sortedCards[0].id : null;
-
-  // let newState = state;
-  // if (!currentCardId) {
-  //   newState = lessonUpdateCompleted(state, { isCompleted: true });
-  // }
-
-  return state.merge({
-    showAnswer: false,
-    showFront: true
-    // currentCardId,
-    // currentCard: null
-  });
-};
-
-const updateCardDate = (state, showDate) => {
-  return state.setIn(["showDates", state.currentCardId], showDate.toDate());
-};
-
-const lessonUpdateCompleted = (state, { isCompleted }) => {
-  return state.setIn(["completedLessons", state.currentLessonId], isCompleted);
-};
-
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -143,8 +93,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LESSON_SHOW_FRONT]: showFront,
   [Types.LESSON_SHOW_BACK]: showBack,
   [Types.SET_CURRENT_LESSON]: setCurrentLesson,
-  [Types.SET_CURRENT_CARD]: setCurrentCard,
-  [Types.RESET_DATES]: resetDates,
-  [Types.LOAD_NEXT_CARD]: loadNextCard,
-  [Types.LESSON_UPDATE_COMPLETED]: lessonUpdateCompleted
+  [Types.SET_CURRENT_CARD]: setCurrentCard
 });

@@ -47,6 +47,7 @@ export default class Card extends Model {
       default:
         date = addDays(date, 2);
     }
+
     return await this.update(card => {
       card.showAt = date;
     });

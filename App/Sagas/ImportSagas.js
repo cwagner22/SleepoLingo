@@ -1,4 +1,4 @@
-import { call, put, select } from "redux-saga/effects";
+import { call, put, select, all } from "redux-saga/effects";
 import XLSX from "xlsx";
 import RNFS from "react-native-fs";
 import ImportActions from "../Redux/ImportRedux";
@@ -188,55 +188,97 @@ function parseGroups(workbook) {
   return { lessonGroups, lessons, cards, dictionary };
 }
 
-function* backupUserData() {
-  let modifiedLessons = yield database.collections
-    .get("lessons")
-    .query(Q.or(Q.where("is_completed", true), Q.where("is_in_progress", true)))
+const savedKeys = [
+  {
+    collectionName: "lessons",
+    keys: [
+      {
+        keyCamel: "isCompleted",
+        query: Q.where("is_completed", true)
+      },
+      {
+        keyCamel: "isInProgress",
+        query: Q.where("is_in_progress", true)
+      }
+    ]
+  },
+  {
+    collectionName: "cards",
+    keys: [
+      {
+        keyCamel: "showAt",
+        query: Q.where("show_at", Q.notEq(null))
+      }
+    ]
+  }
+];
+
+function* modifiedRecords(collectionName, allowedKeys) {
+  let records = yield database.collections
+    .get(collectionName)
+    .query(Q.or(...allowedKeys.map(k => k.query)))
     .fetch();
 
-  modifiedLessons = modifiedLessons.map(d => ({
-    id: d.id,
-    is_completed: d.is_completed,
-    is_in_progress: d.is_in_progress
-  }));
-
-  let modifiedCards = yield database.collections
-    .get("cards")
-    .query(Q.where("show_at", Q.notEq(null)))
-    .fetch();
-  modifiedCards = modifiedCards.map(d => ({
-    id: d.id,
-    show_at: d.show_at
-  }));
-
-  return { modifiedLessons, modifiedCards };
+  const keysCamel = allowedKeys.map(k => k.keyCamel);
+  const filtered = records.map(r =>
+    Object.assign({ id: r.id }, ...keysCamel.map(key => ({ [key]: r[key] })))
+  );
+  return filtered;
 }
 
-function* filterDeletedRecords(records, collectionName) {
-  if (records.length) {
-    const foundRecords = yield database.collections
-      .get(collectionName)
-      .query(Q.where("id", Q.oneOf(records.map(l => l.id))))
-      .fetch();
-
-    if (foundRecords.length) {
-      return records.filter(l => foundRecords.some(_l => _l.id === l.id));
-    }
+function* backupUserData() {
+  let records = [];
+  for (const k of savedKeys) {
+    records.push({
+      collectionName: k.collectionName,
+      modifiedProperties: yield call(modifiedRecords, k.collectionName, k.keys)
+    });
   }
-
   return records;
 }
 
-function* restoreUserData(data) {
-  const { modifiedLessons, modifiedCards } = data;
+function* existingRecords(records, collectionName) {
+  const recordsFound = yield database.collections
+    .get(collectionName)
+    .query(Q.where("id", Q.oneOf(records.map(l => l.id))))
+    .fetch();
 
-  const records = [
-    ...(yield filterDeletedRecords(modifiedLessons, "lessons")),
-    ...(yield filterDeletedRecords(modifiedCards, "cards"))
-  ];
+  return recordsFound;
+}
 
-  if (records.length) {
-    yield database.batch(...records.map(d => d.prepareUpdate()));
+function* restoreUserData(userData) {
+  debug("userData", userData);
+
+  let recordsFound = [];
+  for (const data of userData) {
+    if (data.modifiedProperties.length) {
+      const existingRec = yield call(
+        existingRecords,
+        data.modifiedProperties,
+        data.collectionName
+      );
+
+      recordsFound.push(...existingRec);
+    }
+  }
+  // debug("recordsFound", recordsFound);
+
+  if (recordsFound.length) {
+    const allModifiedProperties = userData.reduce(
+      (acc, curr) => acc.concat(curr.modifiedProperties),
+      []
+    );
+    yield database.batch(
+      ...recordsFound.map(r =>
+        r.prepareUpdate(() => {
+          const modifiedProps = allModifiedProperties.find(p => p.id === r.id);
+          let { id, ...modifiedPropsWithoutId } = modifiedProps;
+          debug("modifiedPropsWithoutId", modifiedPropsWithoutId);
+
+          Object.assign(r, modifiedPropsWithoutId);
+        })
+      )
+    );
   }
 }
 
@@ -265,7 +307,7 @@ const lessonsPath = !global.__TEST__
   : "lessons.test.xlsx";
 
 function* startImport(lessonsHash) {
-  console.log("lessonsPath:", lessonsPath);
+  debug("lessonsPath:", lessonsPath);
   debug(`Loading ${lessonsPath}`);
   const data = yield call(RNFS.readFile, lessonsPath, "base64");
   const workbook = yield call(XLSX.read, data);

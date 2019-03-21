@@ -22,10 +22,13 @@ import LessonActions from "../Redux/LessonRedux";
 import {
   ENGLISH,
   THAI,
-  currentLesson,
+  getCurrentLesson,
   getCurrentSentences,
-  currentCard,
-  getCurrentCardsCount
+  getCurrentCard,
+  getCurrentCardsCount,
+  setCurrentCard,
+  getCurrentCards,
+  setCurrentCards
 } from "./LessonSagas";
 
 const debug = Debug("app:PlaybackSaga");
@@ -87,7 +90,7 @@ function* playCard() {
   const playbackState = yield select(getPlaybackState);
 
   const { speed, volume } = playbackState;
-  const sentence = yield currentCard.getSentence();
+  const sentence = yield getCurrentCard().getSentence();
   const translation = playingState === "TRANSLATION";
   const sentenceStr = translation ? sentence.translation : sentence.original;
   const language = translation ? THAI : ENGLISH;
@@ -173,7 +176,7 @@ export function* loadPrevCard() {
 export function* loadCard(next: true) {
   playingState = "ORIGINAL";
   const lessonState = yield select(getLessonState);
-  const currentCards = yield currentLesson.cards.fetch();
+  const currentCards = yield getCurrentLesson().cards.fetch();
 
   if (lessonState.currentCardId) {
     if (next) {
@@ -195,7 +198,9 @@ export function* loadCard(next: true) {
     }
   }
 
-  currentCardId = currentCards[currentIndex].id;
+  const card = getCurrentCards()[currentIndex];
+  setCurrentCard(card);
+  yield put(LessonActions.setCurrentCard(card.id));
 }
 
 function* loadPlayingState(action) {
@@ -293,7 +298,7 @@ function* playerLoopProcess() {
 
 export function* start() {
   const playbackState = yield select(getPlaybackState);
-  const nbCards = yield call(getCurrentCardsCount);
+  // const nbCards = yield call(getCurrentCardsCount);
   lessonLoopMax = playbackState.lessonLoopMax;
   // playing = true
   lessonLoopCounter = 0;
@@ -334,7 +339,7 @@ export function* playbackLoopMaxChange(action) {
 
 function* calculateTotalTime() {
   debug("starting calculateTotalTime()");
-  const nbCards = currentLesson.cards.length;
+  const nbCards = getCurrentLesson().cards.length;
 
   const filesDuration = yield call(
     durationOfFilesTotal,
@@ -346,9 +351,8 @@ function* calculateTotalTime() {
 
   const duration = filesDuration + timeoutsDuration;
 
-  console.log(
-    `Total duration: ${duration.toFixed()}, Files duration: ${filesDuration.toFixed()}, Timeouts duration: ${timeoutsDuration.toFixed()}`
-  );
+  debug(`Total duration: ${duration.toFixed()}, Files duration: ${filesDuration.toFixed()}, 
+    Timeouts duration: ${timeoutsDuration.toFixed()}`);
   yield put(PlaybackActions.playbackSetDuration(duration));
 }
 
@@ -528,8 +532,8 @@ function* calculateProgress() {
 
 export function* startNight() {
   yield put(LessonActions.startLesson());
-  yield put(LessonActions.loadNextCard());
-  const nbCards = yield call(getCurrentCardsCount);
-  yield put(PlaybackActions.playbackSetCardsCount(nbCards));
+  setCurrentCards(yield getCurrentLesson().cards.fetch());
+  // yield put(LessonActions.loadNextCard());
+  yield put(PlaybackActions.playbackSetCardsCount(getCurrentCardsCount()));
   yield put(PlaybackActions.playerStart());
 }

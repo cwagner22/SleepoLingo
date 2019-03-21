@@ -12,7 +12,6 @@ import withObservables from "@nozbe/with-observables";
 import LessonActions from "../Redux/LessonRedux";
 import RoundedButton from "../Components/RoundedButton";
 import PlayerScreen from "./Player/PlayerScreen";
-import LessonTitle from "./LessonTitle";
 
 // Styles
 import styles from "./Styles/LessonScreenStyles";
@@ -99,7 +98,6 @@ class LessonScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    // lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
     playerRunning: state.playback.playerRunning
   };
 };

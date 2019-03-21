@@ -33,8 +33,6 @@ const limit = pLimit(5);
 //     .fetch();
 //   return res.length ? res[0] : null;
 // }
-let currentLesson;
-let currentCard;
 
 // const getCurrentCardId = state => state.lesson.currentCardId;
 // export function* getCurrentCard() {
@@ -42,21 +40,41 @@ let currentCard;
 //   return yield database.collections.get("cards").find(currentCardId);
 // }
 
-function* getCurrentCardsQuery() {
+let _currentLesson;
+export const getCurrentLesson = () => _currentLesson;
+export const setCurrentLesson = lesson => {
+  _currentLesson = lesson;
+};
+
+let _currentCard;
+export const getCurrentCard = () => _currentCard;
+export const setCurrentCard = card => {
+  _currentCard = card;
+};
+
+// Is it needed? Does calling lesson.cards.fetch() store them already?
+let _currentCards = [];
+export const getCurrentCards = () => _currentCards;
+export const setCurrentCards = cards => {
+  _currentCards = cards;
+};
+
+function* _getCurrentCardsQuery() {
   return database.collections
     .get("cards")
-    .query(Q.where("lesson_id", currentLesson.id));
+    .query(Q.where("lesson_id", _currentLesson.id));
 }
 
 export function* getCurrentCardsCount() {
-  const query = yield call(getCurrentCardsQuery);
-  return yield query.fetchCount();
+  // const query = yield call(_getCurrentCardsQuery);
+  // return yield query.fetchCount();
+  return getCurrentCards().length;
 }
 
 export function* getCurrentSentences() {
-  const query = yield call(getCurrentCardsQuery);
-  const cards = yield query.fetch();
-  return getCardsSentences(cards);
+  // const query = yield call(_getCurrentCardsQuery);
+  // const cards = yield query.fetch();
+  return getCardsSentences(getCurrentCards());
 }
 
 const getCardsSentences = cards => cards.map(c => c.getSentence());
@@ -148,14 +166,12 @@ function* restartLesson(lesson) {
 }
 
 function* goToLesson(lesson) {
-  currentLesson = lesson;
   yield call(setLessonProgress, lesson);
+  setCurrentLesson(lesson);
   NavigationService.navigate("Lesson", { lesson });
 }
 
 export function* loadLesson({ lesson }) {
-  // const lesson = yield database.collections.get("lessons").find(lessonId);
-
   if (lesson.isCompleted) {
     const buttons = [
       { text: "Cancel", style: "cancel" },
@@ -175,6 +191,7 @@ export function* loadLesson({ lesson }) {
   } else {
     let done = false;
     if (!lesson.isInProgress) {
+      const currentLesson = getCurrentLesson();
       if (currentLesson && !currentLesson.isCompleted) {
         const buttons = [
           {
@@ -204,44 +221,43 @@ export function* loadLesson({ lesson }) {
   }
 }
 
-function sortCards(cards, allowAlmost = false) {
-  var sortedCardsReady = cards
-    .sort((a, b) => a.index - b.index)
+export function* loadNextCard() {
+  // const sortedCards = sortCards(cards, false);
+  const nextCard = findCardReady(getCurrentCards());
+  yield put(LessonActions.setCurrentCard(nextCard.id));
+  setCurrentCard(nextCard);
+  return nextCard;
+}
+
+function findCardReady(cards, allowAlmost = false) {
+  var cardsReady = cards
+    // .sort((a, b) => a.index - b.index)
     .filter(card => {
       // Exclude future cards
       return card.isReady(allowAlmost);
     });
 
-  if (!sortedCardsReady.length && !allowAlmost) {
-    return sortCards(cards, true);
+  if (!cardsReady.length && !allowAlmost) {
+    return findCardReady(cards, true);
   } else {
-    return sortedCardsReady;
+    return cardsReady[0];
   }
 }
 
-export function* loadNextCard() {
-  const cards = yield currentLesson.cards.fetch();
-  const sortedCards = sortCards(cards, false);
-  const nextCard = sortedCards.length ? sortedCards[0] : null;
-  yield put(LessonActions.setCurrentCard(nextCard.id));
-  currentCard = nextCard;
-  return nextCard;
-}
-
-// Moved the dispatched actions from componentWillMount since the reducers were loaded too late. (mapStateToProps,
-// componentWillReceiveProps and render already called)
 export function* startAnki() {
   yield put(LessonActions.startLesson());
+
+  setCurrentCards(yield getCurrentLesson().cards.fetch());
 
   const nextCard = yield call(loadNextCard);
   NavigationService.navigate("Anki", {
     card: nextCard,
-    lesson: currentLesson
+    lesson: getCurrentLesson()
   });
 }
 
 export function* ankiDifficulty({ difficulty }) {
-  yield currentCard.ankiDifficulty(difficulty);
+  yield getCurrentCard().ankiDifficulty(difficulty);
   yield put(LessonActions.loadNextCard());
 }
 
@@ -257,6 +273,7 @@ export function* setLessonProgress(lesson) {
     );
 
     // Set last lesson as not in progress
+    const currentLesson = getCurrentLesson();
     if (currentLesson) {
       records.push(
         currentLesson.prepareUpdate(l => {

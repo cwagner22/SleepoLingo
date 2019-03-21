@@ -88,13 +88,8 @@ class PlayerScreen extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // const currentLesson = Lesson.getFromId(state.lesson.currentLessonId, true);
   return {
     isPaused: state.playback.isPaused,
-    // currentCards: currentLesson.cards,
-    // currentCard:
-    //   state.lesson.currentCardId &&
-    //   Card.getFromId(state.lesson.currentCardId, true),
     playingState: state.playback.playingState,
     volume: state.playback.volume,
     currentCardId: state.lesson.currentCardId

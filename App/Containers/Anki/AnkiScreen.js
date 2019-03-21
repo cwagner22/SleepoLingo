@@ -23,16 +23,16 @@ class AnkiScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { card } = this.props;
+    const { currentCardId } = this.props;
 
-    if (prevProps.card.id !== card.id) {
+    if (prevProps.currentCardId !== currentCardId) {
       // Next card
-      this.swiper.jumpToIndex(card.index, true);
+      this.swiper.jumpToIndex(this.currentCardIndex(), true);
     }
   }
 
   currentCardIndex() {
-    return this.props.card.index;
+    return this.props.cards.find(c => c.id === this.props.currentCardId).index;
   }
 
   renderNoCards() {
@@ -60,6 +60,8 @@ class AnkiScreen extends React.Component {
   swiper = null;
 
   render() {
+    const { cards } = this.props;
+
     if (!this.props.currentCardId) {
       return this.renderNoCards();
     }
@@ -99,7 +101,7 @@ const enhance = withObservables(
     const lesson = navigation.getParam("lesson");
 
     return {
-      card: database.collections.get("cards").findAndObserve(currentCardId),
+      // card: database.collections.get("cards").findAndObserve(currentCardId),
       lesson,
       cards: lesson.cards
     };

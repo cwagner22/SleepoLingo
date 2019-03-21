@@ -100,17 +100,9 @@ class LessonsListScreen extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    // lesson: Lesson.getFromId(state.lesson.currentLessonId, true),
-    // playerRunning: state.playback.playerRunning
-  };
-};
-
 const mapDispatchToProps = dispatch => {
   return {
     loadLesson: lesson => dispatch(LessonActions.loadLesson(lesson))
-    // startAnki: () => dispatch(LessonActions.startAnki())
   };
 };
 
@@ -126,6 +118,6 @@ const enhance = withObservables([], ({ database }) => ({
 }));
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(withDatabase(enhance(LessonsListScreen)));

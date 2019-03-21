@@ -100,8 +100,8 @@ const enhance = withObservables(
 
     return {
       card: database.collections.get("cards").findAndObserve(currentCardId),
-      lesson: lesson.observe(),
-      cards: lesson.cards.observe()
+      lesson,
+      cards: lesson.cards
     };
   }
 );

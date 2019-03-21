@@ -109,7 +109,7 @@ function parseLesson(worksheet, lessonGroup, index) {
   debug(`Lesson: ${name}`);
 
   let note;
-  const id = worksheet[0].Id
+  const id = worksheet[0].Id;
   if (
     worksheet[1].Original &&
     !worksheet[1].Translation &&
@@ -123,7 +123,7 @@ function parseLesson(worksheet, lessonGroup, index) {
 
   const lesson = database.collections.get("lessons").prepareCreate(l => {
     l._raw.id = id.toString();
-    l.index = index
+    l.index = index;
     l.name = name;
     l.note = note;
     l.lessonGroup.set(lessonGroup);
@@ -189,15 +189,25 @@ function parseGroups(workbook) {
 }
 
 function* backupUserData() {
-  const modifiedLessons = yield database.collections
+  let modifiedLessons = yield database.collections
     .get("lessons")
-    .query(Q.where("is_completed", true))
+    .query(Q.or(Q.where("is_completed", true), Q.where("is_in_progress", true)))
     .fetch();
 
-  const modifiedCards = yield database.collections
+  modifiedLessons = modifiedLessons.map(d => ({
+    id: d.id,
+    is_completed: d.is_completed,
+    is_in_progress: d.is_in_progress
+  }));
+
+  let modifiedCards = yield database.collections
     .get("cards")
     .query(Q.where("show_at", Q.notEq(null)))
     .fetch();
+  modifiedCards = modifiedCards.map(d => ({
+    id: d.id,
+    show_at: d.show_at
+  }));
 
   return { modifiedLessons, modifiedCards };
 }

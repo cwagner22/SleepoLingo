@@ -25,29 +25,27 @@ const debug = Debug("app:LessonSagas");
 
 const limit = pLimit(5);
 
-const isCompleted = (state, lessonId) =>
-  !!state.lesson.completedLessons[lessonId];
+// const getCurrentLessonId = state => state.lesson.currentLessonId;
+// export function* getCurrentLesson() {
+//   const res = yield database.collections
+//     .get("lessons")
+//     .query(Q.where("is_in_progress", true))
+//     .fetch();
+//   return res.length ? res[0] : null;
+// }
+let currentLesson;
+let currentCard;
 
-const getCurrentLessonId = state => state.lesson.currentLessonId;
-export function* getCurrentLesson() {
-  const res = yield database.collections
-    .get("lessons")
-    .query(Q.where("is_in_progress", true))
-    .fetch();
-  return res.length ? res[0] : null;
-}
-
-const getCurrentCardId = state => state.lesson.currentCardId;
-export function* getCurrentCard() {
-  const currentCardId = yield select(getCurrentCardId);
-  return yield database.collections.get("cards").find(currentCardId);
-}
+// const getCurrentCardId = state => state.lesson.currentCardId;
+// export function* getCurrentCard() {
+//   const currentCardId = yield select(getCurrentCardId);
+//   return yield database.collections.get("cards").find(currentCardId);
+// }
 
 function* getCurrentCardsQuery() {
-  const currentLessonId = yield select(getCurrentLessonId);
   return database.collections
     .get("cards")
-    .query(Q.where("lesson_id", currentLessonId));
+    .query(Q.where("lesson_id", currentLesson.id));
 }
 
 export function* getCurrentCardsCount() {
@@ -144,37 +142,13 @@ export function* downloadLesson({ cards }) {
   }
 }
 
-// Because of the way "call" works, if we want to "put" an action
-// after a callback is invoked, we can return a promise that is
-// bound to resolve when the callback is invoked
-function bindCallbackToPromise() {
-  let _resolve;
-  const promise = () => {
-    return new Promise(resolve => {
-      _resolve = resolve;
-    });
-  };
-  const cb = args => _resolve(args);
-
-  return {
-    promise,
-    cb
-  };
-}
-
-function* processLessonAlert(res, lessonId) {
-  if (res.hasOwnProperty("confirm")) {
-    yield put(LessonActions.resetDates());
-    yield put(LessonActions.setCurrentLesson(lessonId));
-    yield put(LessonActions.lessonUpdateCompleted(false));
-    yield put(navigateToLesson());
-  } else {
-    // yield call(NavigatorService.reset, 'LessonsListScreen')
-  }
+function* restartLesson(lesson) {
+  yield call(resetCardsDates, lesson);
+  yield call(goToLesson, lesson);
 }
 
 function* goToLesson(lesson) {
-  yield put(LessonActions.setCurrentLesson(lesson.id));
+  currentLesson = lesson;
   yield call(setLessonProgress, lesson);
   NavigationService.navigate("Lesson", { lesson });
 }
@@ -183,28 +157,24 @@ export function* loadLesson({ lesson }) {
   // const lesson = yield database.collections.get("lessons").find(lessonId);
 
   if (lesson.isCompleted) {
-    const cancel = bindCallbackToPromise();
-    const confirm = bindCallbackToPromise();
+    const buttons = [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Start again",
+        style: "default",
+        call: { method: restartLesson, args: lesson }
+      }
+    ];
 
-    Alert.alert("Lesson Completed", "You have already completed this lesson.", [
-      { text: "Start again", onPress: confirm.cb },
-      { text: "Cancel", onPress: cancel.cb }
-    ]);
-
-    // The race will wait for either the cancel or confirm callback to be invoked - which skirts
-    // around the problem of trying to "put" from within a callback: don't put an event, instead
-    // rely strictly on the resolution of a promise
-    const res = yield race({
-      cancel: call(cancel.promise),
-      confirm: call(confirm.promise)
-    });
-
-    yield call(processLessonAlert, res, lessonId);
+    yield call(
+      alert,
+      "Lesson Completed",
+      "You have already completed this lesson.",
+      buttons
+    );
   } else {
     let done = false;
     if (!lesson.isInProgress) {
-      const currentLesson = yield call(getCurrentLesson);
-
       if (currentLesson && !currentLesson.isCompleted) {
         const buttons = [
           {
@@ -250,12 +220,11 @@ function sortCards(cards, allowAlmost = false) {
 }
 
 export function* loadNextCard() {
-  currentLesson = yield call(getCurrentLesson);
-
   const cards = yield currentLesson.cards.fetch();
   const sortedCards = sortCards(cards, false);
   const nextCard = sortedCards.length ? sortedCards[0] : null;
   yield put(LessonActions.setCurrentCard(nextCard.id));
+  currentCard = nextCard;
   return nextCard;
 }
 
@@ -265,33 +234,32 @@ export function* startAnki() {
   yield put(LessonActions.startLesson());
 
   const nextCard = yield call(loadNextCard);
-  const lesson = yield call(getCurrentLesson);
   NavigationService.navigate("Anki", {
     card: nextCard,
-    lesson
+    lesson: currentLesson
   });
 }
 
 export function* ankiDifficulty({ difficulty }) {
-  const currentCard = yield call(getCurrentCard);
   yield currentCard.ankiDifficulty(difficulty);
-
   yield put(LessonActions.loadNextCard());
 }
 
 export function* setLessonProgress(lesson) {
-  if (!lesson.isInProgress) {
+  if (!lesson.isInProgress || lesson.isCompleted) {
     let records = [];
     records.push(
+      // Set the lesson as in progress
       lesson.prepareUpdate(l => {
         l.isInProgress = true;
+        l.isCompleted = false;
       })
     );
 
-    const lastLesson = yield call(getCurrentLesson);
-    if (lastLesson) {
+    // Set last lesson as not in progress
+    if (currentLesson) {
       records.push(
-        lastLesson.prepareUpdate(l => {
+        currentLesson.prepareUpdate(l => {
           l.isInProgress = false;
         })
       );
@@ -299,4 +267,14 @@ export function* setLessonProgress(lesson) {
 
     yield database.batch(...records);
   }
+}
+
+function* resetCardsDates(lesson) {
+  const records = lesson.cards.map(l =>
+    l.prepareUpdate(l => {
+      l.showAt = null;
+    })
+  );
+
+  yield database.batch(...records);
 }

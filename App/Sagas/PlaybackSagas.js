@@ -22,9 +22,9 @@ import LessonActions from "../Redux/LessonRedux";
 import {
   ENGLISH,
   THAI,
-  getCurrentLesson,
+  currentLesson,
   getCurrentSentences,
-  getCurrentCard,
+  currentCard,
   getCurrentCardsCount
 } from "./LessonSagas";
 
@@ -84,7 +84,6 @@ function* play(sentence, language, volume, speed) {
 }
 
 function* playCard() {
-  const currentCard = yield call(getCurrentCard);
   const playbackState = yield select(getPlaybackState);
 
   const { speed, volume } = playbackState;
@@ -174,7 +173,6 @@ export function* loadPrevCard() {
 export function* loadCard(next: true) {
   playingState = "ORIGINAL";
   const lessonState = yield select(getLessonState);
-  const currentLesson = yield call(getCurrentLesson);
   const currentCards = yield currentLesson.cards.fetch();
 
   if (lessonState.currentCardId) {
@@ -336,7 +334,6 @@ export function* playbackLoopMaxChange(action) {
 
 function* calculateTotalTime() {
   debug("starting calculateTotalTime()");
-  const currentLesson = yield call(getCurrentLesson);
   const nbCards = currentLesson.cards.length;
 
   const filesDuration = yield call(

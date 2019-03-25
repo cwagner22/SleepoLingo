@@ -30,8 +30,8 @@ export default class LessonButton extends React.Component {
   disabledStyle() {
     if (this.props.isDisabled) {
       return {
-        opacity: 0.5,
-        backgroundColor: Colors.darkGrey
+        opacity: 0.5
+        // backgroundColor: Colors.darkGrey
       };
     }
   }

@@ -96,11 +96,13 @@ class LessonsListScreen extends Component {
           )}
           sections={sections}
           keyExtractor={item => item.id}
+          ListFooterComponent={
+            <Text style={styles.footer}>
+              More lessons? Another language? Use the contact section to send
+              your feedback. 😉
+            </Text>
+          }
         />
-        <Text style={styles.footer}>
-          More lessons? Another language? Use the contact section to send your
-          feedback. 😉
-        </Text>
       </View>
     );
   }

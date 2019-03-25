@@ -8,7 +8,8 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: Metrics.section,
     marginVertical: Metrics.baseMargin,
-    backgroundColor: Colors.cheeryPink
+    backgroundColor: Colors.cheeryPink,
+    paddingRight: 50
   },
   buttonText: {
     fontWeight: "bold",

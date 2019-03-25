@@ -58,6 +58,7 @@ export default class LessonButton extends React.Component {
         titleStyle={styles.buttonText}
         onPress={this.props.onPress}
         title={this.props.text}
+        titleProps={{ adjustsFontSizeToFit: true }}
         icon={this.renderNbLeft()}
         iconRight={true}
         testID={this.props.testID}

@@ -64,61 +64,82 @@ const createCard = (properties, lesson, index, id) =>
     card.lesson.set(lesson);
   });
 
-const getCardPropertiesFromRow = row => ({
-  note: row.Note,
-  sentenceOriginal: getSentence(row.Original),
-  sentenceTranslation: getSentence(row.Translation),
-  sentenceTransliteration: getSentence(row.Transliteration),
-  fullSentenceOriginal: getFullSentence(row.Original),
-  fullSentenceTranslation: getFullSentence(row.Translation),
-  fullSentenceTransliteration: getFullSentence(row.Transliteration)
-});
+const getCardPropertiesFromRow = row => {
+  const {
+    Note: note,
+    Translation: translation,
+    Transliteration: transliteration
+  } = row;
+
+  // original can be 0
+  const original =
+    row.Original || row.Original === 0 ? row.Original.toString() : null;
+
+  return {
+    ...(note && { note }),
+    ...(original && { sentenceOriginal: getSentence(original) }),
+    ...(translation && { sentenceTranslation: getSentence(translation) }),
+    ...(transliteration && {
+      sentenceTransliteration: getSentence(transliteration)
+    }),
+    ...(original && { fullSentenceOriginal: getFullSentence(original) }),
+    ...(translation && {
+      fullSentenceTranslation: getFullSentence(translation)
+    }),
+    ...(transliteration && {
+      fullSentenceTransliteration: getFullSentence(transliteration)
+    })
+  };
+};
 
 function parseCards(worksheet, lesson) {
   debug("Parsing cards, worksheet length: ", worksheet.length);
   let cards = [];
   for (var i = 0; i < worksheet.length; i++) {
     var row = worksheet[i];
-    if (!row.Original || !row.Translation || !row.Transliteration) {
+    const properties = getCardPropertiesFromRow(row);
+    if (
+      !properties.sentenceOriginal ||
+      !properties.sentenceTranslation ||
+      !properties.sentenceTransliteration
+    ) {
       break;
     }
 
-    const newCard = createCard(
-      getCardPropertiesFromRow(row),
-      lesson,
-      i,
-      row.Id
-    );
+    const newCard = createCard(properties, lesson, i, row.Id);
     cards.push(newCard);
   }
 
+  // Remove parsed cards
   worksheet.splice(0, i);
+
   debug(cards.length + " cards found");
   return cards;
 }
+
+const getNote = row =>
+  !row.Id && row.Original && !row.Translation && !row.Transliteration
+    ? row.Original
+    : null;
 
 function parseLesson(worksheet, lessonGroup, index) {
   if (!worksheet.length) return;
   debug("Parsing lesson, worksheet length: ", worksheet.length);
   const lessonNameFull = worksheet[0].Original;
   const res = lessonNameFull.match(/Lesson (\d+): (.+)/);
+  if (!res) return; // Not a lesson, ignore
   const lessonIndex = res[1];
   const name = res[2];
-  if (!lessonIndex || !name) return;
+  if (!lessonIndex || !name) return; // Missing values
 
   debug(`Lesson: ${name}`);
 
-  let note;
   const id = worksheet[0].Id;
-  if (
-    worksheet[1].Original &&
-    !worksheet[1].Translation &&
-    !worksheet[1].Transliteration
-  ) {
-    // Note is optional
-    note = worksheet[1].Original;
-  }
 
+  // Note is optional
+  const note = getNote(worksheet[1]);
+
+  // Skip to cards
   worksheet.splice(0, note ? 2 : 1);
 
   const lesson = database.collections.get("lessons").prepareCreate(l => {
@@ -142,7 +163,7 @@ function parseLessons(worksheet, lessonGroup) {
     const { lesson, cards: _cards } =
       parseLesson(worksheet, lessonGroup, index) || {};
     index++;
-    if (lesson && _cards.length) {
+    if (lesson) {
       lessons = lessons.concat(lesson);
       cards = cards.concat(_cards);
       canContinue = worksheet.length > 2;

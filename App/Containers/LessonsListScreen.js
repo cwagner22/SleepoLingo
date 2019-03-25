@@ -98,8 +98,8 @@ class LessonsListScreen extends Component {
           keyExtractor={item => item.id}
         />
         <Text style={styles.footer}>
-          Use the contact section to leave your suggestions. More languages will
-          be added in the future. 😉
+          More lessons? Another language? Use the contact section to send your
+          feedback. 😉
         </Text>
       </View>
     );

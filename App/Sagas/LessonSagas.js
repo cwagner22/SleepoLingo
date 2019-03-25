@@ -274,17 +274,8 @@ export function* ankiDifficulty({ difficulty }) {
 
 export function* setLessonProgress(lesson) {
   if (!lesson.isInProgress || lesson.isCompleted) {
-    let records = [];
-    records.push(
-      // Set the lesson as in progress
-      lesson.prepareUpdate(l => {
-        l.isInProgress = true;
-        l.isCompleted = false;
-      })
-    );
-
     // Set last lesson as not in progress
-    // const currentLesson = yield select(getCurrentLessonFromState);
+    let records = [];
     const lastLesson = yield call(getLessonInProgress);
     if (lastLesson) {
       records.push(
@@ -293,6 +284,14 @@ export function* setLessonProgress(lesson) {
         })
       );
     }
+
+    records.push(
+      // Set the lesson as in progress
+      lesson.prepareUpdate(l => {
+        l.isInProgress = true;
+        l.isCompleted = false;
+      })
+    );
 
     yield database.batch(...records);
   }

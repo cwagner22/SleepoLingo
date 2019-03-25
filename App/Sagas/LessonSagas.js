@@ -192,30 +192,45 @@ export function* loadLesson({ lesson }) {
   } else {
     let done = false;
     if (!lesson.isInProgress) {
-      // Alert if there is another lesson in progress
-      // const currentLesson = yield select(getCurrentLessonFromState);
-      const lastLesson = yield call(getLessonInProgress);
-      if (lastLesson && !lastLesson.isCompleted) {
+      if (!lesson.cards.length) {
         const buttons = [
           {
-            text: "Start new lesson",
-            call: { method: goToLesson, args: lesson }
-          },
-          {
-            text: "Cancel",
-            style: "cancel",
+            text: "OK",
             call: () => {}
           }
         ];
 
-        yield call(
-          alert,
-          "New Lesson",
-          "You have another lesson in progress.",
-          buttons
-        );
+        yield call(alert, "Coming soon...", "Check back later", buttons);
 
         done = true;
+      }
+
+      if (!done) {
+        // Alert if there is another lesson in progress
+        // const currentLesson = yield select(getCurrentLessonFromState);
+        const lastLesson = yield call(getLessonInProgress);
+        if (lastLesson && !lastLesson.isCompleted) {
+          const buttons = [
+            {
+              text: "Start new lesson",
+              call: { method: goToLesson, args: lesson }
+            },
+            {
+              text: "Cancel",
+              style: "cancel",
+              call: () => {}
+            }
+          ];
+
+          yield call(
+            alert,
+            "New Lesson",
+            "You have another lesson in progress.",
+            buttons
+          );
+
+          done = true;
+        }
       }
     }
 

@@ -52,7 +52,7 @@ test("generates the database properly", async () => {
           .get("lessons")
           .query()
           .fetch();
-        expect(lessons.length).toEqual(2);
+        expect(lessons.length).toEqual(4);
       })
   );
 });

@@ -16,12 +16,18 @@ import styles from "./Styles/LessonsListScreenStyle";
 const RawLessonItem = ({ lesson, cards, onPress, testID, isDisabled }) => {
   const nbCardsLeft = () => {
     // todo: only for current lesson?
-    return cards.reduce((total, card) => {
+    let count = cards.reduce((total, card) => {
       if (card.isReady(false)) {
         total++;
       }
       return total;
     }, 0);
+
+    // fake count for lessons not available for now
+    if (!count && !lesson.isCompleted) {
+      count = 10;
+    }
+    return count;
   };
 
   return (

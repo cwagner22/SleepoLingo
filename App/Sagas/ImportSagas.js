@@ -328,6 +328,7 @@ const lessonsPath = !global.__TEST__
   : "lessons.test.xlsx";
 
 function* startImport(lessonsHash) {
+  yield put(ImportActions.setIsImporting(true));
   debug("lessonsPath:", lessonsPath);
   debug(`Loading ${lessonsPath}`);
   const data = yield call(RNFS.readFile, lessonsPath, "base64");
@@ -335,6 +336,7 @@ function* startImport(lessonsHash) {
 
   yield call(importLessons, workbook);
   yield put(ImportActions.setLessonsHash(lessonsHash));
+  yield put(ImportActions.setIsImporting(false));
   debug("Done");
 }
 

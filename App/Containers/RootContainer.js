@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StatusBar } from "react-native";
+import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { Platform } from "react-native";
 import Sound from "react-native-sound";
@@ -34,23 +34,35 @@ class RootContainer extends Component {
   render() {
     return (
       <View style={styles.applicationView}>
-        <AppContainer
-          ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef);
-          }}
-          // persistenceKey={navigationPersistenceKey}
-        />
+        {!this.props.isImporting && (
+          <AppContainer
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }}
+            // persistenceKey={navigationPersistenceKey}
+          />
+        )}
+        {this.props.isImporting && (
+          <View style={styles.updatingContainer}>
+            <Text style={styles.updating}>Updating Lessons...</Text>
+          </View>
+        )}
       </View>
     );
   }
 }
 
-// wraps dispatch to create nicer functions to call within our component
+const mapStateToProps = state => {
+  return {
+    isImporting: state.import.isImporting
+  };
+};
+
 const mapDispatchToProps = dispatch => ({
   importLessonsIfNeeded: () => dispatch(ImportActions.importLessonsIfNeeded())
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(RootContainer);

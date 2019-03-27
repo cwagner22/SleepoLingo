@@ -1,24 +1,19 @@
-import {StyleSheet} from 'react-native'
-import {Fonts, Metrics, Colors} from '../../Themes/'
+import { StyleSheet } from "react-native";
+import { Fonts, Metrics, Colors, ApplicationStyles } from "../../Themes/";
 
 export default StyleSheet.create({
+  ...ApplicationStyles.screen,
   applicationView: {
     flex: 1
   },
-  container: {
+  updatingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: Colors.background
+    justifyContent: "center"
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    fontFamily: Fonts.type.base,
+  updating: {
+    fontSize: Fonts.size.h4,
+    textAlign: "center",
+    // fontFamily: Fonts.type.base,
     margin: Metrics.baseMargin
-  },
-  myImage: {
-    width: 200,
-    height: 200,
-    alignSelf: 'center'
   }
-})
+});

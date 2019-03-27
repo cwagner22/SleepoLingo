@@ -192,7 +192,8 @@ export function* loadLesson({ lesson }) {
   } else {
     let done = false;
     if (!lesson.isInProgress) {
-      if (!lesson.cards.length) {
+      const cardsCount = yield lesson.cards.fetchCount();
+      if (!cardsCount) {
         const buttons = [
           {
             text: "OK",

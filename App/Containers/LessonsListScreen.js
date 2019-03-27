@@ -23,7 +23,7 @@ const RawLessonItem = ({ lesson, cards, onPress, testID, isDisabled }) => {
       return total;
     }, 0);
 
-    // fake count for lessons not available for now
+    // Fake count for lessons not available for now
     if (!count && !lesson.isCompleted) {
       count = 10;
     }

@@ -305,7 +305,7 @@ function* restoreUserData(userData) {
 
 function* importLessons(workbook) {
   const userData = yield call(backupUserData);
-  yield database.unsafeResetDatabase();
+  yield database.action(() => database.unsafeResetDatabase());
 
   // debug("workbook:", workbook);
   const { lessonGroups, lessons, cards, dictionary } = parseGroups(workbook);

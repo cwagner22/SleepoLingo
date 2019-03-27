@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -26,6 +25,7 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		14E59E39B00E4F85ACB03B79 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B34E6F4856A45E28684FDF5 /* libRNVectorIcons.a */; };
+		1C8C70FC08DCFC0A236D7F6B /* Pods_SleepoLingo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4887D012089229BC931514FE /* Pods_SleepoLingo.framework */; };
 		1CF9F8C552444DE2A1E1E075 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D2ABB2FD0154977A3D72573 /* libRNVectorIcons-tvOS.a */; };
 		1EA7131137EF44B0A9B71447 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 670D4C92518A4FB0B8830B3A /* Feather.ttf */; };
 		23A70307E4C748719A23EA89 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 458647FA3E774342BAAEEBCA /* Entypo.ttf */; };
@@ -52,6 +52,7 @@
 		4E7F5B0422669D0D5ABA05B9 /* libPods-SleepoLingo-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF92CDC2C26E639B9BD5F6CB /* libPods-SleepoLingo-tvOSTests.a */; };
 		51DC2854503544DBA08D78D2 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E992FF510A8469D88D1B737 /* FontAwesome5_Regular.ttf */; };
 		5943741A459D44A8A304FD10 /* libRNI18n-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D989E66543264B978E7A69AA /* libRNI18n-tvOS.a */; };
+		63CF930EEDDD2A3C5E0023C0 /* Pods_SleepoLingoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BC2B2EAFA8B69B220952ABF /* Pods_SleepoLingoTests.framework */; };
 		6C3EEEB3613D4E69868369C3 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAEE4D592544470781C72E03 /* FontAwesome.ttf */; };
 		75E6BE3464304515B64E122E /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A840E6C870747C69D58578E /* libBVLinearGradient.a */; };
 		7E014D77C8ED47B3A6AB7EBC /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FE95C27C0174214AD0D8437 /* Roboto.ttf */; };
@@ -537,6 +538,7 @@
 		028DFFB1018C496F89863FB8 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		05D463661A3D49CAB9130D93 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		08B9FCE62DE14E1A92AB5A36 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		0BC2B2EAFA8B69B220952ABF /* Pods_SleepoLingoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SleepoLingoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E229840289C4B2EBBF1BD26 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		1007FF661A224DF18E603CA4 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNative.a; sourceTree = "<group>"; };
 		12B7361C7F414ACDA60B6C45 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -623,7 +625,6 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FAEE4D592544470781C72E03 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		FB6D0C373D6943F9AD13DDC4 /* libReactNativeConfig-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libReactNativeConfig-tvOS.a"; sourceTree = "<group>"; };
-		FB7A698E94E91DE603CA9E79 /* Pods_SleepoLingoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SleepoLingoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC1DAA29158F422EA9E665EE /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		FF92CDC2C26E639B9BD5F6CB /* libPods-SleepoLingo-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SleepoLingo-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -634,6 +635,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
+				63CF930EEDDD2A3C5E0023C0 /* Pods_SleepoLingoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +671,7 @@
 				493ACD0D033F47EE81C2D1A0 /* libRNSound.a in Frameworks */,
 				14E59E39B00E4F85ACB03B79 /* libRNVectorIcons.a in Frameworks */,
 				FCAC78F1B5A0431496BA84AA /* libRNFetchBlob.a in Frameworks */,
+				1C8C70FC08DCFC0A236D7F6B /* Pods_SleepoLingo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -864,7 +867,7 @@
 				4887D012089229BC931514FE /* Pods_SleepoLingo.framework */,
 				B404DA5EB2ACD99B146842A0 /* libPods-SleepoLingo-tvOS.a */,
 				FF92CDC2C26E639B9BD5F6CB /* libPods-SleepoLingo-tvOSTests.a */,
-				FB7A698E94E91DE603CA9E79 /* Pods_SleepoLingoTests.framework */,
+				0BC2B2EAFA8B69B220952ABF /* Pods_SleepoLingoTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1289,6 +1292,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

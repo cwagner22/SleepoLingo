@@ -16,7 +16,7 @@ import styles from "./Styles/LessonsListScreenStyle";
 const RawLessonItem = ({ lesson, cards, onPress, testID, isDisabled }) => {
   const nbCardsLeft = () => {
     // todo: only for current lesson?
-    let count = cards.reduce((total, card) => {
+    return cards.reduce((total, card) => {
       if (card.isReady(false)) {
         total++;
       }
@@ -24,10 +24,10 @@ const RawLessonItem = ({ lesson, cards, onPress, testID, isDisabled }) => {
     }, 0);
 
     // Fake count for lessons not available for now
-    if (!count && !lesson.isCompleted) {
-      count = 10;
-    }
-    return count;
+    // if (!count && !lesson.isCompleted) {
+    //   count = 10;
+    // }
+    // return count;
   };
 
   return (

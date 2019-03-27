@@ -3,6 +3,7 @@ import { View, Text, TouchableHighlight, ScrollView } from "react-native";
 import { ListItem } from "react-native-elements";
 import { connect } from "react-redux";
 import Collapsible from "react-native-collapsible";
+import withObservables from "@nozbe/with-observables";
 
 import PlaybackActions from "../../Redux/PlaybackRedux";
 
@@ -64,7 +65,7 @@ class WordsListScreen extends React.Component {
   }
 
   render() {
-    const cards = this.props.navigation.getParam("cards");
+    const { cards } = this.props;
     return <ScrollView>{cards.map(card => this.renderItem(card))}</ScrollView>;
   }
 }
@@ -76,7 +77,15 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+const enhance = withObservables([], ({ navigation }) => {
+  const lesson = navigation.getParam("lesson");
+
+  return {
+    cards: lesson.cards
+  };
+});
+
 export default connect(
   null,
   mapDispatchToProps
-)(WordsListScreen);
+)(enhance(WordsListScreen));

@@ -55,7 +55,7 @@ const LessonsStack = createStackNavigator(
           <Button
             onPress={() =>
               navigation.navigate("WordsList", {
-                cards: navigation.getParam("cards")
+                lesson: navigation.getParam("lesson")
               })
             }
             title="All Words"

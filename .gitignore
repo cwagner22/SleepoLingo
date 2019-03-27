@@ -30,6 +30,13 @@ build/
 local.properties
 *.iml
 
+# vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 # node.js
 #
 node_modules/

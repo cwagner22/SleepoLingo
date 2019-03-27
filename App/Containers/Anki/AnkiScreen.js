@@ -106,4 +106,4 @@ const enhance = withObservables(
 export default connect(
   mapStateToProps,
   null
-)(withDatabase(enhance(AnkiScreen)));
+)(enhance(AnkiScreen));

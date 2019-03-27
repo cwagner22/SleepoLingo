@@ -1,33 +1,25 @@
-import React from 'react'
-import { ScrollView, Text, KeyboardAvoidingView } from 'react-native'
-import { connect } from 'react-redux'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+import React from "react";
+import { Text, View, Linking } from "react-native";
+import RoundedButton from "../Components/RoundedButton";
 
 // Styles
-import styles from './Styles/ContactScreenStyle'
+import styles from "./Styles/ContactScreenStyle";
 
-class ContactScreenScreen extends React.Component {
-  render () {
+export default class ContactScreenScreen extends React.Component {
+  render() {
     return (
-      <ScrollView style={styles.container}>
-        <KeyboardAvoidingView behavior='position'>
-          <Text>ContactScreen Screen</Text>
-        </KeyboardAvoidingView>
-      </ScrollView>
-    )
+      <View style={styles.container}>
+        <Text style={styles.text}>
+          More lessons? Another language? Leave a message! 😉
+        </Text>
+        <RoundedButton
+          onPress={() =>
+            Linking.openURL("mailto:hi@chriswt.com?subject=SleepoLingo")
+          }
+        >
+          Contact Support
+        </RoundedButton>
+      </View>
+    );
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactScreenScreen)

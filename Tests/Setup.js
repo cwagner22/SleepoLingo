@@ -30,11 +30,13 @@ jest.mock("../App/Services/NavigationService", () => ({
 jest.mock("react-native-background-timer", () => {});
 jest.mock("react-native-sound");
 jest.mock("rn-fetch-blob", () => {});
-jest.mock("react-native-simple-toast", () => {});
+jest.mock("react-native-simple-toast", () => ({
+  show: jest.fn()
+}));
 
 jest.mock("react-native-fs", () => {
   return {
-    // mkdir: jest.fn(),
+    mkdir: jest.fn(),
     // moveFile: jest.fn(),
     // copyFile: jest.fn(),
     // pathForBundle: jest.fn(),
@@ -48,7 +50,13 @@ jest.mock("react-native-fs", () => {
     // isResumable: jest.fn(),
     // stopUpload: jest.fn(),
     // completeHandlerIOS: jest.fn(),
-    // readDir: jest.fn(),
+    readDir: jest.fn(() => [
+      {
+        name: "cf8c96b6656c531eafaa3b003b7ced34.mp3",
+        path: "test/en-US/cf8c96b6656c531eafaa3b003b7ced34.mp3",
+        size: 4608
+      }
+    ]),
     // readDirAssets: jest.fn(),
     // existsAssets: jest.fn(),
     // readdir: jest.fn(),

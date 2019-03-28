@@ -112,7 +112,8 @@ export function* filterSentencesNotCached(sentences, language) {
   });
 }
 
-export function* downloadLesson({ cards }) {
+export function* downloadLesson() {
+  const cards = getCurrentCards();
   let sentencesOriginal = [],
     sentencesTranslation = [];
   for (const c of cards) {
@@ -168,6 +169,8 @@ function* restartLesson(lesson) {
 function* goToLesson(lesson) {
   yield call(setLessonProgress, lesson);
   setCurrentLesson(lesson);
+  setCurrentCards(yield lesson.cards.fetch());
+  yield put(LessonActions.downloadLesson());
   // yield put(LessonActions.setCurrentLesson(lesson.id));
   NavigationService.navigate("Lesson", { lesson });
 }
@@ -274,7 +277,7 @@ function findCardReady(cards, allowAlmost = false) {
 export function* startAnki() {
   yield put(LessonActions.startLesson());
 
-  setCurrentCards(yield getCurrentLesson().cards.fetch());
+  // setCurrentCards(yield getCurrentLesson().cards.fetch());
 
   const nextCard = yield call(loadNextCard);
   NavigationService.navigate("Anki", {

@@ -532,7 +532,7 @@ function* calculateProgress() {
 
 export function* startNight() {
   yield put(LessonActions.startLesson());
-  setCurrentCards(yield getCurrentLesson().cards.fetch());
+  // setCurrentCards(yield getCurrentLesson().cards.fetch());
   // yield put(LessonActions.loadNextCard());
   yield put(PlaybackActions.playbackSetCardsCount(getCurrentCardsCount()));
   yield put(PlaybackActions.playerStart());

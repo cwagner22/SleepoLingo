@@ -79,7 +79,9 @@ class PlayerScreen extends React.Component {
           volume={this.props.volume}
           onChange={volume => this.props.changeVol(volume)}
         />
-        {/* <PlayerProgress card={card} cardsCount={cardsCount} /> */}
+        {card && cardsCount && (
+          <PlayerProgress card={card} cardsCount={cardsCount} />
+        )}
         <PlaybackControls />
       </LinearGradient>
     );
@@ -108,11 +110,15 @@ const mapDispatchToProps = dispatch => {
 
 const enhance = withObservables(
   ["currentCardId"],
-  ({ database, currentCardId }) => ({
-    card: currentCardId
-      ? database.collections.get("cards").findAndObserve(currentCardId)
-      : of$(null)
-  })
+  ({ database, currentCardId, navigation }) => {
+    const lesson = navigation.getParam("lesson");
+    return {
+      card: currentCardId
+        ? database.collections.get("cards").findAndObserve(currentCardId)
+        : of$(null),
+      cardsCount: lesson.cards.observeCount()
+    };
+  }
 );
 
 export default connect(

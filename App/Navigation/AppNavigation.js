@@ -1,12 +1,12 @@
 import React from "react";
-import { Button } from "react-native";
+import { Button, Text, Platform, Animated, Easing } from "react-native";
 import {
   createStackNavigator,
   createDrawerNavigator,
-  createAppContainer
+  createAppContainer,
+  StackViewTransitionConfigs
 } from "react-navigation";
 
-// import LaunchScreen from "../Containers/LaunchScreen";
 import LessonsListScreen from "../Containers/LessonsListScreen";
 import LessonScreen from "../Containers/LessonScreen";
 import AnkiScreen from "../Containers/Anki/AnkiScreen";
@@ -70,18 +70,6 @@ const LessonsStack = createStackNavigator(
         title: "Words"
         // headerBackTitle: 'Back'
       })
-    },
-    PlayerSettingsScreen: {
-      screen: PlayerSettingsScreen,
-      navigationOptions: ({ navigation }) => ({
-        drawerLockMode: "locked-closed"
-      })
-    },
-    PlayerScreen: {
-      screen: PlayerScreen,
-      navigationOptions: () => ({
-        header: null
-      })
     }
   },
   {
@@ -91,8 +79,82 @@ const LessonsStack = createStackNavigator(
   }
 );
 
+const transitionConfig = (transitionProps, prevTransitionProps) => {
+  const last = transitionProps.scenes[transitionProps.scenes.length - 1];
+  if (last.route.routeName === "Player") {
+    // Custom slide from top transition
+    return {
+      transitionSpec: {
+        duration: 750,
+        easing: Easing.out(Easing.poly(4)),
+        timing: Animated.timing,
+        useNativeDriver: true
+      },
+      screenInterpolator: sceneProps => {
+        const { position, layout, scene } = sceneProps;
+        const thisSceneIndex = scene.index;
+        const height = layout.initHeight;
+
+        const translateY = position.interpolate({
+          inputRange: [thisSceneIndex - 1, thisSceneIndex],
+          outputRange: [-height, 0]
+        });
+        const slideFromTop = { transform: [{ translateY }] };
+
+        return slideFromTop;
+      }
+    };
+  }
+
+  // Default modal transition
+  return StackViewTransitionConfigs.defaultTransitionConfig(
+    transitionProps,
+    prevTransitionProps,
+    true
+  );
+};
+
+// Use a stack navigator wrapper to handle the modals: https://reactnavigation.org/docs/en/modal.html
+// Not sure why we need to put lessons inside it and not in the drawer...
+// Info about dynamic mode: https://reactnavigation.org/docs/en/stack-navigator.html#specifying-the-transition-mode-for-a-stack-s-screens-explicitly
+const ModalStack = createStackNavigator(
+  {
+    Main: { screen: LessonsStack },
+    Player: {
+      screen: PlayerScreen,
+      navigationOptions: () => ({
+        gesturesEnabled: true,
+        gestureResponseDistance: { vertical: 500 },
+        gestureDirection: "inverted"
+      })
+    },
+    // Another stack navigator to have a header as well...
+    PlayerSettingsStack: createStackNavigator({
+      PlayerSettings: {
+        screen: PlayerSettingsScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: "Settings",
+          headerRight:
+            Platform.OS === "ios" ? (
+              <Button
+                onPress={() => navigation.pop()}
+                title="Done"
+                color={Colors.cheeryPink}
+              />
+            ) : null
+        })
+      }
+    })
+  },
+  {
+    mode: "modal",
+    headerMode: "none",
+    transitionConfig
+  }
+);
+
 // https://reactnavigation.org/docs/en/navigation-options-resolution.html#a-drawer-has-a-stack-inside-of-it-and-you-want-to-lock-the-drawer-on-certain-screens
-LessonsStack.navigationOptions = ({ navigation }) => {
+ModalStack.navigationOptions = ({ navigation }) => {
   let drawerLockMode = "unlocked";
   if (navigation.state.index > 0) {
     drawerLockMode = "locked-closed";
@@ -105,26 +167,26 @@ LessonsStack.navigationOptions = ({ navigation }) => {
 
 const DrawerNavigator = createDrawerNavigator(
   {
-    Lessons: LessonsStack,
-    SettingsStack: createStackNavigator(
-      {
-        Settings: {
-          screen: SettingsScreen,
-          navigationOptions: ({ navigation }) => ({
-            headerLeft: <DrawerButton navigation={navigation} />
-          })
-        }
-      },
-      {
-        defaultNavigationOptions: {
-          title: "Settings",
-          ...headerColors
-        },
-        navigationOptions: () => ({
-          drawerLabel: "Settings"
-        })
-      }
-    ),
+    Main: ModalStack,
+    // SettingsStack: createStackNavigator(
+    //   {
+    //     Settings: {
+    //       screen: SettingsScreen,
+    //       navigationOptions: ({ navigation }) => ({
+    //         headerLeft: <DrawerButton navigation={navigation} />
+    //       })
+    //     }
+    //   },
+    //   {
+    //     defaultNavigationOptions: {
+    //       title: "Settings",
+    //       ...headerColors
+    //     },
+    //     navigationOptions: () => ({
+    //       drawerLabel: "Settings"
+    //     })
+    //   }
+    // ),
     ContactStack: createStackNavigator(
       {
         Settings: {

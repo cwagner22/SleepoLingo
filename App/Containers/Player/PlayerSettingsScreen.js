@@ -26,17 +26,6 @@ import styles from "../Styles/PlayerSettingsScreenStyle";
 class PlayerSettingsScreen extends React.Component {
   state = { controlOS: false };
 
-  static navigationOptions = ({ navigation, screenProps }) => {
-    return {
-      title: "Settings",
-      headerLeft: Platform.OS === "ios" ? null : undefined,
-      headerRight:
-        Platform.OS === "ios" ? (
-          <Button onPress={() => navigation.goBack()} title="Done" />
-        ) : null
-    };
-  };
-
   componentWillMount() {
     StatusBar.setBarStyle("dark-content");
   }

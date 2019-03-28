@@ -67,7 +67,7 @@ class PlayerControls extends React.Component {
           <Icon iconStyle={styles.buttonIcon} name="skip-next" size={35} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("PlayerSettingsScreen")}
+          onPress={() => navigation.navigate("PlayerSettings")}
           style={styles.settingsButton}
         >
           <Icon size={20} name="settings" color="white" />

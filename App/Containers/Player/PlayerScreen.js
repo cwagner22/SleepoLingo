@@ -63,7 +63,6 @@ class PlayerScreen extends React.Component {
 
   render() {
     const { card, cardsCount } = this.props;
-    if (!card) return null;
     // const bgStyle = {
     // backgroundColor: isFocusMode() ? '#0e1a29' : '#0c0f1c'
     // }
@@ -74,13 +73,13 @@ class PlayerScreen extends React.Component {
         colors={["#0c0f1c", "#0e1a29"]}
         style={styles.mainContainer}
       >
-        {this.renderWord()}
+        {card && this.renderWord()}
         {this.renderStop()}
         <VolumeSlider
           volume={this.props.volume}
           onChange={volume => this.props.changeVol(volume)}
         />
-        <PlayerProgress card={card} cardsCount={cardsCount} />
+        {/* <PlayerProgress card={card} cardsCount={cardsCount} /> */}
         <PlaybackControls />
       </LinearGradient>
     );

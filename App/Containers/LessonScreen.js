@@ -71,28 +71,28 @@ class LessonScreen extends React.Component {
   }
 
   render() {
-    const { cards } = this.props;
+    // const { cards } = this.props;
     return (
       <View style={styles.mainContainer}>
         {this.renderCard()}
 
-        <Modal
+        {/* <Modal
           style={styles.mainContainer}
           ref={"nightPlayerModal"}
           swipeToClose
           entry="top"
-          backdropOpacity={0.95}
+          // backdropOpacity={0.95}
           coverScreen={true}
           // swipeArea={Dimensions.get('window').height*0.65}
         >
           <PlayerScreen cardsCount={cards.length} />
-        </Modal>
+        </Modal> */}
       </View>
     );
   }
 
   startNight() {
-    this.refs.nightPlayerModal.open();
+    this.props.navigation.navigate("Player");
   }
 }
 

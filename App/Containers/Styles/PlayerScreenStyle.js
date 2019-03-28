@@ -1,7 +1,7 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
-import { ApplicationStyles } from '../../Themes/'
+import { StyleSheet } from "react-native";
+import { ApplicationStyles } from "../../Themes/";
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
@@ -9,41 +9,41 @@ export default StyleSheet.create({
     flex: 1
   },
   sentenceContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
-    borderBottomColor: 'white',
+    borderBottomColor: "white",
     borderBottomWidth: 1
   },
   sentence: {
     fontSize: 30,
-    color: 'white'
+    color: "white"
   },
   stop: {
     flex: 3,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center"
   },
   stopIcon: {
     fontSize: 40,
-    color: 'white'
+    color: "white"
   },
   stopText: {
-    color: 'white',
+    color: "white",
     marginTop: -10,
-    fontWeight: 'bold'
+    fontWeight: "bold"
     // fontFamily: Fonts.type.bold,
   },
   infoText: {
-    color: 'white',
-    fontStyle: 'italic',
+    color: "white",
+    fontStyle: "italic",
     // fontFamily: Fonts.type.emphasis,
     fontSize: 14,
     marginTop: 5,
-    textAlign: 'center'
+    textAlign: "center"
   },
   settingsModal: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   }
-})
+});

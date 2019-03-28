@@ -92,12 +92,12 @@ class PlayerSettingsScreen extends React.Component {
                 Player
               </Text>
             </Separator>
-            <ListItem onPress={() => {}}>
+            {/* <ListItem onPress={() => {}}>
               <Text>Control Player From OS</Text>
               <Right>
                 <Switch value={false} />
               </Right>
-            </ListItem>
+            </ListItem> */}
             {Platform.OS === "ios" ? (
               <ListItem last icon onPress={() => this.openNumberOfRepeats()}>
                 <Body>

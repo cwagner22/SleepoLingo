@@ -34,26 +34,26 @@ async function checkWords() {
   debug("Words missing from dictionary:", wordsMissing);
 }
 
-const createWord = (original, translation, transliteration) =>
+const createWord = properties =>
   database.collections.get("dictionary").prepareCreate(w => {
-    w.original = original;
-    w.translation = translation;
-    w.transliteration = transliteration;
+    Object.assign(w, properties);
   });
 
 function parseDictionary(worksheet, database) {
   debug("Parsing Dictionary, worksheet length: ", worksheet.length);
   return worksheet.reduce((res, row) => {
-    if (row.Original && row.Translation && row.Transliteration) {
-      res.push(createWord(row.Original, row.Translation, row.Transliteration));
+    const properties = getWordPropertiesFromRow(row);
+    if (
+      properties.original &&
+      properties.translation &&
+      properties.transliteration
+    ) {
+      res.push(createWord(properties));
     }
 
     return res;
   }, []);
 }
-
-const getSentence = string => string.split("\n")[0];
-const getFullSentence = string => string.split("\n")[1];
 
 const createCard = (properties, lesson, index, id) =>
   database.collections.get("cards").prepareCreate(card => {
@@ -64,33 +64,24 @@ const createCard = (properties, lesson, index, id) =>
     card.lesson.set(lesson);
   });
 
-const getCardPropertiesFromRow = row => {
-  const {
-    Note: note,
-    Translation: translation,
-    Transliteration: transliteration
-  } = row;
+const cellString = cell => (cell || cell === 0 ? cell.toString() : null);
+const getWordPropertiesFromRow = row => ({
+  original: cellString(row.Original),
+  translation: cellString(row.Translation),
+  transliteration: cellString(row.Transliteration)
+});
+const getSentence = string => string && string.trim().split("\n")[0];
+const getFullSentence = string => string && string.trim().split("\n")[1];
 
-  // original can be 0
-  const original =
-    row.Original || row.Original === 0 ? row.Original.toString() : null;
-
-  return {
-    ...(note && { note }),
-    ...(original && { sentenceOriginal: getSentence(original) }),
-    ...(translation && { sentenceTranslation: getSentence(translation) }),
-    ...(transliteration && {
-      sentenceTransliteration: getSentence(transliteration)
-    }),
-    ...(original && { fullSentenceOriginal: getFullSentence(original) }),
-    ...(translation && {
-      fullSentenceTranslation: getFullSentence(translation)
-    }),
-    ...(transliteration && {
-      fullSentenceTransliteration: getFullSentence(transliteration)
-    })
-  };
-};
+const getCardPropertiesFromRow = row => ({
+  note: row.Note,
+  sentenceOriginal: getSentence(cellString(row.Original)),
+  sentenceTranslation: getSentence(cellString(row.Translation)),
+  sentenceTransliteration: getSentence(cellString(row.Transliteration)),
+  fullSentenceOriginal: getFullSentence(cellString(row.Original)),
+  fullSentenceTranslation: getFullSentence(cellString(row.Translation)),
+  fullSentenceTransliteration: getFullSentence(cellString(row.Transliteration))
+});
 
 function parseCards(worksheet, lesson) {
   debug("Parsing cards, worksheet length: ", worksheet.length);

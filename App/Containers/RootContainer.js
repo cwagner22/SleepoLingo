@@ -27,8 +27,13 @@ class RootContainer extends Component {
     Sound.setCategory("Playback", true);
   }
   componentDidMount() {
-    // Import the lessons to the Watermelon database if first launch or updated
-    this.props.importLessonsIfNeeded();
+    if (this.props.isImporting) {
+      // The last import failed, force re-import
+      this.props.forceImportLessons();
+    } else {
+      // Import the lessons to the Watermelon database if first launch or updated
+      this.props.importLessonsIfNeeded();
+    }
   }
 
   render() {
@@ -59,7 +64,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  importLessonsIfNeeded: () => dispatch(ImportActions.importLessonsIfNeeded())
+  importLessonsIfNeeded: () => dispatch(ImportActions.importLessonsIfNeeded()),
+  forceImportLessons: () => dispatch(ImportActions.forceImportLessons())
 });
 
 export default connect(

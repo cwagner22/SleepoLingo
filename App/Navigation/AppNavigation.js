@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Text, Platform, Animated, Easing } from "react-native";
+import { Button, Dimensions, Platform, Animated, Easing } from "react-native";
 import {
   createStackNavigator,
   createDrawerNavigator,
@@ -124,7 +124,9 @@ const ModalStack = createStackNavigator(
       screen: PlayerScreen,
       navigationOptions: () => ({
         gesturesEnabled: true,
-        gestureResponseDistance: { vertical: 500 },
+        gestureResponseDistance: {
+          vertical: Dimensions.get("window").height * 0.7
+        },
         gestureDirection: "inverted"
       })
     },

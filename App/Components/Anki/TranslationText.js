@@ -1,6 +1,6 @@
 // @flow
 
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
   TouchableHighlight,
@@ -14,14 +14,20 @@ import { connect } from "react-redux";
 import withObservables from "@nozbe/with-observables";
 import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 import { Q } from "@nozbe/watermelondb";
+import { CopilotStep } from "@okgrow/react-native-copilot";
 
 import { Colors } from "../../Themes/index";
 import PlaybackActions from "../../Redux/PlaybackRedux";
 import Explanation from "../Explanation";
-import Dictionary from "../../Models/Dictionary";
 import { of as of$ } from "rxjs";
 
 import styles from "../Styles/TranslationTextStyle";
+
+class WalkthroughableComponent extends PureComponent {
+  render() {
+    return <View {...this.props.copilot}>{this.props.children}</View>;
+  }
+}
 
 class TranslationText extends React.Component {
   static propTypes = {
@@ -78,14 +84,21 @@ class TranslationText extends React.Component {
           </TouchableOpacity>
         </Modal>
         <View style={styles.explanationButton}>
-          <Icon
-            name="g-translate"
-            reverse
-            color={Colors.easternBlue}
-            size={23}
-            iconStyle={styles.explanationIcon}
-            onPress={() => this.setModalVisible(true)}
-          />
+          <CopilotStep
+            text="Press here for the translation of each word."
+            order={2}
+            name="explanation"
+          >
+            <WalkthroughableComponent>
+              <Icon
+                name="g-translate"
+                reverse
+                color={Colors.easternBlue}
+                size={25}
+                onPress={() => this.setModalVisible(true)}
+              />
+            </WalkthroughableComponent>
+          </CopilotStep>
         </View>
       </View>
     );

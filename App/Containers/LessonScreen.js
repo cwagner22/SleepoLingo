@@ -1,21 +1,67 @@
 // @flow
 
-import React from "react";
+import React, { PureComponent } from "react";
 import { View, ScrollView, Text } from "react-native";
 import { connect } from "react-redux";
 import { Card } from "react-native-elements";
-import ActionButton from "react-native-action-button";
-import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import withObservables from "@nozbe/with-observables";
+import { Icon } from "react-native-elements";
+import { copilot, CopilotStep } from "@okgrow/react-native-copilot";
 
 import LessonActions from "../Redux/LessonRedux";
+import AppActions from "../Redux/AppRedux";
 import RoundedButton from "../Components/RoundedButton";
 
 // Styles
 import styles from "./Styles/LessonScreenStyles";
 import { Colors } from "../Themes/";
 
+class WalkthroughableRoundedButton extends PureComponent {
+  render() {
+    return (
+      <View {...this.props.copilot}>
+        <RoundedButton {...this.props}>{this.props.children}</RoundedButton>
+      </View>
+    );
+  }
+}
+
+class WalkthroughableNightIcon extends PureComponent {
+  render() {
+    return (
+      <View style={styles.nightIconContainer}>
+        <View {...this.props.copilot}>
+          <Icon {...this.props} />
+        </View>
+      </View>
+    );
+  }
+}
+
 class LessonScreen extends React.Component {
+  componentDidMount() {
+    const {
+      copilotScreens,
+      addCopilotScreen,
+      copilotEvents,
+      start
+    } = this.props;
+    const copilotAlreadyFinished = copilotScreens.some(
+      screen => screen === "lesson"
+    );
+
+    if (!copilotAlreadyFinished) {
+      copilotEvents.on("stop", () => {
+        addCopilotScreen("lesson");
+      });
+      start();
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.copilotEvents.off("stop");
+  }
+
   // componentWillReceiveProps(newProps) {
   //   if (
   //     this.state.modalVisible &&
@@ -41,30 +87,41 @@ class LessonScreen extends React.Component {
             <Text style={styles.componentLabel}>{lesson.note}</Text>
           </ScrollView>
 
-          <RoundedButton
-            onPress={() => startAnki()}
-            styles={styles.button}
-            testID="StartStudy"
+          <CopilotStep
+            text="Click here to start learning new vocabulary!"
+            order={1}
+            name="day"
           >
-            START STUDY
-          </RoundedButton>
+            <WalkthroughableRoundedButton
+              onPress={() => startAnki()}
+              styles={styles.button}
+              testID="StartStudy"
+            >
+              START STUDY
+            </WalkthroughableRoundedButton>
+          </CopilotStep>
         </Card>
 
-        <ActionButton
-          buttonColor={Colors.easternBlue}
-          onPress={() => this.startNight()}
-          offsetY={85}
-          renderIcon={() => <MIcon name="hotel" color="white" size={24} />}
-          elevation={5}
-          zIndex={5}
-          testID="StartNight"
-        />
+        <CopilotStep
+          text="Click this button before going to sleep for a soothing audio recap! 😴"
+          order={2}
+          name="night"
+        >
+          <WalkthroughableNightIcon
+            name="hotel"
+            reverse
+            raised
+            color={Colors.easternBlue}
+            size={25}
+            onPress={() => this.startNight()}
+            testID="StartNight"
+          />
+        </CopilotStep>
       </View>
     );
   }
 
   render() {
-    // const { cards } = this.props;
     return <View style={styles.mainContainer}>{this.renderCard()}</View>;
   }
 
@@ -76,13 +133,15 @@ class LessonScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    playerRunning: state.playback.playerRunning
+    playerRunning: state.playback.playerRunning,
+    copilotScreens: state.app.copilotScreens
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    startAnki: () => dispatch(LessonActions.startAnki())
+    startAnki: () => dispatch(LessonActions.startAnki()),
+    addCopilotScreen: screen => dispatch(AppActions.addCopilotScreen(screen))
   };
 };
 
@@ -97,4 +156,4 @@ const enhance = withObservables([], ({ navigation }) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(enhance(LessonScreen));
+)(enhance(copilot()(LessonScreen)));

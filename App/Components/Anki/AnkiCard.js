@@ -32,7 +32,7 @@ class RawAnkiCard extends React.Component {
   }
 
   render() {
-    const { card } = this.props;
+    const { card, startCopilot } = this.props;
 
     if (!card) {
       return null;
@@ -71,6 +71,7 @@ class RawAnkiCard extends React.Component {
               fullTransliteration={card.fullSentenceTransliteration}
               note={card.note}
               onPress={() => this.flip()}
+              startCopilot={startCopilot}
             />
           </CardElem>
         </FlipCard>

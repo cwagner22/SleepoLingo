@@ -5,18 +5,37 @@ import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import Swiper from "react-native-swiper-animated";
 import { Card } from "react-native-elements";
+import { copilot } from "@okgrow/react-native-copilot";
+import withObservables from "@nozbe/with-observables";
 
 import AnkiFooter from "./AnkiFooter";
 import AnkiCard from "../../Components/Anki/AnkiCard";
 import RoundedButton from "../../Components/RoundedButton";
-
-import withObservables from "@nozbe/with-observables";
-import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
+import AppActions from "../../Redux/AppRedux";
 
 // Styles
 import styles from "./AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
+  componentDidMount() {
+    // Create the copilot here to have access to ankiFooter
+    // Started in CardTranslation
+    const { copilotScreens, addCopilotScreen, copilotEvents } = this.props;
+    this.copilotNotFinished = !copilotScreens.some(
+      screen => screen === "cardTranslation"
+    );
+
+    if (this.copilotNotFinished) {
+      copilotEvents.on("stop", () => {
+        addCopilotScreen("cardTranslation");
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.copilotEvents.off("stop");
+  }
+
   componentDidUpdate(prevProps) {
     const { currentCardId } = this.props;
 
@@ -55,13 +74,13 @@ class AnkiScreen extends React.Component {
   swiper = null;
 
   render() {
-    const { cards, currentCardId } = this.props;
+    const { cards, currentCardId, start } = this.props;
 
     if (!currentCardId) {
       return this.renderNoCards();
     }
     return (
-      <View style={{ flex: 1 }} testID="AnkiSwipe">
+      <View style={{ flex: 1, position: "relative" }} testID="AnkiSwipe">
         <Swiper
           ref={swiper => {
             this.swiper = swiper;
@@ -73,7 +92,11 @@ class AnkiScreen extends React.Component {
           backPressToBack={false}
         >
           {cards.map(card => (
-            <AnkiCard card={card} key={card.id} />
+            <AnkiCard
+              card={card}
+              key={card.id}
+              startCopilot={this.copilotNotFinished ? start : null}
+            />
           ))}
         </Swiper>
         <AnkiFooter />
@@ -84,9 +107,15 @@ class AnkiScreen extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    currentCardId: state.lesson.currentCardId
+    currentCardId: state.lesson.currentCardId,
+    copilotScreens: state.app.copilotScreens,
+    showAnswer: state.lesson.showAnswer
   };
 };
+
+const mapDispatchToProps = dispatch => ({
+  addCopilotScreen: screen => dispatch(AppActions.addCopilotScreen(screen))
+});
 
 const enhance = withObservables(
   ["currentCardId"],
@@ -105,5 +134,5 @@ const enhance = withObservables(
 
 export default connect(
   mapStateToProps,
-  null
-)(enhance(AnkiScreen));
+  mapDispatchToProps
+)(enhance(copilot()(AnkiScreen)));

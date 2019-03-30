@@ -18,5 +18,14 @@ export default StyleSheet.create({
     minHeight: "40%",
     flex: -1,
     justifyContent: "center"
+  },
+  copilotBox: {
+    position: "absolute",
+    height: 80,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "red",
+    marginTop: -100
   }
 });

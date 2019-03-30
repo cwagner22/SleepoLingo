@@ -19,5 +19,12 @@ export default StyleSheet.create({
   ankiEasy: {
     flex: 1,
     backgroundColor: Colors.cheeryPink
+  },
+  copilotBox: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "100%"
   }
 });

@@ -1,25 +1,25 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
-import { ApplicationStyles, Metrics } from '../../Themes/index'
+import { StyleSheet } from "react-native";
+import { ApplicationStyles, Metrics } from "../../Themes/index";
 
 export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
     marginBottom: Metrics.baseMargin,
-    alignSelf: 'center', // “Auto” width for text node, prevent from expanding full width
+    alignSelf: "center", // “Auto” width for text node, prevent from expanding full width
     paddingHorizontal: 5
   },
   innerContainer: {
-    alignSelf: 'center'
+    alignSelf: "center"
   },
   title: {
     fontSize: 29,
-    textAlign: 'center'
+    textAlign: "center"
   },
   explanationButton: {
-    alignItems: 'flex-end',
-    position: 'absolute',
+    alignItems: "flex-end",
+    position: "absolute",
     bottom: -45,
     right: 0,
     zIndex: 99 // Probably don't need that
@@ -29,13 +29,18 @@ export default StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
   innerExplanationContainer: {
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20
+  },
+  copilotBox: {
+    position: "absolute",
+    height: 300,
+    width: "100%"
   }
-})
+});

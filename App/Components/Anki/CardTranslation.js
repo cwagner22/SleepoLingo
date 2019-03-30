@@ -1,9 +1,10 @@
 // @flow
 
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { View, Image, Text, TouchableWithoutFeedback } from "react-native";
 import { connect } from "react-redux";
+import { CopilotStep } from "@okgrow/react-native-copilot";
 
 import LessonActions from "../../Redux/LessonRedux";
 import PlaybackActions from "../../Redux/PlaybackRedux";
@@ -12,6 +13,12 @@ import images from "../../Lessons/images/images";
 
 // Styles
 import styles from "../Styles/CardTranslationStyles";
+
+class WalkthroughableComponent extends PureComponent {
+  render() {
+    return <View {...this.props.copilot}>{this.props.children}</View>;
+  }
+}
 
 class CardTranslation extends React.Component {
   static propTypes = {
@@ -24,22 +31,32 @@ class CardTranslation extends React.Component {
     onPress: PropTypes.func
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.showAnswer();
+    // Start the copilot using the props from AnkiScreen
+    this.props.startCopilot && this.props.startCopilot();
   }
 
   renderTranslation() {
     const { transliteration, translation, fullTranslation } = this.props;
 
     return (
-      <View style={styles.translationContainer}>
-        <TranslationText
-          translation={translation}
-          transliteration={transliteration}
-          showExplanation={!fullTranslation}
-        />
-        {this.renderFullTranslation()}
-      </View>
+      <CopilotStep
+        text="Here is the answer. Press the text to play the audio."
+        order={1}
+        name="translation"
+      >
+        <WalkthroughableComponent>
+          <View style={styles.translationContainer}>
+            <TranslationText
+              translation={translation}
+              transliteration={transliteration}
+              showExplanation={!fullTranslation}
+            />
+            {this.renderFullTranslation()}
+          </View>
+        </WalkthroughableComponent>
+      </CopilotStep>
     );
   }
 
@@ -91,15 +108,24 @@ class CardTranslation extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    copilotScreens: state.app.copilotScreens
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     showAnswer: () => dispatch(LessonActions.lessonShowAnswer()),
     play: (sentence, language, volume, speed) =>
-      dispatch(PlaybackActions.playbackStart(sentence, language, volume, speed))
+      dispatch(
+        PlaybackActions.playbackStart(sentence, language, volume, speed)
+      ),
+    addCopilotScreen: screen => dispatch(AppActions.addCopilotScreen(screen))
   };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(CardTranslation);

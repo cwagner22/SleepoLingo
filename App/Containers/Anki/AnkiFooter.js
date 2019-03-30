@@ -1,8 +1,9 @@
 // @flow
 
-import React from "react";
+import React, { PureComponent } from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
+import { CopilotStep } from "@okgrow/react-native-copilot";
 
 import LessonActions from "../../Redux/LessonRedux";
 import AnkiButton from "../../Components/Anki/AnkiButton";
@@ -10,10 +11,29 @@ import AnkiButton from "../../Components/Anki/AnkiButton";
 // Styles
 import styles from "./AnkiFooterStyle";
 
-class AnkiFooter extends React.Component {
+class WalkthroughableFakeBox extends PureComponent {
   render() {
+    return <View {...this.props.copilot} style={styles.copilotBox} />;
+  }
+}
+
+class AnkiFooter extends React.Component {
+  renderCopilot() {
+    // Render CopilotStep once showAnswer is true. Rendering before that will make it step 1.
+    return (
+      <CopilotStep
+        text="Select how difficult it is to memorize it. Easy cards won't come back for 2 days so you have time to focus on the harder ones."
+        order={3}
+        name="ankiFooter"
+      >
+        <WalkthroughableFakeBox />
+      </CopilotStep>
+    );
+  }
+  render() {
+    const { showAnswer } = this.props;
     let answerStyles = {};
-    if (!this.props.showAnswer) {
+    if (!showAnswer) {
       answerStyles.opacity = 0;
     }
 
@@ -41,6 +61,7 @@ class AnkiFooter extends React.Component {
           subText="(2 days)"
           onPress={() => this.props.ankiDifficulty("easy")}
         />
+        {showAnswer && this.renderCopilot()}
       </View>
     );
   }

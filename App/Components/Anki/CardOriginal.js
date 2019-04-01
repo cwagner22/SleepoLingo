@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 
 import styles from "../Styles/CardOriginalStyles";
 import AppActions from "../../Redux/AppRedux";
+import CopilotService from "../../Services/Copilot";
 
 // Use a fake box for copilot since it's not possibe to have multiple walkthroughable custom components wrapped
 const WalkthroughableFakeBox = ({ copilot }) => (
@@ -22,26 +23,12 @@ class CardOriginal extends React.Component {
   };
 
   componentDidMount() {
-    const {
-      copilotScreens,
-      addCopilotScreen,
-      copilotEvents,
-      start
-    } = this.props;
-    const copilotAlreadyFinished = copilotScreens.some(
-      screen => screen === "cardOriginal"
-    );
-
-    if (!copilotAlreadyFinished) {
-      copilotEvents.on("stop", () => {
-        addCopilotScreen("cardOriginal");
-      });
-      start();
-    }
+    this.copilot = new CopilotService("cardOriginal", this.props);
+    this.copilot.start();
   }
 
   componentWillUnmount() {
-    this.props.copilotEvents.off("stop");
+    this.copilot.unload();
   }
 
   renderFullOriginal() {

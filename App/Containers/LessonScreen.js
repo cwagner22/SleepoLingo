@@ -11,6 +11,7 @@ import { copilot, CopilotStep } from "@okgrow/react-native-copilot";
 import LessonActions from "../Redux/LessonRedux";
 import AppActions from "../Redux/AppRedux";
 import RoundedButton from "../Components/RoundedButton";
+import CopilotService from "../Services/Copilot";
 
 // Styles
 import styles from "./Styles/LessonScreenStyles";
@@ -40,26 +41,12 @@ class WalkthroughableNightIcon extends PureComponent {
 
 class LessonScreen extends React.Component {
   componentDidMount() {
-    const {
-      copilotScreens,
-      addCopilotScreen,
-      copilotEvents,
-      start
-    } = this.props;
-    const copilotAlreadyFinished = copilotScreens.some(
-      screen => screen === "lesson"
-    );
-
-    if (!copilotAlreadyFinished) {
-      copilotEvents.on("stop", () => {
-        addCopilotScreen("lesson");
-      });
-      start();
-    }
+    this.copilot = new CopilotService("lesson", this.props);
+    this.copilot.start();
   }
 
   componentWillUnmount() {
-    this.props.copilotEvents.off("stop");
+    this.copilot.unload();
   }
 
   // componentWillReceiveProps(newProps) {

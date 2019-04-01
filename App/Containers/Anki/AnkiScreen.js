@@ -12,28 +12,21 @@ import AnkiFooter from "./AnkiFooter";
 import AnkiCard from "../../Components/Anki/AnkiCard";
 import RoundedButton from "../../Components/RoundedButton";
 import AppActions from "../../Redux/AppRedux";
+import CopilotService from "../../Services/Copilot";
 
 // Styles
 import styles from "./AnkiScreenStyle";
 
 class AnkiScreen extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     // Create the copilot here to have access to ankiFooter
     // Started in CardTranslation
-    const { copilotScreens, addCopilotScreen, copilotEvents } = this.props;
-    this.copilotNotFinished = !copilotScreens.some(
-      screen => screen === "cardTranslation"
-    );
-
-    if (this.copilotNotFinished) {
-      copilotEvents.on("stop", () => {
-        addCopilotScreen("cardTranslation");
-      });
-    }
+    this.copilot = new CopilotService("cardTranslation", this.props);
   }
 
   componentWillUnmount() {
-    this.props.copilotEvents.off("stop");
+    this.copilot.unload();
   }
 
   componentDidUpdate(prevProps) {
@@ -74,13 +67,13 @@ class AnkiScreen extends React.Component {
   swiper = null;
 
   render() {
-    const { cards, currentCardId, start } = this.props;
+    const { cards, currentCardId } = this.props;
 
     if (!currentCardId) {
       return this.renderNoCards();
     }
     return (
-      <View style={{ flex: 1, position: "relative" }} testID="AnkiSwipe">
+      <View style={{ flex: 1 }} testID="AnkiSwipe">
         <Swiper
           ref={swiper => {
             this.swiper = swiper;
@@ -92,11 +85,7 @@ class AnkiScreen extends React.Component {
           backPressToBack={false}
         >
           {cards.map(card => (
-            <AnkiCard
-              card={card}
-              key={card.id}
-              startCopilot={this.copilotNotFinished ? start : null}
-            />
+            <AnkiCard card={card} key={card.id} copilot={this.copilot} />
           ))}
         </Swiper>
         <AnkiFooter />

@@ -28,13 +28,20 @@ class CardTranslation extends React.Component {
     fullTranslation: PropTypes.string,
     fullTransliteration: PropTypes.string,
     note: PropTypes.string,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    copilot: PropTypes.object
   };
 
   componentDidMount() {
     this.props.showAnswer();
     // Start the copilot using the props from AnkiScreen
-    this.props.startCopilot && this.props.startCopilot();
+    if (!this.props.copilot.isAlreadyFinished()) {
+      this.props.copilot.start();
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.copilot.unload();
   }
 
   renderTranslation() {

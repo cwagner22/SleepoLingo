@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -61,6 +62,7 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		833495E622363D21000B16AB /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833495E522363D21000B16AB /* SnapshotHelper.swift */; };
 		836916142240C1AA00C09ACB /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836916132240C1AA00C09ACB /* Launch Screen.storyboard */; };
+		83904430225202D10037B07B /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8390442A225202AB0037B07B /* libRNSVG.a */; };
 		83B039A9223502080040F7EF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B039A8223502080040F7EF /* File.swift */; };
 		83B03B3E223502B60040F7EF /* SleepoLingoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B03B3D223502B60040F7EF /* SleepoLingoUITests.swift */; };
 		83E8DFA0224137D600D87AFC /* Design.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 83E8DF9F224137D500D87AFC /* Design.jpeg */; };
@@ -335,6 +337,20 @@
 			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
 			remoteInfo = "RNGestureHandler-tvOS";
 		};
+		83904429225202AB0037B07B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 839043EC225202AB0037B07B /* RNSVG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
+			remoteInfo = RNSVG;
+		};
+		8390442B225202AB0037B07B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 839043EC225202AB0037B07B /* RNSVG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 94DDAC5C1F3D024300EED511;
+			remoteInfo = "RNSVG-tvOS";
+		};
 		83B039CF223502090040F7EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -591,6 +607,7 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		833495E522363D21000B16AB /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		836916132240C1AA00C09ACB /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		839043EC225202AB0037B07B /* RNSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
 		83B039A7223502080040F7EF /* SleepoLingo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SleepoLingo-Bridging-Header.h"; sourceTree = "<group>"; };
 		83B039A8223502080040F7EF /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		83B03B3B223502B60040F7EF /* SleepoLingoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SleepoLingoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -658,6 +675,7 @@
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
+				83904430225202D10037B07B /* libRNSVG.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				FE2B0C335DDB4135BB4C4F49 /* libWatermelonDB.a in Frameworks */,
@@ -899,6 +917,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				839043EC225202AB0037B07B /* RNSVG.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -939,6 +958,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		839043ED225202AB0037B07B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8390442A225202AB0037B07B /* libRNSVG.a */,
+				8390442C225202AB0037B07B /* libRNSVG-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		83B039E32235023B0040F7EF /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -960,7 +988,6 @@
 				FB6D0C373D6943F9AD13DDC4 /* libReactNativeConfig-tvOS.a */,
 				D989E66543264B978E7A69AA /* libRNI18n-tvOS.a */,
 				8D2ABB2FD0154977A3D72573 /* libRNVectorIcons-tvOS.a */,
-				602F203689094D91A72AFA15 /* libRNCAsyncStorage.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1411,6 +1438,10 @@
 					ProjectRef = D4352AE351DF43A7A2B2C042 /* RNSound.xcodeproj */;
 				},
 				{
+					ProductGroup = 839043ED225202AB0037B07B /* Products */;
+					ProjectRef = 839043EC225202AB0037B07B /* RNSVG.xcodeproj */;
+				},
+				{
 					ProductGroup = 83B03ACD223502760040F7EF /* Products */;
 					ProjectRef = 33061C3B4DCC4DE1AC5B80BC /* RNVectorIcons.xcodeproj */;
 				},
@@ -1660,6 +1691,20 @@
 			fileType = archive.ar;
 			path = "libRNGestureHandler-tvOS.a";
 			remoteRef = 833495DD22363C4E000B16AB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8390442A225202AB0037B07B /* libRNSVG.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSVG.a;
+			remoteRef = 83904429225202AB0037B07B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8390442C225202AB0037B07B /* libRNSVG-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSVG-tvOS.a";
+			remoteRef = 8390442B225202AB0037B07B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		83B039D0223502090040F7EF /* libjsi.a */ = {
@@ -2149,9 +2194,7 @@
 				INFOPLIST_FILE = SleepoLingoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2194,9 +2237,7 @@
 				INFOPLIST_FILE = SleepoLingoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2334,9 +2375,7 @@
 				);
 				INFOPLIST_FILE = "SleepoLingo-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2382,9 +2421,7 @@
 				);
 				INFOPLIST_FILE = "SleepoLingo-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2429,9 +2466,7 @@
 				);
 				INFOPLIST_FILE = "SleepoLingo-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2476,9 +2511,7 @@
 				);
 				INFOPLIST_FILE = "SleepoLingo-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2509,9 +2542,7 @@
 				INFOPLIST_FILE = SleepoLingoUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chriswt.SleepoLingoUITests;
@@ -2543,9 +2574,7 @@
 				INFOPLIST_FILE = SleepoLingoUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chriswt.SleepoLingoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

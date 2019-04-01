@@ -13,10 +13,12 @@ target 'SleepoLingo' do
   
 
   platform :ios, '9.0'
-  pod 'RNSVG', :path => '../node_modules/react-native-svg'
-
-
   target 'SleepoLingoTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'SleepoLingoUITests' do
     inherit! :search_paths
     # Pods for testing
   end

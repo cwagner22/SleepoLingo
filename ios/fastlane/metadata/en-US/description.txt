@@ -1,13 +1,14 @@
 Learning Thai? Use SleepoLingo's flashcards to increase your vocabulary and learn the basics to understand and speak Thai!
 
-SleepoLingo uses Spaced Repetition to help you memorize the lessons efficiently. Every day you'll learn new flashcards without wasting precious time on the things you already know. 
-And the magic happens at night. Before going to sleep launch the "Night mode" and SleepoLingo will play repeatedly all the content you learned during the day. Just relax and drift off to sleep.
+SleepoLingo uses Spaced Repetition to help you memorize the lessons efficiently. Every day you will learn new flashcards without wasting precious time on the things you already know. 
+And the magic happens at night. Before going to sleep launch the "Night mode" and SleepoLingo will play repeatedly all the content you learned during the day. Just relax and drift off to sleep, listening to the soothing audio recap.
 SleepoLingo helps you memorize better and even helps you to fall asleep! 
 
-- Funny flashcard images to help you memorize vocabulary easily.
-- The flashcards contain a word and a longer sentence. Learn the full sentence once you are ready.
-- Text to speech to hear the pronunciation.
-- Smart spaced repetition helps you learn efficiently new lessons.
-- Night mode: Play repeatedly all the new sentences that you learnt today (with each translation) while you drift off to sleep!
+• Funny flashcard images to help you memorize vocabulary easily.
+• The flashcards contain a word and a longer sentence. Learn the full sentence once you are ready.
+• Text to speech to hear the pronunciation.
+• Word by word dictionary.
+• Smart spaced repetition helps you learn efficiently new lessons.
+• Night mode: Play repeatedly all the new sentences that you learnt today (with each translation) while you drift off to sleep!
 
 Contact me for any suggestion or issue.

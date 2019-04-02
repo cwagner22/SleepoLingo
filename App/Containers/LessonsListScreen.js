@@ -63,6 +63,9 @@ class LessonsListScreen extends Component {
   render() {
     const { loadLesson, lessons, lessonGroups } = this.props;
 
+    // section testID index
+    let index = 0;
+
     // lessons by group name as title
     const sections = lessons.reduce((sections, lesson) => {
       const lessonGroupName = lessonGroups.find(
@@ -72,9 +75,11 @@ class LessonsListScreen extends Component {
       if (!section) {
         section = {
           title: lessonGroupName,
-          data: []
+          data: [],
+          index
         };
         sections.push(section);
+        index++;
       }
 
       section.data.push(lesson);
@@ -91,7 +96,7 @@ class LessonsListScreen extends Component {
             <LessonItem
               lesson={lesson}
               onPress={() => loadLesson(lesson)}
-              testID={`LessonItem_${index}`}
+              testID={`LessonItem_${section.index}-${index}`}
               isDisabled={
                 lessonInProgress && !lesson.isInProgress && !lesson.isCompleted
               }

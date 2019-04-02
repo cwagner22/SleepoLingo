@@ -25,6 +25,7 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: "100%"
+    height: "100%",
+    zIndex: -1
   }
 });

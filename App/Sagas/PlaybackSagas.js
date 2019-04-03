@@ -339,7 +339,7 @@ export function* playbackLoopMaxChange(action) {
 
 function* calculateTotalTime() {
   debug("starting calculateTotalTime()");
-  const nbCards = getCurrentLesson().cards.length;
+  const nbCards = getCurrentCards().length;
 
   const filesDuration = yield call(
     durationOfFilesTotal,

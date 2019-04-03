@@ -16,6 +16,7 @@ function navigate(routeName, params) {
   );
 }
 
+// https://reactnavigation.org/docs/en/screen-tracking.html
 function getActiveRouteName(navigationState) {
   if (!navigationState) {
     return null;

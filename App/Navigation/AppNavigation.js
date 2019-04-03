@@ -80,32 +80,6 @@ const LessonsStack = createStackNavigator(
   }
 );
 
-let CollapseExpand = (index, position) => {
-  const inputRange = [index - 1, index, index + 1];
-  const opacity = position.interpolate({
-    inputRange,
-    outputRange: [0, 1, 1]
-  });
-
-  const scaleY = position.interpolate({
-    inputRange,
-    outputRange: [0, 1, 1]
-  });
-
-  return {
-    opacity,
-    transform: [{ scaleY }]
-  };
-};
-
-let SlideFromRight = (index, position, width) => {
-  const translateX = position.interpolate({
-    inputRange: [index - 1, index, index + 1],
-    outputRange: [width, 0, 0]
-  });
-  return { transform: [{ translateX }] };
-};
-
 let SlideFromTop = (index, position, height) => {
   const opacity = position.interpolate({
     inputRange: [index - 1, index, index + 0.01, index + 1],
@@ -119,10 +93,10 @@ let SlideFromTop = (index, position, height) => {
   return { transform: [{ translateY }], opacity };
 };
 
-let Opacity = (index, position, height) => {
+let Opacity = (index, position) => {
   const opacity = position.interpolate({
-    inputRange: [index - 1, index, index + 0.01, index + 1],
-    outputRange: [1, 1, 0.5, 0]
+    inputRange: [index, index + 0.01, index + 1],
+    outputRange: [1, 0.3, 0]
   });
   return { opacity };
 };
@@ -133,9 +107,8 @@ const transitionConfig = (transitionProps, prevTransitionProps) => {
     transitionProps.navigation.state
   );
 
-  // const lastScene = transitionProps.scenes[transitionProps.scenes.length - 1];
   if (routeName === "Player") {
-    // Custom slide from top transition
+    // Player slide from top transition
     return {
       transitionSpec: {
         duration: 750,
@@ -153,27 +126,11 @@ const transitionConfig = (transitionProps, prevTransitionProps) => {
         const { position, layout, scene } = sceneProps;
         const { index, route } = scene;
         const height = layout.initHeight;
-        const width = layout.initHeight;
 
-        // const lastRoute = getLastRoute(scene);
-        // console.log("scene", scene, "route", route, "lastRoute", lastRoute);
-
-        // const opacity = position.interpolate({
-        //   inputRange: [
-        //     thisSceneIndex - 1,
-        //     thisSceneIndex,
-        //     thisSceneIndex + 0.01,
-        //     thisSceneIndex + 1
-        //   ],
-        //   outputRange: [1, 1, 0.5, 0]
-        // });
-
-        // if (route.routeName === "Player") {
-        return SlideFromTop(index, position, height);
-        // return Opacity(index, position, height);
-        // } else {
-        // return SlideFromRight(index, position, width);
-        // }
+        return {
+          ...SlideFromTop(index, position, height),
+          ...Opacity(index, position)
+        };
 
         // const transition = route.routeName || "default";
         // return {
@@ -190,17 +147,11 @@ const transitionConfig = (transitionProps, prevTransitionProps) => {
   }
 
   // Default modal transition
-  let config = StackViewTransitionConfigs.defaultTransitionConfig(
+  return StackViewTransitionConfigs.defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
     true
   );
-  // if (routeName === "Lesson") {
-  // config.containerStyle.backgroundColor = "#000000";
-  // }
-  console.log(config);
-
-  return config;
 };
 
 // Use a stack navigator wrapper to handle the modals: https://reactnavigation.org/docs/en/modal.html

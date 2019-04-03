@@ -17,6 +17,7 @@ import SettingsScreen from "../Containers/SettingsScreen";
 import ContactScreen from "../Containers/ContactScreen";
 import PlayerSettingsScreen from "../Containers/Player/PlayerSettingsScreen";
 import PlayerScreen from "../Containers/Player/PlayerScreen";
+import NavigationService from "../Services/NavigationService";
 
 import styles from "./Styles/NavigationStyles";
 import { Colors } from "../Themes/";
@@ -79,9 +80,61 @@ const LessonsStack = createStackNavigator(
   }
 );
 
+let CollapseExpand = (index, position) => {
+  const inputRange = [index - 1, index, index + 1];
+  const opacity = position.interpolate({
+    inputRange,
+    outputRange: [0, 1, 1]
+  });
+
+  const scaleY = position.interpolate({
+    inputRange,
+    outputRange: [0, 1, 1]
+  });
+
+  return {
+    opacity,
+    transform: [{ scaleY }]
+  };
+};
+
+let SlideFromRight = (index, position, width) => {
+  const translateX = position.interpolate({
+    inputRange: [index - 1, index, index + 1],
+    outputRange: [width, 0, 0]
+  });
+  return { transform: [{ translateX }] };
+};
+
+let SlideFromTop = (index, position, height) => {
+  const opacity = position.interpolate({
+    inputRange: [index - 1, index, index + 0.01, index + 1],
+    outputRange: [1, 1, 0.5, 0]
+  });
+  const translateY = position.interpolate({
+    inputRange: [index - 1, index, index + 1],
+    outputRange: [-height, 0, 0]
+  });
+
+  return { transform: [{ translateY }], opacity };
+};
+
+let Opacity = (index, position, height) => {
+  const opacity = position.interpolate({
+    inputRange: [index - 1, index, index + 0.01, index + 1],
+    outputRange: [1, 1, 0.5, 0]
+  });
+  return { opacity };
+};
+
+// https://medium.com/@ksashrithbhat/custom-transitions-in-react-navigation-screen-to-screen-c2d035aa3c63
 const transitionConfig = (transitionProps, prevTransitionProps) => {
-  const lastScene = transitionProps.scenes[transitionProps.scenes.length - 1];
-  if (lastScene.route.routeName === "Player") {
+  const routeName = NavigationService.getActiveRouteName(
+    transitionProps.navigation.state
+  );
+
+  // const lastScene = transitionProps.scenes[transitionProps.scenes.length - 1];
+  if (routeName === "Player") {
     // Custom slide from top transition
     return {
       transitionSpec: {
@@ -91,27 +144,63 @@ const transitionConfig = (transitionProps, prevTransitionProps) => {
         useNativeDriver: true
       },
       screenInterpolator: sceneProps => {
+        // screenInterpolator() is called for each scene.
+        // Initially scene is the route we’re navigating from.
+        // Immediately after this, screenInterpolator(sceneProps) will be called again and scene
+        // will be the route we’re navigating to.
+        // screenInterpolator gets called again after the transition completes but it’s probably
+        // due to a re - render within React Navigation due to the change in navigation props.
         const { position, layout, scene } = sceneProps;
-        const thisSceneIndex = scene.index;
+        const { index, route } = scene;
         const height = layout.initHeight;
+        const width = layout.initHeight;
 
-        const translateY = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-          outputRange: [-height, 0, 0]
-        });
-        const slideFromTop = { transform: [{ translateY }] };
+        // const lastRoute = getLastRoute(scene);
+        // console.log("scene", scene, "route", route, "lastRoute", lastRoute);
 
-        return slideFromTop;
+        // const opacity = position.interpolate({
+        //   inputRange: [
+        //     thisSceneIndex - 1,
+        //     thisSceneIndex,
+        //     thisSceneIndex + 0.01,
+        //     thisSceneIndex + 1
+        //   ],
+        //   outputRange: [1, 1, 0.5, 0]
+        // });
+
+        // if (route.routeName === "Player") {
+        return SlideFromTop(index, position, height);
+        // return Opacity(index, position, height);
+        // } else {
+        // return SlideFromRight(index, position, width);
+        // }
+
+        // const transition = route.routeName || "default";
+        // return {
+        //   collapseExpand: CollapseExpand(index, position),
+        //   default: SlideFromRight(index, position, width)
+        // }[transition];
+
+        // return slideFromTop;
+      },
+      containerStyle: {
+        backgroundColor: "#000000"
       }
     };
   }
 
   // Default modal transition
-  return StackViewTransitionConfigs.defaultTransitionConfig(
+  let config = StackViewTransitionConfigs.defaultTransitionConfig(
     transitionProps,
     prevTransitionProps,
     true
   );
+  // if (routeName === "Lesson") {
+  // config.containerStyle.backgroundColor = "#000000";
+  // }
+  console.log(config);
+
+  return config;
 };
 
 // Use a stack navigator wrapper to handle the modals: https://reactnavigation.org/docs/en/modal.html

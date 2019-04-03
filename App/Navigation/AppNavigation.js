@@ -80,8 +80,8 @@ const LessonsStack = createStackNavigator(
 );
 
 const transitionConfig = (transitionProps, prevTransitionProps) => {
-  const last = transitionProps.scenes[transitionProps.scenes.length - 1];
-  if (last.route.routeName === "Player") {
+  const lastScene = transitionProps.scenes[transitionProps.scenes.length - 1];
+  if (lastScene.route.routeName === "Player") {
     // Custom slide from top transition
     return {
       transitionSpec: {
@@ -96,8 +96,8 @@ const transitionConfig = (transitionProps, prevTransitionProps) => {
         const height = layout.initHeight;
 
         const translateY = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex],
-          outputRange: [-height, 0]
+          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
+          outputRange: [-height, 0, 0]
         });
         const slideFromTop = { transform: [{ translateY }] };
 

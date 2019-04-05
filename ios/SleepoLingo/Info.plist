@@ -84,5 +84,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
 </dict>
 </plist>

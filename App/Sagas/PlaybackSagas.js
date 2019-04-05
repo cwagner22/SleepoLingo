@@ -392,7 +392,6 @@ function* cacheFilesDurations(sentences) {
   cachedFilesDurations = yield all(
     sentences.map(s => call(getSentenceDurations, s))
   );
-  debug(cachedFilesDurations);
 }
 
 const applySpeedToFileDuration = (duration, speed) =>

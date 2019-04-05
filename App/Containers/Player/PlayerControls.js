@@ -92,14 +92,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    incCurrentWord: allowRestart =>
-      dispatch(LessonActions.incCurrentWord(allowRestart)),
-    decCurrentWord: () => dispatch(LessonActions.decCurrentWord()),
-    play: (sentence, language, volume, speed) =>
-      dispatch(
-        PlaybackActions.playbackStart(sentence, language, volume, speed)
-      ),
-    playerStart: () => dispatch(PlaybackActions.playerStart()),
     playerNext: () => dispatch(PlaybackActions.playerNext()),
     playerPrev: () => dispatch(PlaybackActions.playerPrev()),
     playerPause: () => dispatch(PlaybackActions.playerPause()),

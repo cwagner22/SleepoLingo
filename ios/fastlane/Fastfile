@@ -24,4 +24,11 @@ platform :ios do
     frame_screenshots
     # upload_to_app_store
   end
+
+  lane :icons do
+  appicon(
+    appicon_devices: [:ipad, :iphone, :ios_marketing],
+    appicon_path: "SleepoLingo/Images.xcassets"
+  )
+  end
 end

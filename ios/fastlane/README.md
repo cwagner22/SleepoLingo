@@ -28,6 +28,12 @@ fastlane ios screenshots
 
 Generate new localized screenshots
 
+### ios icons
+
+```
+fastlane ios icons
+```
+
 ---
 
 This README.md is auto-generated and will be re-generated every time [fastlane](https://fastlane.tools) is run.

@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 import { SectionList, View, Text } from "react-native";
 import { connect } from "react-redux";
-import RNFS from "react-native-fs";
+import Config from "react-native-config";
 import withObservables from "@nozbe/with-observables";
 import { withDatabase } from "@nozbe/watermelondb/DatabaseProvider";
 
@@ -37,7 +37,7 @@ const RawLessonItem = ({ lesson, cards, onPress, testID, isDisabled }) => {
         nbLeft={nbCardsLeft()}
         onPress={onPress}
         isCompleted={lesson.isCompleted}
-        isDisabled={isDisabled}
+        isDisabled={!Config.MAKE_SCREENSHOTS && isDisabled}
         testID={testID}
       />
     </View>

@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,8 +37,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Alterlight-Regular.ttf</string>
@@ -84,9 +86,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
 </dict>
 </plist>

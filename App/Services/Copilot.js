@@ -1,4 +1,4 @@
-// @flow
+import Config from "react-native-config";
 
 const copilot = (screenName, props) => {
   let copilotAlreadyFinished = props.copilotScreens.some(
@@ -15,7 +15,7 @@ const copilot = (screenName, props) => {
       return copilotAlreadyFinished;
     },
     start() {
-      if (!copilotAlreadyFinished) {
+      if (!copilotAlreadyFinished && !Config.MAKE_SCREENSHOTS) {
         // https//github.com/okgrow/react-native-copilot/issues/75
         this.timer = setTimeout(() => {
           props.start();

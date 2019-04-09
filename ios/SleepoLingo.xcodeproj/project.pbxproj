@@ -65,7 +65,6 @@
 		83904430225202D10037B07B /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8390442A225202AB0037B07B /* libRNSVG.a */; };
 		83B039A9223502080040F7EF /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B039A8223502080040F7EF /* File.swift */; };
 		83B03B3E223502B60040F7EF /* SleepoLingoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B03B3D223502B60040F7EF /* SleepoLingoUITests.swift */; };
-		83E8DFA0224137D600D87AFC /* Design.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 83E8DF9F224137D500D87AFC /* Design.jpeg */; };
 		8BDE310ACC3A4E238AD0F1D8 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 706630A8CAB440879CB63C41 /* AntDesign.ttf */; };
 		8D496B11F25B4990842D0954 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 028DFFB1018C496F89863FB8 /* Zocial.ttf */; };
 		8F9E8062238E4A28BADECFF9 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D949D9BDFE1B4A9493940C2E /* Octicons.ttf */; };
@@ -613,7 +612,6 @@
 		83B03B3B223502B60040F7EF /* SleepoLingoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SleepoLingoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83B03B3D223502B60040F7EF /* SleepoLingoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepoLingoUITests.swift; sourceTree = "<group>"; };
 		83B03B3F223502B60040F7EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		83E8DF9F224137D500D87AFC /* Design.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Design.jpeg; sourceTree = "<group>"; };
 		84AEF77615E1499A86D41A24 /* AppCenterReactNativeCrashes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AppCenterReactNativeCrashes.xcodeproj; path = "../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes.xcodeproj"; sourceTree = "<group>"; };
 		89BA11C25F7C66AA10EAC960 /* Pods-SleepoLingo-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SleepoLingo-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-SleepoLingo-tvOSTests/Pods-SleepoLingo-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		8AB952D21E3C491AB15B9FF4 /* WatermelonDB.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = WatermelonDB.xcodeproj; path = "../node_modules/@nozbe/watermelondb/native/ios/WatermelonDB.xcodeproj"; sourceTree = "<group>"; };
@@ -819,7 +817,6 @@
 		13B07FAE1A68108700A75B9A /* SleepoLingo */ = {
 			isa = PBXGroup;
 			children = (
-				83E8DF9F224137D500D87AFC /* Design.jpeg */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1909,7 +1906,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				83E8DFA0224137D600D87AFC /* Design.jpeg in Resources */,
 				B487E9064ADE4FEDBC1CC02F /* AppCenter-Config.plist in Resources */,
 				AC129ED548A843D9B9F7AE69 /* Alterlight-Regular.ttf in Resources */,
 				8BDE310ACC3A4E238AD0F1D8 /* AntDesign.ttf in Resources */,

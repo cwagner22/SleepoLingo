@@ -18,6 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Generate new localized screenshots"
   lane :screenshots do
+    ENVFILE=.env.screenshots
     # set "concurrent_simulators" to false to avoid "Caught error... 65"
     # https://github.com/fastlane/fastlane/issues/14201
     capture_screenshots(workspace: "SleepoLingo.xcworkspace", scheme: "SleepoLingoUITests", concurrent_simulators: false)

@@ -27,8 +27,6 @@ class PlayerProgress extends React.Component {
     const nbPlayed = nbPlayedPreviousLoop + card.index;
     const progress = nbPlayed / (cardsCount * lessonLoopMax);
 
-    console.log(Time.formattedTime(elapsedTime));
-
     return (
       <View>
         <View style={styles.infoContainer}>

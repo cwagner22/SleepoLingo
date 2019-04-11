@@ -65,12 +65,6 @@ function* _getCurrentCardsQuery() {
     .query(Q.where("lesson_id", _currentLesson.id));
 }
 
-export function* getCurrentCardsCount() {
-  // const query = yield call(_getCurrentCardsQuery);
-  // return yield query.fetchCount();
-  return getCurrentCards().length;
-}
-
 export function* getCurrentSentences() {
   // const query = yield call(_getCurrentCardsQuery);
   // const cards = yield query.fetch();

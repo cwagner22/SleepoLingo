@@ -93,7 +93,8 @@ const mapStateToProps = state => {
     isPaused: state.playback.isPaused,
     playingState: state.playback.playingState,
     volume: state.playback.volume,
-    currentCardId: state.lesson.currentCardId
+    currentCardId: state.lesson.currentCardId,
+    cardsCount: state.playback.cardsCount
   };
 };
 
@@ -115,8 +116,8 @@ const enhance = withObservables(
     return {
       card: currentCardId
         ? database.collections.get("cards").findAndObserve(currentCardId)
-        : of$(null),
-      cardsCount: lesson.cards.observeCount()
+        : of$(null)
+      // cardsCount: lesson.cards.observeCount()
     };
   }
 );

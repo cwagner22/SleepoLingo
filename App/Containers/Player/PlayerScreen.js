@@ -63,7 +63,6 @@ class PlayerScreen extends React.Component {
 
   render() {
     const { card, cardsCount } = this.props;
-    return null;
     // const bgStyle = {
     // backgroundColor: isFocusMode() ? '#0e1a29' : '#0c0f1c'
     // }
@@ -114,10 +113,10 @@ const enhance = withObservables(
   ({ database, currentCardId, navigation }) => {
     const lesson = navigation.getParam("lesson");
     return {
-      // card: currentCardId
-      //   ? database.collections.get("cards").findAndObserve(currentCardId)
-      //   : of$(null)
-      // cardsCount: lesson.cards.observeCount()
+      card: currentCardId
+        ? database.collections.get("cards").findAndObserve(currentCardId)
+        : of$(null),
+      cardsCount: lesson.cards.observeCount()
     };
   }
 );

@@ -89,7 +89,7 @@ function* play(sentence, language, volume, speed) {
     yield put(PlaybackActions.playbackError(e));
   } finally {
     if (yield cancelled()) {
-      sound.cancel();
+      if (sound) sound.cancel();
     }
   }
 }
@@ -184,16 +184,11 @@ export function* loadPrevCard() {
 export function* loadCard(next: true) {
   playingState = "ORIGINAL";
   const lessonState = yield select(getLessonState);
-
-  // const currentCards = yield getCurrentLesson().cards.fetch();
-  // console.log(currentCards);
-
-  // setCurrentCards(currentCards);
-  // return;
+  const cards = getCurrentCards();
 
   if (lessonState.currentCardId) {
     if (next) {
-      if (++currentIndex >= currentCards.length) {
+      if (++currentIndex >= cards.length) {
         // if (allowRestart) {
         // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
         lessonLoopCounter++;
@@ -211,10 +206,9 @@ export function* loadCard(next: true) {
     }
   }
 
-  // const card = getCurrentCards()[currentIndex];
-  const card = getCurrentCards()[currentIndex];
+  const card = cards[currentIndex];
   setCurrentCard(card);
-  // yield put(LessonActions.setCurrentCard(card.id));
+  yield put(LessonActions.setCurrentCard(card.id));
 }
 
 function* loadPlayingState(action) {
@@ -254,7 +248,7 @@ function* loadPlayingState(action) {
     // yield call(restartCalculateProgress);
   }
 
-  // yield call(processPlayingState, action);
+  yield call(processPlayingState, action);
 }
 
 function* processPlayingState(action) {
@@ -331,9 +325,9 @@ export function* start() {
   console.log("start()", new Date(), Date.now());
 
   yield put(PlaybackActions.playerReady()); // start playerLoopProcess
-
-  // yield fork(calculateTotalTime);
-  // yield call(startCalculateProgress);
+  console.time("progress");
+  yield fork(calculateTotalTime);
+  yield call(startCalculateProgress);
 }
 
 export function* playerVolChange({ volume }) {

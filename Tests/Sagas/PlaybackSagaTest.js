@@ -1,5 +1,5 @@
 import { expectSaga } from "redux-saga-test-plan";
-import { startNight } from "../../App/Sagas/PlaybackSagas";
+import { __RewireAPI__ as PlaybackSagasRequireAPI } from "../../App/Sagas/PlaybackSagas";
 import PlaybackActions, {
   reducer as playbackReducer,
   PlaybackTypes
@@ -34,6 +34,7 @@ test("plays", async () => {
       })
     );
   }
+
   await database.batch(lesson, ...cards);
 
   return (
@@ -44,13 +45,31 @@ test("plays", async () => {
           lesson: lessonReducer
         })
       )
+      // Check that actions have been called
+      .put(LessonActions.downloadLesson())
+      .put(LessonActions.startLesson())
+      .put(PlaybackActions.playerStart())
+      .fork(PlaybackSagasRequireAPI.__get__("calculateTotalTime"))
+      .spawn(PlaybackSagasRequireAPI.__get__("calculateProgress"))
+      .call.fn(PlaybackSagasRequireAPI.__get__("play"))
+      .put(PlaybackActions.playbackSetPaused(false))
+      .put(PlaybackActions.playerReady())
+      // not sure why it starts with the last card
+      .put(LessonActions.setCurrentCard(cards[cards.length - 1].id))
+      .put.actionType("PLAYBACK_SET_ELAPSED_TIME")
 
       // Dispatch any actions that the saga will `take`.
       .dispatch(LessonActions.loadLesson(lesson))
+      // Wait for lesson to load
+      .delay(250)
       .dispatch(PlaybackActions.startNight())
 
       // // Start the test. Returns a Promise.
-      .run()
+      .silentRun(500)
+      .then(result => {
+        // RangeError: Maximum call stack size exceeded
+        // expect(result.toJSON()).toMatchSnapshot();
+      })
   );
 });
 

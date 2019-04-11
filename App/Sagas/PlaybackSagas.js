@@ -50,6 +50,7 @@ var sound, playerLoopProcessTask, progressTask;
 var playingState, lessonLoopCounter, translationLoopCounter, currentIndex;
 var cachedFilesDurations;
 var lessonLoopMax;
+let previousCardsElapsedTime = 0;
 
 // Replicate redux-saga/delay with react-native-background-timer
 const bgDelay = (ms, val = true) => {
@@ -215,6 +216,12 @@ export function* loadCard(next: true) {
     }
   }
 
+  if (cachedFilesDurations) {
+    // Update previousCardsElapsedTime
+    // At first cards, cachedFilesDurations is still not calculated but we don't need it yet
+    yield call(updatePreviousCardsElapsedTime);
+  }
+
   const card = cards[currentIndex];
   setCurrentCard(card);
   yield put(LessonActions.setCurrentCard(card.id));
@@ -250,8 +257,7 @@ function* loadPlayingState(action) {
     action.type === PlaybackTypes.PLAYBACK_SUCCESS &&
     playingState === "ORIGINAL"
   ) {
-    startTime = new Date();
-    // yield call(restartCalculateProgress);
+    yield call(restartCalculateProgress);
   }
 
   yield call(processPlayingState, action);
@@ -491,7 +497,7 @@ function getTimeoutsDurationTotal(index, nbCards, full: boolean) {
   return timeoutsDuration;
 }
 
-function* getElapsedTime() {
+function* updatePreviousCardsElapsedTime() {
   const playbackState = yield select(getPlaybackState);
   const cardsCount = playbackState.cardsCount;
   const filesDuration = yield call(
@@ -506,11 +512,11 @@ function* getElapsedTime() {
     false
   );
 
-  const duration = filesDuration + timeoutsDuration;
+  previousCardsElapsedTime = filesDuration + timeoutsDuration;
   debug(
-    `Elapsed time for previous cards - Total: ${duration.toFixed()}, Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`
+    `Elapsed time for previous cards - Total: ${previousCardsElapsedTime.toFixed()}, 
+    Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`
   );
-  return duration;
 }
 
 function* startCalculateProgress() {
@@ -528,23 +534,21 @@ function* restartCalculateProgress() {
   yield call(startCalculateProgress);
 }
 
-let startTime;
 function* calculateProgress() {
-  startTime = new Date();
+  const startTime = new Date();
 
   while (true) {
-    // If the files durations have not been cached yet then set it to 0 for now
-    const elaspedTime = cachedFilesDurations ? yield call(getElapsedTime) : 0;
     const elapsedTimeSincePreviousCard = differenceInMilliseconds(
       new Date(),
       startTime
     );
-    const totalElaspedTime = elaspedTime + elapsedTimeSincePreviousCard;
+    const totalElaspedTime =
+      previousCardsElapsedTime + elapsedTimeSincePreviousCard;
     debug(
       `Time elapsed - Total: ${totalElaspedTime.toFixed()}, Since previous card: ${elapsedTimeSincePreviousCard.toFixed()}`
     );
     yield put(PlaybackActions.playbackSetElapsedTime(totalElaspedTime));
-    yield delay(500);
+    yield delay(1000);
   }
 }
 

@@ -12,8 +12,8 @@ import {
 } from "redux-saga/effects";
 import BackgroundTimer from "react-native-background-timer";
 import Sound from "react-native-sound";
-import moment from "moment";
 import Debug from "debug";
+import differenceInMilliseconds from "date-fns/difference_in_milliseconds";
 
 import Player from "../Services/Player";
 import loadSound from "../Services/Sound";
@@ -73,8 +73,16 @@ function* play(sentence, language, volume, speed) {
   try {
     const path = Player.getFilePath(sentence, language);
     debug(`Playing ${path}`);
+    const duration = yield fileDuration(path);
+    console.time("duration");
+    console.log("start play", new Date(), Date.now());
+
     sound = yield call(loadSound, path, volume, speed);
     yield sound.promise;
+    console.timeEnd("duration");
+    console.log("path", path, "dur", duration);
+    console.log("end play", new Date(), Date.now());
+
     yield put(PlaybackActions.playbackSuccess());
   } catch (e) {
     console.error("Playback error");
@@ -176,7 +184,12 @@ export function* loadPrevCard() {
 export function* loadCard(next: true) {
   playingState = "ORIGINAL";
   const lessonState = yield select(getLessonState);
-  const currentCards = yield getCurrentLesson().cards.fetch();
+
+  // const currentCards = yield getCurrentLesson().cards.fetch();
+  // console.log(currentCards);
+
+  // setCurrentCards(currentCards);
+  // return;
 
   if (lessonState.currentCardId) {
     if (next) {
@@ -198,9 +211,10 @@ export function* loadCard(next: true) {
     }
   }
 
+  // const card = getCurrentCards()[currentIndex];
   const card = getCurrentCards()[currentIndex];
   setCurrentCard(card);
-  yield put(LessonActions.setCurrentCard(card.id));
+  // yield put(LessonActions.setCurrentCard(card.id));
 }
 
 function* loadPlayingState(action) {
@@ -233,10 +247,14 @@ function* loadPlayingState(action) {
     action.type === PlaybackTypes.PLAYBACK_SUCCESS &&
     playingState === "ORIGINAL"
   ) {
-    yield call(restartCalculateProgress);
+    startTime = new Date();
+    console.timeEnd("progress");
+    console.log("startTime finished", startTime);
+
+    // yield call(restartCalculateProgress);
   }
 
-  yield call(processPlayingState, action);
+  // yield call(processPlayingState, action);
 }
 
 function* processPlayingState(action) {
@@ -310,10 +328,12 @@ export function* start() {
   yield call(setModifiers);
 
   playerLoopProcessTask = yield fork(playerLoopProcess);
+  console.log("start()", new Date(), Date.now());
+
   yield put(PlaybackActions.playerReady()); // start playerLoopProcess
 
-  yield fork(calculateTotalTime);
-  yield call(startCalculateProgress);
+  // yield fork(calculateTotalTime);
+  // yield call(startCalculateProgress);
 }
 
 export function* playerVolChange({ volume }) {
@@ -392,6 +412,7 @@ function* cacheFilesDurations(sentences) {
   cachedFilesDurations = yield all(
     sentences.map(s => call(getSentenceDurations, s))
   );
+  console.log(cachedFilesDurations);
 }
 
 const applySpeedToFileDuration = (duration, speed) =>
@@ -409,6 +430,13 @@ function* durationOfFiles(index) {
       cachedFileDuration.original +
       cachedFileDuration.translation * TRANSLATION_LOOP_MAX;
   }
+
+  console.log(
+    "file duration",
+    duration,
+    speed,
+    applySpeedToFileDuration(duration, speed)
+  );
 
   return applySpeedToFileDuration(duration, speed);
 }
@@ -445,6 +473,8 @@ function* durationOfFilesTotal(index, nbCards, full: boolean) {
   filesDuration += yield call(durationOfFiles, full ? index : index - 1);
 
   if (full) filesDuration += msgEndDuration;
+  console.log(filesDuration);
+
   return filesDuration;
 }
 
@@ -492,7 +522,7 @@ function* getElapsedTime() {
 
   const duration = filesDuration + timeoutsDuration;
   debug(
-    `Time previous cards - Total: ${duration.toFixed()}, Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`
+    `Elapsed time for previous cards - Total: ${duration.toFixed()}, Files: ${filesDuration.toFixed()}, Timeouts: ${timeoutsDuration.toFixed()}`
   );
   return duration;
 }
@@ -512,17 +542,22 @@ function* restartCalculateProgress() {
   yield call(startCalculateProgress);
 }
 
+let startTime;
 function* calculateProgress() {
-  let startTime = moment();
+  startTime = new Date();
+  console.time("progress");
+  console.log("startTime", startTime);
 
   while (true) {
     // If the files durations have not been cached yet then set it to 0 for now
     const elaspedTime = cachedFilesDurations ? yield call(getElapsedTime) : 0;
-    const totalElaspedTime = elaspedTime + moment().diff(startTime);
+    const elapsedTimeSincePreviousCard = differenceInMilliseconds(
+      new Date(),
+      startTime
+    );
+    const totalElaspedTime = elaspedTime + elapsedTimeSincePreviousCard;
     debug(
-      `Time total - ${totalElaspedTime.toFixed()}, Since current card: ${moment().diff(
-        startTime
-      )}`
+      `Time elapsed - Total: ${totalElaspedTime.toFixed()}, Since previous card: ${elapsedTimeSincePreviousCard.toFixed()}`
     );
     yield put(PlaybackActions.playbackSetElapsedTime(totalElaspedTime));
     yield delay(500);
@@ -531,8 +566,7 @@ function* calculateProgress() {
 
 export function* startNight() {
   yield put(LessonActions.startLesson());
-  // setCurrentCards(yield getCurrentLesson().cards.fetch());
   // yield put(LessonActions.loadNextCard());
-  yield put(PlaybackActions.playbackSetCardsCount(getCurrentCardsCount()));
+  // yield put(PlaybackActions.playbackSetCardsCount(getCurrentCardsCount()));
   yield put(PlaybackActions.playerStart());
 }

@@ -49,7 +49,7 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
-export const playerStart = (state, { volume }) => {
+export const playerStart = state => {
   return state.merge({
     lessonLoopCounter: 0,
     playingState: null,
@@ -59,9 +59,13 @@ export const playerStart = (state, { volume }) => {
   });
 };
 
-export const playerStop = (state, { volume }) => {
+export const playerStop = state => {
   return state.merge({
-    playerRunning: false
+    playerRunning: false,
+    lessonLoopCounter: 0,
+    playingState: null,
+    elapsedTime: 0,
+    duration: 0
   });
 };
 

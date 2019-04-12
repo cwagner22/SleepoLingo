@@ -134,22 +134,22 @@ export function* playerStop() {
 }
 
 function* forcePlayerWithLoadedCard() {
-  // playing = true
+  // Restart playerLoopProcess
+  yield cancel(playerLoopProcessTask);
+  playerLoopProcessTask = yield fork(playerLoopProcess);
   translationLoopCounter = 0;
   playingState = "ORIGINAL";
-  playerLoopProcessTask = yield fork(playerLoopProcess);
-  yield call(startCalculateProgress);
-  yield fork(playCard);
+
+  yield call(restartCalculateProgress);
+  yield call(playCard);
 }
 
 export function* playerNext() {
-  yield call(playerStop);
   yield call(loadNextCard);
   yield call(forcePlayerWithLoadedCard);
 }
 
 export function* playerPrev() {
-  yield call(playerStop);
   yield call(loadPrevCard);
   yield call(forcePlayerWithLoadedCard);
 }
@@ -216,7 +216,7 @@ export function* loadCard(next: true) {
 
   if (cachedFilesDurations) {
     // Update previousCardsElapsedTime
-    // At first cards, cachedFilesDurations is still not calculated but we don't need it yet
+    // At first card, cachedFilesDurations is still not calculated but we don't need it yet
     yield call(updatePreviousCardsElapsedTime);
   }
 

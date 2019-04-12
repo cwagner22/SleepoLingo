@@ -22,12 +22,10 @@ import LessonActions from "../Redux/LessonRedux";
 import {
   ENGLISH,
   THAI,
-  getCurrentLesson,
   getCurrentSentences,
   getCurrentCard,
   setCurrentCard,
-  getCurrentCards,
-  setCurrentCards
+  getCurrentCards
 } from "./LessonSagas";
 
 const debug = Debug("app:PlaybackSaga");
@@ -46,11 +44,11 @@ const REPEAT_ALL_TIMEOUT_SLEEP = 4000;
 const getLessonState = state => state.lesson;
 const getPlaybackState = state => state.playback;
 
-var sound, playerLoopProcessTask, progressTask;
-var playingState, lessonLoopCounter, translationLoopCounter, currentIndex;
-var cachedFilesDurations;
-var lessonLoopMax;
-let previousCardsElapsedTime = 0;
+let sound, playerLoopProcessTask, progressTask;
+let playingState, lessonLoopCounter, translationLoopCounter, currentIndex;
+let cachedFilesDurations;
+let lessonLoopMax;
+let previousCardsElapsedTime;
 
 // Replicate redux-saga/delay with react-native-background-timer
 const bgDelay = (ms, val = true) => {
@@ -329,6 +327,7 @@ export function* start() {
   currentIndex = 0;
   playingState = null;
   cachedFilesDurations = null;
+  previousCardsElapsedTime = 0;
 
   yield call(setModifiers);
 

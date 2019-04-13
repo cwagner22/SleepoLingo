@@ -19,6 +19,7 @@ import Player from "../Services/Player";
 import loadSound from "../Services/Sound";
 import PlaybackActions, { PlaybackTypes } from "../Redux/PlaybackRedux";
 import LessonActions from "../Redux/LessonRedux";
+import NavigationService from "../Services/NavigationService";
 import {
   ENGLISH,
   THAI,
@@ -200,12 +201,11 @@ export function* loadCard(next: true) {
         // Next loop, load first card
         if (lessonLoopCounter < lessonLoopMax - 1) {
           lessonLoopCounter++;
-          // lessonLoopCounter = Math.max(++lessonLoopCounter, lessonLoopMax - 1);
           currentIndex = 0;
           yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
         } else {
           // Last card of the last loop
-          currentIndex = cards.length - 1;
+          // currentIndex = cards.length - 1;
         }
       }
     } else {
@@ -231,15 +231,17 @@ export function* loadCard(next: true) {
   }
 
   const card = cards[currentIndex];
-  setCurrentCard(card);
-  yield put(LessonActions.setCurrentCard(card.id));
+  if (card) {
+    setCurrentCard(card);
+    yield put(LessonActions.setCurrentCard(card.id));
+  } else {
+    // Finished
+    yield call(playerStop);
+    NavigationService.back();
+  }
 }
 
 function* loadPlayingState(action) {
-  if (!playerShouldContinue()) {
-    yield put(PlaybackActions.playerStop());
-  }
-
   if (!playingState) {
     // init
     yield call(loadNextCard);
@@ -316,7 +318,7 @@ function setModifiers() {
 export const isFocusMode = () =>
   lessonLoopCounter < lessonLoopMax - 1 || lessonLoopMax === 1;
 
-const playerShouldContinue = () => lessonLoopCounter < lessonLoopMax;
+const playerShouldStop = () => !!!getCurrentCard();
 
 function* playerLoopProcess() {
   yield put(PlaybackActions.playbackSetPaused(false));

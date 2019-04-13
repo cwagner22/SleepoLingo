@@ -1,6 +1,5 @@
-import { call, select, put, race, all } from "redux-saga/effects";
+import { call, put, all } from "redux-saga/effects";
 import RNFS from "react-native-fs";
-import { Alert } from "react-native";
 import pLimit from "p-limit";
 import Toast from "react-native-simple-toast";
 import RNFetchBlob from "rn-fetch-blob";
@@ -9,10 +8,6 @@ import { alert } from "redux-saga-rn-alert";
 
 import API from "../Services/TranslateApi";
 import LessonActions from "../Redux/LessonRedux";
-import NavigationActions, {
-  navigateToAnki,
-  navigateToLesson
-} from "../Navigation/NavigationActions";
 import NavigationService from "../Services/NavigationService";
 import Player from "../Services/Player";
 import database from "../Models/database";

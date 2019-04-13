@@ -15,17 +15,6 @@ import NavigationActions from "../../Navigation/NavigationActions";
 import styles from "../Styles/PlayerControlsStyle";
 
 class PlayerControls extends React.Component {
-  componentWillMount() {
-    // this.scheduleTimer()
-  }
-
-  scheduleTimer() {
-    BackgroundTimer.setTimeout(() => {
-      // this.componentWillUnmount();
-      this.props.navigation.back();
-    }, 60 * 60 * 1000);
-  }
-
   renderPlayPauseButton() {
     if (this.props.isPaused) {
       return (

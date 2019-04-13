@@ -23,11 +23,20 @@ class PlayerScreen extends React.Component {
   componentWillMount() {
     StatusBar.setBarStyle("light-content");
     this.props.startNight();
+    // this.scheduleTimer()
   }
 
   componentWillUnmount() {
     StatusBar.setBarStyle("dark-content");
     this.props.playerStop();
+  }
+
+  scheduleTimer() {
+    // todo
+    BackgroundTimer.setTimeout(() => {
+      // this.componentWillUnmount();
+      this.props.navigation.back();
+    }, 60 * 60 * 1000);
   }
 
   renderWord() {

@@ -16,6 +16,10 @@ function navigate(routeName, params) {
   );
 }
 
+function back() {
+  _navigator.dispatch(NavigationActions.back());
+}
+
 // https://reactnavigation.org/docs/en/screen-tracking.html
 function getActiveRouteName(navigationState) {
   if (!navigationState) {
@@ -31,6 +35,7 @@ function getActiveRouteName(navigationState) {
 
 export default {
   navigate,
+  back,
   setTopLevelNavigator,
   getActiveRouteName
 };

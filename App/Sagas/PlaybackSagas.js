@@ -84,7 +84,7 @@ function* play(sentence, language, volume, speed) {
   }
 }
 
-function* playCard() {
+function* playSentence() {
   const playbackState = yield select(getPlaybackState);
 
   const { speed, volume } = playbackState;
@@ -93,7 +93,6 @@ function* playCard() {
   const sentenceStr = translation ? sentence.translation : sentence.original;
   const language = translation ? THAI : ENGLISH;
 
-  yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
   // yield put(LessonActions.setCurrentCard(currentCard.id));
   yield put(PlaybackActions.setPlayingState(playingState));
 
@@ -141,7 +140,7 @@ function* forcePlayerWithLoadedCard() {
   playingState = "ORIGINAL";
 
   yield call(restartCalculateProgress);
-  yield call(playCard);
+  yield call(playSentence);
 }
 
 export function* playerNext() {
@@ -197,16 +196,9 @@ export function* loadCard(next: true) {
   if (lessonState.currentCardId) {
     if (next) {
       if (++currentIndex >= cards.length) {
-        // if (allowRestart) {
-        // if (state.lessonLoopCounter < LESSON_LOOP_MAX) {
         lessonLoopCounter++;
         currentIndex = 0;
-        // } else {
-        //   index = currentCards.length - 1
-        // }
-        // } else {
-        //
-        // }
+        yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
       }
       currentIndex = Math.max(0, currentIndex);
     } else {
@@ -241,7 +233,6 @@ function* loadPlayingState(action) {
       // next word
       const oldlessonLoopCounter = lessonLoopCounter;
       yield call(loadNextCard);
-      // newState = navigateCurrentWord(state, action)
       translationLoopCounter = 0;
       if (lessonLoopCounter !== oldlessonLoopCounter) {
         playingState = "RESTART";
@@ -269,11 +260,11 @@ function* processPlayingState(action) {
         yield call(bgDelay, this.nextWordTimeout);
       }
       // yield call(bgDelay, this.originalTimeout)
-      yield call(playCard);
+      yield call(playSentence);
       break;
     case "TRANSLATION":
       yield call(bgDelay, this.translationTimeout);
-      yield call(playCard);
+      yield call(playSentence);
       break;
     case "RESTART":
       yield call(setModifiers);
@@ -543,9 +534,9 @@ function* calculateProgress() {
     );
     const totalElaspedTime =
       previousCardsElapsedTime + elapsedTimeSincePreviousCard;
-    debug(
-      `Time elapsed - Total: ${totalElaspedTime.toFixed()}, Since previous card: ${elapsedTimeSincePreviousCard.toFixed()}`
-    );
+    // debug(
+    //   `Time elapsed - Total: ${totalElaspedTime.toFixed()}, Since previous card: ${elapsedTimeSincePreviousCard.toFixed()}`
+    // );
     yield put(PlaybackActions.playbackSetElapsedTime(totalElaspedTime));
     yield delay(1000);
   }

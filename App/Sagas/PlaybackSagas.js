@@ -190,19 +190,37 @@ export function* loadCard(next: true) {
   logCardDuration();
 
   playingState = "ORIGINAL";
-  const lessonState = yield select(getLessonState);
   const cards = getCurrentCards();
 
-  if (lessonState.currentCardId) {
+  // Don't do anything at init
+  if (getCurrentCard()) {
     if (next) {
+      // Next card
       if (++currentIndex >= cards.length) {
-        lessonLoopCounter++;
-        currentIndex = 0;
-        yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
+        // Next loop, load first card
+        if (lessonLoopCounter < lessonLoopMax - 1) {
+          lessonLoopCounter++;
+          // lessonLoopCounter = Math.max(++lessonLoopCounter, lessonLoopMax - 1);
+          currentIndex = 0;
+          yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
+        } else {
+          // Last card of the last loop
+          currentIndex = cards.length - 1;
+        }
       }
-      currentIndex = Math.max(0, currentIndex);
     } else {
-      currentIndex = Math.max(0, --currentIndex);
+      // Previous card
+      if (--currentIndex < 0) {
+        // Go back to previous loop, load last card
+        if (lessonLoopCounter > 0) {
+          lessonLoopCounter--;
+          currentIndex = cards.length - 1;
+          yield put(PlaybackActions.setLessonLoopCounter(lessonLoopCounter));
+        } else {
+          // First card of the first loop
+          currentIndex = 0;
+        }
+      }
     }
   }
 

@@ -9,7 +9,6 @@ export default StyleSheet.create({
     flex: 1
   },
   sentenceContainer: {
-    alignItems: "center",
     justifyContent: "center",
     flex: 1,
     borderBottomColor: "white",
@@ -17,7 +16,8 @@ export default StyleSheet.create({
   },
   sentence: {
     fontSize: 30,
-    color: "white"
+    color: "white",
+    textAlign: "center"
   },
   stop: {
     flex: 3,

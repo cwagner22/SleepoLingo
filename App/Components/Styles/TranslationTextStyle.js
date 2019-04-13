@@ -7,11 +7,11 @@ export default StyleSheet.create({
   ...ApplicationStyles.screen,
   container: {
     marginBottom: Metrics.baseMargin,
-    alignSelf: "center", // “Auto” width for text node, prevent from expanding full width
+    // alignSelf: "center", // “Auto” width for text node, prevent from expanding full width
     paddingHorizontal: 5
   },
   innerContainer: {
-    alignSelf: "center"
+    // alignSelf: "center"
   },
   title: {
     fontSize: 29,
@@ -37,10 +37,5 @@ export default StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#fff",
     padding: 20
-  },
-  copilotBox: {
-    position: "absolute",
-    height: 300,
-    width: "100%"
   }
 });

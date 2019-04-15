@@ -20,8 +20,8 @@ SleepoLingo only supports iOS and the Thai language for now.
 
 ## :fire: Preview
 
-![Demo](https://user-images.githubusercontent.com/5314435/56145601-ca184280-5fce-11e9-9e4c-89c7d2c8e379.gif)
-![Screenshot](https://user-images.githubusercontent.com/5314435/56144602-e5824e00-5fcc-11e9-914b-57762f28bcc4.png)
+![](https://user-images.githubusercontent.com/5314435/56145601-ca184280-5fce-11e9-9e4c-89c7d2c8e379.gif)
+![](https://user-images.githubusercontent.com/5314435/56146839-372cd780-5fd1-11e9-8836-91d7c46b9d4c.png)
 
 ## :arrow_up: How to Setup
 

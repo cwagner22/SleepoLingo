@@ -20,14 +20,14 @@ SleepoLingo only supports iOS and the Thai language for now.
 
 ## :fire: Preview
 
-![Demo](https://media.giphy.com/media/MSUkFnL8o4sxUtGIth/giphy.gif)
-![Screenshot](https://i.imgur.com/FocBtQ5.png?1)
+![Demo](https://user-images.githubusercontent.com/5314435/56145601-ca184280-5fce-11e9-9e4c-89c7d2c8e379.gif)
+![Screenshot](https://user-images.githubusercontent.com/5314435/56144602-e5824e00-5fcc-11e9-914b-57762f28bcc4.png)
 
 ## :arrow_up: How to Setup
 
-**Step 1:** git clone this repo:
+**Step 1:** git clone this repo.
 
-**Step 2:** cd to the cloned repo:
+**Step 2:** cd to the cloned repo.
 
 **Step 3:** Install the Application with `npm install`
 

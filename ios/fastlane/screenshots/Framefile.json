@@ -10,13 +10,13 @@
       "color": "#ffffff"
     },
     "background": "./background3.png",
-    "padding": "55x20",
+    "padding": "50x40",
     "show_complete_frame": false,
     "stack_title": true,
     "title_below_image": false,
     "frame": "WHITE",
-    "interline_spacing": 50,
-    "font_scale_factor": 0.2
+    "interline_spacing": 0,
+    "font_scale_factor": 0.16
   },
   "data": []
 }

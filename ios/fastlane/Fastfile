@@ -18,18 +18,17 @@ default_platform(:ios)
 platform :ios do
   desc "Generate new localized screenshots"
   lane :screenshots do
-    ENVFILE=.env.screenshots
     # set "concurrent_simulators" to false to avoid "Caught error... 65"
     # https://github.com/fastlane/fastlane/issues/14201
     capture_screenshots(workspace: "SleepoLingo.xcworkspace", scheme: "SleepoLingoUITests", concurrent_simulators: false)
-    frame_screenshots
+    frame_screenshots(path: "fastlane/screenshots")
     # upload_to_app_store
   end
 
   lane :icons do
-  appicon(
-    appicon_devices: [:ipad, :iphone, :ios_marketing],
-    appicon_path: "SleepoLingo/Images.xcassets"
-  )
+    appicon(
+      appicon_devices: [:ipad, :iphone, :ios_marketing],
+      appicon_path: "SleepoLingo/Images.xcassets"
+    )
   end
 end

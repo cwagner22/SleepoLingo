@@ -31,7 +31,7 @@ SleepoLingo only supports iOS and the Thai language for now.
 
 **Step 3:** Install the Application with `npm install`
 
-**Step 4:** In `App/Lessons` rename `lessons.test.xlsx` to `lessons.xlsx`.
+**Step 4:** In `App` rename `lessons.test.xlsx` to `lessons.xlsx`.
 
 ## :arrow_forward: How to Run App
 

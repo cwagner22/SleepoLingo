@@ -194,9 +194,10 @@ export function* loadCard(next: true) {
 
   playingState = "ORIGINAL";
   const cards = getCurrentCards();
+  const playbackState = yield select(getPlaybackState);
 
   // Don't do anything at init
-  if (getCurrentCard()) {
+  if (playbackState.playingState) {
     if (next) {
       // Next card
       if (++currentIndex >= cards.length) {

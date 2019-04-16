@@ -50,7 +50,7 @@ test("plays", async () => {
       .put(LessonActions.startLesson())
       .put(PlaybackActions.playerStart())
       .fork(PlaybackSagasRequireAPI.__get__("calculateTotalTime"))
-      .spawn(PlaybackSagasRequireAPI.__get__("calculateProgress"))
+      .spawn(PlaybackSagasRequireAPI.__get__("trackElapsedTime"))
       .call.fn(PlaybackSagasRequireAPI.__get__("play"))
       .put(PlaybackActions.playbackSetPaused(false))
       .put(PlaybackActions.playerReady())

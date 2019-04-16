@@ -8,17 +8,19 @@ import {
   takeEvery,
   spawn,
   all,
-  delay
+  delay,
+  take
 } from "redux-saga/effects";
 import BackgroundTimer from "react-native-background-timer";
 import Sound from "react-native-sound";
 import Debug from "debug";
 import differenceInMilliseconds from "date-fns/difference_in_milliseconds";
+import Toast from "react-native-simple-toast";
 
 import Player from "../Services/Player";
 import loadSound from "../Services/Sound";
 import PlaybackActions, { PlaybackTypes } from "../Redux/PlaybackRedux";
-import LessonActions from "../Redux/LessonRedux";
+import LessonActions, { LessonTypes } from "../Redux/LessonRedux";
 import NavigationService from "../Services/NavigationService";
 import {
   ENGLISH,
@@ -45,7 +47,7 @@ const REPEAT_ALL_TIMEOUT_SLEEP = 4000;
 const getLessonState = state => state.lesson;
 const getPlaybackState = state => state.playback;
 
-let sound, playerLoopProcessTask, progressTask;
+let sound, elapsedTimeTask, _startTask;
 let playingState, lessonLoopCounter, translationLoopCounter, currentIndex;
 let cachedFilesDurations;
 let lessonLoopMax;
@@ -69,6 +71,8 @@ export function* playSaga({ sentence, language, volume, speed }) {
 }
 
 function* play(sentence, language, volume, speed) {
+  const lessonState = yield select(getLessonState);
+
   try {
     const path = Player.getFilePath(sentence, language);
     debug(`Playing ${path}`);
@@ -76,8 +80,12 @@ function* play(sentence, language, volume, speed) {
     yield sound.promise;
     yield put(PlaybackActions.playbackSuccess());
   } catch (e) {
-    console.error("Playback error");
-    yield put(PlaybackActions.playbackError(e));
+    if (lessonState.isDownloading) {
+      Toast.show("Audio not downloaded yet");
+    } else {
+      debug("Playback error");
+      yield put(PlaybackActions.playbackError(e));
+    }
   } finally {
     if (yield cancelled()) {
       if (sound) sound.cancel();
@@ -95,7 +103,7 @@ function* playSentence() {
   const language = translation ? THAI : ENGLISH;
 
   // yield put(LessonActions.setCurrentCard(currentCard.id));
-  yield put(PlaybackActions.setPlayingState(playingState));
+  // yield put(PlaybackActions.setPlayingState(playingState));
 
   yield call(
     play,
@@ -125,22 +133,16 @@ function* playMessageEnd() {
 }
 
 export function* playerStop() {
-  // if (task) {
-  //   yield cancel(task)
-  // }
-  // playing = false
-  yield call(stopCalculateProgress);
-  yield cancel(playerLoopProcessTask);
+  yield call(stopTrackElapsedTime);
+  // yield cancel(playerLoopProcessTask);
+  yield cancel(_startTask);
 }
 
 function* forcePlayerWithLoadedCard() {
-  // Restart playerLoopProcess
-  yield cancel(playerLoopProcessTask);
-  playerLoopProcessTask = yield fork(playerLoopProcess);
   translationLoopCounter = 0;
   playingState = "ORIGINAL";
-
-  yield call(restartCalculateProgress);
+  yield put(PlaybackActions.setPlayingState(playingState));
+  yield call(restartTrackElapsedTime);
   yield call(playSentence);
 }
 
@@ -266,9 +268,10 @@ function* loadPlayingState(action) {
     action.type === PlaybackTypes.PLAYBACK_SUCCESS &&
     playingState === "ORIGINAL"
   ) {
-    yield call(restartCalculateProgress);
+    yield call(restartTrackElapsedTime);
   }
 
+  yield put(PlaybackActions.setPlayingState(playingState));
   yield call(processPlayingState, action);
 }
 
@@ -318,9 +321,7 @@ function setModifiers() {
 export const isFocusMode = () =>
   lessonLoopCounter < lessonLoopMax - 1 || lessonLoopMax === 1;
 
-const playerShouldStop = () => !!!getCurrentCard();
-
-function* playerLoopProcess() {
+function* watchLoadPlayingState() {
   yield put(PlaybackActions.playbackSetPaused(false));
   // takeLatest cancelled the task at the end for no reason
   yield takeEvery(
@@ -330,7 +331,13 @@ function* playerLoopProcess() {
 }
 
 export function* start() {
+  // Fork task to make it cancelable
+  _startTask = yield fork(startTask);
+}
+
+function* startTask() {
   const playbackState = yield select(getPlaybackState);
+  const lessonState = yield select(getLessonState);
   lessonLoopMax = playbackState.lessonLoopMax;
   // playing = true
   lessonLoopCounter = 0;
@@ -342,10 +349,15 @@ export function* start() {
 
   yield call(setModifiers);
 
-  playerLoopProcessTask = yield fork(playerLoopProcess);
-  yield put(PlaybackActions.playerReady()); // start playerLoopProcess
+  if (lessonState.isDownloading) {
+    // Wait for download to complete
+    yield take(LessonTypes.SET_IS_DOWNLOADING);
+  }
+
+  yield fork(watchLoadPlayingState);
+  yield put(PlaybackActions.playerReady()); // start loadPlayingState
   yield fork(calculateTotalTime);
-  yield call(startCalculateProgress);
+  yield call(startTrackElapsedTime);
 }
 
 export function* playerVolChange({ volume }) {
@@ -361,7 +373,7 @@ export function* playerSpeedChange() {
   }
 
   yield fork(calculateTotalTime);
-  yield call(restartCalculateProgress);
+  yield call(restartTrackElapsedTime);
 }
 
 export function* playbackLoopMaxChange(action) {
@@ -529,22 +541,23 @@ function* updatePreviousCardsElapsedTime() {
   );
 }
 
-function* startCalculateProgress() {
-  progressTask = yield spawn(calculateProgress);
+function* startTrackElapsedTime() {
+  // spawn instead of to restart it from children without blocking
+  elapsedTimeTask = yield spawn(trackElapsedTime);
 }
 
-function* stopCalculateProgress() {
-  if (progressTask) {
-    yield cancel(progressTask);
+function* stopTrackElapsedTime() {
+  if (elapsedTimeTask) {
+    yield cancel(elapsedTimeTask);
   }
 }
 
-function* restartCalculateProgress() {
-  yield call(stopCalculateProgress);
-  yield call(startCalculateProgress);
+function* restartTrackElapsedTime() {
+  yield call(stopTrackElapsedTime);
+  yield call(startTrackElapsedTime);
 }
 
-function* calculateProgress() {
+function* trackElapsedTime() {
   const startTime = new Date();
 
   while (true) {

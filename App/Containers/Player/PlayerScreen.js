@@ -39,12 +39,17 @@ class PlayerScreen extends React.Component {
     }, 60 * 60 * 1000);
   }
 
-  renderWord() {
-    const sentence = this.props.card.getSentence();
-    const sentenceStr =
-      this.props.playingState === "ORIGINAL"
-        ? sentence.original
-        : sentence.translation;
+  renderSentence() {
+    const { card, playingState, isDownloading } = this.props;
+    let sentenceStr = "";
+    if (isDownloading) {
+      sentenceStr = "Downloading...";
+    } else if (card) {
+      const sentence = card.getSentence();
+      sentenceStr =
+        playingState === "ORIGINAL" ? sentence.original : sentence.translation;
+    }
+
     return (
       <View style={styles.sentenceContainer}>
         <Text style={styles.sentence}>{sentenceStr}</Text>
@@ -82,7 +87,7 @@ class PlayerScreen extends React.Component {
         colors={["#0c0f1c", "#0e1a29"]}
         style={styles.mainContainer}
       >
-        {card && this.renderWord()}
+        {this.renderSentence()}
         {this.renderStop()}
         <VolumeSlider
           volume={this.props.volume}
@@ -103,6 +108,7 @@ const mapStateToProps = state => {
     playingState: state.playback.playingState,
     volume: state.playback.volume,
     currentCardId: state.lesson.currentCardId,
+    isDownloading: state.lesson.isDownloading,
     cardsCount: state.playback.cardsCount
   };
 };
@@ -120,13 +126,11 @@ const mapDispatchToProps = dispatch => {
 
 const enhance = withObservables(
   ["currentCardId"],
-  ({ database, currentCardId, navigation }) => {
-    const lesson = navigation.getParam("lesson");
+  ({ database, currentCardId }) => {
     return {
       card: currentCardId
         ? database.collections.get("cards").findAndObserve(currentCardId)
         : of$(null)
-      // cardsCount: lesson.cards.observeCount()
     };
   }
 );

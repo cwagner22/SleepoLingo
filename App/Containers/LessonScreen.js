@@ -49,17 +49,6 @@ class LessonScreen extends React.Component {
     this.copilot.unload();
   }
 
-  // componentWillReceiveProps(newProps) {
-  //   if (
-  //     this.state.modalVisible &&
-  //     newProps.playerRunning !== this.props.playerRunning &&
-  //     !newProps.playerRunning
-  //   ) {
-  //     // Audio finished, force the player to close since it's still open
-  //     this.refs.nightPlayerModal.close();
-  //   }
-  // }
-
   renderCard() {
     const { lesson, startAnki } = this.props;
 

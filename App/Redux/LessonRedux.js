@@ -16,7 +16,8 @@ const { Types, Creators } = createActions({
   loadLesson: ["lesson"],
   setCurrentLesson: ["lessonId"],
   setCurrentCard: ["currentCardId"],
-  setLessonProgress: ["lessonId"]
+  setLessonProgress: ["lessonId"],
+  setIsDownloading: ["isDownloading"]
 });
 
 export const LessonTypes = Types;
@@ -29,7 +30,8 @@ export const INITIAL_STATE = Immutable({
   currentCardId: null,
   lessonLoopCounter: null,
   forcePlay: null,
-  translationLoopCounter: null
+  translationLoopCounter: null,
+  isDownloading: false
 });
 
 /* ------------- Selectors ------------- */
@@ -66,11 +68,18 @@ export const setCurrentCard = (state, { currentCardId }) => {
   });
 };
 
+export const setIsDownloading = (state, { isDownloading }) => {
+  return state.merge({
+    isDownloading
+  });
+};
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.START_LESSON]: startLesson,
   [Types.LESSON_SHOW_ANSWER]: showAnswer,
   [Types.SET_CURRENT_LESSON]: setCurrentLesson,
-  [Types.SET_CURRENT_CARD]: setCurrentCard
+  [Types.SET_CURRENT_CARD]: setCurrentCard,
+  [Types.SET_IS_DOWNLOADING]: setIsDownloading
 });

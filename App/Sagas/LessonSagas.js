@@ -130,6 +130,7 @@ export function* downloadLesson() {
   if (sentencesOriginal.length || sentencesTranslation.length) {
     try {
       Toast.show("Downloading lesson for offline use");
+      yield put(LessonActions.setIsDownloading(true));
 
       yield all(
         sentencesOriginal.map(s =>
@@ -148,6 +149,8 @@ export function* downloadLesson() {
       Toast.show("Download error: " + error.message);
     }
   }
+
+  yield put(LessonActions.setIsDownloading(false));
 }
 
 function* restartLesson(lesson) {
